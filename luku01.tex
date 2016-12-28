@@ -402,7 +402,7 @@ as follows ($\varepsilon=10^{-9}$):
 
 \begin{lstlisting}
 if (abs(a-b) < 1e-9) {
-    // a ja b ovat yhtä suuret
+    // a and b are equal
 }
 \end{lstlisting}
 
@@ -413,91 +413,91 @@ For example, using \texttt{double},
 it is possible to accurately represent all
 integers having absolute value at most $2^{53}$.
 
-\section{Koodin lyhentäminen}
+\section{Shortening code}
 
-Kisakoodauksessa ihanteena on lyhyt koodi,
-koska algoritmi täytyy pystyä toteuttamaan
-mahdollisimman nopeasti.
-Monet kisakoodarit käyttävätkin lyhennysmerkintöjä
-tietotyypeille ja muille koodin osille.
+Short code is ideal in competitive programming,
+because the algorithm should be implemented
+as fast as possible.
+Because of this, competitive programmers often define
+shorter names for datatypes and other parts of code.
 
-\subsubsection{Tyyppinimet}
+\subsubsection{Type names}
 \index{tuppdef@\texttt{typedef}}
-Komennolla \texttt{typedef} voi antaa lyhyemmän
-nimen tietotyypille.
-Esimerkiksi nimi \texttt{long long} on pitkä,
-joten tyypille voi antaa lyhyemmän nimen \texttt{ll}:
+Using the command \texttt{typedef}
+it is possible to give a shorter name
+to a datatype.
+For example, the name \texttt{long long} is long,
+so we can define a shorter name \texttt{ll}:
 \begin{lstlisting}
 typedef long long ll;
 \end{lstlisting}
-Tämän jälkeen koodin
+After this, the code
 \begin{lstlisting}
 long long a = 123456789;
 long long b = 987654321;
 cout << a*b << "\n";
 \end{lstlisting}
-voi lyhentää seuraavasti:
+can be shortened as follows:
 \begin{lstlisting}
 ll a = 123456789;
 ll b = 987654321;
 cout << a*b << "\n";
 \end{lstlisting}
 
-Komentoa \texttt{typedef} voi käyttää myös
-monimutkaisempien tyyppien kanssa.
-Esimerkiksi seuraava koodi antaa nimen \texttt{vi}
-kokonaisluvuista muodostuvalle vektorille
-sekä nimen \texttt{pi} kaksi
-kokonaislukua sisältävälle parille.
+The command \texttt{typedef}
+can also be used with more complex types.
+For example, the following code gives
+the name \texttt{vi} for a vector of integers,
+and the name \texttt{pi} for a pair
+that contains two integers.
 \begin{lstlisting}
 typedef vector<int> vi;
 typedef pair<int,int> pi;
 \end{lstlisting}
 
-\subsubsection{Makrot}
-\index{makro}
-Toinen tapa lyhentää koodia on määritellä \key{makroja}.
-Makro ilmaisee, että tietyt koodissa olevat
-merkkijonot korvataan toisilla ennen koodin
-kääntämistä.
-C++:ssa makro määritellään
-esikääntäjän komennolla \texttt{\#define}.
+\subsubsection{Macros}
+\index{macro}
+Another way to shorten the code is to define
+\key{macros}.
+A macro means that certain strings in
+the code will be changed before the compilation.
+In C++, macros are defined using the
+command \texttt{\#define}.
 
-Määritellään esimerkiksi seuraavat makrot:
+For example, we can define the following macros:
 \begin{lstlisting}
 #define F first
 #define S second
 #define PB push_back
 #define MP make_pair
 \end{lstlisting}
-Tämän jälkeen koodin
+After this, the code
 \begin{lstlisting}
 v.push_back(make_pair(y1,x1));
 v.push_back(make_pair(y2,x2));
 int d = v[i].first+v[i].second;
 \end{lstlisting}
-voi kirjoittaa lyhyemmin seuraavasti:
+can be shortened as follows:
 \begin{lstlisting}
 v.PB(MP(y1,x1));
 v.PB(MP(y2,x2));
 int d = v[i].F+v[i].S;
 \end{lstlisting}
 
-Makro on mahdollista määritellä myös niin,
-että sille voi antaa parametreja.
-Tämän ansiosta makrolla voi lyhentää esimerkiksi
-komentorakenteita.
-Määritellään esimerkiksi seuraava makro:
+It is also possible to define a macro with parameters
+which makes it possible to shorten loops and other
+structures in the code.
+For example, we can define the following macro:
 \begin{lstlisting}
 #define REP(i,a,b) for (int i = a; i <= b; i++)
 \end{lstlisting}
-Tämän jälkeen koodin
+After this, the code
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     haku(i);
 }
 \end{lstlisting}
-voi lyhentää seuraavasti:
+can be shortened as follows:
 \begin{lstlisting}
 REP(i,1,n) {
     haku(i);
