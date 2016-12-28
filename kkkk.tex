@@ -1,0 +1,113 @@
+\documentclass[twoside,12pt,a4paper,english]{book}
+
+\includeonly{luku01}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{microtype}
+
+\usepackage{fouriernc}
+\usepackage[T1]{fontenc}
+
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\usepackage{pifont}
+\usepackage{ifthen}
+\usepackage{makeidx}
+\usepackage{enumitem}
+
+\usepackage{titlesec}
+
+\usetikzlibrary{patterns,snakes}
+\pagestyle{plain}
+
+\lstset{language=C++,frame=single,basicstyle=\ttfamily \small,showstringspaces=false,columns=flexible}
+\lstset{
+  literate={ö}{{\"o}}1
+           {ä}{{\"a}}1
+           {ü}{{\"u}}1
+}
+\lstset{xleftmargin=20pt,xrightmargin=5pt}
+\lstset{aboveskip=12pt,belowskip=8pt}
+
+
+\date{\Large \today}
+
+\usepackage[a4paper,vmargin=30mm,hmargin=33mm,footskip=15mm]{geometry}
+
+\title{\Huge Handbook of Competitive Programming}
+\author{\Large Antti Laaksonen}
+
+\makeindex
+
+\titleformat{\subsubsection}
+{\normalfont\large\bfseries\sffamily}{\thesubsection}{1em}{}
+
+\begin{document}
+
+%\selectlanguage{finnish}
+
+%\setcounter{page}{1}
+%\pagenumbering{roman}
+
+\frontmatter
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\include{johdanto}
+
+\mainmatter
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\newcommand{\key}[1] {\textbf{#1}}
+
+\part{Perusasiat}
+\include{luku01}
+\include{luku02}
+\include{luku03}
+\include{luku04}
+\include{luku05}
+\include{luku06}
+\include{luku07}
+\include{luku08}
+\include{luku09}
+\include{luku10}
+\part{Graph algorithms}
+\include{luku11}
+\include{luku12}
+\include{luku13}
+\include{luku14}
+\include{luku15}
+\include{luku16}
+\include{luku17}
+\include{luku18}
+\include{luku19}
+\include{luku20}
+\part{Advanced topics}
+\include{luku21}
+\include{luku22}
+\include{luku23}
+\include{luku24}
+\include{luku25}
+\include{luku26}
+\include{luku27}
+\include{luku28}
+\include{luku29}
+\include{luku30}
+\include{kirj}
+
+\cleardoublepage
+\printindex
+
+\end{document}

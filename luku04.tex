@@ -1,0 +1,774 @@
+\chapter{Data structures}
+
+\index{tietorakenne@tietorakenne}
+
+\key{Tietorakenne}
+on tapa säilyttää tietoa tietokoneen muistissa.
+Sopivan tietorakenteen valinta on tärkeää,
+koska kullakin rakenteella on omat
+vahvuutensa ja heikkoutensa.
+Tietorakenteen valinnassa oleellinen kysymys on,
+mitkä operaatiot rakenne toteuttaa tehokkaasti.
+
+Tämä luku esittelee keskeisimmät
+C++:n standardikirjaston tietorakenteet.
+Valmiita tietorakenteita kannattaa käyttää
+aina kun mahdollista, 
+koska se säästää paljon aikaa toteutuksessa.
+Myöhemmin kirjassa tutustumme erikoisempiin
+rakenteisiin, joita ei ole valmiina C++:ssa.
+
+\section{Dynaaminen taulukko}
+
+\index{vektori@vektori}
+\index{vector@\texttt{vector}}
+
+\key{Dynaaminen taulukko} on taulukko,
+jonka kokoa voi muuttaa
+ohjelman suorituksen aikana.
+C++:n tavallisin dynaaminen taulukko
+on \key{vektori} (\texttt{vector}).
+Sitä voi käyttää hyvin samalla tavalla
+kuin tavallista taulukkoa.
+
+Seuraava koodi luo tyhjän vektorin
+ja lisää siihen kolme lukua:
+
+\begin{lstlisting}
+vector<int> v;
+v.push_back(3); // [3]
+v.push_back(2); // [3,2]
+v.push_back(5); // [3,2,5]
+\end{lstlisting}
+
+Tämän jälkeen vektorin sisältöä voi käsitellä taulukon tavoin:
+
+\begin{lstlisting}
+cout << v[0] << "\n"; // 3
+cout << v[1] << "\n"; // 2
+cout << v[2] << "\n"; // 5
+\end{lstlisting}
+
+Funktio \texttt{size} kertoo, montako alkiota vektorissa on.
+Seuraava koodi käy läpi ja tulostaa kaikki vektorin alkiot:
+
+\begin{lstlisting}
+for (int i = 0; i < v.size(); i++) {
+    cout << v[i] << "\n";
+}
+\end{lstlisting}
+
+\begin{samepage}
+Vektorin voi käydä myös läpi lyhyemmin näin:
+
+\begin{lstlisting}
+for (auto x : v) {
+    cout << x << "\n";
+}
+\end{lstlisting}
+\end{samepage}
+
+Funktio \texttt{back} hakee vektorin viimeisen alkion,
+ja funktio \texttt{pop\_back} poistaa vektorin
+viimeisen alkion:
+
+\begin{lstlisting}
+vector<int> v;
+v.push_back(5);
+v.push_back(2);
+cout << v.back() << "\n"; // 2
+v.pop_back();
+cout << v.back() << "\n"; // 5
+\end{lstlisting}
+
+Vektorin sisällön voi antaa myös sen luonnissa:
+
+\begin{lstlisting}
+vector<int> v = {2,4,2,5,1};
+\end{lstlisting}
+
+Kolmas tapa luoda vektori on ilmoittaa
+vektorin koko ja alkuarvo:
+
+\begin{lstlisting}
+// koko 10, alkuarvo 0
+vector<int> v(10);
+\end{lstlisting}
+\begin{lstlisting}
+// koko 10, alkuarvo 5
+vector<int> v(10, 5);
+\end{lstlisting}
+
+Vektori on toteutettu sisäisesti tavallisena taulukkona.
+Jos vektorin koko kasvaa ja taulukko jää liian pieneksi,
+varataan uusi suurempi taulukko, johon kopioidaan
+vektorin sisältö.
+Näin tapahtuu kuitenkin niin harvoin, että vektorin
+funktion \texttt{push\_back} aikavaativuus on
+keskimäärin $O(1)$.
+
+\index{merkkijono@merkkijono}
+\index{string@\texttt{string}}
+
+Myös \key{merkkijono} (\texttt{string}) on dynaaminen taulukko,
+jota pystyy käsittelemään lähes samaan
+tapaan kuin vektoria.
+Merkkijonon käsittelyyn liittyy lisäksi erikoissyntaksia
+ja funktioita, joita ei ole muissa tietorakenteissa.
+Merkkijonoja voi yhdistää toisiinsa \texttt{+}-merkin avulla.
+Funktio $\texttt{substr}(k,x)$ erottaa merkkijonosta
+osajonon, joka alkaa kohdasta $k$ ja jonka pituus on $x$.
+Funktio $\texttt{find}(\texttt{t})$ etsii kohdan,
+jossa osajono \texttt{t} esiintyy merkkijonossa.
+
+Seuraava koodi esittelee merkkijonon käyttämistä:
+
+\begin{lstlisting}
+string a = "hatti";
+string b = a+a;
+cout << b << "\n"; // hattihatti
+b[5] = 'v';
+cout << b << "\n"; // hattivatti
+string c = b.substr(3,4);
+cout << c << "\n"; // tiva
+\end{lstlisting}
+
+\section{Joukkorakenne}
+
+\index{joukko@joukko}
+\index{set@\texttt{set}}
+\index{unordered\_set@\texttt{unordered\_set}}
+
+\key{Joukko} on tietorakenne,
+joka sisältää kokoelman alkioita.
+Joukon perusoperaatiot ovat alkion lisäys,
+haku ja poisto.
+
+C++ sisältää kaksi
+toteutusta joukolle: \texttt{set} ja \texttt{unordered\_set}.
+Rakenne \texttt{set} perustuu tasapainoiseen
+binääripuuhun, ja sen operaatioiden aikavaativuus
+on $O(\log n)$.
+Rakenne \texttt{unordered\_set} pohjautuu hajautustauluun,
+ja sen operaatioiden aikavaativuus on keskimäärin $O(1)$.
+
+Usein on makuasia, kumpaa joukon toteutusta käyttää.
+Rakenteen \texttt{set} etuna on, että se säilyttää
+joukon alkioita järjestyksessä ja tarjoaa
+järjestykseen liittyviä funktioita,
+joita \texttt{unordered\_set} ei sisällä.
+Toisaalta \texttt{unordered\_set} on usein nopeampi rakenne.
+
+Seuraava koodi luo lukuja sisältävän joukon ja
+esittelee sen käyttämistä.
+Funktio \texttt{insert} lisää joukkoon alkion,
+funktio \texttt{count} laskee alkion määrän joukossa
+ja funktio \texttt{erase} poistaa alkion joukosta.
+
+\begin{lstlisting}
+set<int> s;
+s.insert(3);
+s.insert(2);
+s.insert(5);
+cout << s.count(3) << "\n"; // 1
+cout << s.count(4) << "\n"; // 0
+s.erase(3);
+s.insert(4);
+cout << s.count(3) << "\n"; // 0
+cout << s.count(4) << "\n"; // 1
+\end{lstlisting}
+
+Joukkoa voi käsitellä muuten suunnilleen samalla tavalla
+kuin vektoria, mutta joukkoa ei voi indeksoida
+\texttt{[]}-merkinnällä.
+Seuraava koodi luo joukon, tulostaa sen 
+alkioiden määrän ja käy sitten läpi kaikki alkiot.
+\begin{lstlisting}
+set<int> s = {2,5,6,8};
+cout << s.size() << "\n"; // 4
+for (auto x : s) {
+    cout << x << "\n";
+}
+\end{lstlisting}
+
+Tärkeä joukon ominaisuus on,
+että tietty alkio voi esiintyä siinä
+enintään kerran.
+Niinpä funktio \texttt{count} palauttaa aina
+arvon 0 (alkiota ei ole joukossa) tai 1 (alkio on joukossa)
+ja funktio \texttt{insert} ei lisää alkiota
+uudestaan joukkoon, jos se on siellä valmiina.
+Seuraava koodi havainnollistaa asiaa:
+
+\begin{lstlisting}
+set<int> s;
+s.insert(5);
+s.insert(5);
+s.insert(5);
+cout << s.count(5) << "\n"; // 1
+\end{lstlisting}
+
+\index{multiset@\texttt{multiset}}
+\index{unordered\_multiset@\texttt{unordered\_multiset}}
+
+C++ sisältää myös rakenteet
+\texttt{multiset} ja \texttt{unordered\_multiset},
+jotka toimivat muuten samalla tavalla kuin \texttt{set}
+ja \texttt{unordered\_set},
+mutta sama alkio voi esiintyä
+monta kertaa joukossa.
+Esimerkiksi seuraavassa koodissa
+kaikki luvun 5 kopiot lisätään joukkoon:
+
+\begin{lstlisting}
+multiset<int> s;
+s.insert(5);
+s.insert(5);
+s.insert(5);
+cout << s.count(5) << "\n"; // 3
+\end{lstlisting}
+Funktio \texttt{erase} poistaa
+kaikki alkion esiintymät
+\texttt{multiset}-rakenteessa:
+\begin{lstlisting}
+s.erase(5);
+cout << s.count(5) << "\n"; // 0
+\end{lstlisting}
+Usein kuitenkin tulisi poistaa
+vain yksi esiintymä,
+mikä onnistuu näin:
+\begin{lstlisting}
+s.erase(s.find(5));
+cout << s.count(5) << "\n"; // 2
+\end{lstlisting}
+
+\section{Hakemisto}
+
+\index{hakemisto@hakemisto}
+\index{map@\texttt{map}}
+\index{unordered\_map@\texttt{unordered\_map}}
+
+\key{Hakemisto} on taulukon yleistys,
+joka sisältää kokoelman avain-arvo-pareja.
+Siinä missä taulukon avaimet ovat aina peräkkäiset
+kokonaisluvut $0,1,\ldots,n-1$,
+missä $n$ on taulukon koko,
+hakemiston avaimet voivat
+olla mitä tahansa tyyppiä
+eikä niiden tarvitse olla peräkkäin.
+
+C++ sisältää kaksi toteutusta hakemistolle
+samaan tapaan kuin joukolle.
+Rakenne
+\texttt{map} perustuu
+tasapainoiseen binääripuuhun ja sen
+alkioiden käsittely vie aikaa $O(\log n)$,
+kun taas rakenne
+\texttt{unordered\_map} perustuu
+hajautustauluun ja sen alkioiden
+käsittely vie keskimäärin aikaa $O(1)$.
+
+Seuraava koodi toteuttaa hakemiston,
+jossa avaimet ovat merkkijonoja ja
+arvot ovat kokonaislukuja:
+
+\begin{lstlisting}
+map<string,int> m;
+m["apina"] = 4;
+m["banaani"] = 3;
+m["cembalo"] = 9;
+cout << m["banaani"] << "\n"; // 3
+\end{lstlisting}
+
+Jos hakemistosta hakee avainta,
+jota ei ole siinä,
+avain lisätään hakemistoon
+automaattisesti oletusarvolla.
+Esimerkiksi seuraavassa koodissa
+hakemistoon ilmestyy avain ''aybabtu'',
+jonka arvona on 0:
+
+\begin{lstlisting}
+map<string,int> m;
+cout << m["aybabtu"] << "\n"; // 0
+\end{lstlisting}
+Funktiolla \texttt{count} voi
+tutkia, esiintyykö avain hakemistossa:
+\begin{lstlisting}
+if (m.count("aybabtu")) {
+    cout << "avain on hakemistossa";
+}
+\end{lstlisting}
+Seuraava koodi listaa hakemiston
+kaikki avaimet ja arvot:
+\begin{lstlisting}
+for (auto x : m) {
+    cout << x.first << " " << x.second << "\n";
+}
+\end{lstlisting}
+
+\section{Iteraattorit ja välit}
+
+\index{iteraattori@iteraattori}
+
+Monet C++:n standardikirjaston funktiot
+käsittelevät tietorakenteiden iteraattoreita
+ja niiden määrittelemiä välejä.
+\key{Iteraattori} on muuttuja,
+joka osoittaa tiettyyn tietorakenteen alkioon.
+
+Usein tarvittavat iteraattorit ovat \texttt{begin}
+ja \texttt{end}, jotka rajaavat välin,
+joka sisältää kaikki tietorakenteen alkiot.
+Iteraattori \texttt{begin} osoittaa
+tietorakenteen ensimmäiseen alkioon,
+kun taas iteraattori \texttt{end} osoittaa
+tietorakenteen viimeisen alkion jälkeiseen kohtaan.
+Tilanne on siis tällainen:
+
+\begin{center}
+\begin{tabular}{llllllllll}
+\{ & 3, & 4, & 6, & 8, & 12, & 13, & 14, & 17 & \} \\
+& $\uparrow$ & & & & & & & & $\uparrow$ \\
+& \multicolumn{3}{l}{\texttt{s.begin()}} & & & & & & \texttt{s.end()} \\
+\end{tabular}
+\end{center}
+
+Huomaa epäsymmetria iteraattoreissa:
+\texttt{s.begin()} osoittaa tietorakenteen alkioon,
+kun taas \texttt{s.end()} osoittaa tietorakenteen ulkopuolelle.
+Iteraattoreiden rajaama joukon väli on siis \emph{puoliavoin}.
+
+\subsubsection{Välien käsittely}
+
+Iteraattoreita tarvitsee
+C++:n standardikirjaston funktioissa, jotka käsittelevät
+tietorakenteen välejä.
+Yleensä halutaan käsitellä tietorakenteiden kaikkia
+alkioita, jolloin funktiolle annetaan
+iteraattorit \texttt{begin} ja \texttt{end}.
+
+Esimerkiksi seuraava koodi järjestää vektorin funktiolla \texttt{sort},
+kääntää sitten alkioiden järjestyksen funktiolla \texttt{reverse}
+ja sekoittaa lopuksi alkioiden järjestyksen funktiolla \texttt{random\_shuffle}.
+
+\index{sort@\texttt{sort}}
+\index{reverse@\texttt{reverse}}
+\index{random\_shuffle@\texttt{random\_shuffle}}
+
+\begin{lstlisting}
+sort(v.begin(), v.end());
+reverse(v.begin(), v.end());
+random_shuffle(v.begin(), v.end());
+\end{lstlisting}
+
+Samoja funktioita voi myös käyttää tavallisen taulukon
+yhteydessä, jolloin iteraattorin sijasta annetaan
+osoitin taulukkoon:
+
+\begin{lstlisting}
+sort(t, t+n);
+reverse(t, t+n);
+random_shuffle(t, t+n);
+\end{lstlisting}
+
+\subsubsection{Joukon iteraattorit}
+
+Iteraattoreita tarvitsee usein joukon
+alkioiden käsittelyssä.
+Seuraava koodi määrittelee iteraattorin
+\texttt{it}, joka osoittaa joukon \texttt{s} alkuun:
+\begin{lstlisting}
+set<int>::iterator it = s.begin();
+\end{lstlisting}
+Koodin voi kirjoittaa myös lyhyemmin näin:
+\begin{lstlisting}
+auto it = s.begin();
+\end{lstlisting}
+Iteraattoria vastaavaan joukon alkioon
+pääsee käsiksi \texttt{*}-merkinnällä.
+Esimerkiksi seuraava koodi tulostaa
+joukon ensimmäisen alkion:
+
+\begin{lstlisting}
+auto it = s.begin();
+cout << *it << "\n";
+\end{lstlisting}
+
+Iteraattoria pystyy liikuttamaan
+operaatioilla \texttt{++} (eteenpäin)
+ja \texttt{---} (taaksepäin).
+Tällöin iteraattori siirtyy seuraavaan
+tai edelliseen alkioon joukossa.
+
+Seuraava koodi tulostaa joukon kaikki alkiot:
+
+\begin{lstlisting}
+for (auto it = s.begin(); it != s.end(); it++) {
+    cout << *it << "\n";
+}
+\end{lstlisting}
+Seuraava koodi taas tulostaa joukon
+viimeisen alkion:
+
+\begin{lstlisting}
+auto it = s.end();
+it--;
+cout << *it << "\n";
+\end{lstlisting}
+% Iteraattoria täytyi liikuttaa askel taaksepäin,
+% koska se osoitti aluksi joukon viimeisen
+% alkion jälkeiseen kohtaan.
+
+Funktio $\texttt{find}(x)$ palauttaa iteraattorin
+joukon alkioon, jonka arvo on $x$.
+Poikkeuksena jos alkiota $x$ ei esiinny joukossa,
+iteraattoriksi tulee \texttt{end}.
+
+\begin{lstlisting}
+auto it = s.find(x);
+if (it == s.end()) cout << "x puuttuu joukosta";
+\end{lstlisting}
+
+Funktio $\texttt{lower\_bound}(x)$ palauttaa
+iteraattorin joukon pienimpään alkioon,
+joka on ainakin yhtä suuri kuin $x$.
+Vastaavasti $\texttt{upper\_bound}(x)$ palauttaa
+iteraattorin pienimpään alkioon,
+joka on suurempi kuin $x$.
+Jos tällaisia alkioita ei ole joukossa,
+funktiot palauttavat arvon \texttt{end}.
+Näitä funktioita ei voi käyttää
+\texttt{unordered\_set}-rakenteessa,
+joka ei pidä yllä alkioiden järjestystä.
+
+\begin{samepage}
+Esimerkiksi seuraava koodi etsii joukosta
+alkion, joka on lähinnä lukua $x$:
+
+\begin{lstlisting}
+auto a = s.lower_bound(x);
+if (a == s.begin() && a == s.end()) {
+    cout << "joukko on tyhjä\n";
+} else if (a == s.begin()) {
+    cout << *a << "\n";
+} else if (a == s.end()) {
+    a--;
+    cout << *a << "\n";
+} else {
+    auto b = a; b--;
+    if (x-*b < *a-x) cout << *b << "\n";
+    else cout << *a << "\n";
+}
+\end{lstlisting}
+
+Koodi käy läpi mahdolliset tapaukset
+iteraattorin \texttt{a} avulla.
+Iteraattori
+osoittaa aluksi pienimpään alkioon,
+joka on ainakin yhtä suuri kuin $x$.
+Jos \texttt{a} on samaan aikaan \texttt{begin}
+ja \texttt{end}, joukko on tyhjä.
+Muuten jos \texttt{a} on \texttt{begin},
+sen osoittama alkio on $x$:ää lähin alkio.
+Jos taas \texttt{a} on \texttt{end},
+$x$:ää lähin alkio on joukon viimeinen alkio.
+Jos mikään edellisistä tapauksista ei päde,
+niin $x$:ää lähin alkio
+on joko $a$:n osoittama alkio tai sitä edellinen alkio.
+\end{samepage}
+
+\section{Muita tietorakenteita}
+
+\subsubsection{Bittijoukko}
+
+\index{bittijoukko@bittijoukko}
+\index{bitset@\texttt{bitset}}
+
+\key{Bittijoukko} (\texttt{bitset}) on taulukko,
+jonka jokaisen alkion arvo on 0 tai 1.
+Esimerkiksi
+seuraava koodi luo bittijoukon, jossa on 10 alkiota.
+\begin{lstlisting}
+bitset<10> s;
+s[2] = 1;
+s[5] = 1;
+s[6] = 1;
+s[8] = 1;
+cout << s[4] << "\n"; // 0
+cout << s[5] << "\n"; // 1
+\end{lstlisting}
+
+Bittijoukon etuna on, että se vie tavallista
+taulukkoa vähemmän muistia,
+koska jokainen alkio vie
+vain yhden bitin muistia.
+Esimerkiksi $n$ bitin tallentaminen
+\texttt{int}-taulukkona vie $32n$
+bittiä tilaa, mutta bittijoukkona
+vain $n$ bittiä tilaa.
+Lisäksi bittijoukon sisältöä
+voi käsitellä tehokkaasti bittioperaatioilla,
+minkä ansiosta sillä voi tehostaa algoritmeja.
+
+Seuraava koodi näyttää toisen tavan
+bittijoukon luomiseen:
+
+\begin{lstlisting}
+bitset<10> s(string("0010011010"));
+cout << s[4] << "\n"; // 0
+cout << s[5] << "\n"; // 1
+\end{lstlisting}
+
+Funktio \texttt{count} palauttaa
+bittijoukon ykkösbittien määrän:
+
+\begin{lstlisting}
+bitset<10> s(string("0010011010"));
+cout << s.count() << "\n"; // 4
+\end{lstlisting}
+
+Seuraava koodi näyttää esimerkkejä
+bittioperaatioiden käyttämisestä:
+\begin{lstlisting}
+bitset<10> a(string("0010110110"));
+bitset<10> b(string("1011011000"));
+cout << (a&b) << "\n"; // 0010010000
+cout << (a|b) << "\n"; // 1011111110
+cout << (a^b) << "\n"; // 1001101110
+\end{lstlisting}
+
+\subsubsection{Pakka}
+
+\index{pakka@pakka}
+\index{deque@\texttt{deque}}
+
+\key{Pakka} (\texttt{deque}) on dynaaminen taulukko,
+jonka kokoa pystyy muuttamaan tehokkaasti
+sekä alku- että loppupäässä.
+Pakka sisältää vektorin tavoin
+funktiot \texttt{push\_back}
+ja \texttt{pop\_back}, mutta siinä on lisäksi myös funktiot
+\texttt{push\_front} ja \texttt{pop\_front},
+jotka käsittelevät taulukon alkua.
+
+Seuraava koodi esittelee pakan käyttämistä:
+
+\begin{lstlisting}
+deque<int> d;
+d.push_back(5); // [5]
+d.push_back(2); // [5,2]
+d.push_front(3); // [3,5,2]
+d.pop_back(); // [3,5]
+d.pop_front(); // [5]
+\end{lstlisting}
+
+Pakan sisäinen toteutus on monimutkaisempi kuin
+vektorissa, minkä vuoksi se on
+vektoria raskaampi rakenne.
+Kuitenkin lisäyksen ja poiston
+aikavaativuus on keskimäärin $O(1)$ molemmissa päissä.
+
+\subsubsection{Pino}
+
+\index{pino@pino}
+\index{stack@\texttt{stack}}
+
+\key{Pino} (\texttt{stack}) on tietorakenne,
+joka tarjoaa kaksi $O(1)$-aikaista
+operaatiota:
+alkion lisäys pinon päälle ja alkion
+poisto pinon päältä.
+Pinossa ei ole mahdollista käsitellä muita
+alkioita kuin pinon päällimmäistä alkiota.
+
+Seuraava koodi esittelee pinon käyttämistä:
+
+\begin{lstlisting}
+stack<int> s;
+s.push(3);
+s.push(2);
+s.push(5);
+cout << s.top(); // 5
+s.pop();
+cout << s.top(); // 2
+\end{lstlisting}
+\subsubsection{Jono}
+
+\index{jono@jono}
+\index{queue@\texttt{queue}}
+
+\key{Jono} (\texttt{queue}) on kuin pino,
+mutta alkion lisäys tapahtuu jonon loppuun
+ja alkion poisto tapahtuu jonon alusta.
+Jonossa on mahdollista käsitellä vain
+alussa ja lopussa olevaa alkiota.
+
+Seuraava koodi esittelee jonon käyttämistä:
+
+\begin{lstlisting}
+queue<int> s;
+s.push(3);
+s.push(2);
+s.push(5);
+cout << s.front(); // 3
+s.pop();
+cout << s.front(); // 2
+\end{lstlisting}
+% 
+% Huomaa, että rakenteiden \texttt{stack} ja \texttt{queue}
+% sijasta voi aina käyttää rakenteita
+% \texttt{vector} ja \texttt{deque}, joilla voi
+% tehdä kaiken saman ja enemmän.
+% Kuitenkin \texttt{stack} ja \texttt{queue} ovat
+% kevyempiä ja hieman tehokkaampia rakenteita,
+% jos niiden operaatiot riittävät algoritmin toteuttamiseen.
+
+\subsubsection{Prioriteettijono}
+
+\index{prioriteettijono@prioriteettijono}
+\index{keko@keko}
+\index{priority\_queue@\texttt{priority\_queue}}
+
+\key{Prioriteettijono} (\texttt{priority\_queue})
+pitää yllä joukkoa alkioista.
+Sen operaatiot ovat alkion lisäys ja
+jonon tyypistä riippuen joko
+pienimmän alkion haku ja poisto tai
+suurimman alkion haku ja poisto.
+Lisäyksen ja poiston aikavaativuus on $O(\log n)$
+ja haun aikavaativuus on $O(1)$.
+
+Vaikka prioriteettijonon operaatiot
+pystyy toteuttamaan myös \texttt{set}-ra\-ken\-teel\-la,
+prioriteettijonon etuna on,
+että sen kekoon perustuva sisäinen
+toteutus on yksinkertaisempi
+kuin \texttt{set}-rakenteen tasapainoinen binääripuu,
+minkä vuoksi rakenne on kevyempi ja
+operaatiot ovat tehokkaampia.
+
+\begin{samepage}
+C++:n prioriteettijono toimii oletuksena niin,
+että alkiot ovat järjestyksessä suurimmasta pienimpään
+ja jonosta pystyy hakemaan ja poistamaan suurimman alkion.
+Seuraava koodi esittelee prioriteettijonon käyttämistä:
+
+\begin{lstlisting}
+priority_queue<int> q;
+q.push(3);
+q.push(5);
+q.push(7);
+q.push(2);
+cout << q.top() << "\n"; // 7
+q.pop();
+cout << q.top() << "\n"; // 5
+q.pop();
+q.push(6);
+cout << q.top() << "\n"; // 6
+q.pop();
+\end{lstlisting}
+\end{samepage}
+
+Seuraava määrittely luo käänteisen prioriteettijonon,
+jossa jonosta pystyy hakemaan ja poistamaan pienimmän alkion:
+
+\begin{lstlisting}
+priority_queue<int,vector<int>,greater<int>> q;
+\end{lstlisting}
+
+\section{Vertailu järjestämiseen}
+
+Monen tehtävän voi ratkaista tehokkaasti joko
+käyttäen sopivia tietorakenteita
+tai taulukon järjestämistä.
+Vaikka erilaiset ratkaisutavat olisivat kaikki
+periaatteessa tehokkaita, niissä voi olla
+käytännössä merkittäviä eroja.
+
+Tarkastellaan ongelmaa, jossa
+annettuna on kaksi listaa $A$ ja $B$,
+joista kummassakin on $n$ kokonaislukua.
+Tehtävänä on selvittää, moniko luku
+esiintyy kummassakin listassa.
+Esimerkiksi jos listat ovat
+\[A = [5,2,8,9,4] \hspace{10px} \textrm{ja} \hspace{10px} B = [3,2,9,5],\]
+niin vastaus on 3, koska luvut 2, 5
+ja 9 esiintyvät kummassakin listassa.
+Suoraviivainen ratkaisu tehtävään on käydä läpi
+kaikki lukuparit ajassa $O(n^2)$, mutta seuraavaksi
+keskitymme tehokkaampiin ratkaisuihin.
+
+\subsubsection{Ratkaisu 1}
+
+Tallennetaan listan $A$ luvut joukkoon
+ja käydään sitten läpi listan $B$ luvut ja
+tarkistetaan jokaisesta, esiintyykö se myös listassa $A$.
+Joukon ansiosta on tehokasta tarkastaa,
+esiintyykö listan $B$ luku listassa $A$.
+Kun joukko toteutetaan \texttt{set}-rakenteella,
+algoritmin aikavaativuus on $O(n \log n)$.
+
+\subsubsection{Ratkaisu 2}
+
+Joukon ei tarvitse säilyttää lukuja
+järjestyksessä, joten
+\texttt{set}-ra\-ken\-teen sijasta voi
+käyttää myös \texttt{unordered\_set}-ra\-ken\-net\-ta.
+Tämä on helppo tapa parantaa algoritmin
+tehokkuutta, koska
+algoritmin toteutus säilyy samana ja vain tietorakenne vaihtuu.
+Uuden algoritmin aikavaativuus on $O(n)$.
+
+\subsubsection{Ratkaisu 3}
+
+Tietorakenteiden sijasta voimme käyttää järjestämistä.
+Järjestetään ensin listat $A$ ja $B$,
+minkä jälkeen yhteiset luvut voi löytää
+käymällä listat rinnakkain läpi.
+Järjestämisen aikavaativuus on $O(n \log n)$ ja
+läpikäynnin aikavaativuus on $O(n)$,
+joten kokonaisaikavaativuus on $O(n \log n)$.
+
+\subsubsection{Tehokkuusvertailu}
+
+Seuraavassa taulukossa on mittaustuloksia
+äskeisten algoritmien tehokkuudesta,
+kun $n$ vaihtelee ja listojen luvut ovat
+satunnaisia lukuja välillä $1 \ldots 10^9$:
+
+\begin{center}
+\begin{tabular}{rrrr}
+$n$ & ratkaisu 1 & ratkaisu 2 & ratkaisu 3 \\
+\hline
+$10^6$ & $1{,}5$ s & $0{,}3$ s & $0{,}2$ s \\
+$2 \cdot 10^6$ & $3{,}7$ s & $0{,}8$ s & $0{,}3$ s \\
+$3 \cdot 10^6$ & $5{,}7$ s & $1{,}3$ s & $0{,}5$ s \\
+$4 \cdot 10^6$ & $7{,}7$ s & $1{,}7$ s & $0{,}7$ s \\
+$5 \cdot 10^6$ & $10{,}0$ s & $2{,}3$ s & $0{,}9$ s \\
+\end{tabular}
+\end{center}
+
+Ratkaisut 1 ja 2 ovat muuten samanlaisia,
+mutta ratkaisu 1 käyttää \texttt{set}-rakennetta,
+kun taas ratkaisu 2 käyttää
+\texttt{unordered\_set}-rakennetta.
+Tässä tapauksessa tällä valinnalla on
+merkittävä vaikutus suoritusaikaan,
+koska ratkaisu 2 on 4–5 kertaa
+nopeampi kuin ratkaisu 1.
+
+Tehokkain ratkaisu on kuitenkin järjestämistä
+käyttävä ratkaisu 3, joka on vielä puolet
+nopeampi kuin ratkaisu 2.
+Kiinnostavaa on, että sekä ratkaisun 1 että
+ratkaisun 3 aikavaativuus on $O(n \log n)$,
+mutta siitä huolimatta
+ratkaisu 3 vie aikaa vain kymmenesosan.
+Tämän voi selittää sillä, että
+järjestäminen on kevyt
+operaatio ja se täytyy tehdä vain kerran
+ratkaisussa 3 algoritmin alussa,
+minkä jälkeen algoritmin loppuosa on lineaarinen.
+Ratkaisu 1 taas pitää yllä monimutkaista
+tasapainoista binääripuuta koko algoritmin ajan.

@@ -1,0 +1,856 @@
+\chapter{Sweep line}
+
+\index{pyyhkxisyviiva@pyyhkäisyviiva}
+
+\key{Pyyhkäisyviiva} on tason halki kulkeva viiva,
+jonka avulla voi ratkaista useita geometrisia tehtäviä.
+Ideana on esittää tehtävä joukkona tapahtumia,
+jotka vastaavat tason pisteitä.
+Kun pyyhkäisyviiva törmää pisteeseen,
+tapahtuma käsitellään ja tehtävän ratkaisu edistyy.
+
+Tarkastellaan esimerkkinä tekniikan
+käyttämisestä tehtävää,
+jossa yrityksessä on töissä $n$ henkilöä
+ja jokaisesta henkilöstä tiedetään,
+milloin hän tuli töihin ja lähti töistä
+tiettynä päivänä.
+Tehtävänä on laskea,
+mikä on suurin määrä henkilöitä,
+jotka olivat samaan aikaan töissä.
+
+Tehtävän voi ratkaista mallintamalla tilanteen
+niin, että jokaista henkilöä vastaa kaksi tapahtumaa:
+tuloaika töihin ja lähtöaika töistä.
+Pyyhkäisyviiva käy läpi tapahtumat aikajärjestyksessä
+ja pitää kirjaa, montako henkilöä oli töissä milloinkin.
+Esimerkiksi tilannetta
+\begin{center}
+\begin{tabular}{ccc}
+henkilö & tuloaika & lähtöaika \\
+\hline
+Uolevi & 10 & 15 \\
+Maija & 6 & 12 \\
+Kaaleppi & 14 & 16 \\
+Liisa & 5 & 13 \\
+\end{tabular}
+\end{center}
+vastaavat seuraavat tapahtumat:
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+\draw (0,0) rectangle (17,-6.5);
+\path[draw,thick,-] (10,-1) -- (15,-1);
+\path[draw,thick,-] (6,-2.5) -- (12,-2.5);
+\path[draw,thick,-] (14,-4) -- (16,-4);
+\path[draw,thick,-] (5,-5.5) -- (13,-5.5);
+
+\draw[fill] (10,-1) circle [radius=0.05];
+\draw[fill] (15,-1) circle [radius=0.05];
+\draw[fill] (6,-2.5) circle [radius=0.05];
+\draw[fill] (12,-2.5) circle [radius=0.05];
+\draw[fill] (14,-4) circle [radius=0.05];
+\draw[fill] (16,-4) circle [radius=0.05];
+\draw[fill] (5,-5.5) circle [radius=0.05];
+\draw[fill] (13,-5.5) circle [radius=0.05];
+
+\node at (2,-1) {Uolevi};
+\node at (2,-2.5) {Maija};
+\node at (2,-4) {Kaaleppi};
+\node at (2,-5.5) {Liisa};
+\end{tikzpicture}
+\end{center}
+Pyyhkäisyviiva käy läpi tapahtumat vasemmalta oikealle
+ja pitää yllä laskuria.
+Aina kun henkilö tulee töihin, laskurin arvo
+kasvaa yhdellä, ja kun henkilö lähtee töistä,
+laskurin arvo vähenee yhdellä.
+Tehtävän ratkaisu on suurin laskuri arvo
+pyyhkäisyviivan kulun aikana.
+
+Pyyhkäisyviiva kulkee seuraavasti tason halki:
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+\path[draw,thick,->] (0.5,0.5) -- (16.5,0.5);
+\draw (0,0) rectangle (17,-6.5);
+\path[draw,thick,-] (10,-1) -- (15,-1);
+\path[draw,thick,-] (6,-2.5) -- (12,-2.5);
+\path[draw,thick,-] (14,-4) -- (16,-4);
+\path[draw,thick,-] (5,-5.5) -- (13,-5.5);
+
+\draw[fill] (10,-1) circle [radius=0.05];
+\draw[fill] (15,-1) circle [radius=0.05];
+\draw[fill] (6,-2.5) circle [radius=0.05];
+\draw[fill] (12,-2.5) circle [radius=0.05];
+\draw[fill] (14,-4) circle [radius=0.05];
+\draw[fill] (16,-4) circle [radius=0.05];
+\draw[fill] (5,-5.5) circle [radius=0.05];
+\draw[fill] (13,-5.5) circle [radius=0.05];
+
+\node at (2,-1) {Uolevi};
+\node at (2,-2.5) {Maija};
+\node at (2,-4) {Kaaleppi};
+\node at (2,-5.5) {Liisa};
+
+\path[draw,dashed] (10,0)--(10,-6.5);
+\path[draw,dashed] (15,0)--(15,-6.5);
+\path[draw,dashed] (6,0)--(6,-6.5);
+\path[draw,dashed] (12,0)--(12,-6.5);
+\path[draw,dashed] (14,0)--(14,-6.5);
+\path[draw,dashed] (16,0)--(16,-6.5);
+\path[draw,dashed] (5,0)--(5,-6.5);
+\path[draw,dashed] (13,0)--(13,-6.5);
+
+\node at (10,-7) {$+$};
+\node at (15,-7) {$-$};
+\node at (6,-7) {$+$};
+\node at (12,-7) {$-$};
+\node at (14,-7) {$+$};
+\node at (16,-7) {$-$};
+\node at (5,-7) {$+$};
+\node at (13,-7) {$-$};
+
+\node at (10,-8) {$3$};
+\node at (15,-8) {$1$};
+\node at (6,-8) {$2$};
+\node at (12,-8) {$2$};
+\node at (14,-8) {$2$};
+\node at (16,-8) {$0$};
+\node at (5,-8) {$1$};
+\node at (13,-8) {$1$};
+\end{tikzpicture}
+\end{center}
+Kuvan alareunan merkinnät $+$ ja $-$
+tarkoittavat, että laskurin arvo kasvaa
+ja vähenee yhdellä.
+Niiden alapuolella on laskurin uusi arvo.
+Laskurin suurin arvo 3 on voimassa 
+Uolevi tulohetken ja Maijan lähtöhetken välillä.
+
+Ratkaisun aikavaativuus on $O(n \log n)$,
+koska tapahtumien järjestäminen vie aikaa $O(n \log n)$
+ja pyyhkäisyviivan läpikäynti vie aikaa $O(n)$.
+
+\section{Janojen leikkauspisteet}
+
+\index{leikkauspiste@leikkauspiste}
+
+Annettuna on $n$ janaa, joista jokainen
+on vaaka- tai pystysuuntainen.
+Tehtävänä on laskea tehokkaasti, monessako pisteessä
+kaksi janaa leikkaavat toisensa.
+Esimerkiksi tilanteessa
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+\path[draw,thick,-] (0,2) -- (5,2);
+\path[draw,thick,-] (1,4) -- (6,4);
+\path[draw,thick,-] (6,3) -- (10,3);
+\path[draw,thick,-] (2,1) -- (2,6);
+\path[draw,thick,-] (8,2) -- (8,5);
+\end{tikzpicture}
+\end{center}
+leikkauspisteitä on kolme:
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+\path[draw,thick,-] (0,2) -- (5,2);
+\path[draw,thick,-] (1,4) -- (6,4);
+\path[draw,thick,-] (6,3) -- (10,3);
+\path[draw,thick,-] (2,1) -- (2,6);
+\path[draw,thick,-] (8,2) -- (8,5);
+
+\draw[fill] (2,2) circle [radius=0.15];
+\draw[fill] (2,4) circle [radius=0.15];
+\draw[fill] (8,3) circle [radius=0.15];
+
+\end{tikzpicture}
+\end{center}
+
+
+Tehtävä on helppoa ratkaista ajassa $O(n^2)$,
+koska riittää käydä läpi kaikki mahdolliset janaparit
+ja tarkistaa, moniko leikkaa toisiaan.
+Seuraavaksi ratkaisemme tehtävän
+ajassa $O(n \log n)$ pyyhkäisyviivan avulla.
+
+Ideana on luoda janoista kolmenlaisia tapahtumia:
+\begin{enumerate}[noitemsep]
+\item[(1)] vaakajana alkaa
+\item[(2)] vaakajana päättyy
+\item[(3)] pystyjana
+\end{enumerate}
+
+Esimerkkitilannetta vastaava pistejoukko on seuraava:
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+\path[draw,dashed] (0,2) -- (5,2);
+\path[draw,dashed] (1,4) -- (6,4);
+\path[draw,dashed] (6,3) -- (10,3);
+\path[draw,dashed] (2,1) -- (2,6);
+\path[draw,dashed] (8,2) -- (8,5);
+
+\node at (0,2) {$1$};
+\node at (5,2) {$2$};
+\node at (1,4) {$1$};
+\node at (6,4) {$2$};
+\node at (6,3) {$1$};
+\node at (10,3) {$2$};
+
+\node at (2,3.5) {$3$};
+\node at (8,3.5) {$3$};
+\end{tikzpicture}
+\end{center}
+
+Algoritmi käy läpi pisteet vasemmalta oikealle
+ja pitää yllä tietorakennetta y-koordinaateista,
+joissa on tällä hetkellä aktiivinen vaakajana.
+Tapahtuman 1 kohdalla vaakajanan y-koordinaatti
+lisätään joukkoon ja tapahtuman 2 kohdalla
+vaakajanan y-koordinaatti poistetaan joukosta.
+
+Algoritmi laskee janojen leikkauspisteet
+tapahtumien 3 kohdalla.
+Kun pystyjana kulkee y-koordinaattien
+$y_1 \ldots y_2$ välillä,
+algoritmi laskee tietorakenteesta,
+monessako vaakajanassa on y-koordinaatti
+välillä $y_1 \ldots y_2$ ja kasvattaa
+leikkauspisteiden määrää tällä arvolla.
+
+Sopiva tietorakenne vaakajanojen y-koordinaattien
+tallentamiseen on bi\-nää\-ri-indeksipuu tai segmenttipuu,
+johon on tarvittaessa yhdistetty indeksien pakkaus.
+Tällöin jokaisen pisteen käsittely
+vie aikaa $O(\log n)$, joten algoritmin
+kokonaisaikavaativuus on $O(n \log n)$.
+
+\section{Lähin pistepari}
+
+\index{lzhin pistepari@lähin pistepari}
+
+Seuraava tehtävämme on etsiä $n$ pisteen
+joukosta kaksi pistettä, jotka ovat
+mahdollisimman lähellä toisiaan.
+Esimerkiksi tilanteessa
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw (0,0)--(12,0)--(12,4)--(0,4)--(0,0);
+
+\draw (1,2) circle [radius=0.1];
+\draw (3,1) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5.5,1.5) circle [radius=0.1];
+\draw (6,2.5) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (9,1.5) circle [radius=0.1];
+\draw (10,2) circle [radius=0.1];
+\draw (1.5,3.5) circle [radius=0.1];
+\draw (1.5,1) circle [radius=0.1];
+\draw (2.5,3) circle [radius=0.1];
+\draw (4.5,1.5) circle [radius=0.1];
+\draw (5.25,0.5) circle [radius=0.1];
+\draw (6.5,2) circle [radius=0.1];
+\end{tikzpicture}
+\end{center}
+\begin{samepage}
+lähin pistepari on seuraava:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw (0,0)--(12,0)--(12,4)--(0,4)--(0,0);
+
+\draw (1,2) circle [radius=0.1];
+\draw (3,1) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5.5,1.5) circle [radius=0.1];
+\draw[fill] (6,2.5) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (9,1.5) circle [radius=0.1];
+\draw (10,2) circle [radius=0.1];
+\draw (1.5,3.5) circle [radius=0.1];
+\draw (1.5,1) circle [radius=0.1];
+\draw (2.5,3) circle [radius=0.1];
+\draw (4.5,1.5) circle [radius=0.1];
+\draw (5.25,0.5) circle [radius=0.1];
+\draw[fill] (6.5,2) circle [radius=0.1];
+\end{tikzpicture}
+\end{center}
+\end{samepage}
+
+Tämäkin tehtävä ratkeaa
+$O(n \log n)$-ajassa pyyhkäisyviivan avulla.
+Algoritmi käy pisteet läpi vasemmalta oikealle
+ja pitää yllä arvoa $d$,
+joka on pienin kahden
+pisteen etäisyys.
+Kunkin pisteen kohdalla algoritmi
+etsii lähimmän toisen pisteen vasemmalta.
+Jos etäisyys tähän pisteeseen on alle $d$,
+tämä on uusi pienin kahden pisteen etäisyys
+ja algoritmi päivittää $d$:n arvon.
+
+Jos käsiteltävä piste on $(x,y)$
+ja jokin vasemmalla oleva piste on
+alle $d$:n etäisyydellä,
+sen x-koordinaatin
+tulee olla välillä $[x-d,x]$
+ja y-koordinaatin tulee olla välillä $[y-d,y+d]$.
+Algoritmin riittää siis tarkistaa
+ainoastaan pisteet, jotka osuvat tälle välille,
+mikä tehostaa hakua merkittävästi.
+
+Esimerkiksi seuraavassa kuvassa
+katkoviiva-alue sisältää pisteet,
+jotka voivat olla alle $d$:n etäisyydellä
+tummennetusta pisteestä.
+\\
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw (0,0)--(12,0)--(12,4)--(0,4)--(0,0);
+
+\draw (1,2) circle [radius=0.1];
+\draw (3,1) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5.5,1.5) circle [radius=0.1];
+\draw (6,2.5) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (9,1.5) circle [radius=0.1];
+\draw (10,2) circle [radius=0.1];
+\draw (1.5,3.5) circle [radius=0.1];
+\draw (1.5,1) circle [radius=0.1];
+\draw (2.5,3) circle [radius=0.1];
+\draw (4.5,1.5) circle [radius=0.1];
+\draw (5.25,0.5) circle [radius=0.1];
+\draw[fill] (6.5,2) circle [radius=0.1];
+
+\draw[dashed] (6.5,0.75)--(6.5,3.25);
+\draw[dashed] (5.25,0.75)--(5.25,3.25);
+\draw[dashed] (5.25,0.75)--(6.5,0.75);
+\draw[dashed] (5.25,3.25)--(6.5,3.25);
+
+\draw [decoration={brace}, decorate, line width=0.3mm] (5.25,3.5) -- (6.5,3.5);
+\node at (5.875,4) {$d$};
+\draw [decoration={brace}, decorate, line width=0.3mm] (6.75,3.25) -- (6.75,2);
+\node at (7.25,2.625) {$d$};
+\end{tikzpicture}
+\end{center}
+
+Algoritmin tehokkuus perustuu siihen,
+että $d$:n rajoittamalla alueella
+on aina vain $O(1)$ pistettä.
+Nämä pisteet pystyy käymään läpi
+$O(\log n)$-aikaisesti
+pitämällä algoritmin aikana yllä joukkoa pisteistä,
+joiden x-koordinaatti on välillä $[x-d,x]$
+ja jotka on järjestetty y-koordinaatin mukaan.
+
+Algoritmin aikavaativuus on $O(n \log n)$,
+koska se käy läpi $n$ pistettä
+ja etsii jokaiselle lähimmän
+edeltävän pisteen ajassa $O(\log n)$.
+
+\section{Konveksi peite}
+
+\key{Konveksi peite}
+on pienin konveksi monikulmio,
+joka ympäröi kaikki pistejoukon pisteet.
+Konveksius tarkoittaa,
+että minkä tahansa kahden kärkipisteen välinen jana
+kulkee monikulmion sisällä.
+Hyvä mielikuva asiasta on,
+että pistejoukko ympäröidään tiukasti
+viritetyllä narulla.
+
+\begin{samepage}
+Esimerkiksi pistejoukon
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+\end{tikzpicture}
+\end{center}
+\end{samepage}
+konveksi peite on seuraava:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw (0,0)--(4,-1)--(7,1)--(6,3)--(2,4)--(0,2)--(0,0);
+
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+\end{tikzpicture}
+\end{center}
+
+\index{Andrew'n algoritmi}
+
+Tehokas ja helposti toteutettava menetelmä
+konveksin peitteen muodostamiseen
+on \key{Andrew'n algoritmi},
+jonka aikavaativuus on $O(n \log n)$.
+Algoritmi muodostaa konveksin peitteen kahdessa
+osassa: ensin peitteen yläosan ja sitten peitteen alaosan.
+Kummankin osan muodostaminen tapahtuu samalla tavalla,
+minkä vuoksi voimme keskittyä yläosan muodostamiseen.
+
+Algoritmi järjestää ensin pisteet ensisijaisesti x-koordinaatin
+ja toissijaisesti y-koordinaatin mukaan.
+Tämän jälkeen se käy pisteet läpi järjestyksessä
+ja lisää aina uuden pisteen osaksi peitettä.
+Aina pisteen lisäämisen jälkeen algoritmi tarkastaa
+ristitulon avulla,
+muodostavatko kolme viimeistä pistettä peitteessä
+vasemmalle kääntyvän osan.
+Jos näin on,
+algoritmi poistaa näistä keskimmäisen pisteen.
+Tämän jälkeen algoritmi tarkastaa uudestaan
+kolme viimeistä pistettä ja poistaa taas tarvittaessa
+keskimmäisen pisteen.
+Sama jatkuu, kunnes kolme viimeistä pistettä
+eivät muodosta vasemmalle kääntyvää osaa.
+
+Seuraava kuvasarja esittää Andrew'n algoritmin toimintaa:
+\\
+\begin{tabular}{ccccccc}
+\\
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(1,1);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(1,1)--(2,2);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,2);
+\end{tikzpicture}
+\\
+1 & & 2 & & 3 & & 4 \\
+\end{tabular}
+\\
+\begin{tabular}{ccccccc}
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,2)--(2,4);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(3,2);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(3,2)--(4,-1);
+\end{tikzpicture}
+\\
+5 & & 6 & & 7 & & 8 \\
+\end{tabular}
+\\
+\begin{tabular}{ccccccc}
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(3,2)--(4,-1)--(4,0);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(3,2)--(4,0);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(3,2)--(4,0)--(4,3);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(3,2)--(4,3);
+\end{tikzpicture}
+\\
+9 & & 10 & & 11 & & 12 \\
+\end{tabular}
+\\
+\begin{tabular}{ccccccc}
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(4,3);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(4,3)--(5,2);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(4,3)--(5,2)--(6,1);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(4,3)--(5,2)--(6,1)--(6,3);
+\end{tikzpicture}
+\\
+13 & & 14 & & 15 & & 16 \\
+\end{tabular}
+\\
+\begin{tabular}{ccccccc}
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(4,3)--(5,2)--(6,3);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(4,3)--(6,3);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(6,3);
+\end{tikzpicture}
+& \hspace{0.1cm} &
+\begin{tikzpicture}[scale=0.3]
+\draw (-1,-2)--(8,-2)--(8,5)--(-1,5)--(-1,-2);
+\draw (0,0) circle [radius=0.1];
+\draw (4,-1) circle [radius=0.1];
+\draw (7,1) circle [radius=0.1];
+\draw (6,3) circle [radius=0.1];
+\draw (2,4) circle [radius=0.1];
+\draw (0,2) circle [radius=0.1];
+
+\draw (1,1) circle [radius=0.1];
+\draw (2,2) circle [radius=0.1];
+\draw (3,2) circle [radius=0.1];
+\draw (4,0) circle [radius=0.1];
+\draw (4,3) circle [radius=0.1];
+\draw (5,2) circle [radius=0.1];
+\draw (6,1) circle [radius=0.1];
+
+\draw (0,0)--(0,2)--(2,4)--(6,3)--(7,1);
+\end{tikzpicture}
+\\
+17 & & 18 & & 19 & & 20
+\end{tabular}
+
+
+
+

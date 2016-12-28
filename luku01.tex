@@ -1,0 +1,835 @@
+\chapter{Introduction}
+
+Competitive programming combines two topics:
+(1) design of algorithms and (2) implementation of algorithms.
+
+The \key{design of algorithms} consists of problem solving
+and mathematical thinking.
+Skills for analyzing problems and solving them
+using creativity is needed.
+An algorithm for solving a problem
+has to be both correct and efficient,
+and the core of the problem is often
+how to invent an efficient algorithm.
+
+Theoretical knowledge of algorithms
+is very important to competitive programmers.
+Typically, a solution for a problem is
+a combination of well-known techniques and
+new insights.
+The techniques that appear in competitive programming
+also form the basis for the scientific research
+of algorithms.
+
+The \key{implementation of algorithms} requires good
+programming skills.
+In competitive programming, the solutions
+are graded by testing an implemented algorithm
+using a set of test cases.
+Thus, it is not enough that the idea of the
+algorithm is correct, but the implementation has
+to be correct as well.
+
+Good coding style in contests is
+straightforward and concise.
+The solutions should be written quickly,
+because there is not much time available.
+Unlike in traditional software engineering,
+the solutions are short (usually at most some
+hundreds of lines) and it is not needed to 
+maintain them after the contest.
+
+\section{Programming languages}
+
+\index{programming language}
+
+At the moment, the most popular programming
+languages in contests are C++, Python and Java.
+For example, in Google Code Jam 2016,
+among the best 3,000 participants,
+73 \% used C++,
+15 \% used Python and
+10 \% used Java\footnote{\url{https://www.go-hero.net/jam/16}}.
+Some participants also used several languages.
+
+Many people think that C++ is the best choice
+for a competitive programmer,
+and C++ is nearly always available in
+contest systems.
+The benefits in using C++ are that
+it is a very efficient language and
+its standard library contains a 
+large collection
+of data structures and algorithms.
+
+On the other hand, it is good to
+master several languages and know the
+benefits of them.
+For example, if big integers are needed
+in the problem,
+Python can be a good choice because it
+contains a built-in library for handling
+big integers.
+Still, usually the goal is to write the problems so that
+the use of a specific programming language
+is not an unfair advantage in the contest.
+
+All examples in this book are written in C++,
+and the data structures and algorithms in
+the standard library are often used.
+The standard is C++11 that can be used in most
+contests.
+If you can't program in C++ yet,
+now it is a good time to start learning.
+
+\subsubsection{C++ template}
+
+A typical C++ template for competitive programming
+looks like this:
+
+\begin{lstlisting}
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    // koodi tulee tähän
+}
+\end{lstlisting}
+
+The \texttt{\#include} line at the beginning
+is a feature in the \texttt{g++} compiler
+that allows to include the whole standard library.
+Thus, it is not needed to separately include
+libraries such as \texttt{iostream},
+\texttt{vector} and \texttt{algorithm},
+but they are available automatically.
+
+The following \texttt{using} line determines
+that the standard library can be used directly
+in the code.
+Without the \texttt{using} line we should write,
+for example, \texttt{std::cout},
+but now it is enough to write \texttt{cout}.
+
+The code can be compiled using the following command:
+
+\begin{lstlisting}
+g++ -std=c++11 -O2 -Wall code.cpp -o code
+\end{lstlisting}
+
+This command produces a binary file \texttt{code}
+from the source code \texttt{code.cpp}.
+The compiler obeys the C++11 standard
+(\texttt{-std=c++11}),
+optimizes the code (\texttt{-O2})
+and shows warnings about possible errors (\texttt{-Wall}).
+
+\section{Input and output}
+
+\index{input and output}
+
+In most contests, standard streams are used for
+reading input and writing output.
+In C++, the standard streams are
+\texttt{cin} for input and \texttt{cout} for output.
+In addition, the C functions
+\texttt{scanf} and \texttt{printf} can be used.
+
+The input for the program usually consists of
+numbers and strings that are separated with
+spaces and newlines.
+They can be read from the \texttt{cin} stream
+as follows:
+
+\begin{lstlisting}
+int a, b;
+string x;
+cin >> a >> b >> x;
+\end{lstlisting}
+
+This kind of code always works,
+assuming that there is at least one space
+or one newline between each element in the input.
+For example, the above code accepts
+both the following inputs:
+\begin{lstlisting}
+123 456 apina
+\end{lstlisting}
+\begin{lstlisting}
+123    456
+apina
+\end{lstlisting}
+The \texttt{cout} stream is used for output
+as follows:
+\begin{lstlisting}
+int a = 123, b = 456;
+string x = "apina";
+cout << a << " " << b << " " << x << "\n";
+\end{lstlisting}
+
+Handling input and output is sometimes
+a bottleneck in the program.
+The following lines at the beginning of the code
+make input and output more efficient:
+
+\begin{lstlisting}
+ios_base::sync_with_stdio(0);
+cin.tie(0);
+\end{lstlisting}
+
+Note that the newline \texttt{"\textbackslash n"}
+works faster than \texttt{endl},
+becauses \texttt{endl} always causes
+a flush operation.
+
+The C functions \texttt{scanf}
+and \texttt{printf} are an alternative
+to the C++ standard streams.
+They are usually a bit faster,
+but they are also more difficult to use.
+The following code reads two integers from the input:
+\begin{lstlisting}
+int a, b;
+scanf("%d %d", &a, &b);
+\end{lstlisting}
+The following code prints two integers:
+\begin{lstlisting}
+int a = 123, b = 456;
+printf("%d %d\n", a, b);
+\end{lstlisting}
+
+Sometimes the program should read a whole line
+from the input, possibly with spaces.
+This can be accomplished using the
+\texttt{getline} function:
+
+\begin{lstlisting}
+string s;
+getline(cin, s);
+\end{lstlisting}
+
+If the amount of data is unknown, the following
+loop can be handy:
+\begin{lstlisting}
+while (cin >> x) {
+    // koodia
+}
+\end{lstlisting}
+This loop reads elements from the input
+one after another, until there is no
+more data available in the input.
+
+In some contest systems, files are used for
+input and output.
+An easy solution for this is to write
+the code as usual using standard streams,
+but add the following lines to the beginning of the code:
+\begin{lstlisting}
+freopen("input.txt", "r", stdin);
+freopen("output.txt", "w", stdout);
+\end{lstlisting}
+After this, the code reads the input from the file
+''input.txt'' and writes the output to the file
+''output.txt''.
+
+\section{Handling numbers}
+
+\index{integer}
+
+\subsubsection{Integers}
+
+The most popular integer type in competitive programming
+is \texttt{int}. This is a 32-bit type with
+value range $-2^{31} \ldots 2^{31}-1$,
+i.e., about $-2 \cdot 10^9 \ldots 2 \cdot 10^9$.
+If the type \texttt{int} is not enough,
+the 64-bit type \texttt{long long} can be used,
+with value range $-2^{63} \ldots 2^{63}-1$,
+i.e., about $-9 \cdot 10^{18} \ldots 9 \cdot 10^{18}$.
+
+The following code defines a
+\texttt{long long} variable:
+\begin{lstlisting}
+long long x = 123456789123456789LL;
+\end{lstlisting}
+The suffix \texttt{LL} means that the
+type of the number is \texttt{long long}.
+
+A typical error when using the type \texttt{long long}
+is that the type \texttt{int} is still used somewhere
+in the code.
+For example, the following code contains
+a subtle error:
+
+\begin{lstlisting}
+int a = 123456789;
+long long b = a*a;
+cout << b << "\n"; // -1757895751
+\end{lstlisting}
+
+Even though the variable \texttt{b} is of type \texttt{long long},
+both numbers in the expression \texttt{a*a}
+are of type \texttt{int} and the result is
+also of type \texttt{int}.
+Because of this, the variable \texttt{b} will
+contain a wrong result.
+The problem can be solved by changing the type
+of \texttt{a} to \texttt{long long} or
+by changing the expression to \texttt{(long long)a*a}.
+
+Usually, the problems are written so that the
+type \texttt{long long} is enough.
+Still, it is good to know that
+the \texttt{g++} compiler also features
+an 128-bit type \texttt{\_\_int128\_t}
+with value range
+$-2^{127} \ldots 2^{127}-1$, i.e., $-10^{38} \ldots 10^{38}$.
+However, this type is not available in all contest systems.
+
+\subsubsection{Modular arithmetic}
+
+\index{remainder}
+\index{modular arithmetic}
+
+We denote by $x \bmod m$ the remainder
+when $x$ is divided by $m$.
+For example, $17 \bmod 5 = 2$,
+because $17 = 3 \cdot 5 + 2$.
+
+Sometimes, the answer for a problem is a
+very big integer but it is enough to
+print it ''modulo $m$'', i.e.,
+the remainder when the answer is divided by $m$
+(for example, ''modulo $10^9+7$'').
+The idea is that even if the actual answer
+may be very big,
+it is enough to use the types
+\texttt{int} and \texttt{long long}.
+
+An important property of the remainder is that
+in addition, subtraction and multiplication,
+the remainder can be calculated before the operation:
+
+\[
+\begin{array}{rcr}
+(a+b) \bmod m & = & (a \bmod m + b \bmod m) \bmod m \\
+(a-b) \bmod m & = & (a \bmod m - b \bmod m) \bmod m \\
+(a \cdot b) \bmod m & = & (a \bmod m \cdot b \bmod m) \bmod m
+\end{array}
+\]
+
+Thus, we can calculate the remainder after every operation
+and the numbers will never become too large.
+
+For example, the following code calculates $n!$,
+the factorial of $n$, modulo $m$:
+\begin{lstlisting}
+long long x = 1;
+for (int i = 2; i <= n i++) {
+    x = (x*i)%m;
+}
+cout << x << "\n";
+\end{lstlisting}
+
+Usually, the answer should be always given so
+that the remainder is between $0\ldots m-1$.
+However, in C++ and other languages,
+the remainder of a negative number can
+be negative.
+An easy way to make sure that this will
+not happen is to first calculate
+the remainder as usual and then add $m$
+if the result is negative:
+\begin{lstlisting}
+x = x%m;
+if (x < 0) x += m;
+\end{lstlisting}
+However, this is only needed when there
+are subtractions in the code and the
+remainder may become negative.
+
+\subsubsection{Floating point numbers}
+
+\index{floating point number}
+
+The usual floating point types in
+competitive programming are
+the 64-bit \texttt{double}
+and, as an extension in the \texttt{g++} compiler,
+the 80-bit \texttt{long double}.
+In most cases, \texttt{double} is enough,
+but \texttt{long double} is more accurate.
+
+The required precision of the answer
+is usually given.
+The easiest way is to use
+the \texttt{printf} function
+that can be given the number of decimal places.
+For example, the following code prints
+the value of $x$ with 9 decimal places:
+
+\begin{lstlisting}
+printf("%.9f\n", x);
+\end{lstlisting}
+
+A difficulty when using floating point numbers
+is that some numbers cannot be represented
+accurately, but there will be rounding errors.
+For example, the result of the following code
+is surprising:
+
+\begin{lstlisting}
+double x = 0.3*3+0.1;
+printf("%.20f\n", x); // 0.99999999999999988898
+\end{lstlisting}
+
+Because of a rounding error,
+the value of \texttt{x} is a bit less than 1,
+while the correct value would be 1.
+
+It is risky to compare floating point numbers
+with the \texttt{==} operator,
+because it is possible that the values should
+be equal but they are not due to rounding errors.
+A better way to compare floating point numbers
+is to assume that two numbers are equal
+if the difference between them is $\varepsilon$,
+where $\varepsilon$ is a small number.
+
+In practice, the numbers can be compared
+as follows ($\varepsilon=10^{-9}$):
+
+\begin{lstlisting}
+if (abs(a-b) < 1e-9) {
+    // a ja b ovat yhtä suuret
+}
+\end{lstlisting}
+
+Note that while floating point numbers are inaccurate,
+integers up to a certain limit can be still
+represented accurately.
+For example, using \texttt{double},
+it is possible to accurately represent all
+integers having absolute value at most $2^{53}$.
+
+\section{Koodin lyhentäminen}
+
+Kisakoodauksessa ihanteena on lyhyt koodi,
+koska algoritmi täytyy pystyä toteuttamaan
+mahdollisimman nopeasti.
+Monet kisakoodarit käyttävätkin lyhennysmerkintöjä
+tietotyypeille ja muille koodin osille.
+
+\subsubsection{Tyyppinimet}
+\index{tuppdef@\texttt{typedef}}
+Komennolla \texttt{typedef} voi antaa lyhyemmän
+nimen tietotyypille.
+Esimerkiksi nimi \texttt{long long} on pitkä,
+joten tyypille voi antaa lyhyemmän nimen \texttt{ll}:
+\begin{lstlisting}
+typedef long long ll;
+\end{lstlisting}
+Tämän jälkeen koodin
+\begin{lstlisting}
+long long a = 123456789;
+long long b = 987654321;
+cout << a*b << "\n";
+\end{lstlisting}
+voi lyhentää seuraavasti:
+\begin{lstlisting}
+ll a = 123456789;
+ll b = 987654321;
+cout << a*b << "\n";
+\end{lstlisting}
+
+Komentoa \texttt{typedef} voi käyttää myös
+monimutkaisempien tyyppien kanssa.
+Esimerkiksi seuraava koodi antaa nimen \texttt{vi}
+kokonaisluvuista muodostuvalle vektorille
+sekä nimen \texttt{pi} kaksi
+kokonaislukua sisältävälle parille.
+\begin{lstlisting}
+typedef vector<int> vi;
+typedef pair<int,int> pi;
+\end{lstlisting}
+
+\subsubsection{Makrot}
+\index{makro}
+Toinen tapa lyhentää koodia on määritellä \key{makroja}.
+Makro ilmaisee, että tietyt koodissa olevat
+merkkijonot korvataan toisilla ennen koodin
+kääntämistä.
+C++:ssa makro määritellään
+esikääntäjän komennolla \texttt{\#define}.
+
+Määritellään esimerkiksi seuraavat makrot:
+\begin{lstlisting}
+#define F first
+#define S second
+#define PB push_back
+#define MP make_pair
+\end{lstlisting}
+Tämän jälkeen koodin
+\begin{lstlisting}
+v.push_back(make_pair(y1,x1));
+v.push_back(make_pair(y2,x2));
+int d = v[i].first+v[i].second;
+\end{lstlisting}
+voi kirjoittaa lyhyemmin seuraavasti:
+\begin{lstlisting}
+v.PB(MP(y1,x1));
+v.PB(MP(y2,x2));
+int d = v[i].F+v[i].S;
+\end{lstlisting}
+
+Makro on mahdollista määritellä myös niin,
+että sille voi antaa parametreja.
+Tämän ansiosta makrolla voi lyhentää esimerkiksi
+komentorakenteita.
+Määritellään esimerkiksi seuraava makro:
+\begin{lstlisting}
+#define REP(i,a,b) for (int i = a; i <= b; i++)
+\end{lstlisting}
+Tämän jälkeen koodin
+\begin{lstlisting}
+for (int i = 1; i <= n; i++) {
+    haku(i);
+}
+\end{lstlisting}
+voi lyhentää seuraavasti:
+\begin{lstlisting}
+REP(i,1,n) {
+    haku(i);
+}
+\end{lstlisting}
+
+\section{Matematiikka}
+
+Matematiikka on tärkeässä asemassa kisakoodauksessa,
+ja menestyvän kisakoodarin täytyy osata myös
+hyvin matematiikkaa.
+Käymme seuraavaksi läpi joukon keskeisiä
+matematiikan käsitteitä ja kaavoja.
+Palaamme moniin aiheisiin myöhemmin tarkemmin kirjan aikana.
+
+\subsubsection{Summakaavat}
+
+Jokaiselle summalle muotoa
+\[\sum_{x=1}^n x^k = 1^k+2^k+3^k+\ldots+n^k\]
+on olemassa laskukaava,
+kun $k$ on jokin positiivinen kokonaisluku.
+Tällainen laskukaava on aina astetta $k+1$
+oleva polynomi. Esimerkiksi
+\[\sum_{x=1}^n x = 1+2+3+\ldots+n = \frac{n(n+1)}{2}\]
+ja
+\[\sum_{x=1}^n x^2 = 1^2+2^2+3^2+\ldots+n^2 = \frac{n(n+1)(2n+1)}{6}.\]
+
+\key{Aritmeettinen summa} on summa, \index{aritmeettinen summa@aritmeettinen summa}
+jossa jokaisen vierekkäisen luvun erotus on vakio.
+Esimerkiksi
+\[3+7+11+15\]
+on aritmeettinen summa,
+jossa vakio on 4.
+Aritmeettinen summa voidaan laskea kaavalla
+\[\frac{n(a+b)}{2},\]
+jossa summan ensimmäinen luku on $a$,
+viimeinen luku on $b$ ja lukujen määrä on $n$.
+Esimerkiksi
+\[3+7+11+15=\frac{4 \cdot (3+15)}{2} = 36.\]
+Kaava perustuu siihen, että summa muodostuu $n$ luvusta
+ja luvun suuruus on keskimäärin $(a+b)/2$.
+
+\index{geometrinen summa@geometrinen summa}
+\key{Geometrinen summa} on summa,
+jossa jokaisen vierekkäisen luvun suhde on vakio.
+Esimerkiksi
+\[3+6+12+24\]
+on geometrinen summa,
+jossa vakio on 2.
+Geometrinen summa voidaan laskea kaavalla
+\[\frac{bx-a}{x-1},\]
+jossa summan ensimmäinen luku on $a$,
+viimeinen luku on $b$ ja vierekkäisten lukujen suhde on $x$.
+Esimerkiksi
+\[3+6+12+24=\frac{24 \cdot 2 - 3}{2-1} = 45.\]
+
+Geometrisen summan kaavan voi johtaa merkitsemällä
+\[ S = a + ax + ax^2 + \cdots + b .\] 
+Kertomalla molemmat puolet $x$:llä saadaan
+\[ xS = ax + ax^2 + ax^3 + \cdots + bx,\]
+josta kaava seuraa ratkaisemalla yhtälön
+\[ xS-S = bx-a.\]
+
+Geometrisen summan erikoistapaus on usein kätevä kaava
+\[1+2+4+8+\ldots+2^{n-1}=2^n-1.\]
+
+% Geometrisen summan sukulainen on
+% \[x+2x^2+3x^3+\cdots+k x^k = \frac{kx^{k+2}-(k+1)x^{k+1}+x}{(x-1)^2}. \]
+
+\index{harmoninen summa@harmoninen summa}
+
+\key{Harmoninen summa} on summa muotoa
+\[ \sum_{x=1}^n \frac{1}{x} = 1+\frac{1}{2}+\frac{1}{3}+\ldots+\frac{1}{n}.\]
+
+Yläraja harmonisen summan suuruudelle on $\log_2(n)+1$.
+Summaa voi näet arvioida ylöspäin
+muuttamalla jokaista termiä $1/k$ niin,
+että $k$:ksi tulee alempi 2:n potenssi.
+Esimerkiksi tapauksessa $n=6$ arvioksi tulee
+\[ 1+\frac{1}{2}+\frac{1}{3}+\frac{1}{4}+\frac{1}{5}+\frac{1}{6} \le
+1+\frac{1}{2}+\frac{1}{2}+\frac{1}{4}+\frac{1}{4}+\frac{1}{4}.\]
+Tämän seurauksena summa jakaantuu $\log_2(n)+1$ osaan
+($1$, $2 \cdot 1/2$, $4 \cdot 1/4$, jne.),
+joista jokaisen summa on enintään 1.
+
+\subsubsection{Joukko-oppi}
+
+\index{joukko-oppi}
+\index{joukko@joukko}
+\index{leikkaus@leikkaus}
+\index{yhdiste@yhdiste}
+\index{erotus@erotus}
+\index{osajoukko@osajoukko}
+\index{perusjoukko}
+
+\key{Joukko} on kokoelma alkioita.
+Esimerkiksi joukko
+\[X=\{2,4,7\}\]
+sisältää alkiot 2, 4 ja 7.
+Merkintä $\emptyset$ tarkoittaa tyhjää joukkoa.
+Joukon $S$ koko eli alkoiden määrä on $|S|$.
+Esimerkiksi äskeisessä joukossa $|X|=3$.
+
+Merkintä $x \in S$ tarkoittaa,
+että alkio $x$ on joukossa $S$,
+ja merkintä $x \notin S$ tarkoittaa,
+että alkio $x$ ei ole joukossa $S$.
+Esimerkiksi äskeisessä joukossa
+\[4 \in X \hspace{10px}\textrm{ja}\hspace{10px} 5 \notin X.\]
+
+\begin{samepage}
+Uusia joukkoja voidaan muodostaa joukko-operaatioilla
+seuraavasti:
+\begin{itemize}
+\item \key{Leikkaus} $A \cap B$ sisältää alkiot,
+jotka ovat molemmissa joukoista $A$ ja $B$.
+Esimerkiksi jos $A=\{1,2,5\}$ ja $B=\{2,4\}$,
+niin $A \cap B = \{2\}$.
+\item \key{Yhdiste} $A \cup B$ sisältää alkiot,
+jotka ovat ainakin toisessa joukoista $A$ ja $B$.
+Esimerkiksi jos $A=\{3,7\}$ ja $B=\{2,3,8\}$,
+niin $A \cup B = \{2,3,7,8\}$.
+\item \key{Komplementti} $\bar A$ sisältää alkiot,
+jotka eivät ole joukossa $A$.
+Komplementin tulkinta riippuu siitä, mikä on
+\key{perusjoukko} eli joukko, jossa on kaikki
+mahdolliset alkiot. Esimerkiksi jos
+$A=\{1,2,5,7\}$ ja perusjoukko on $P=\{1,2,\ldots,10\}$,
+niin $\bar A = \{3,4,6,8,9,10\}$.
+\item \key{Erotus} $A \setminus B = A \cap \bar B$ sisältää alkiot,
+jotka ovat joukossa $A$ mutta eivät joukossa $B$.
+Huomaa, että $B$:ssä voi olla alkioita,
+joita ei ole $A$:ssa.
+Esimerkiksi jos $A=\{2,3,7,8\}$ ja $B=\{3,5,8\}$,
+niin $A \setminus B = \{2,7\}$.
+\end{itemize}
+\end{samepage}
+
+
+Merkintä $A \subset S$ tarkoittaa,
+että $A$ on $S$:n \key{osajoukko}
+eli jokainen $A$:n alkio esiintyy $S$:ssä.
+Joukon $S$ osajoukkojen yhteismäärä on $2^{|S|}$.
+Esimerkiksi joukon $\{2,4,7\}$
+osajoukot ovat
+\begin{center}
+$\emptyset$,
+$\{2\}$, $\{4\}$, $\{7\}$, $\{2,4\}$, $\{2,7\}$, $\{4,7\}$ ja $\{2,4,7\}$.
+\end{center}
+
+Usein esiintyviä joukkoja ovat
+
+\begin{itemize}[noitemsep]
+\item $\mathbb{N}$ (luonnolliset luvut),
+\item $\mathbb{Z}$ (kokonaisluvut),
+\item $\mathbb{Q}$ (rationaaliluvut) ja
+\item $\mathbb{R}$ (reaaliluvut).
+\end{itemize}
+
+Luonnollisten lukujen joukko $\mathbb{N}$ voidaan määritellä
+tilanteesta riippuen kahdella tavalla:
+joko $\mathbb{N}=\{0,1,2,\ldots\}$
+tai $\mathbb{N}=\{1,2,3,...\}$.
+
+Joukon voi muodostaa myös säännöllä muotoa
+\[\{f(n) : n \in S\},\]
+missä $f(n)$ on jokin funktio.
+Tällainen joukko sisältää kaikki alkiot
+$f(n)$, jossa $n$ on valittu joukosta $S$.
+Esimerkiksi joukko
+\[X=\{2n : n \in \mathbb{Z}\}\]
+sisältää kaikki parilliset kokonaisluvut.
+
+\subsubsection{Logiikka}
+
+\index{logiikka@logiikka}
+\index{negaatio@negaatio}
+\index{konjunktio@konjunktio}
+\index{disjunktio@disjunktio}
+\index{implikaatio@implikaatio}
+\index{ekvivalenssi@ekvivalenssi}
+
+Loogisen lausekkeen arvo on joko \key{tosi} (1) tai
+\key{epätosi} (0).
+Tärkeimmät loogiset operaatiot ovat
+$\lnot$ (\key{negaatio}),
+$\land$ (\key{konjunktio}),
+$\lor$ (\key{disjunktio}),
+$\Rightarrow$ (\key{implikaatio}) sekä
+$\Leftrightarrow$ (\key{ekvivalenssi}).
+Seuraava taulukko näyttää operaatioiden merkityksen:
+
+\begin{center}
+\begin{tabular}{rr|rrrrrrr}
+$A$ & $B$ & $\lnot A$ & $\lnot B$ & $A \land B$ & $A \lor B$ & $A \Rightarrow B$ & $A \Leftrightarrow B$ \\
+\hline
+0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
+0 & 1 & 1 & 0 & 0 & 1 & 1 & 0 \\
+1 & 0 & 0 & 1 & 0 & 1 & 0 & 0 \\
+1 & 1 & 0 & 0 & 1 & 1 & 1 & 1 \\
+\end{tabular}
+\end{center}
+
+Negaatio $\lnot A$ muuttaa lausekkeen käänteiseksi.
+Lauseke $A \land B$ on tosi, jos molemmat $A$ ja $B$ ovat tosia,
+ja lauseke $A \lor B$ on tosi, jos $A$ tai $B$ on tosi.
+Lauseke $A \Rightarrow B$ on tosi,
+jos $A$:n ollessa tosi myös $B$ on aina tosi.
+Lauseke $A \Leftrightarrow B$ on tosi,
+jos $A$:n ja $B$:n totuusarvo on sama.
+
+\index{predikaatti@predikaatti}
+
+\key{Predikaatti} on lauseke, jonka arvo on tosi tai epätosi
+riippuen sen parametreista.
+Yleensä predikaattia merkitään suurella kirjaimella.
+Esimerkiksi voimme määritellä predikaatin $P(x)$,
+joka on tosi tarkalleen silloin, kun $x$ on alkuluku.
+Tällöin esimerkiksi $P(7)$ on tosi, kun taas $P(8)$ on epätosi.
+
+\index{kvanttori@kvanttori}
+
+\key{Kvanttori} ilmaisee, että looginen
+lauseke liittyy jollakin tavalla joukon alkioihin.
+Tavalliset kvanttorit
+ovat $\forall$ (\key{kaikille}) ja $\exists$ (\key{on olemassa}).
+Esimerkiksi
+\[\forall x (\exists y (y < x))\]
+tarkoittaa, että jokaiselle joukon
+alkiolle $x$ on olemassa
+jokin joukon alkio $y$ niin, että $y$ on $x$:ää pienempi.
+Tämä pätee kokonaislukujen joukossa,
+mutta ei päde luonnollisten lukujen joukossa.
+
+Yllä esitettyjen merkintöjä avulla on mahdollista esittää
+monenlaisia loogisia väitteitä.
+Esimerkiksi
+\[\forall x ((x>2 \land \lnot P(x)) \Rightarrow (\exists a (\exists b (x = ab \land a > 1 \land b > 1))))\]
+tarkoittaa, että jos luku $x$ on suurempi
+kuin 2 eikä ole alkuluku,
+niin on olemassa luvut $a$ ja $b$,
+joiden tulo on $x$ ja jotka molemmat ovat suurempia kuin 1.
+Tämä väite pitää paikkansa kokonaislukujen joukossa.
+
+\subsubsection{Funktioita}
+
+Funktio $\lfloor x \rfloor$ pyöristää luvun $x$
+alaspäin kokonaisluvuksi ja
+funktio $\lceil x \rceil$ pyöristää luvun $x$
+ylöspäin kokonaisluvuksi. Esimerkiksi
+\[ \lfloor 3/2 \rfloor = 1 \hspace{10px} \textrm{ja} \hspace{10px} \lceil 3/2 \rceil = 2.\]
+
+Funktiot $\min(x_1,x_2,\ldots,x_n)$
+ja $\max(x_1,x_2,\ldots,x_n)$
+palauttavat pienimmän ja suurimman
+arvoista $x_1,x_2,\ldots,x_n$.
+Esimerkiksi
+\[ \min(1,2,3)=1 \hspace{10px} \textrm{ja} \hspace{10px} \max(1,2,3)=3.\]
+
+\index{kertoma@kertoma}
+
+\key{Kertoma} $n!$ määritellään
+\[\prod_{x=1}^n x = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n\]
+tai vaihtoehtoisesti rekursiivisesti
+\[
+\begin{array}{lcl}
+0! & = & 1 \\
+n! & = & n \cdot (n-1)! \\
+\end{array}
+\]
+
+\index{Fibonaccin luku@Fibonaccin luku}
+
+\key{Fibonaccin luvut} esiintyvät monissa erilaisissa yhteyksissä.
+Ne määritellään seuraavasti rekursiivisesti:
+\[
+\begin{array}{lcl}
+f(0) & = & 0 \\
+f(1) & = & 1 \\
+f(n) & = & f(n-1)+f(n-2) \\
+\end{array}
+\]
+Ensimmäiset Fibonaccin luvut ovat
+\[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, \ldots\]
+Fibonaccin lukujen laskemiseen on olemassa myös
+suljetun muodon kaava
+\[f(n)=\frac{(1 + \sqrt{5})^n - (1-\sqrt{5})^n}{2^n \sqrt{5}}.\]
+
+\subsubsection{Logaritmi}
+
+\index{logaritmi@logaritmi}
+
+Luvun $x$
+\key{logaritmi} merkitään $\log_k(x)$, missä $k$ on logaritmin kantaluku.
+Logaritmin määritelmän mukaan
+$\log_k(x)=a$ tarkalleen silloin, kun $k^a=x$.
+
+Algoritmiikassa hyödyllinen tulkinta on,
+että logaritmi $\log_k(x)$ ilmaisee, montako kertaa lukua $x$
+täytyy jakaa $k$:lla, ennen kuin tulos on 1.
+Esimerkiksi $\log_2(32)=5$,
+koska lukua 32 täytyy jakaa 2:lla 5 kertaa:
+
+\[32 \rightarrow 16 \rightarrow 8 \rightarrow 4 \rightarrow 2 \rightarrow 1 \]
+
+Logaritmi tulee usein vastaan algoritmien analyysissa,
+koska monessa tehokkaassa algoritmissa jokin asia puolittuu
+joka askeleella.
+Niinpä logaritmin avulla voi arvioida algoritmin tehokkuutta.
+
+Logaritmille pätee kaava
+\[\log_k(ab) = \log_k(a)+\log_k(b),\]
+josta seuraa edelleen
+\[\log_k(x^n) = n \cdot \log_k(x).\]
+Samoin logaritmille pätee
+\[\log_k\Big(\frac{a}{b}\Big) = \log_k(a)-\log_k(b).\]
+Lisäksi on voimassa kaava
+\[\log_u(x) = \frac{\log_k(x)}{\log_k(u)},\]
+minkä ansiosta logaritmeja voi laskea mille tahansa kantaluvulle,
+jos on keino laskea logaritmeja jollekin kantaluvulle.
+
+\index{luonnollinen logaritmi@luonnollinen logaritmi}
+\index{Neperin luku@Neperin luku}
+
+Luvun $x$ \key{luonnollinen logaritmi} $\ln(x)$ on logaritmi, jonka kantaluku on
+\key{Neperin luku} $e \approx 2{,}71828$.
+
+Vielä yksi logaritmin ominaisuus on, että
+luvun $x$ numeroiden määrä $b$-kantaisessa
+lukujärjestelmässä
+on $\lfloor \log_b(x)+1 \rfloor$.
+Esimerkiksi luvun $123$ esitys
+2-järjestelmässä on 1111011 ja
+$\lfloor \log_2(123)+1 \rfloor = 7$.
+
