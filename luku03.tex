@@ -1,41 +1,42 @@
 \chapter{Sorting}
 
-\index{jxrjestxminen@järjestäminen}
+\index{sorting}
 
-\key{Järjestäminen}
-on keskeinen algoritmiikan ongelma.
-Moni tehokas algoritmi
-perustuu järjestämiseen,
-koska järjestetyn tiedon
-käsittely on helpompaa
-kuin sekalaisessa järjestyksessä olevan.
+\key{Sorting}
+is a fundamental algorithm design problem.
+In addition,
+many efficient algorithms
+use sorting as a subroutine,
+because it is often easier to process
+data if the elements are in a sorted order.
 
-Esimerkiksi kysymys ''onko taulukossa kahta samaa
-alkiota?'' ratkeaa tehokkaasti järjestämisen avulla.
-Jos taulukossa on kaksi samaa alkiota,
-ne ovat järjestämisen jälkeen peräkkäin,
-jolloin niiden löytäminen on helppoa.
-Samaan tapaan ratkeaa myös kysymys
-''mikä on yleisin alkio taulukossa?''.
+For example, the question ''does the array contain
+two equal elements?'' is easy to solve using sorting.
+If the array contains two equal elements,
+they will be next to each other after sorting,
+so it is easy to find them.
+Also the question ''what is the most frequent element
+in the array?'' can be solved similarly.
 
-Järjestämiseen on kehitetty monia
-algoritmeja, jotka tarjoavat hyviä
-esimerkkejä algoritmien suunnittelun tekniikoista.
-Tehokkaat yleiset järjestämis\-algoritmit
-toimivat ajassa $O(n \log n)$, ja tämä aikavaativuus
-on myös monella järjestämistä käyttävällä algoritmilla.
+There are many algorithms for sorting, that are
+also good examples of algorithm design techniques.
+The efficient general sorting algorithms
+work in $O(n \log n)$ time,
+and many algorithms that use sorting
+as a subroutine also
+have this time complexity.
 
-\section{Järjestämisen teoriaa}
+\section{Sorting theory}
 
-Järjestämisen perusongelma on seuraava:
+The basic problem in sorting is as follows:
 \begin{framed}
 \noindent
-Annettuna on taulukko, jossa on $n$ alkiota.
-Tehtäväsi on järjestää alkiot pienimmästä
-suurimpaan.
+Given an array that contains $n$ elements,
+your task is to sort the elements
+in increasing order.
 \end{framed}
 \noindent
-Esimerkiksi taulukko
+For example, the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -59,7 +60,7 @@ Esimerkiksi taulukko
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-on järjestettynä seuraava:
+will be as follows after sorting:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -84,27 +85,26 @@ on järjestettynä seuraava:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{$O(n^2)$-algoritmit}
+\subsubsection{$O(n^2)$ algorithms}
 
-\index{kuplajxrjestxminen@kuplajärjestäminen}
+\index{bubble sort}
 
-Yksinkertaiset algoritmit taulukon
-järjestämiseen vievät aikaa $O(n^2)$.
-Tällaiset algoritmit ovat lyhyitä ja
-muodostuvat tyypillisesti
-kahdesta sisäkkäisestä silmukasta.
-Tunnettu $O(n^2)$-aikainen algoritmi on
-\key{kuplajärjestäminen},
-jossa alkiot ''kuplivat'' eteenpäin taulukossa
-niiden suuruuden perusteella.
+Simple algorithms for sorting an array
+work in $O(n^2)$ time.
+Such algorithms are short and usually
+consist of two nested loops.
+A famous $O(n^2)$ time algorithm for sorting
+is \key{bubble sort} where the elements
+''bubble'' forward in the array according to their values.
 
-Kuplajärjestäminen muodostuu $n-1$ kierroksesta,
-joista jokainen käy taulukon läpi vasemmalta oikealle.
-Aina kun taulukosta löytyy kaksi vierekkäistä
-alkiota, joiden järjestys on väärä, algoritmi
-korjaa niiden järjestyksen.
-Algoritmin voi toteuttaa seuraavasti
-taulukolle
+Bubble sort consists of $n-1$ rounds.
+On each round, the algorithm iterates through
+the elements in the array.
+Whenever two successive elements are found
+that are not in correct order,
+the algorithm swaps them.
+The algorithm can be implemented as follows
+for array
 $\texttt{t}[1],\texttt{t}[2],\ldots,\texttt{t}[n]$:
 \begin{lstlisting}
 for (int i = 1; i <= n-1; i++) {
@@ -114,13 +114,14 @@ for (int i = 1; i <= n-1; i++) {
 }
 \end{lstlisting}
 
-Algoritmin ensimmäisen kierroksen jälkeen suurin
-alkio on paikallaan, toisen kierroksen jälkeen
-kaksi suurinta alkiota on paikallaan, jne.
-Niinpä $n-1$ kierroksen jälkeen koko taulukko
-on järjestyksessä.
+After the first round of the algorithm,
+the largest element is in the correct place,
+after the second round the second largest
+element is in the correct place, etc.
+Thus, after $n-1$ rounds, all elements
+will be sorted.
 
-Esimerkiksi taulukossa
+For example, in the array
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -148,8 +149,8 @@ Esimerkiksi taulukossa
 \end{center}
 
 \noindent
-kuplajärjestämisen ensimmäinen
-läpikäynti tekee seuraavat vaihdot:
+the first round of bubble sort swaps elements
+as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -257,25 +258,26 @@ läpikäynti tekee seuraavat vaihdot:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Inversiot}
+\subsubsection{Inversions}
 
-\index{inversio@inversio}
+\index{inversion}
 
-Kuplajärjestäminen on esimerkki algoritmista,
-joka perustuu taulukon vierekkäisten alkioiden
-vaihtamiseen keskenään.
-Osoittautuu, että tällaisen algoritmin
-aikavaativuus on \emph{aina} vähintään $O(n^2)$,
-koska pahimmassa tapauksessa taulukon
-järjestäminen vaatii $O(n^2)$ alkioparin vaihtamista.
+Bubble sort is an example of a sorting
+algorithm that always swaps successive
+elements in the array.
+It turns out that the time complexity
+of this kind of an algorithm is \emph{always}
+at least $O(n^2)$ because in the worst case,
+$O(n^2)$ swaps are required for sorting the array.
 
-Hyödyllinen käsite järjestämisalgoritmien
-analyysissa on \key{inversio}.
-Se on taulukossa oleva alkiopari
-$(\texttt{t}[a],\texttt{t}[b])$,
-missä $a<b$ ja $\texttt{t}[a]>\texttt{t}[b]$
-eli alkiot ovat väärässä järjestyksessä taulukossa.
-Esimerkiksi taulukon
+A useful concept when analyzing sorting
+algorithms is an \key{inversion}.
+It is a pair of elements
+$(\texttt{t}[a],\texttt{t}[b])$
+in the array such that
+$a<b$ and $\texttt{t}[a]>\texttt{t}[b]$,
+i.e., they are in wrong order.
+For example, in the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -299,61 +301,54 @@ Esimerkiksi taulukon
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-inversiot ovat $(6,3)$, $(6,5)$ ja $(9,8)$.
-Inversioiden määrä kuvaa, miten lähellä
-järjestystä taulukko on.
-Taulukko on järjestyksessä tarkalleen
-silloin, kun siinä ei ole yhtään inversiota.
-Inversioiden määrä on puolestaan suurin,
-kun taulukon järjestys on käänteinen,
-jolloin inversioita on
-\[1+2+\cdots+(n-1)=\frac{n(n-1)}{2} = O(n^2).\]
+the inversions are $(6,3)$, $(6,5)$ and $(9,8)$.
+The number of inversions indicates
+how sorted the array is.
+An array is completely sorted when
+there are no inversions.
+On the other hand, if the array elements
+are in reverse order,
+the number of inversions is maximum:
+\[1+2+\cdots+(n-1)=\frac{n(n-1)}{2} = O(n^2)\]
 
-Jos vierekkäiset taulukon alkiot
-ovat väärässä järjestyksessä,
-niiden järjestyksen korjaaminen
-poistaa taulukosta tarkalleen yhden inversion.
-Niinpä jos järjestämisalgoritmi pystyy
-vaihtamaan keskenään vain
-taulukon vierekkäisiä alkioita,
-jokainen vaihto voi poistaa enintään yhden inversion
-ja algoritmin aikavaativuus on varmasti ainakin $O(n^2)$.
+Swapping successive elements that are
+in wrong order removes exactly one inversion
+from the array.
+Thus, if a sorting algorithm can only
+swap successive elements, each swap removes
+at most one inversion and the time complexity
+of the algorithm is at least $O(n^2)$.
 
-\subsubsection{$O(n \log n)$-algoritmit}
+\subsubsection{$O(n \log n)$ algorithms}
 
-\index{lomitusjxrjestxminen@lomitusjärjestäminen}
+\index{merge sort}
 
-Taulukon järjestäminen on mahdollista
-tehokkaasti ajassa $O(n \log n)$
-algoritmilla, joka ei rajoitu vierekkäisten
-alkoiden vaihtamiseen.
-Yksi tällainen algoritmi on
-\key{lomitusjärjestäminen},
-joka järjestää taulukon
-rekursiivisesti jakamalla sen
-pienemmiksi osataulukoiksi.
+It is possible to sort an array efficiently
+in $O(n \log n)$ time using an algorithm
+that is not limited to swapping successive elements.
+One such algorithm is \key{mergesort}
+that sorts an array recursively by dividing
+it into smaller subarrays.
 
-Lomitusjärjestäminen järjestää taulukon välin
-$[a,b]$ seuraavasti:
+Mergesort sorts the subarray $[a,b]$ as follows:
 
 \begin{enumerate}
-\item Jos $a=b$, älä tee mitään, koska väli on valmiiksi järjestyksessä.
-\item Valitse välin jakokohdaksi $k=\lfloor (a+b)/2 \rfloor$.
-\item Järjestä rekursiivisesti välin $[a,k]$ alkiot.
-\item Järjestä rekursiivisesti välin $[k+1,b]$ alkiot.
-\item \emph{Lomita} järjestetyt välit $[a,k]$ ja $[k+1,b]$
-järjestetyksi väliksi $[a,b]$.
+\item If $a=b$, don't do anything because the subarray is already sorted.
+\item Calculate the index of the middle element: $k=\lfloor (a+b)/2 \rfloor$.
+\item Recursively sort the subarray $[a,k]$.
+\item Recursively sort the subarray $[k+1,b]$.
+\item \emph{Merge} the sorted subarrays $[a,k]$ and $[k+1,b]$
+into a sorted subarray $[a,b]$.
 \end{enumerate}
 
-Lomitusjärjestämisen tehokkuus perustuu siihen,
-että se puolittaa joka askeleella välin kahteen osaan.
-Rekursiosta muodostuu yhteensä $O(\log n)$ tasoa
-ja jokaisen tason käsittely vie aikaa $O(n)$.
-Kohdan 5 lomittaminen on mahdollista ajassa $O(n)$,
-koska välit $[a,k]$ ja $[k+1,b]$ on jo järjestetty.
+Mergesort is an efficient algorithm because it
+halves the size of the subarray at each step.
+The recursion consists of $O(\log n)$ levels,
+and processing each level takes $O(n)$ time.
+Merging the subarrays $[a,k]$ and $[k+1,b]$
+is possible in linear time because they are already sorted.
 
-Tarkastellaan esimerkkinä seuraavan taulukon
-järjestämistä:
+For example, consider sorting the following array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -378,8 +373,8 @@ järjestämistä:
 \end{tikzpicture}
 \end{center}
 
-Taulukko jakautuu ensin kahdeksi
-osataulukoksi seuraavasti:
+The array will be divided into two subarrays
+as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,1);
@@ -408,8 +403,8 @@ osataulukoksi seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Algoritmi järjestää osataulukot rekursiivisesti,
-jolloin tuloksena on:
+Then, the subarrays will be sorted recursively
+as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,1);
@@ -437,8 +432,8 @@ jolloin tuloksena on:
 \end{tikzpicture}
 \end{center}
 
-Lopuksi algoritmi lomittaa järjestetyt osataulukot,
-jolloin syntyy lopullinen järjestetty taulukko:
+Finally, the algorithm merges the sorted
+subarrays and creates the final sorted array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -463,21 +458,19 @@ jolloin syntyy lopullinen järjestetty taulukko:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Järjestämisen alaraja}
+\subsubsection{Sorting lower bound}
 
-Onko sitten mahdollista järjestää taulukkoa
-nopeammin kuin ajassa $O(n \log n)$?
-Osoittautuu, että tämä \emph{ei} ole mahdollista,
-kun rajoitumme
-järjestämis\-algoritmeihin,
-jotka perustuvat taulukon alkioiden
-vertailemiseen.
+Is it possible to sort an array faster
+than in $O(n \log n)$ time?
+It turns out that this is \emph{not} possible
+when we restrict ourselves to sorting algorithms
+that are based on comparing array elements.
 
-Aikavaativuuden alaraja on mahdollista todistaa
-tarkastelemalla järjestämistä
-prosessina, jossa jokainen kahden alkion vertailu
-antaa lisää tietoa taulukon sisällöstä.
-Prosessista muodostuu seuraavanlainen puu:
+The lower bound for the time complexity
+can be proved by examining the sorting
+as a process where each comparison of two elements
+gives more information about the contents of the array.
+The process creates the following tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -517,47 +510,45 @@ Prosessista muodostuu seuraavanlainen puu:
 \end{tikzpicture}
 \end{center}
 
-Merkintä ''$x<y?$'' tarkoittaa taulukon alkioiden
-$x$ ja $y$ vertailua.
-Jos $x<y$, prosessi jatkaa vasemmalle,
-ja muuten oikealle.
-Prosessin tulokset ovat taulukon mahdolliset
-järjestykset, joita on kaikkiaan $n!$ erilaista.
-Puun korkeuden tulee olla tämän vuoksi vähintään
+Here ''$x<y?$'' means that some elements
+$x$ and $y$ are compared.
+If $x<y$, the process continues to the left,
+and otherwise to the right.
+The results of the process are the possible
+ways to order the array, a total of $n!$ ways.
+For this reason, the height of the tree
+must be at least
 \[ \log_2(n!) = \log_2(1)+\log_2(2)+\cdots+\log_2(n).\]
-Voimme arvioida tätä summaa alaspäin
-valitsemalla summasta $n/2$
-viimeistä termiä ja muuttamalla kunkin
-termin arvoksi $\log_2(n/2)$.
-Tästä saadaan arvio
+We get an lower bound for this sum
+by choosing last $n/2$ elements and
+changing the value of each element to $\log_2(n/2)$.
+This yields an estimate
 \[ \log_2(n!) \ge (n/2) \cdot \log_2(n/2),\]
-eli puun korkeus ja sen myötä
-pienin mahdollinen järjestämisalgoritmin askelten
-määrä on pahimmassa tapauksessa ainakin luokkaa $n \log n$.
+so the height of the tree and the minimum
+possible number of steps in an sorting
+algorithm in the worst case
+is at least $n \log n$.
 
-\subsubsection{Laskemisjärjestäminen}
+\subsubsection{Counting sort}
 
-\index{laskemisjxrjestxminen@laskemisjärjestäminen}
+\index{counting sort}
 
-Järjestämisen alaraja $n \log n$ ei koske algoritmeja,
-jotka eivät perustu alkioiden vertailemiseen
-vaan hyödyntävät jotain muuta tietoa alkioista.
-Esimerkki tällaisesta algoritmista on
-\key{laskemisjärjestäminen}, jonka avulla
-on mahdollista järjestää
-taulukko ajassa $O(n)$ olettaen,
-että jokainen taulukon alkio on
-kokonaisluku välillä $0 \ldots c$,
-missä $c$ on pieni vakio.
+The lower bound $n \log n$ doesn't apply to
+algorithms that do not compare array elements
+but use some other information.
+An example of such an algorithm is
+\key{counting sort} that sorts an array in
+$O(n)$ time assuming that every element in the array
+is an integer between $0 \ldots c$ where $c$
+is a small constant.
 
-Algoritmin ideana on luoda \emph{kirjanpito}, josta selviää,
-montako kertaa mikäkin alkio esiintyy taulukossa.
-Kirjanpito on taulukko, jonka indeksit ovat alkuperäisen
-taulukon alkioita.
-Jokaisen indeksin kohdalla lukee, montako kertaa
-kyseinen alkio esiintyy alkuperäisessä taulukossa.
+The algorithm creates a \emph{bookkeeping} array
+whose indices are elements in the original array.
+The algorithm iterates through the original array
+and calculates how many times each element
+appears in the array.
 
-Esimerkiksi taulukosta
+For example, the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -581,7 +572,7 @@ Esimerkiksi taulukosta
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-syntyy seuraava kirjanpito:
+produces the following bookkeeping array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (9,1);
@@ -609,23 +600,23 @@ syntyy seuraava kirjanpito:
 \end{tikzpicture}
 \end{center}
 
-Esimerkiksi kirjanpidossa lukee indeksin 3 kohdalla 2,
-koska luku 3 esiintyy kahdesti alkuperäisessä
-taulukossa (indekseissä 2 ja 6).
+For example, the value of element 3
+in the bookkeeping array is 2,
+because the element 3 appears two times
+in the original array (indices 2 and 6).
 
-Kirjanpidon muodostus vie aikaa $O(n)$,
-koska riittää käydä taulukko läpi kerran.
-Tämän jälkeen järjestetyn taulukon luominen
-vie myös aikaa $O(n)$, koska kunkin alkion
-määrän saa selville suoraan kirjanpidosta.
-Niinpä laskemisjärjestämisen
-kokonaisaikavaativuus on $O(n)$.
+The construction of the bookkeeping array
+takes $O(n)$ time. After this, the sorted array
+can be created in $O(n)$ time because
+the amount of each element can be retrieved
+from the bookkeeping array.
+Thus, the total time complexity of counting
+sort is $O(n)$.
 
-Laskemisjärjestäminen on hyvin tehokas algoritmi,
-mutta sen käyttäminen vaatii,
-että vakio $c$ on niin pieni,
-että taulukon alkioita voi käyttää
-kirjanpidon taulukon indeksöinnissä.
+Counting sort is a very efficient algorithm
+but it can only be used when the constant $c$
+is so small that the array elements can
+be used as indices in the bookkeeping array.
 
 \section{Järjestäminen C++:ssa}
 
