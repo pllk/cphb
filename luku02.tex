@@ -270,43 +270,43 @@ All the above time complexities except
 $O(2^n)$ and $O(n!)$ are polynomial.
 In practice, the constant $k$ is usually small,
 and therefore a polynomial time complexity
-means that the algorithm is \emph{efficient}.
+roughly means that the algorithm is \emph{efficient}.
 
 \index{NP-hard problem}
 
 Most algorithms in this book are polynomial.
 Still, there are many important problems for which
 no polynomial algorithm is known, i.e.,
-nobody knows how to solve the problem efficiently.
+nobody knows how to solve them efficiently.
 \key{NP-hard} problems are an important set
 of problems for which no polynomial algorithm is known.
 
-\section{Tehokkuuden arviointi}
+\section{Estimating efficiency}
 
-Aikavaativuuden hyötynä on,
-että sen avulla voi arvioida ennen algoritmin
-toteuttamista, onko algoritmi riittävän nopea
-tehtävän ratkaisemiseen.
-Lähtökohtana arviossa on, että nykyaikainen tietokone
-pystyy suorittamaan sekunnissa joitakin
-satoja miljoonia koodissa olevia komentoja.
+By calculating the time complexity,
+it is possible to check before the implementation that
+an algorithm is efficient enough for the problem.
+The starting point for the estimation is the fact that
+a modern computer can perform some hundreds of
+millions of operations in a second.
 
-Oletetaan esimerkiksi, että tehtävän aikaraja on 
-yksi sekunti ja syötteen koko on $n=10^5$.
-Jos algoritmin aikavaativuus on $O(n^2)$,
-algoritmi suorittaa noin $(10^5)^2=10^{10}$ komentoa.
-Tähän kuluu aikaa arviolta kymmeniä sekunteja,
-joten algoritmi vaikuttaa liian hitaalta tehtävän ratkaisemiseen.
+For example, assume that the time limit for
+a problem is one second and the input size is $n=10^5$.
+If the time complexity is $O(n^2)$,
+the algorithm will perform about $(10^5)^2=10^{10}$ operations.
+This should take some tens of seconds time,
+so the algorithm seems to be too slow for solving the problem.
 
-Käänteisesti syötteen koosta voi päätellä,
-kuinka tehokasta algoritmia tehtävän laatija odottaa
-ratkaisijalta.
-Seuraavassa taulukossa on joitakin hyödyllisiä arvioita,
-jotka olettavat, että tehtävän aikaraja on yksi sekunti.
+On the other hand, given the input size,
+we can try to guess
+the desired time complexity of the algorithm
+that solves the problem.
+The following table contains some useful estimates
+assuming that the time limit is one second.
 
 \begin{center}
 \begin{tabular}{ll}
-syötteen koko ($n$) & haluttu aikavaativuus \\
+input size ($n$) & desired time complexity \\
 \hline
 $n \le 10^{18}$ & $O(1)$ tai $O(\log n)$ \\
 $n \le 10^{12}$ & $O(\sqrt n)$ \\
@@ -318,41 +318,44 @@ $n \le 10$ & $O(n!)$ \\
 \end{tabular}
 \end{center}
 
-Esimerkiksi jos syötteen koko on $n=10^5$,
-tehtävän laatija odottaa luultavasti
-algoritmia, jonka aikavaativuus on $O(n)$ tai $O(n \log n)$.
-Tämä tieto helpottaa algoritmin suunnittelua,
-koska se rajaa pois monia lähestymistapoja,
-joiden tuloksena olisi hitaampi aikavaativuus.
+For example, if the input size is $n=10^5$,
+it is probably expected that the time
+complexity of the algorithm should be $O(n)$ or $O(n \log n)$.
+This information makes it easier to design an algorithm
+because it rules out approaches that would yield
+an algorithm with a slower time complexity.
 
-\index{vakiokerroin}
+\index{constant factor}
 
-Aikavaativuus ei kerro kuitenkaan kaikkea algoritmin
-tehokkuudesta, koska se kätkee toteutuksessa olevat
-\key{vakiokertoimet}. Esimerkiksi aikavaativuuden $O(n)$
-algoritmi voi tehdä käytännössä $n/2$ tai $5n$ operaatiota.
-Tällä on merkittävä vaikutus algoritmin
-todelliseen ajankäyttöön.
+Still, it is important to remember that a
+time complexity doesn't tell everything about 
+the efficiency because it hides the \key{constant factors}.
+For example, an algorithm that runs in $O(n)$ time
+can perform $n/2$ or $5n$ operations.
+This has an important effect on the actual
+running time of the algorithm.
 
-\section{Suurin alitaulukon summa}
+\section{Maximum subarray sum}
 
-\index{suurin alitaulukon summa@suurin alitaulukon summa}
+\index{maximum subarray sum}
 
-Usein ohjelmointitehtävän ratkaisuun on monta
-luontevaa algoritmia, joiden aikavaativuudet eroavat.
-Tutustumme seuraavaksi klassiseen ongelmaan,
-jonka suoraviivaisen ratkaisun aikavaativuus on $O(n^3)$,
-mutta algoritmia parantamalla aikavaativuudeksi
-tulee ensin $O(n^2)$ ja lopulta $O(n)$.
+There are often several possible algorithms
+for solving a problem with different
+time complexities.
+This section discusses a classic problem that
+has a straightforward $O(n^3)$ solution.
+However, by designing a better algorithm it
+is possible to solve the problem in $O(n^2)$
+time and even in $O(n)$ time.
 
-Annettuna on taulukko, jossa on $n$ kokonaislukua
-$x_1,x_2,\ldots,x_n$, ja tehtävänä on etsiä
-taulukon \key{suurin alitaulukon summa}
-eli mahdollisimman suuri summa
-taulukon yhtenäisellä välillä.
-Tehtävän kiinnostavuus on siinä, että taulukossa
-saattaa olla negatiivisia lukuja.
-Esimerkiksi taulukossa
+Given an array of $n$ integers $x_1,x_2,\ldots,x_n$,
+our task is to find the
+\key{maximum subarray sum}, i.e.,
+the largest possible sum of numbers
+in a contiguous region in the array.
+The problem is interesting because there may be
+negative numbers in the array.
+For example, in the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -378,7 +381,7 @@ Esimerkiksi taulukossa
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-suurimman summan $10$ tuottaa seuraava alitaulukko:
+the following subarray produces the maximum sum $10$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (6,1);
@@ -406,14 +409,14 @@ suurimman summan $10$ tuottaa seuraava alitaulukko:
 \end{center}
 \end{samepage}
 
+\subsubsection{Solution 1}
 
-\subsubsection{Ratkaisu 1}
-
-Suoraviivainen ratkaisu tehtävään on käydä
-läpi kaikki tavat valita alitaulukko taulukosta,
-laskea jokaisesta vaihtoehdosta lukujen summa
-ja pitää muistissa suurinta summaa.
-Seuraava koodi toteuttaa tämän algoritmin:
+A straightforward solution for the problem
+is to go through all possible ways to
+select a subarray, calculate the sum of
+numbers in each subarray and maintain
+the maximum sum.
+The following code implements this algorithm:
 
 \begin{lstlisting}
 int p = 0;
@@ -429,22 +432,24 @@ for (int a = 1; a <= n; a++) {
 cout << p << "\n";
 \end{lstlisting}
 
-Koodi olettaa, että luvut on tallennettu taulukkoon \texttt{x},
-jota indeksoidaan $1 \ldots n$.
-Muuttujat $a$ ja $b$ valitsevat alitaulukon ensimmäisen
-ja viimeisen luvun, ja alitaulukon summa lasketaan muuttujaan $s$.
-Muuttujassa $p$ on puolestaan paras haun aikana löydetty summa.
+The code assumes that the numbers are stored in array \texttt{x}
+with indices $1 \ldots n$.
+Variables $a$ and $b$ select the first and last
+number in the subarray,
+and the sum of the subarray is calculated to variable $s$.
+Variable $p$ contains the maximum sum found during the search.
 
-Algoritmin aikavaativuus on $O(n^3)$, koska siinä on kolme
-sisäkkäistä silmukkaa ja jokainen silmukka käy läpi $O(n)$ lukua.
+The time complexity of the algorithm is $O(n^3)$
+because it consists of three nested loops and
+each loop contains $O(n)$ steps.
 
-\subsubsection{Ratkaisu 2}
+\subsubsection{Solution 2}
 
-Äskeistä ratkaisua on helppoa tehostaa hankkiutumalla
-eroon sisimmästä silmukasta.
-Tämä on mahdollista laskemalla summaa samalla,
-kun alitaulukon oikea reuna liikkuu eteenpäin.
-Tuloksena on seuraava koodi:
+It is easy to make the first solution more efficient
+by removing one loop.
+This is possible by calculating the sum at the same
+time when the right border of the subarray moves.
+The result is the following code:
 
 \begin{lstlisting}
 int p = 0;
@@ -457,41 +462,35 @@ for (int a = 1; a <= n; a++) {
 }
 cout << p << "\n";
 \end{lstlisting}
-Tämän muutoksen jälkeen koodin aikavaativuus on $O(n^2)$.
+After this change, the time complexity is $O(n^2)$.
 
-\subsubsection{Ratkaisu 3}
+\subsubsection{Solution 3}
 
-Yllättävää kyllä, tehtävään on olemassa myös
-$O(n)$-aikainen ratkaisu eli koodista pystyy
-karsimaan vielä yhden silmukan.
-Ideana on laskea taulukon jokaiseen
-kohtaan, mikä on suurin alitaulukon
-summa, jos alitaulukko päättyy kyseiseen kohtaan.
-Tämän jälkeen ratkaisu tehtävään on suurin
-näistä summista.
+Surprisingly, it is possible to solve the problem
+in $O(n)$ time which means that we can remove
+one more loop.
+The idea is to calculate for each array index
+the maximum subarray sum that ends to that index.
+After this, the answer for the problem is the
+maximum of those sums.
 
-Tarkastellaan suurimman summan tuottavan
-alitaulukon etsimistä,
-kun valittuna on alitaulukon loppukohta $k$.
-Vaihtoehtoja on kaksi:
+Condider the subproblem of finding the maximum subarray
+for a fixed ending index $k$.
+There are two possibilities:
 \begin{enumerate}
-\item Alitaulukossa on vain kohdassa $k$ oleva luku.
-\item Alitaulukossa on ensin jokin kohtaan $k-1$ päättyvä alitaulukko
-ja sen jälkeen kohdassa $k$ oleva luku.
+\item The subarray only contains the element at index $k$.
+\item The subarray consists of a subarray that ends
+to index $k-1$, followed by the element at index $k$.
 \end{enumerate}
 
-Koska tavoitteena on löytää alitaulukko,
-jonka lukujen summa on suurin,
-tapauksessa 2 myös kohtaan $k-1$ päättyvän
-alitaulukon tulee olla sellainen,
-että sen summa on suurin.
-Niinpä tehokas ratkaisu syntyy käymällä läpi
-kaikki alitaulukon loppukohdat järjestyksessä
-ja laskemalla jokaiseen kohtaan suurin
-mahdollinen kyseiseen kohtaan päättyvän alitaulukon summa.
+Our goal is to find a subarray with maximum sum,
+so in case 2 the subarray that ends to index $k-1$
+should also have the maximum sum.
+Thus, we can solve the problem efficiently
+when we calculate the maximum subarray sum
+for each ending index from left to right.
 
-Seuraava koodi toteuttaa ratkaisun:
-
+The following code implements the solution:
 \begin{lstlisting}
 int p = 0, s = 0;
 for (int k = 1; k <= n; k++) {
@@ -501,28 +500,28 @@ for (int k = 1; k <= n; k++) {
 cout << p << "\n";
 \end{lstlisting}
 
-Algoritmissa on vain yksi silmukka,
-joka käy läpi taulukon luvut,
-joten sen aikavaativuus on $O(n)$.
-Tämä on myös paras mahdollinen aikavaativuus,
-koska minkä tahansa algoritmin täytyy käydä
-läpi ainakin kerran taulukon sisältö.
+The algorithm only contains one loop
+that goes through the input,
+so the time complexity is $O(n)$.
+This is also the best possible time complexity,
+because any algorithm for the problem
+has to access all array elements at least once.
 
-\subsubsection{Tehokkuusvertailu}
+\subsubsection{Efficiency comparison}
 
-On kiinnostavaa tutkia, kuinka tehokkaita algoritmit
-ovat käytännössä.
-Seuraava taulukko näyttää, kuinka nopeasti äskeiset
-ratkaisut toimivat eri $n$:n arvoilla
-nykyaikaisella tietokoneella.
+It is interesting to study how efficient the
+algorithms are in practice.
+The following table shows the running times
+of the above algorithms for different
+values of $n$ in a modern computer.
 
-Jokaisessa testissä syöte on muodostettu satunnaisesti.
-Ajankäyttöön ei ole laskettu syötteen lukemiseen
-kuluvaa aikaa.
+In each test, the input was generated randomly.
+The time needed for reading the input was not
+measured.
 
 \begin{center}
 \begin{tabular}{rrrr}
-taulukon koko $n$ & ratkaisu 1 & ratkaisu 2 & ratkaisu 3 \\
+array size $n$ & solution 1 & solution 2 & solution 3 \\
 \hline
 $10^2$ & $0{,}0$ s & $0{,}0$ s & $0{,}0$ s \\
 $10^3$ & $0{,}1$ s & $0{,}0$ s & $0{,}0$ s \\
@@ -533,13 +532,12 @@ $10^7$ & > $10,0$ s & > $10,0$ s & $0{,}0$ s \\
 \end{tabular}
 \end{center}
 
-Vertailu osoittaa,
-että pienillä syötteillä kaikki algoritmit
-ovat tehokkaita,
-mutta suuremmat syötteet tuovat esille
-merkittäviä eroja algoritmien suoritusajassa.
-$O(n^3)$-aikainen ratkaisu 1 alkaa hidastua,
-kun $n=10^3$, ja $O(n^2)$-aikainen ratkaisu 2
-alkaa hidastua, kun $n=10^4$.
-Vain $O(n)$-aikainen ratkaisu 3 selvittää
-suurimmatkin syötteet salamannopeasti.
+The comparison shows that all algorithms
+are efficient when the input size is small,
+but larger inputs bring out remarkable
+differences in running times of the algorithms.
+The $O(n^3)$ time solution 1 becomes slower
+when $n=10^3$, and the $O(n^2)$ time solution 2
+becomes slower when $n=10^4$.
+Only the $O(n)$ time solution 3 solves
+even the largest inputs instantly.
