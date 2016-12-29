@@ -77,7 +77,7 @@ is not an unfair advantage in the contest.
 All examples in this book are written in C++,
 and the data structures and algorithms in
 the standard library are often used.
-The book follows the C++11 standard
+The book follows the C++11 standard,
 that can be used in most contests nowadays.
 If you can't program in C++ yet,
 now it is a good time to start learning.
@@ -106,7 +106,8 @@ libraries such as \texttt{iostream},
 but they are available automatically.
 
 The \texttt{using} line determines
-that the standard library can be used directly
+that the classes and functions
+of the standard library can be used directly
 in the code.
 Without the \texttt{using} line we should write,
 for example, \texttt{std::cout},
@@ -514,182 +515,184 @@ This section covers some important
 mathematical concepts and formulas that
 are needed later in the book.
 
-\subsubsection{Summakaavat}
+\subsubsection{Sum formulas}
 
-Jokaiselle summalle muotoa
+Each sum of the form
 \[\sum_{x=1}^n x^k = 1^k+2^k+3^k+\ldots+n^k\]
-on olemassa laskukaava,
-kun $k$ on jokin positiivinen kokonaisluku.
-Tällainen laskukaava on aina astetta $k+1$
-oleva polynomi. Esimerkiksi
+where $k$ is a positive integer,
+has a closed-form formula that is a
+polynomial of degree $k+1$.
+For example,
 \[\sum_{x=1}^n x = 1+2+3+\ldots+n = \frac{n(n+1)}{2}\]
-ja
+and
 \[\sum_{x=1}^n x^2 = 1^2+2^2+3^2+\ldots+n^2 = \frac{n(n+1)(2n+1)}{6}.\]
 
-\key{Aritmeettinen summa} on summa, \index{aritmeettinen summa@aritmeettinen summa}
-jossa jokaisen vierekkäisen luvun erotus on vakio.
-Esimerkiksi
+An \key{arithmetic sum} is a sum \index{arithmetic sum}
+where the difference between any two consecutive
+numbers is constant.
+For example,
 \[3+7+11+15\]
-on aritmeettinen summa,
-jossa vakio on 4.
-Aritmeettinen summa voidaan laskea kaavalla
-\[\frac{n(a+b)}{2},\]
-jossa summan ensimmäinen luku on $a$,
-viimeinen luku on $b$ ja lukujen määrä on $n$.
-Esimerkiksi
+is an arithmetic sum with constant 4.
+An arithmetic sum can be calculated
+using the formula
+\[\frac{n(a+b)}{2}\]
+where $a$ is the first number,
+$b$ is the last number and
+$n$ is the amount of numbers.
+For example,
 \[3+7+11+15=\frac{4 \cdot (3+15)}{2} = 36.\]
-Kaava perustuu siihen, että summa muodostuu $n$ luvusta
-ja luvun suuruus on keskimäärin $(a+b)/2$.
+The formula is based on the fact
+that the sum consists of $n$ numbers and
+the value of each number is $(a+b)/2$ on average.
 
-\index{geometrinen summa@geometrinen summa}
-\key{Geometrinen summa} on summa,
-jossa jokaisen vierekkäisen luvun suhde on vakio.
-Esimerkiksi
+\index{geometric sum}
+A \key{geometric sum} is a sum
+where the ratio between any two consecutive
+numbers is constant.
+For example,
 \[3+6+12+24\]
-on geometrinen summa,
-jossa vakio on 2.
-Geometrinen summa voidaan laskea kaavalla
-\[\frac{bx-a}{x-1},\]
-jossa summan ensimmäinen luku on $a$,
-viimeinen luku on $b$ ja vierekkäisten lukujen suhde on $x$.
-Esimerkiksi
+is a geometric sum with constant 2.
+A geometric sum can be calculated
+using the formula
+\[\frac{bx-a}{x-1}\]
+where $a$ is the first number,
+$b$ is the last number and the
+ratio between consecutive numbers is $x$.
+For example,
 \[3+6+12+24=\frac{24 \cdot 2 - 3}{2-1} = 45.\]
 
-Geometrisen summan kaavan voi johtaa merkitsemällä
-\[ S = a + ax + ax^2 + \cdots + b .\] 
-Kertomalla molemmat puolet $x$:llä saadaan
+This formula can be derived as follows. Let
+\[ S = a + ax + ax^2 + \cdots + b .\]
+By multiplying both sides by $x$, we get
 \[ xS = ax + ax^2 + ax^3 + \cdots + bx,\]
-josta kaava seuraa ratkaisemalla yhtälön
+and solving the equation
 \[ xS-S = bx-a.\]
+yields the formula.
 
-Geometrisen summan erikoistapaus on usein kätevä kaava
+A special case of a geometric sum is the formula
 \[1+2+4+8+\ldots+2^{n-1}=2^n-1.\]
 
-% Geometrisen summan sukulainen on
-% \[x+2x^2+3x^3+\cdots+k x^k = \frac{kx^{k+2}-(k+1)x^{k+1}+x}{(x-1)^2}. \]
+\index{harmonic sum}
 
-\index{harmoninen summa@harmoninen summa}
-
-\key{Harmoninen summa} on summa muotoa
+A \key{harmonic sum} is a sum of the form
 \[ \sum_{x=1}^n \frac{1}{x} = 1+\frac{1}{2}+\frac{1}{3}+\ldots+\frac{1}{n}.\]
 
-Yläraja harmonisen summan suuruudelle on $\log_2(n)+1$.
-Summaa voi näet arvioida ylöspäin
-muuttamalla jokaista termiä $1/k$ niin,
-että $k$:ksi tulee alempi 2:n potenssi.
-Esimerkiksi tapauksessa $n=6$ arvioksi tulee
+An upper bound for the harmonic sum is $\log_2(n)+1$.
+The reason for this is that we can
+change each term $1/k$ so that $k$ becomes
+a power of two that doesn't exceed $k$.
+For example, when $n=6$, we can estimate
+the sum as follows:
 \[ 1+\frac{1}{2}+\frac{1}{3}+\frac{1}{4}+\frac{1}{5}+\frac{1}{6} \le
 1+\frac{1}{2}+\frac{1}{2}+\frac{1}{4}+\frac{1}{4}+\frac{1}{4}.\]
-Tämän seurauksena summa jakaantuu $\log_2(n)+1$ osaan
-($1$, $2 \cdot 1/2$, $4 \cdot 1/4$, jne.),
-joista jokaisen summa on enintään 1.
+This upper bound consists of $\log_2(n)+1$ parts
+($1$, $2 \cdot 1/2$, $4 \cdot 1/4$, etc.),
+and the sum of each part is at most 1.
 
-\subsubsection{Joukko-oppi}
+\subsubsection{Set theory}
 
-\index{joukko-oppi}
-\index{joukko@joukko}
-\index{leikkaus@leikkaus}
-\index{yhdiste@yhdiste}
-\index{erotus@erotus}
-\index{osajoukko@osajoukko}
-\index{perusjoukko}
+\index{set theory}
+\index{set}
+\index{intersection}
+\index{union}
+\index{difference}
+\index{subset}
+\index{universal set}
+\index{complement}
 
-\key{Joukko} on kokoelma alkioita.
-Esimerkiksi joukko
+A \key{set} is a collection of elements.
+For example, the set
 \[X=\{2,4,7\}\]
-sisältää alkiot 2, 4 ja 7.
-Merkintä $\emptyset$ tarkoittaa tyhjää joukkoa.
-Joukon $S$ koko eli alkoiden määrä on $|S|$.
-Esimerkiksi äskeisessä joukossa $|X|=3$.
+contains elements 2, 4 and 7.
+The symbol $\emptyset$ denotes an empty set,
+and $|S|$ denotes the size of set $S$,
+i.e., the number of elements in the set.
+For example, in the above set, $|X|=3$.
 
-Merkintä $x \in S$ tarkoittaa,
-että alkio $x$ on joukossa $S$,
-ja merkintä $x \notin S$ tarkoittaa,
-että alkio $x$ ei ole joukossa $S$.
-Esimerkiksi äskeisessä joukossa
-\[4 \in X \hspace{10px}\textrm{ja}\hspace{10px} 5 \notin X.\]
+If set $S$ contains element $x$,
+we write $x \in S$,
+and otherwise we write $x \notin S$.
+For example, in the above set
+\[4 \in X \hspace{10px}\textrm{and}\hspace{10px} 5 \notin X.\]
 
 \begin{samepage}
-Uusia joukkoja voidaan muodostaa joukko-operaatioilla
-seuraavasti:
+New sets can be constructed as follows using set operations:
 \begin{itemize}
-\item \key{Leikkaus} $A \cap B$ sisältää alkiot,
-jotka ovat molemmissa joukoista $A$ ja $B$.
-Esimerkiksi jos $A=\{1,2,5\}$ ja $B=\{2,4\}$,
-niin $A \cap B = \{2\}$.
-\item \key{Yhdiste} $A \cup B$ sisältää alkiot,
-jotka ovat ainakin toisessa joukoista $A$ ja $B$.
-Esimerkiksi jos $A=\{3,7\}$ ja $B=\{2,3,8\}$,
-niin $A \cup B = \{2,3,7,8\}$.
-\item \key{Komplementti} $\bar A$ sisältää alkiot,
-jotka eivät ole joukossa $A$.
-Komplementin tulkinta riippuu siitä, mikä on
-\key{perusjoukko} eli joukko, jossa on kaikki
-mahdolliset alkiot. Esimerkiksi jos
-$A=\{1,2,5,7\}$ ja perusjoukko on $P=\{1,2,\ldots,10\}$,
-niin $\bar A = \{3,4,6,8,9,10\}$.
-\item \key{Erotus} $A \setminus B = A \cap \bar B$ sisältää alkiot,
-jotka ovat joukossa $A$ mutta eivät joukossa $B$.
-Huomaa, että $B$:ssä voi olla alkioita,
-joita ei ole $A$:ssa.
-Esimerkiksi jos $A=\{2,3,7,8\}$ ja $B=\{3,5,8\}$,
-niin $A \setminus B = \{2,7\}$.
+\item The \key{intersection} $A \cap B$ consists of elements
+that are both in $A$ and $B$.
+For example, if $A=\{1,2,5\}$ and $B=\{2,4\}$,
+then $A \cap B = \{2\}$.
+\item The \key{union} $A \cup B$ consists of elements
+that are in $A$ or $B$ or both.
+For example, if $A=\{3,7\}$ and $B=\{2,3,8\}$,
+then $A \cup B = \{2,3,7,8\}$.
+\item The \key{complement} $\bar A$ consists of elements
+that are not in $A$.
+The interpretation of a complement depends on
+the \key{universal set} that contains all possible elements.
+For example, if $A=\{1,2,5,7\}$ and the universal set is
+$P=\{1,2,\ldots,10\}$, then $\bar A = \{3,4,6,8,9,10\}$.
+\item The \key{difference} $A \setminus B = A \cap \bar B$
+consists of elements that are in $A$ but not in $B$.
+Note that $B$ can contain elements that are not in $A$.
+For example, if $A=\{2,3,7,8\}$ and $B=\{3,5,8\}$,
+then $A \setminus B = \{2,7\}$.
 \end{itemize}
 \end{samepage}
 
-
-Merkintä $A \subset S$ tarkoittaa,
-että $A$ on $S$:n \key{osajoukko}
-eli jokainen $A$:n alkio esiintyy $S$:ssä.
-Joukon $S$ osajoukkojen yhteismäärä on $2^{|S|}$.
-Esimerkiksi joukon $\{2,4,7\}$
-osajoukot ovat
+If each element of $A$ also belongs to $S$,
+we say that $A$ is a \key{subset} of $S$,
+denoted by $A \subset S$.
+Set $S$ always has $2^{|S|}$ subsets,
+including the empty set.
+For example, the subsets of the set $\{2,4,7\}$ are
 \begin{center}
 $\emptyset$,
 $\{2\}$, $\{4\}$, $\{7\}$, $\{2,4\}$, $\{2,7\}$, $\{4,7\}$ ja $\{2,4,7\}$.
 \end{center}
 
-Usein esiintyviä joukkoja ovat
+Often used sets are
 
 \begin{itemize}[noitemsep]
-\item $\mathbb{N}$ (luonnolliset luvut),
-\item $\mathbb{Z}$ (kokonaisluvut),
-\item $\mathbb{Q}$ (rationaaliluvut) ja
-\item $\mathbb{R}$ (reaaliluvut).
+\item $\mathbb{N}$ (natural numbers),
+\item $\mathbb{Z}$ (integers),
+\item $\mathbb{Q}$ (rational numbers) and
+\item $\mathbb{R}$ (real numbers).
 \end{itemize}
 
-Luonnollisten lukujen joukko $\mathbb{N}$ voidaan määritellä
-tilanteesta riippuen kahdella tavalla:
-joko $\mathbb{N}=\{0,1,2,\ldots\}$
-tai $\mathbb{N}=\{1,2,3,...\}$.
+The set $\mathbb{N}$ of natural numbers
+can be defined in two ways, depending
+on the situation:
+either $\mathbb{N}=\{0,1,2,\ldots\}$
+or $\mathbb{N}=\{1,2,3,...\}$.
 
-Joukon voi muodostaa myös säännöllä muotoa
+We can also construct a set using a rule of the form
 \[\{f(n) : n \in S\},\]
-missä $f(n)$ on jokin funktio.
-Tällainen joukko sisältää kaikki alkiot
-$f(n)$, jossa $n$ on valittu joukosta $S$.
-Esimerkiksi joukko
+where $f(n)$ is some function.
+This set contains all elements $f(n)$
+where $n$ is an element in $S$.
+For example, the set
 \[X=\{2n : n \in \mathbb{Z}\}\]
-sisältää kaikki parilliset kokonaisluvut.
+contains all even integers.
 
-\subsubsection{Logiikka}
+\subsubsection{Logic}
 
-\index{logiikka@logiikka}
-\index{negaatio@negaatio}
-\index{konjunktio@konjunktio}
-\index{disjunktio@disjunktio}
-\index{implikaatio@implikaatio}
-\index{ekvivalenssi@ekvivalenssi}
+\index{logic}
+\index{negation}
+\index{conjuction}
+\index{disjunction}
+\index{implication}
+\index{equivalence}
 
-Loogisen lausekkeen arvo on joko \key{tosi} (1) tai
-\key{epätosi} (0).
-Tärkeimmät loogiset operaatiot ovat
-$\lnot$ (\key{negaatio}),
-$\land$ (\key{konjunktio}),
-$\lor$ (\key{disjunktio}),
-$\Rightarrow$ (\key{implikaatio}) sekä
-$\Leftrightarrow$ (\key{ekvivalenssi}).
-Seuraava taulukko näyttää operaatioiden merkityksen:
+The value of a logical expression is either
+\key{true} (1) or \key{false} (0).
+The most important logical operators are
+$\lnot$ (\key{negation}),
+$\land$ (\key{conjunction}),
+$\lor$ (\key{disjunction}),
+$\Rightarrow$ (\key{implication}) and
+$\Leftrightarrow$ (\key{equivalence}).
+The following table shows the meaning of the operators:
 
 \begin{center}
 \begin{tabular}{rr|rrrrrrr}
@@ -702,67 +705,69 @@ $A$ & $B$ & $\lnot A$ & $\lnot B$ & $A \land B$ & $A \lor B$ & $A \Rightarrow B$
 \end{tabular}
 \end{center}
 
-Negaatio $\lnot A$ muuttaa lausekkeen käänteiseksi.
-Lauseke $A \land B$ on tosi, jos molemmat $A$ ja $B$ ovat tosia,
-ja lauseke $A \lor B$ on tosi, jos $A$ tai $B$ on tosi.
-Lauseke $A \Rightarrow B$ on tosi,
-jos $A$:n ollessa tosi myös $B$ on aina tosi.
-Lauseke $A \Leftrightarrow B$ on tosi,
-jos $A$:n ja $B$:n totuusarvo on sama.
+The negation $\lnot A$ reverses the value of an expression.
+The expression $A \land B$ is true if both $A$ and $B$
+are true,
+and the expression $A \lor B$ is true if $A$ or $B$ or both
+are true.
+The expression $A \Rightarrow B$ is true
+if whenever $A$ is true, also $B$ is true.
+The expression $A \Leftrightarrow B$ is true
+if $A$ and $B$ are both true or both false.
 
-\index{predikaatti@predikaatti}
+\index{predicate}
 
-\key{Predikaatti} on lauseke, jonka arvo on tosi tai epätosi
-riippuen sen parametreista.
-Yleensä predikaattia merkitään suurella kirjaimella.
-Esimerkiksi voimme määritellä predikaatin $P(x)$,
-joka on tosi tarkalleen silloin, kun $x$ on alkuluku.
-Tällöin esimerkiksi $P(7)$ on tosi, kun taas $P(8)$ on epätosi.
+A \key{predicate} is an expression that is true or false
+depending on its parameters.
+Predicates are usually denoted by capital letters.
+For example, we can define a predicate $P(x)$
+that is true exactly when $x$ is a prime number.
+Using this definition, $P(7)$ is true but $P(8)$ is false.
 
-\index{kvanttori@kvanttori}
+\index{quantifier}
 
-\key{Kvanttori} ilmaisee, että looginen
-lauseke liittyy jollakin tavalla joukon alkioihin.
-Tavalliset kvanttorit
-ovat $\forall$ (\key{kaikille}) ja $\exists$ (\key{on olemassa}).
-Esimerkiksi
+A \key{quantifier} connects a logical expression
+to elements in a set.
+The most important quantifiers are
+$\forall$ (\key{for all}) and $\exists$ (\key{there is}).
+For example,
 \[\forall x (\exists y (y < x))\]
-tarkoittaa, että jokaiselle joukon
-alkiolle $x$ on olemassa
-jokin joukon alkio $y$ niin, että $y$ on $x$:ää pienempi.
-Tämä pätee kokonaislukujen joukossa,
-mutta ei päde luonnollisten lukujen joukossa.
+means that for each element $x$ in the set,
+there is an element $y$ in the set
+such that $y$ is smaller than $x$.
+This is true in the set of integers,
+but false in the set of natural numbers.
 
-Yllä esitettyjen merkintöjä avulla on mahdollista esittää
-monenlaisia loogisia väitteitä.
-Esimerkiksi
+Using the notation described above,
+we can express many kinds of logical propositions.
+For example,
 \[\forall x ((x>2 \land \lnot P(x)) \Rightarrow (\exists a (\exists b (x = ab \land a > 1 \land b > 1))))\]
-tarkoittaa, että jos luku $x$ on suurempi
-kuin 2 eikä ole alkuluku,
-niin on olemassa luvut $a$ ja $b$,
-joiden tulo on $x$ ja jotka molemmat ovat suurempia kuin 1.
-Tämä väite pitää paikkansa kokonaislukujen joukossa.
+means that if a number $x$ is larger than 2
+and not a prime number,
+there are numbers $a$ and $b$
+that are larger than $1$ and whose product is $x$.
+This proposition is true in the set of integers.
 
-\subsubsection{Funktioita}
+\subsubsection{Functions}
 
-Funktio $\lfloor x \rfloor$ pyöristää luvun $x$
-alaspäin kokonaisluvuksi ja
-funktio $\lceil x \rceil$ pyöristää luvun $x$
-ylöspäin kokonaisluvuksi. Esimerkiksi
-\[ \lfloor 3/2 \rfloor = 1 \hspace{10px} \textrm{ja} \hspace{10px} \lceil 3/2 \rceil = 2.\]
+The function $\lfloor x \rfloor$ rounds the number $x$
+down to an integer, and the function
+$\lceil x \rceil$ rounds the number $x$
+up to an integer. For example,
+\[ \lfloor 3/2 \rfloor = 1 \hspace{10px} \textrm{and} \hspace{10px} \lceil 3/2 \rceil = 2.\]
 
-Funktiot $\min(x_1,x_2,\ldots,x_n)$
-ja $\max(x_1,x_2,\ldots,x_n)$
-palauttavat pienimmän ja suurimman
-arvoista $x_1,x_2,\ldots,x_n$.
-Esimerkiksi
-\[ \min(1,2,3)=1 \hspace{10px} \textrm{ja} \hspace{10px} \max(1,2,3)=3.\]
+The functions $\min(x_1,x_2,\ldots,x_n)$
+and $\max(x_1,x_2,\ldots,x_n)$
+return the smallest and the largest of values
+$x_1,x_2,\ldots,x_n$.
+For example,
+\[ \min(1,2,3)=1 \hspace{10px} \textrm{and} \hspace{10px} \max(1,2,3)=3.\]
 
-\index{kertoma@kertoma}
+\index{factorial}
 
-\key{Kertoma} $n!$ määritellään
+The \key{factorial} $n!$ is defined
 \[\prod_{x=1}^n x = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n\]
-tai vaihtoehtoisesti rekursiivisesti
+or recursively
 \[
 \begin{array}{lcl}
 0! & = & 1 \\
@@ -770,10 +775,10 @@ n! & = & n \cdot (n-1)! \\
 \end{array}
 \]
 
-\index{Fibonaccin luku@Fibonaccin luku}
+\index{Fibonacci number}
 
-\key{Fibonaccin luvut} esiintyvät monissa erilaisissa yhteyksissä.
-Ne määritellään seuraavasti rekursiivisesti:
+The \key{Fibonacci numbers} arise in several situations.
+They can be defined recursively as follows:
 \[
 \begin{array}{lcl}
 f(0) & = & 0 \\
@@ -781,56 +786,58 @@ f(1) & = & 1 \\
 f(n) & = & f(n-1)+f(n-2) \\
 \end{array}
 \]
-Ensimmäiset Fibonaccin luvut ovat
+The first Fibonacci numbers are
 \[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, \ldots\]
-Fibonaccin lukujen laskemiseen on olemassa myös
-suljetun muodon kaava
+There is also a closed-form formula
+for calculating Fibonacci numbers:
 \[f(n)=\frac{(1 + \sqrt{5})^n - (1-\sqrt{5})^n}{2^n \sqrt{5}}.\]
 
-\subsubsection{Logaritmi}
+\subsubsection{Logarithm}
 
-\index{logaritmi@logaritmi}
+\index{logarithm}
 
-Luvun $x$
-\key{logaritmi} merkitään $\log_k(x)$, missä $k$ on logaritmin kantaluku.
-Logaritmin määritelmän mukaan
-$\log_k(x)=a$ tarkalleen silloin, kun $k^a=x$.
+The \key{logarithm} of a number $x$
+is denoted $\log_k(x)$ where $k$ is the base
+of the logarithm.
+The logarithm is defined so that
+$\log_k(x)=a$ exactly when $k^a=x$.
 
-Algoritmiikassa hyödyllinen tulkinta on,
-että logaritmi $\log_k(x)$ ilmaisee, montako kertaa lukua $x$
-täytyy jakaa $k$:lla, ennen kuin tulos on 1.
-Esimerkiksi $\log_2(32)=5$,
-koska lukua 32 täytyy jakaa 2:lla 5 kertaa:
+A useful interpretation in algorithmics is
+that $\log_k(x)$ equals the number of times
+we have to divide $x$ by $k$ before we reach 
+the number 1.
+For example, $\log_2(32)=5$
+because 5 divisions are needed:
 
 \[32 \rightarrow 16 \rightarrow 8 \rightarrow 4 \rightarrow 2 \rightarrow 1 \]
 
-Logaritmi tulee usein vastaan algoritmien analyysissa,
-koska monessa tehokkaassa algoritmissa jokin asia puolittuu
-joka askeleella.
-Niinpä logaritmin avulla voi arvioida algoritmin tehokkuutta.
+Logarithms are often needed in the analysis of
+algorithms because many efficient algorithms
+divide in half something at each step.
+Thus, we can estimate the efficiency of those algorithms
+using the logarithm.
 
-Logaritmille pätee kaava
+The logarithm of a product is
 \[\log_k(ab) = \log_k(a)+\log_k(b),\]
-josta seuraa edelleen
+and consequently,
 \[\log_k(x^n) = n \cdot \log_k(x).\]
-Samoin logaritmille pätee
+In addition, the logarithm of a quotient is
 \[\log_k\Big(\frac{a}{b}\Big) = \log_k(a)-\log_k(b).\]
-Lisäksi on voimassa kaava
+Another useful formula is
 \[\log_u(x) = \frac{\log_k(x)}{\log_k(u)},\]
-minkä ansiosta logaritmeja voi laskea mille tahansa kantaluvulle,
-jos on keino laskea logaritmeja jollekin kantaluvulle.
+and using this, it is possible to calculate
+logarithms to any base if there is a way to
+calculate logarithms to some fixed base.
 
-\index{luonnollinen logaritmi@luonnollinen logaritmi}
-\index{Neperin luku@Neperin luku}
+\index{natural logarithm}
 
-Luvun $x$ \key{luonnollinen logaritmi} $\ln(x)$ on logaritmi, jonka kantaluku on
-\key{Neperin luku} $e \approx 2{,}71828$.
+The \key{natural logarithm} $\ln(x)$ of a number $x$
+is a logarithm whose base is $e \approx 2{,}71828$.
 
-Vielä yksi logaritmin ominaisuus on, että
-luvun $x$ numeroiden määrä $b$-kantaisessa
-lukujärjestelmässä
-on $\lfloor \log_b(x)+1 \rfloor$.
-Esimerkiksi luvun $123$ esitys
-2-järjestelmässä on 1111011 ja
+Another property of the logarithm is that
+the number of digits of a number $x$ in base $b$ is
+$\lfloor \log_b(x)+1 \rfloor$.
+For example, the representation of
+the number $123$ in base $2$ is 1111011 and
 $\lfloor \log_2(123)+1 \rfloor = 7$.
 
