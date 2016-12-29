@@ -618,85 +618,77 @@ but it can only be used when the constant $c$
 is so small that the array elements can
 be used as indices in the bookkeeping array.
 
-\section{Järjestäminen C++:ssa}
+\section{Sorting in C++}
 
 \index{sort@\texttt{sort}}
 
-Järjestämisalgoritmia
-ei yleensä koskaan kannata koodata itse,
-vaan on parempi ratkaisu käyttää
-ohjelmointikielen valmista toteutusta.
-Esimerkiksi
-C++:n standardikirjastossa on funktio \texttt{sort},
-jonka avulla voi järjestää helposti taulukoita
-ja muita tietorakenteita.
+It is almost never a good idea to use
+an own implementation of a sorting algorithm
+in a contest, because there are good
+implementations available in programming languages.
+For example, the C++ standard library contains
+the function \texttt{sort} that can be easily used for
+sorting arrays and other data structures.
 
-Valmiin toteutuksen käyttämisessä on monia etuja.
-Ensinnäkin se säästää aikaa, koska järjestämisalgoritmia
-ei tarvitse kirjoittaa itse.
-Lisäksi valmis toteutus on varmasti tehokas ja toimiva:
-vaikka järjestämisalgoritmin toteuttaisi itse,
-siitä tulisi tuskin valmista toteutusta parempi.
+There are many benefits in using a library function.
+First, it saves time because there is no need to
+implement the function.
+In addition, the library implementation is
+certainly correct and efficient: it is not probable
+that a home-made sorting function would be better.
 
-Tutustumme seuraavaksi C++:n \texttt{sort}-funktion
-käyttämiseen.
-Seuraava koodi järjestää vektorin \texttt{v}
-luvut pienimmästä suurimpaan:
+In this section we will see how to use the
+C++ \texttt{sort} function.
+The following code sorts the numbers
+in vector \texttt{t} in increasing order:
 \begin{lstlisting}
 vector<int> v = {4,2,5,3,5,8,3};
 sort(v.begin(),v.end());
 \end{lstlisting}
-Järjestämisen seurauksena
-vektorin sisällöksi tulee
-$\{2,3,3,4,5,5,8\}$.
-Oletuksena \texttt{sort}-funktio järjestää
-siis alkiot pienimmästä suurimpaan,
-mutta järjestyksen saa käänteiseksi näin:
+After the sorting, the contents of the
+vector will be
+$[2,3,3,4,5,5,8]$.
+The default sorting order in increasing,
+but a reverse order is possible as follows:
 \begin{lstlisting}
 sort(v.rbegin(),v.rend());
 \end{lstlisting}
-Tavallisen taulukon voi järjestää seuraavasti:
+A regular array can be sorted as follows:
 \begin{lstlisting}
-int n = 7; // taulukon koko
+int n = 7; // array size
 int t[] = {4,2,5,3,5,8,3};
 sort(t,t+n);
 \end{lstlisting}
-Seuraava koodi taas järjestää merkkijonon \texttt{s}:
+The following code sorts the string \texttt{s}:
 \begin{lstlisting}
-string s = "apina";
+string s = "monkey";
 sort(s.begin(), s.end());
 \end{lstlisting}
-Merkkijonon järjestäminen tarkoittaa,
-että sen merkit järjestetään aakkosjärjestykseen.
-Esimerkiksi merkkijono ''apina''
-on järjestettynä ''aainp''.
+Sorting a string means that the characters
+in the string are sorted.
+For example, the string ''monkey'' becomes ''ekmnoy''.
 
-\subsubsection{Vertailuoperaattori}
+\subsubsection{Comparison operator}
 
-\index{vertailuoperaattori@vertailuoperaattori}
+\index{comparison operator}
 
-Funktion \texttt{sort} käyttäminen vaatii,
-että järjestettävien alkioiden
-tietotyypille on määritelty \key{vertailuoperaattori} \texttt{<},
-jonka avulla voi selvittää, mikä on kahden alkion järjestys.
-Järjestämisen aikana \texttt{sort}-funktio
-käyttää operaattoria \texttt{<} aina, kun sen täytyy
-vertailla järjestettäviä alkioita.
+The function \texttt{sort} requires that
+a \key{comparison operator} is defined for the data type
+of the elements to be sorted.
+During the sorting, this operator will be used
+whenever it is needed to find out the order of two elements.
 
-Vertailuoperaattori on määritelty valmiiksi
-useimmille C++:n tietotyypeille,
-minkä ansiosta niitä pystyy järjestämään automaattisesti.
-Jos järjestettävänä on lukuja, ne järjestyvät
-suuruusjärjestykseen,
-ja jos järjestettävänä on merkkijonoja,
-ne järjestyvät aakkosjärjestykseen.
+Most C++ data types have a built-in comparison operator
+and elements of those types can be sorted automatically.
+For example, numbers are sorted according to their values
+and strings are sorted according to alphabetical order.
 
 \index{pair@\texttt{pair}}
 
-Parit (\texttt{pair}) järjestyvät ensisijaisesti
-ensimmäisen kentän (\texttt{first}) mukaan.
-Jos kuitenkin parien ensimmäiset kentät ovat samat,
-järjestys määräytyy toisen kentän (\texttt{second}) mukaan:
+Pairs (\texttt{pair}) are sorted primarily by the first
+element (\texttt{first}).
+However, if the first elements of two pairs are equal,
+they are sorted by the second element (\texttt{second}):
 \begin{lstlisting}
 vector<pair<int,int>> v;
 v.push_back({1,5});
@@ -704,13 +696,14 @@ v.push_back({2,3});
 v.push_back({1,2});
 sort(v.begin(), v.end());
 \end{lstlisting}
-Tämän seurauksena parien järjestys on
-$(1,2)$, $(1,5)$ ja $(2,3)$.
+After this, the order of the pairs is
+$(1,2)$, $(1,5)$ and $(2,3)$.
 
 \index{tuple@\texttt{tuple}}
-Vastaavasti \texttt{tuple}-rakenteet
-järjestyvät ensisijaisesti ensimmäisen kentän,
-toissijaisesti toisen kentän, jne., mukaan:
+
+Correspondingly, tuples (\texttt{tuple})
+are sorted primarily by the first element,
+secondarily by the second element, etc.:
 \begin{lstlisting}
 vector<tuple<int,int,int>> v;
 v.push_back(make_tuple(2,1,4));
@@ -718,25 +711,26 @@ v.push_back(make_tuple(1,5,3));
 v.push_back(make_tuple(2,1,3));
 sort(v.begin(), v.end());
 \end{lstlisting}
-Tämän seurauksena järjestys on
-$(1,5,3)$, $(2,1,3)$ ja $(2,1,4)$.
+After this, the order of the tuples is
+$(1,5,3)$, $(2,1,3)$ and $(2,1,4)$.
 
-\subsubsection{Omat tietueet}
+\subsubsection{User-defined structs}
 
-Jos järjestettävänä on omia tietueita,
-niiden vertailuoperaattori täytyy toteuttaa itse.
-Operaattori määritellään tietueen sisään
-\texttt{operator<}-nimisenä funktiona,
-jonka parametrina on toinen alkio.
-Operaattorin tulee palauttaa \texttt{true},
-jos oma alkio on pienempi kuin parametrialkio,
-ja muuten \texttt{false}.
+User-defined structs do not have a comparison
+operator automatically.
+The operator should be defined inside
+the struct as a function
+\texttt{operator<}
+whose parameter is another element of the same type.
+The operator should return \texttt{true}
+if the element is smaller than the parameter,
+and \texttt{false} otherwise.
 
-Esimerkiksi seuraava tietue \texttt{P}
-sisältää pisteen x- ja y-koordinaatit.
-Vertailuoperaattori on toteutettu niin,
-että pisteet järjestyvät ensisijaisesti x-koor\-di\-naa\-tin
-ja toissijaisesti y-koordinaatin mukaan.
+For example, the following struct \texttt{P}
+contains the x and y coordinate of a point.
+The comparison operator is defined so that
+the points are sorted primarily by the x coordinate
+and secondarily by the y coordinate.
 
 \begin{lstlisting}
 struct P {
@@ -748,15 +742,16 @@ struct P {
 };
 \end{lstlisting}
 
-\subsubsection{Vertailufunktio}
+\subsubsection{Comparison function}
 
-\index{vertailufunktio@vertailufunktio}
+\index{comparison function}
 
-On myös mahdollista antaa
-\texttt{sort}-funktiolle ulkopuolinen \key{vertailufunktio}.
-Esimerkiksi seuraava vertailufunktio
-järjestää merkkijonot ensisijaisesti pituuden mukaan
-ja toissijaisesti aakkosjärjestyksen mukaan:
+It is also possible to give an external
+\key{comparison function} to the \texttt{sort} function
+as a callback function.
+For example, the following comparison function
+sorts strings primarily by length and secondarily
+by alphabetical order:
 
 \begin{lstlisting}
 bool cmp(string a, string b) {
@@ -764,14 +759,14 @@ bool cmp(string a, string b) {
     return a < b;
 }
 \end{lstlisting}
-Tämän jälkeen merkkijonovektorin voi järjestää näin:
+Now a vector of strings can be sorted as follows:
 \begin{lstlisting}
 sort(v.begin(), v.end(), cmp);
 \end{lstlisting}
 
-\section{Binäärihaku}
+\section{Binary search}
 
-\index{binxxrihaku@binäärihaku}
+\index{binary search}
 
 Tavallinen tapa etsiä alkiota taulukosta
 on käyttää \texttt{for}-silmukkaa, joka käy läpi
