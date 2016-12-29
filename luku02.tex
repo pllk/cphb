@@ -1,162 +1,166 @@
 \chapter{Time complexity}
 
-\index{aikavaativuus@aikavaativuus}
+\index{time complexity}
 
-Kisakoodauksessa oleellinen asia on algoritmien tehokkuus.
-Yleensä on helppoa suunnitella algoritmi,
-joka ratkaisee tehtävän hitaasti,
-mutta todellinen vaikeus piilee siinä,
-kuinka keksiä nopeasti toimiva algoritmi.
-Jos algoritmi on liian hidas, se tuottaa vain
-osan pisteistä tai ei pisteitä lainkaan.
+The efficiency of algorithms is important in competitive programming.
+Usually, it is easy to design an algorithm
+that solves the problem slowly,
+but the real challenge is to invent a
+fast algorithm.
+If an algorithm is too slow, it will get only
+partial points or no points at all.
 
-\key{Aikavaativuus} on kätevä tapa arvioida,
-kuinka nopeasti algoritmi toimii.
-Se esittää algoritmin tehokkuuden funktiona,
-jonka parametrina on syötteen koko.
-Aikavaativuuden avulla algoritmista voi päätellä ennen koodaamista,
-onko se riittävän tehokas tehtävän ratkaisuun.
+The \key{time complexity} of an algorithm
+estimates how much time the algorithm will use
+for some input.
+The idea is to represent the efficiency
+as an function whose parameter is the size of the input.
+By calculating the time complexity,
+we can estimate if the algorithm is good enough
+without implementing it.
 
-\section{Laskusäännöt}
+\section{Calculation rules}
 
-Algoritmin aikavaativuus merkitään $O(\cdots)$,
-jossa kolmen pisteen tilalla
-on kaava, joka kuvaa algoritmin ajankäyttöä.
-Yleensä muuttuja $n$ esittää syötteen kokoa.
-Esimerkiksi jos algoritmin syötteenä on taulukko lukuja,
-$n$ on lukujen määrä,
-ja jos syötteenä on merkkijono,
-$n$ on merkkijonon pituus.
+The time complexity of an algorithm
+is denoted $O(\cdots)$
+where the three dots represent some
+function.
+Usually, the variable $n$ denotes
+the input size.
+For example, if the input is an array of numbers,
+$n$ will be the size of the array,
+and if the input is a string,
+$n$ will be the length of the string.
 
-\subsubsection*{Silmukat}
+\subsubsection*{Loops}
 
-Algoritmin ajankäyttö johtuu usein
-pohjimmiltaan silmukoista,
-jotka käyvät syötettä läpi.
-Mitä enemmän sisäkkäisiä silmukoita
-algoritmissa on, sitä hitaampi se on.
-Jos sisäkkäisiä silmukoita on $k$,
-aikavaativuus on $O(n^k)$.
+The typical reason why an algorithm is slow is
+that it contains many loops that go through the input.
+The more nested loops the algorithm contains,
+the slower it is.
+If there are $k$ nested loops,
+the time complexity is $O(n^k)$.
 
-Esimerkiksi seuraavan koodin aikavaativuus on $O(n)$:
+For example, the time complexity of the following code is $O(n)$:
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
-    // koodia
+    // code
 }
 \end{lstlisting}
 
-Vastaavasti seuraavan koodin aikavaativuus on $O(n^2)$:
+Correspondingly, the time complexity of the following code is $O(n^2)$:
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n; j++) {
-        // koodia
+        // code
     }
 }
 \end{lstlisting}
 
-\subsubsection*{Suuruusluokka}
+\subsubsection*{Order of magnitude}
 
-Aikavaativuus ei kerro tarkasti,
-montako kertaa silmukan sisällä oleva koodi suoritetaan,
-vaan se kertoo vain suuruusluokan.
-Esimerkiksi seuraavissa esimerkeissä silmukat
-suoritetaan $3n$, $n+5$ ja $\lceil n/2 \rceil$ kertaa,
-mutta kunkin koodin aikavaativuus on sama $O(n)$.
+A time complexity doesn't tell the exact number
+of times the code inside a loop is executed,
+but it only tells the order of magnitude.
+In the following examples, the code inside the loop
+is executed $3n$, $n+5$ and $\lceil n/2 \rceil$ times,
+but the time complexity of each code is $O(n)$.
 
 \begin{lstlisting}
 for (int i = 1; i <= 3*n; i++) {
-    // koodia
+    // code
 }
 \end{lstlisting}
 
 \begin{lstlisting}
 for (int i = 1; i <= n+5; i++) {
-    // koodia
+    // code
 }
 \end{lstlisting}
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i += 2) {
-    // koodia
+    // code
 }
 \end{lstlisting}
 
-Seuraavan koodin aikavaativuus on puolestaan $O(n^2)$:
+As another example,
+the time complexity of the following code is $O(n^2)$:
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     for (int j = i+1; j <= n; j++) {
-        // koodia
+        // code
     }
 }
 \end{lstlisting}
 
-\subsubsection*{Peräkkäisyys}
+\subsubsection*{Phases}
 
-Jos koodissa on peräkkäisiä osia,
-kokonaisaikavaativuus on suurin yksittäisen
-osan aikavaativuus.
-Tämä johtuu siitä, että koodin hitain
-vaihe on yleensä koodin pullonkaula
-ja muiden vaiheiden merkitys on pieni.
+If the code consists of consecutive phases,
+the total time complexity is the largest
+time complexity of a single phase.
+The reason for this is that the slowest
+phase is usually the bottleneck of the code
+and the other phases are not important.
 
-Esimerkiksi seuraava koodi muodostuu
-kolmesta osasta,
-joiden aikavaativuudet ovat $O(n)$, $O(n^2)$ ja $O(n)$.
-Niinpä koodin aikavaativuus on $O(n^2)$.
+For example, the following code consists
+of three phases with time complexities
+$O(n)$, $O(n^2)$ and $O(n)$.
+Thus, the total time complexity is $O(n^2)$.
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
-    // koodia
+    // code
 }
 for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n; j++) {
-        // koodia
+        // code
     }
 }
 for (int i = 1; i <= n; i++) {
-    // koodia
+    // code
 }
 \end{lstlisting}
 
-\subsubsection*{Monta muuttujaa}
+\subsubsection*{Several variables}
 
-Joskus syötteessä on monta muuttujaa,
-jotka vaikuttavat aikavaativuuteen.
-Tällöin myös aikavaativuuden kaavassa esiintyy
-monta muuttujaa.
+Sometimes the time complexity depends on
+several variables.
+In this case, the formula for the time complexity
+contains several variables.
 
-Esimerkiksi seuraavan koodin
-aikavaativuus on $O(nm)$:
+For example, the time complexity of the
+following code is $O(nm)$:
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= m; j++) {
-        // koodia
+        // code
     }
 }
 \end{lstlisting}
 
-\subsubsection*{Rekursio}
+\subsubsection*{Recursion}
 
-Rekursiivisen funktion aikavaativuuden
-määrittää, montako kertaa funktiota kutsutaan yhteensä
-ja mikä on yksittäisen kutsun aikavaativuus.
-Kokonais\-aikavaativuus saadaan kertomalla
-nämä arvot toisillaan.
+The time complexity of a recursive function
+depends on the number of times the function is called
+and the time complexity of a single call.
+The total time complexity is the product of
+these values.
 
-Tarkastellaan esimerkiksi seuraavaa funktiota:
+For example, consider the following function:
 \begin{lstlisting}
 void f(int n) {
     if (n == 1) return;
     f(n-1);
 }
 \end{lstlisting}
-Kutsu $\texttt{f}(n)$ aiheuttaa yhteensä $n$ funktiokutsua,
-ja jokainen funktiokutsu vie aikaa $O(1)$,
-joten aikavaativuus on $O(n)$.
+The call $\texttt{f}(n)$ causes $n$ function calls,
+and the time complexity of each call is $O(1)$.
+Thus, the total time complexity is $O(n)$.
 
-Tarkastellaan sitten seuraavaa funktiota:
+As another example, consider the following function:
 \begin{lstlisting}
 void g(int n) {
     if (n == 1) return;
@@ -164,11 +168,11 @@ void g(int n) {
     g(n-1);
 }
 \end{lstlisting}
-Tässä tapauksessa funktio haarautuu kahteen osaan,
-joten kutsu $\texttt{g}(n)$ aiheuttaa kaikkiaan seuraavat kutsut:
+In this case the function branches into two parts.
+Thus, the call $\texttt{g}(n)$ causes the following calls:
 \begin{center}
 \begin{tabular}{rr}
-kutsu & kerrat \\
+call & amount \\
 \hline
 $\texttt{g}(n)$ & 1 \\
 $\texttt{g}(n-1)$ & 2 \\
@@ -176,116 +180,106 @@ $\cdots$ & $\cdots$ \\
 $\texttt{g}(1)$ & $2^{n-1}$ \\
 \end{tabular}
 \end{center}
-Tämän perusteella kutsun $\texttt{g}(n)$ aikavaativuus on
+Based on this, the time complexity is
 \[1+2+4+\cdots+2^{n-1} = 2^n-1 = O(2^n).\]
 
-\section{Vaativuusluokkia}
+\section{Complexity classes}
 
-\index{vaativuusluokka@vaativuusluokka}
+\index{complexity classes}
 
-Usein esiintyviä vaativuusluokkia ovat seuraavat:
+Typical complexity classes are:
 
 \begin{description}
 \item[$O(1)$]
-\index{vakioaikainen algoritmi@vakioaikainen algoritmi}
-\key{Vakioaikainen} algoritmi
-käyttää saman verran aikaa minkä tahansa
-syötteen käsittelyyn,
-eli algoritmin nopeus ei riipu syötteen koosta.
-Tyypillinen vakioaikainen algoritmi on suora kaava
-vastauksen laskemiseen.
+\index{constant-time algorithm}
+The running time of a \key{constant-time} algorithm
+doesn't depend on the input size.
+A typical constant-time algorithm is a direct
+formula that calculates the answer.
 
 \item[$O(\log n)$]
-\index{logaritminen algoritmi@logaritminen algoritmi}
-\key{Logaritminen} aikavaativuus
-syntyy usein siitä, että algoritmi
-puolittaa syötteen koon joka askeleella.
-Logaritmi $\log_2 n$ näet ilmaisee, montako
-kertaa luku $n$ täytyy puolittaa,
-ennen kuin tuloksena on 1.
+\index{logarithmic algorithm}
+A \key{logarithmic} algorithm often halves
+the input size at each step.
+The reason for this is that the logarithm
+$\log_2 n$ equals the number of times
+$n$ must be divided by 2 to produce 1.
 
 \item[$O(\sqrt n)$]
-
-Tällainen algoritmi sijoittuu
-aikavaativuuksien $O(\log n)$ ja $O(n)$ välimaastoon.
-Neliöjuuren erityinen ominaisuus on,
-että $\sqrt n = n/\sqrt n$, joten neliöjuuri
-osuu tietyllä tavalla syötteen puoliväliin.
+The running time of this kind of algorithm
+is between $O(\log n)$ and $O(n)$.
+A special feature of the square root is that
+$\sqrt n = n/\sqrt n$, so the square root lies
+''in the middle'' of the input.
 
 \item[$O(n)$]
-\index{lineaarinen algoritmi@lineaarinen algoritmi}
-\key{Lineaarinen} algoritmi käy syötteen läpi
-kiinteän määrän kertoja.
-Tämä on usein paras mahdollinen aikavaativuus,
-koska yleensä syöte täytyy käydä
-läpi ainakin kerran,
-ennen kuin algoritmi voi ilmoittaa vastauksen.
+\index{linear algorithm}
+A \key{linear} algorithm goes through the input
+a constant number of times.
+This is often the best possible time complexity
+because it is usually needed to access each
+input element at least once before
+reporting the answer.
 
 \item[$O(n \log n)$]
-
-Tämä aikavaativuus viittaa usein
-syötteen järjestämiseen,
-koska tehokkaat järjestämisalgoritmit toimivat
-ajassa $O(n \log n)$.
-Toinen mahdollisuus on, että algoritmi
-käyttää tietorakennetta,
-jonka operaatiot ovat $O(\log n)$-aikaisia.
+This time complexity often means that the
+algorithm sorts the input
+because the time complexity of efficient
+sorting algorithms is $O(n \log n)$.
+Another possibility is that the algorithm
+uses a data structure where the time
+complexity of each operation is $O(\log n)$.
 
 \item[$O(n^2)$]
-\index{nelizllinen algoritmi@neliöllinen algoritmi}
-\key{Neliöllinen} aikavaativuus voi syntyä
-siitä, että algoritmissa on 
-kaksi sisäkkäistä silmukkaa.
-Neliöllinen algoritmi voi käydä läpi kaikki
-tavat valita joukosta kaksi alkiota.
+\index{quadratic algorithm}
+A \key{quadratic} algorithm often contains
+two nested loops.
+It is possible to go through all pairs of
+input elements in $O(n^2)$ time.
 
 \item[$O(n^3)$]
-\index{kuutiollinen algoritmi@kuutiollinen algoritmi}
-\key{Kuutiollinen} aikavaativuus voi syntyä siitä,
-että algoritmissa on 
-kolme sisäkkäistä silmukkaa.
-Kuutiollinen algoritmi voi käydä läpi kaikki
-tavat valita joukosta kolme alkiota.
+\index{cubic algorithm}
+A \key{cubic} algorithm often contains
+three nested loops.
+It is possible to go through all triplets of
+input elements in $O(n^3)$ time.
 
 \item[$O(2^n)$]
-
-Tämä aikavaativuus tarkoittaa usein,
-että algoritmi käy läpi kaikki syötteen osajoukot.
-Esimerkiksi joukon $\{1,2,3\}$ osajoukot ovat
+This time complexity often means that
+the algorithm iterates through all
+subsets of the input elements.
+For example, the subsets of $\{1,2,3\}$ are
 $\emptyset$, $\{1\}$, $\{2\}$, $\{3\}$, $\{1,2\}$,
-$\{1,3\}$, $\{2,3\}$ sekä $\{1,2,3\}$.
+$\{1,3\}$, $\{2,3\}$ and $\{1,2,3\}$.
 
 \item[$O(n!)$]
-
-Tämä aikavaativuus voi syntyä siitä,
-että algoritmi käy läpi kaikki syötteen permutaatiot.
-Esimerkiksi joukon $\{1,2,3\}$ permutaatiot ovat
+This time complexity often means that
+the algorithm iterates trough all
+permutations of the input elements.
+For example, the permutations of $\{1,2,3\}$ are
 $(1,2,3)$, $(1,3,2)$, $(2,1,3)$, $(2,3,1)$,
-$(3,1,2)$ sekä $(3,2,1)$.
+$(3,1,2)$ and $(3,2,1)$.
 
 \end{description}
 
-\index{polynominen algoritmi@polynominen algoritmi}
-Algoritmi on \key{polynominen},
-jos sen aikavaativuus on korkeintaan $O(n^k)$,
-kun $k$ on vakio.
-Edellä mainituista aikavaativuuksista
-kaikki paitsi $O(2^n)$ ja $O(n!)$
-ovat polynomisia.
-Käytännössä vakio $k$ on yleensä pieni,
-minkä ansiosta
-polynomisuus kuvastaa sitä,
-että algoritmi on \emph{tehokas}.
-\index{NP-vaikea ongelma}
+\index{polynomial algorithm}
+An algorithm is \key{polynomial}
+if its time complexity is at most $O(n^k)$
+where $k$ is a constant.
+All the above time complexities except
+$O(2^n)$ and $O(n!)$ are polynomial.
+In practice, the constant $k$ is usually small,
+and therefore a polynomial time complexity
+means that the algorithm is \emph{efficient}.
 
-Useimmat tässä kirjassa esitettävät algoritmit
-ovat polynomisia.
-Silti on paljon ongelmia, joihin ei tunneta
-polynomista algoritmia eli ongelmaa ei osata
-ratkaista tehokkaasti.
-\key{NP-vaikeat} ongelmat ovat
-tärkeä joukko ongelmia,
-joihin ei tiedetä polynomista algoritmia.
+\index{NP-hard problem}
+
+Most algorithms in this book are polynomial.
+Still, there are many important problems for which
+no polynomial algorithm is known, i.e.,
+nobody knows how to solve the problem efficiently.
+\key{NP-hard} problems are an important set
+of problems for which no polynomial algorithm is known.
 
 \section{Tehokkuuden arviointi}
 
