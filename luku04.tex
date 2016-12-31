@@ -478,17 +478,17 @@ the element nearest to $x$ is either the
 element that corresponds to $a$ or the previous element.
 \end{samepage}
 
-\section{Muita tietorakenteita}
+\section{Other data structures}
 
-\subsubsection{Bittijoukko}
+\subsubsection{Bitset}
 
-\index{bittijoukko@bittijoukko}
+\index{bitset}
 \index{bitset@\texttt{bitset}}
 
-\key{Bittijoukko} (\texttt{bitset}) on taulukko,
-jonka jokaisen alkion arvo on 0 tai 1.
-Esimerkiksi
-seuraava koodi luo bittijoukon, jossa on 10 alkiota.
+A \key{bitset} (\texttt{bitset}) is an array
+where each element is either 0 or 1.
+For example, the following code creates
+a bitset that contains 10 elements:
 \begin{lstlisting}
 bitset<10> s;
 s[2] = 1;
@@ -499,37 +499,35 @@ cout << s[4] << "\n"; // 0
 cout << s[5] << "\n"; // 1
 \end{lstlisting}
 
-Bittijoukon etuna on, että se vie tavallista
-taulukkoa vähemmän muistia,
-koska jokainen alkio vie
-vain yhden bitin muistia.
-Esimerkiksi $n$ bitin tallentaminen
-\texttt{int}-taulukkona vie $32n$
-bittiä tilaa, mutta bittijoukkona
-vain $n$ bittiä tilaa.
-Lisäksi bittijoukon sisältöä
-voi käsitellä tehokkaasti bittioperaatioilla,
-minkä ansiosta sillä voi tehostaa algoritmeja.
+The benefit in using a bitset is that
+it requires less memory than a regular array,
+because each element in the bitset only
+uses one bit of memory.
+For example, 
+if $n$ bits are stored as an \texttt{int} array,
+$32n$ bits of memory will be used,
+but a corresponding bitset only requires $n$ bits of memory.
+In addition, the values in a bitset
+can be efficiently manipulated using
+bit operators, which makes it possible to
+optimize algorithms.
 
-Seuraava koodi näyttää toisen tavan
-bittijoukon luomiseen:
-
+The following code shows another way to create a bitset:
 \begin{lstlisting}
 bitset<10> s(string("0010011010"));
 cout << s[4] << "\n"; // 0
 cout << s[5] << "\n"; // 1
 \end{lstlisting}
 
-Funktio \texttt{count} palauttaa
-bittijoukon ykkösbittien määrän:
+The function \texttt{count} returns the number
+of ones in the bitset:
 
 \begin{lstlisting}
 bitset<10> s(string("0010011010"));
 cout << s.count() << "\n"; // 4
 \end{lstlisting}
 
-Seuraava koodi näyttää esimerkkejä
-bittioperaatioiden käyttämisestä:
+The following code shows examples of using bit operations:
 \begin{lstlisting}
 bitset<10> a(string("0010110110"));
 bitset<10> b(string("1011011000"));
