@@ -1,38 +1,40 @@
 \chapter{Data structures}
 
-\index{tietorakenne@tietorakenne}
+\index{data structure}
 
-\key{Tietorakenne}
-on tapa säilyttää tietoa tietokoneen muistissa.
-Sopivan tietorakenteen valinta on tärkeää,
-koska kullakin rakenteella on omat
-vahvuutensa ja heikkoutensa.
-Tietorakenteen valinnassa oleellinen kysymys on,
-mitkä operaatiot rakenne toteuttaa tehokkaasti.
+A \key{data structure} is a way to store
+data in the memory of the computer.
+It is important to choose a suitable
+data structure for a problem,
+because each data structure has its own
+advantages and disadvantages.
+The crucial question is: which operations
+are efficient in the chosen data structure?
 
-Tämä luku esittelee keskeisimmät
-C++:n standardikirjaston tietorakenteet.
-Valmiita tietorakenteita kannattaa käyttää
-aina kun mahdollista, 
-koska se säästää paljon aikaa toteutuksessa.
-Myöhemmin kirjassa tutustumme erikoisempiin
-rakenteisiin, joita ei ole valmiina C++:ssa.
+This chapter introduces the most important
+data structures in the C++ standard library.
+It is a good idea to use the standard library
+whenever possible,
+because it will save a lot of time.
+Later in the book we will learn more sophisticated
+data structures that are not available
+in the standard library.
 
-\section{Dynaaminen taulukko}
+\section{Dynamic array}
 
-\index{vektori@vektori}
+\index{dynamic array}
+\index{vector}
 \index{vector@\texttt{vector}}
 
-\key{Dynaaminen taulukko} on taulukko,
-jonka kokoa voi muuttaa
-ohjelman suorituksen aikana.
-C++:n tavallisin dynaaminen taulukko
-on \key{vektori} (\texttt{vector}).
-Sitä voi käyttää hyvin samalla tavalla
-kuin tavallista taulukkoa.
+A \key{dynamic array} is an array whose
+size can be changed during the execution
+of the code.
+The most popular dynamic array in C++ is
+the \key{vector} structure (\texttt{vector}),
+that can be used almost like a regular array.
 
-Seuraava koodi luo tyhjän vektorin
-ja lisää siihen kolme lukua:
+The following code creates an empty vector and
+adds three elements to it:
 
 \begin{lstlisting}
 vector<int> v;
@@ -41,7 +43,7 @@ v.push_back(2); // [3,2]
 v.push_back(5); // [3,2,5]
 \end{lstlisting}
 
-Tämän jälkeen vektorin sisältöä voi käsitellä taulukon tavoin:
+After this, the elements can be accessed like in a regular array:
 
 \begin{lstlisting}
 cout << v[0] << "\n"; // 3
@@ -49,8 +51,9 @@ cout << v[1] << "\n"; // 2
 cout << v[2] << "\n"; // 5
 \end{lstlisting}
 
-Funktio \texttt{size} kertoo, montako alkiota vektorissa on.
-Seuraava koodi käy läpi ja tulostaa kaikki vektorin alkiot:
+The function \texttt{size} returns the number of elements in the vector.
+The following code iterates through
+the vector and prints all elements in it:
 
 \begin{lstlisting}
 for (int i = 0; i < v.size(); i++) {
@@ -59,7 +62,7 @@ for (int i = 0; i < v.size(); i++) {
 \end{lstlisting}
 
 \begin{samepage}
-Vektorin voi käydä myös läpi lyhyemmin näin:
+A shorter way to iterate trough a vector is as follows:
 
 \begin{lstlisting}
 for (auto x : v) {
@@ -68,9 +71,9 @@ for (auto x : v) {
 \end{lstlisting}
 \end{samepage}
 
-Funktio \texttt{back} hakee vektorin viimeisen alkion,
-ja funktio \texttt{pop\_back} poistaa vektorin
-viimeisen alkion:
+The function \texttt{back} returns the last element
+in the vector, and
+the function \texttt{pop\_back} removes the last element:
 
 \begin{lstlisting}
 vector<int> v;
@@ -81,47 +84,48 @@ v.pop_back();
 cout << v.back() << "\n"; // 5
 \end{lstlisting}
 
-Vektorin sisällön voi antaa myös sen luonnissa:
+The following code creates a vector with five elements:
 
 \begin{lstlisting}
 vector<int> v = {2,4,2,5,1};
 \end{lstlisting}
 
-Kolmas tapa luoda vektori on ilmoittaa
-vektorin koko ja alkuarvo:
+Another way to create a vector is to give the number
+of elements and the initial value for each element:
 
 \begin{lstlisting}
-// koko 10, alkuarvo 0
+// size 10, initial value 0
 vector<int> v(10);
 \end{lstlisting}
 \begin{lstlisting}
-// koko 10, alkuarvo 5
+// size 10, initial value 5
 vector<int> v(10, 5);
 \end{lstlisting}
 
-Vektori on toteutettu sisäisesti tavallisena taulukkona.
-Jos vektorin koko kasvaa ja taulukko jää liian pieneksi,
-varataan uusi suurempi taulukko, johon kopioidaan
-vektorin sisältö.
-Näin tapahtuu kuitenkin niin harvoin, että vektorin
-funktion \texttt{push\_back} aikavaativuus on
-keskimäärin $O(1)$.
+The internal implementation of the vector
+uses a regular array.
+If the size of the vector increases and
+the array becomes too small,
+a new array is allocated and all the
+elements are copied to the new array.
+However, this doesn't happen often and the
+time complexity of
+\texttt{push\_back} is $O(1)$ on average.
 
-\index{merkkijono@merkkijono}
+\index{string}
 \index{string@\texttt{string}}
 
-Myös \key{merkkijono} (\texttt{string}) on dynaaminen taulukko,
-jota pystyy käsittelemään lähes samaan
-tapaan kuin vektoria.
-Merkkijonon käsittelyyn liittyy lisäksi erikoissyntaksia
-ja funktioita, joita ei ole muissa tietorakenteissa.
-Merkkijonoja voi yhdistää toisiinsa \texttt{+}-merkin avulla.
-Funktio $\texttt{substr}(k,x)$ erottaa merkkijonosta
-osajonon, joka alkaa kohdasta $k$ ja jonka pituus on $x$.
-Funktio $\texttt{find}(\texttt{t})$ etsii kohdan,
-jossa osajono \texttt{t} esiintyy merkkijonossa.
+Also the \key{string} structure (\texttt{string})
+is a dynamic array that can be used almost like a vector.
+In addition, there is special syntax for strings
+that is not available in other data structures.
+Strings can be combined using the \texttt{+} symbol.
+The function $\texttt{substr}(k,x)$ returns the substring
+that begins at index $k$ and has length $x$.
+The function $\texttt{find}(\texttt{t})$ finds the position
+where a substring \texttt{t} appears in the string.
 
-Seuraava koodi esittelee merkkijonon käyttämistä:
+The following code presents some string operations:
 
 \begin{lstlisting}
 string a = "hatti";
@@ -133,37 +137,41 @@ string c = b.substr(3,4);
 cout << c << "\n"; // tiva
 \end{lstlisting}
 
-\section{Joukkorakenne}
+\section{Set structure}
 
-\index{joukko@joukko}
+\index{set}
 \index{set@\texttt{set}}
 \index{unordered\_set@\texttt{unordered\_set}}
 
-\key{Joukko} on tietorakenne,
-joka sisältää kokoelman alkioita.
-Joukon perusoperaatiot ovat alkion lisäys,
-haku ja poisto.
+A \key{set} is a data structure that
+contains a collection of elements.
+The basic operations in a set are element
+insertion, search and removal.
 
-C++ sisältää kaksi
-toteutusta joukolle: \texttt{set} ja \texttt{unordered\_set}.
-Rakenne \texttt{set} perustuu tasapainoiseen
-binääripuuhun, ja sen operaatioiden aikavaativuus
-on $O(\log n)$.
-Rakenne \texttt{unordered\_set} pohjautuu hajautustauluun,
-ja sen operaatioiden aikavaativuus on keskimäärin $O(1)$.
+C++ contains two set implementations:
+\texttt{set} and \texttt{unordered\_set}.
+The structure \texttt{set} is based on a balanced
+binary tree and the time complexity of its
+operations is $O(\log n)$.
+The structure \texttt{unordered\_set} uses a hash table,
+and the time complexity of its operations is $O(1)$ on average.
 
-Usein on makuasia, kumpaa joukon toteutusta käyttää.
-Rakenteen \texttt{set} etuna on, että se säilyttää
-joukon alkioita järjestyksessä ja tarjoaa
-järjestykseen liittyviä funktioita,
-joita \texttt{unordered\_set} ei sisällä.
-Toisaalta \texttt{unordered\_set} on usein nopeampi rakenne.
+The choice which set implementation to use
+is often a matter of taste.
+The benefit in the \texttt{set} structure
+is that it maintains the order of the elements
+and provides functions that are not available
+in \texttt{unordered\_set}.
+On the other hand, \texttt{unordered\_set} is
+often more efficient.
 
-Seuraava koodi luo lukuja sisältävän joukon ja
-esittelee sen käyttämistä.
-Funktio \texttt{insert} lisää joukkoon alkion,
-funktio \texttt{count} laskee alkion määrän joukossa
-ja funktio \texttt{erase} poistaa alkion joukosta.
+The following code creates a set
+that consists of integers,
+and shows how to use it.
+The function \texttt{insert} adds an element to the set,
+the function \texttt{count} returns how many times an
+element appears in the set,
+and the function \texttt{erase} removes an element from the set.
 
 \begin{lstlisting}
 set<int> s;
@@ -178,11 +186,12 @@ cout << s.count(3) << "\n"; // 0
 cout << s.count(4) << "\n"; // 1
 \end{lstlisting}
 
-Joukkoa voi käsitellä muuten suunnilleen samalla tavalla
-kuin vektoria, mutta joukkoa ei voi indeksoida
-\texttt{[]}-merkinnällä.
-Seuraava koodi luo joukon, tulostaa sen 
-alkioiden määrän ja käy sitten läpi kaikki alkiot.
+A set can be used mostly like a vector,
+but it is not possible to access
+the elements using the \texttt{[]} notation.
+The following code creates a set,
+prints the number of elements in it, and then
+iterates through all the elements:
 \begin{lstlisting}
 set<int> s = {2,5,6,8};
 cout << s.size() << "\n"; // 4
@@ -191,14 +200,15 @@ for (auto x : s) {
 }
 \end{lstlisting}
 
-Tärkeä joukon ominaisuus on,
-että tietty alkio voi esiintyä siinä
-enintään kerran.
-Niinpä funktio \texttt{count} palauttaa aina
-arvon 0 (alkiota ei ole joukossa) tai 1 (alkio on joukossa)
-ja funktio \texttt{insert} ei lisää alkiota
-uudestaan joukkoon, jos se on siellä valmiina.
-Seuraava koodi havainnollistaa asiaa:
+An important property of a set is
+that all the elements are distinct.
+Thus, the function \texttt{count} always returns
+either 0 (the element is not in the set)
+or 1 (the element is in the set),
+and the function \texttt{insert} never adds
+an element to the set if it is
+already in the set.
+The following code illustrates this:
 
 \begin{lstlisting}
 set<int> s;
@@ -211,14 +221,13 @@ cout << s.count(5) << "\n"; // 1
 \index{multiset@\texttt{multiset}}
 \index{unordered\_multiset@\texttt{unordered\_multiset}}
 
-C++ sisältää myös rakenteet
-\texttt{multiset} ja \texttt{unordered\_multiset},
-jotka toimivat muuten samalla tavalla kuin \texttt{set}
-ja \texttt{unordered\_set},
-mutta sama alkio voi esiintyä
-monta kertaa joukossa.
-Esimerkiksi seuraavassa koodissa
-kaikki luvun 5 kopiot lisätään joukkoon:
+C++ also contains the structures
+\texttt{multiset} and \texttt{unordered\_multiset}
+that work otherwise like \texttt{set}
+and \texttt{unordered\_set}
+but they can contain multiple copies of an element.
+For example, in the following code all copies
+of the number 5 are added to the set:
 
 \begin{lstlisting}
 multiset<int> s;
@@ -227,22 +236,21 @@ s.insert(5);
 s.insert(5);
 cout << s.count(5) << "\n"; // 3
 \end{lstlisting}
-Funktio \texttt{erase} poistaa
-kaikki alkion esiintymät
-\texttt{multiset}-rakenteessa:
+The function \texttt{erase} removes
+all instances of an element
+from a \texttt{multiset}:
 \begin{lstlisting}
 s.erase(5);
 cout << s.count(5) << "\n"; // 0
 \end{lstlisting}
-Usein kuitenkin tulisi poistaa
-vain yksi esiintymä,
-mikä onnistuu näin:
+Often, only one instance should be removed,
+which can be done as follows:
 \begin{lstlisting}
 s.erase(s.find(5));
 cout << s.count(5) << "\n"; // 2
 \end{lstlisting}
 
-\section{Hakemisto}
+\section{Map structure}
 
 \index{hakemisto@hakemisto}
 \index{map@\texttt{map}}
