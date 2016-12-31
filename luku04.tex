@@ -256,83 +256,80 @@ cout << s.count(5) << "\n"; // 2
 \index{map@\texttt{map}}
 \index{unordered\_map@\texttt{unordered\_map}}
 
-\key{Hakemisto} on taulukon yleistys,
-joka sisältää kokoelman avain-arvo-pareja.
-Siinä missä taulukon avaimet ovat aina peräkkäiset
-kokonaisluvut $0,1,\ldots,n-1$,
-missä $n$ on taulukon koko,
-hakemiston avaimet voivat
-olla mitä tahansa tyyppiä
-eikä niiden tarvitse olla peräkkäin.
+A \key{map} is a generalized array
+that consists of key-value-pairs.
+While the keys in a regular array are always
+the successive integers $0,1,\ldots,n-1$,
+where $n$ is the size of the array,
+the keys in a map can be of any data type and
+they don't have to be successive values.
 
-C++ sisältää kaksi toteutusta hakemistolle
-samaan tapaan kuin joukolle.
-Rakenne
-\texttt{map} perustuu
-tasapainoiseen binääripuuhun ja sen
-alkioiden käsittely vie aikaa $O(\log n)$,
-kun taas rakenne
-\texttt{unordered\_map} perustuu
-hajautustauluun ja sen alkioiden
-käsittely vie keskimäärin aikaa $O(1)$.
+C++ contains two map implementations that
+correspond to the set implementations:
+the structure
+\texttt{map} is based on a balanced
+binary tree and accessing an element
+takes $O(\log n)$ time,
+while the structure
+\texttt{unordered\_map} uses a hash map
+and accessing an element takes $O(1)$ time on average.
 
-Seuraava koodi toteuttaa hakemiston,
-jossa avaimet ovat merkkijonoja ja
-arvot ovat kokonaislukuja:
+The following code creates a map
+where the keys are strings and the values are integers:
 
 \begin{lstlisting}
 map<string,int> m;
-m["apina"] = 4;
-m["banaani"] = 3;
-m["cembalo"] = 9;
-cout << m["banaani"] << "\n"; // 3
+m["monkey"] = 4;
+m["banana"] = 3;
+m["harpsichord"] = 9;
+cout << m["banana"] << "\n"; // 3
 \end{lstlisting}
 
-Jos hakemistosta hakee avainta,
-jota ei ole siinä,
-avain lisätään hakemistoon
-automaattisesti oletusarvolla.
-Esimerkiksi seuraavassa koodissa
-hakemistoon ilmestyy avain ''aybabtu'',
-jonka arvona on 0:
+If a value of a key is requested
+but the map doesn't contain it,
+the key is automatically added to the map with
+a default value.
+For example, in the following code,
+the key ''aybabtu'' with value 0
+is added to the map.
 
 \begin{lstlisting}
 map<string,int> m;
 cout << m["aybabtu"] << "\n"; // 0
 \end{lstlisting}
-Funktiolla \texttt{count} voi
-tutkia, esiintyykö avain hakemistossa:
+The function \texttt{count} determines
+if a key exists in the map:
 \begin{lstlisting}
 if (m.count("aybabtu")) {
-    cout << "avain on hakemistossa";
+    cout << "key exists in the map";
 }
 \end{lstlisting}
-Seuraava koodi listaa hakemiston
-kaikki avaimet ja arvot:
+The following code prints all keys and values
+in the map:
 \begin{lstlisting}
 for (auto x : m) {
     cout << x.first << " " << x.second << "\n";
 }
 \end{lstlisting}
 
-\section{Iteraattorit ja välit}
+\section{Iterators and ranges}
 
-\index{iteraattori@iteraattori}
+\index{iterator}
 
-Monet C++:n standardikirjaston funktiot
-käsittelevät tietorakenteiden iteraattoreita
-ja niiden määrittelemiä välejä.
-\key{Iteraattori} on muuttuja,
-joka osoittaa tiettyyn tietorakenteen alkioon.
+Many functions in the C++ standard library
+are given iterators to data structures,
+and iterators often correspond to ranges.
+An \key{iterator} is a variable that points
+to an element in a data structure.
 
-Usein tarvittavat iteraattorit ovat \texttt{begin}
-ja \texttt{end}, jotka rajaavat välin,
-joka sisältää kaikki tietorakenteen alkiot.
-Iteraattori \texttt{begin} osoittaa
-tietorakenteen ensimmäiseen alkioon,
-kun taas iteraattori \texttt{end} osoittaa
-tietorakenteen viimeisen alkion jälkeiseen kohtaan.
-Tilanne on siis tällainen:
+Often used iterators are \texttt{begin}
+and \texttt{end} that define a range that contains
+all elements in a data structure.
+The iterator \texttt{begin} points to
+the first element in the data structure,
+and the iterator \texttt{end} points to
+the position \emph{after} the last element.
+The situation looks as follows:
 
 \begin{center}
 \begin{tabular}{llllllllll}
@@ -342,23 +339,24 @@ Tilanne on siis tällainen:
 \end{tabular}
 \end{center}
 
-Huomaa epäsymmetria iteraattoreissa:
-\texttt{s.begin()} osoittaa tietorakenteen alkioon,
-kun taas \texttt{s.end()} osoittaa tietorakenteen ulkopuolelle.
-Iteraattoreiden rajaama joukon väli on siis \emph{puoliavoin}.
+Note the asymmetry in the iterators:
+\texttt{s.begin()} points to an element in the data structure,
+while \texttt{s.end()} points outside the data structure.
+Thus, the range defined by the iterators is \emph{half-open}.
 
-\subsubsection{Välien käsittely}
+\subsubsection{Handling ranges}
 
-Iteraattoreita tarvitsee
-C++:n standardikirjaston funktioissa, jotka käsittelevät
-tietorakenteen välejä.
-Yleensä halutaan käsitellä tietorakenteiden kaikkia
-alkioita, jolloin funktiolle annetaan
-iteraattorit \texttt{begin} ja \texttt{end}.
+Iterators are used in C++ standard library functions
+that work with ranges of data structures.
+Usually, we want to process all elements in a
+data structure, so the iterators
+\texttt{begin} and \texttt{end} are given for the function.
 
-Esimerkiksi seuraava koodi järjestää vektorin funktiolla \texttt{sort},
-kääntää sitten alkioiden järjestyksen funktiolla \texttt{reverse}
-ja sekoittaa lopuksi alkioiden järjestyksen funktiolla \texttt{random\_shuffle}.
+For example, the following code sorts a vector
+using the function \texttt{sort},
+then reverses the order of the elements using the function
+\texttt{reverse}, and finally shuffles the order of
+the elements using the function \texttt{random\_shuffle}.
 
 \index{sort@\texttt{sort}}
 \index{reverse@\texttt{reverse}}
@@ -370,89 +368,84 @@ reverse(v.begin(), v.end());
 random_shuffle(v.begin(), v.end());
 \end{lstlisting}
 
-Samoja funktioita voi myös käyttää tavallisen taulukon
-yhteydessä, jolloin iteraattorin sijasta annetaan
-osoitin taulukkoon:
+These functions can also be used with a regular array.
+In this case, the functions are given pointers to the array
+instead of iterators:
 
+\newpage
 \begin{lstlisting}
 sort(t, t+n);
 reverse(t, t+n);
 random_shuffle(t, t+n);
 \end{lstlisting}
 
-\subsubsection{Joukon iteraattorit}
+\subsubsection{Set iterators}
 
-Iteraattoreita tarvitsee usein joukon
-alkioiden käsittelyssä.
-Seuraava koodi määrittelee iteraattorin
-\texttt{it}, joka osoittaa joukon \texttt{s} alkuun:
+Iterators are often used when accessing
+elements in a set.
+The following code creates an iterator
+\texttt{it} that points to the first element in the set:
 \begin{lstlisting}
 set<int>::iterator it = s.begin();
 \end{lstlisting}
-Koodin voi kirjoittaa myös lyhyemmin näin:
+A shorter way to write the code is as follows:
 \begin{lstlisting}
 auto it = s.begin();
 \end{lstlisting}
-Iteraattoria vastaavaan joukon alkioon
-pääsee käsiksi \texttt{*}-merkinnällä.
-Esimerkiksi seuraava koodi tulostaa
-joukon ensimmäisen alkion:
+The element to which an iterator points
+can be accessed through the \texttt{*} symbol.
+For example, the following code prints
+the first element in the set:
 
 \begin{lstlisting}
 auto it = s.begin();
 cout << *it << "\n";
 \end{lstlisting}
 
-Iteraattoria pystyy liikuttamaan
-operaatioilla \texttt{++} (eteenpäin)
-ja \texttt{---} (taaksepäin).
-Tällöin iteraattori siirtyy seuraavaan
-tai edelliseen alkioon joukossa.
+Iterators can be moved using operators
+\texttt{++} (forward) and \texttt{---} (backward),
+meaning that the iterator moves to the next
+or previous element in the set.
 
-Seuraava koodi tulostaa joukon kaikki alkiot:
-
+The following code prints all elements in the set:
 \begin{lstlisting}
 for (auto it = s.begin(); it != s.end(); it++) {
     cout << *it << "\n";
 }
 \end{lstlisting}
-Seuraava koodi taas tulostaa joukon
-viimeisen alkion:
-
+The following code prints the last element in the set:
 \begin{lstlisting}
 auto it = s.end();
 it--;
 cout << *it << "\n";
 \end{lstlisting}
-% Iteraattoria täytyi liikuttaa askel taaksepäin,
-% koska se osoitti aluksi joukon viimeisen
-% alkion jälkeiseen kohtaan.
 
-Funktio $\texttt{find}(x)$ palauttaa iteraattorin
-joukon alkioon, jonka arvo on $x$.
-Poikkeuksena jos alkiota $x$ ei esiinny joukossa,
-iteraattoriksi tulee \texttt{end}.
+The function $\texttt{find}(x)$ returns an iterator
+that points to an element whose value is $x$.
+However, if the set doesn't contain $x$,
+the iterator will be \texttt{end}.
 
 \begin{lstlisting}
 auto it = s.find(x);
-if (it == s.end()) cout << "x puuttuu joukosta";
+if (it == s.end()) cout << "x is missing";
 \end{lstlisting}
 
-Funktio $\texttt{lower\_bound}(x)$ palauttaa
-iteraattorin joukon pienimpään alkioon,
-joka on ainakin yhtä suuri kuin $x$.
-Vastaavasti $\texttt{upper\_bound}(x)$ palauttaa
-iteraattorin pienimpään alkioon,
-joka on suurempi kuin $x$.
-Jos tällaisia alkioita ei ole joukossa,
-funktiot palauttavat arvon \texttt{end}.
-Näitä funktioita ei voi käyttää
-\texttt{unordered\_set}-rakenteessa,
-joka ei pidä yllä alkioiden järjestystä.
+The function $\texttt{lower\_bound}(x)$ returns
+an iterator to the smallest element in the set
+whose value is at least $x$.
+Correspondingly, 
+the function $\texttt{upper\_bound}(x)$
+returns an iterator to the smallest element
+in the set whose value is larger than $x$.
+If such elements do not exist,
+the return value of the functions will be \texttt{end}.
+These functions are not supported by the
+\texttt{unordered\_set} structure that
+doesn't maintain the order of the elements.
 
 \begin{samepage}
-Esimerkiksi seuraava koodi etsii joukosta
-alkion, joka on lähinnä lukua $x$:
+For example, the following code finds the element
+nearest to $x$:
 
 \begin{lstlisting}
 auto a = s.lower_bound(x);
@@ -470,20 +463,19 @@ if (a == s.begin() && a == s.end()) {
 }
 \end{lstlisting}
 
-Koodi käy läpi mahdolliset tapaukset
-iteraattorin \texttt{a} avulla.
-Iteraattori
-osoittaa aluksi pienimpään alkioon,
-joka on ainakin yhtä suuri kuin $x$.
-Jos \texttt{a} on samaan aikaan \texttt{begin}
-ja \texttt{end}, joukko on tyhjä.
-Muuten jos \texttt{a} on \texttt{begin},
-sen osoittama alkio on $x$:ää lähin alkio.
-Jos taas \texttt{a} on \texttt{end},
-$x$:ää lähin alkio on joukon viimeinen alkio.
-Jos mikään edellisistä tapauksista ei päde,
-niin $x$:ää lähin alkio
-on joko $a$:n osoittama alkio tai sitä edellinen alkio.
+The code goes through all possible cases
+using the iterator \texttt{a}.
+First, the iterator points to the smallest
+element whose value is at least $x$.
+If \texttt{a} is both \texttt{begin}
+and \texttt{end} at the same time, the set is empty.
+If \texttt{a} equals \texttt{begin},
+the corresponding element is nearest to $x$.
+If \texttt{a} equals \texttt{end},
+the last element in the set is nearest to $x$.
+If none of the previous cases is true,
+the element nearest to $x$ is either the
+element that corresponds to $a$ or the previous element.
 \end{samepage}
 
 \section{Muita tietorakenteita}
