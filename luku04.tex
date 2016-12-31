@@ -538,20 +538,18 @@ cout << (a^b) << "\n"; // 1001101110
 
 \subsubsection{Pakka}
 
-\index{pakka@pakka}
+\index{deque}
 \index{deque@\texttt{deque}}
 
-\key{Pakka} (\texttt{deque}) on dynaaminen taulukko,
-jonka kokoa pystyy muuttamaan tehokkaasti
-sekä alku- että loppupäässä.
-Pakka sisältää vektorin tavoin
-funktiot \texttt{push\_back}
-ja \texttt{pop\_back}, mutta siinä on lisäksi myös funktiot
-\texttt{push\_front} ja \texttt{pop\_front},
-jotka käsittelevät taulukon alkua.
+A \key{deque} (\texttt{deque}) is a dynamic array
+whose size can be changed at both ends of the array.
+Like a vector, a deque contains functions
+\texttt{push\_back} and \texttt{pop\_back}, but
+it also contains additional functions
+\texttt{push\_front} and \texttt{pop\_front}
+that are not available in a vector.
 
-Seuraava koodi esittelee pakan käyttämistä:
-
+A deque can be used as follows:
 \begin{lstlisting}
 deque<int> d;
 d.push_back(5); // [5]
@@ -561,27 +559,26 @@ d.pop_back(); // [3,5]
 d.pop_front(); // [5]
 \end{lstlisting}
 
-Pakan sisäinen toteutus on monimutkaisempi kuin
-vektorissa, minkä vuoksi se on
-vektoria raskaampi rakenne.
-Kuitenkin lisäyksen ja poiston
-aikavaativuus on keskimäärin $O(1)$ molemmissa päissä.
+The internal implementation of a deque
+is more complex than the implementation of a vector.
+For this reason, a deque is slower than a vector.
+Still, the time complexity of adding and removing
+elements is $O(1)$ on average at both ends.
 
 \subsubsection{Pino}
 
-\index{pino@pino}
+\index{stack}
 \index{stack@\texttt{stack}}
 
-\key{Pino} (\texttt{stack}) on tietorakenne,
-joka tarjoaa kaksi $O(1)$-aikaista
-operaatiota:
-alkion lisäys pinon päälle ja alkion
-poisto pinon päältä.
-Pinossa ei ole mahdollista käsitellä muita
-alkioita kuin pinon päällimmäistä alkiota.
+A \key{stack} (\texttt{stack})
+is a data structure that provides two
+$O(1)$ time operations:
+adding an element to the top,
+and removing an element from the top.
+It is only possible to access the top
+element of a stack.
 
-Seuraava koodi esittelee pinon käyttämistä:
-
+The following code shows how a stack can be used:
 \begin{lstlisting}
 stack<int> s;
 s.push(3);
@@ -591,19 +588,19 @@ cout << s.top(); // 5
 s.pop();
 cout << s.top(); // 2
 \end{lstlisting}
-\subsubsection{Jono}
+\subsubsection{Queue}
 
-\index{jono@jono}
+\index{queue}
 \index{queue@\texttt{queue}}
 
-\key{Jono} (\texttt{queue}) on kuin pino,
-mutta alkion lisäys tapahtuu jonon loppuun
-ja alkion poisto tapahtuu jonon alusta.
-Jonossa on mahdollista käsitellä vain
-alussa ja lopussa olevaa alkiota.
+A \key{queue} (\texttt{queue}) also
+provides two $O(1)$ time operations:
+adding a new element to the end,
+and removing the first element.
+It is only possible to access the first
+and the last element of a queue.
 
-Seuraava koodi esittelee jonon käyttämistä:
-
+The following code shows how a queue can be used:
 \begin{lstlisting}
 queue<int> s;
 s.push(3);
@@ -613,44 +610,36 @@ cout << s.front(); // 3
 s.pop();
 cout << s.front(); // 2
 \end{lstlisting}
-% 
-% Huomaa, että rakenteiden \texttt{stack} ja \texttt{queue}
-% sijasta voi aina käyttää rakenteita
-% \texttt{vector} ja \texttt{deque}, joilla voi
-% tehdä kaiken saman ja enemmän.
-% Kuitenkin \texttt{stack} ja \texttt{queue} ovat
-% kevyempiä ja hieman tehokkaampia rakenteita,
-% jos niiden operaatiot riittävät algoritmin toteuttamiseen.
 
-\subsubsection{Prioriteettijono}
+\subsubsection{Priority queue}
 
-\index{prioriteettijono@prioriteettijono}
-\index{keko@keko}
+\index{priority queue}
+\index{heap}
 \index{priority\_queue@\texttt{priority\_queue}}
 
-\key{Prioriteettijono} (\texttt{priority\_queue})
-pitää yllä joukkoa alkioista.
-Sen operaatiot ovat alkion lisäys ja
-jonon tyypistä riippuen joko
-pienimmän alkion haku ja poisto tai
-suurimman alkion haku ja poisto.
-Lisäyksen ja poiston aikavaativuus on $O(\log n)$
-ja haun aikavaativuus on $O(1)$.
+A \key{priority queue} (\texttt{priority\_queue})
+maintains a set of elements.
+The supported operations are insertion and,
+depending on the type of the queue,
+retrieval and removal of
+either the minimum element or the maximum element.
+The time complexity is $O(\log n)$
+for insertion and removal and $O(1)$ for retrieval.
 
-Vaikka prioriteettijonon operaatiot
-pystyy toteuttamaan myös \texttt{set}-ra\-ken\-teel\-la,
-prioriteettijonon etuna on,
-että sen kekoon perustuva sisäinen
-toteutus on yksinkertaisempi
-kuin \texttt{set}-rakenteen tasapainoinen binääripuu,
-minkä vuoksi rakenne on kevyempi ja
-operaatiot ovat tehokkaampia.
+While a set structure efficiently supports 
+all the operations of a priority queue,
+the benefit in using a priority queue is
+that it has smaller constant factors.
+A priority queue is usually implemented using
+a heap structure that is much simpler than a
+balanced binary tree needed for an ordered set.
 
 \begin{samepage}
-C++:n prioriteettijono toimii oletuksena niin,
-että alkiot ovat järjestyksessä suurimmasta pienimpään
-ja jonosta pystyy hakemaan ja poistamaan suurimman alkion.
-Seuraava koodi esittelee prioriteettijonon käyttämistä:
+As default, the elements in the C++
+priority queue are sorted in decreasing order,
+and it is possible to find and remove the
+largest element in the queue.
+The following code shows an example:
 
 \begin{lstlisting}
 priority_queue<int> q;
@@ -668,76 +657,77 @@ q.pop();
 \end{lstlisting}
 \end{samepage}
 
-Seuraava määrittely luo käänteisen prioriteettijonon,
-jossa jonosta pystyy hakemaan ja poistamaan pienimmän alkion:
+The following definition creates a priority queue
+that supports finding and removing the minimum element:
 
 \begin{lstlisting}
 priority_queue<int,vector<int>,greater<int>> q;
 \end{lstlisting}
 
-\section{Vertailu järjestämiseen}
+\section{Comparison to sorting}
 
-Monen tehtävän voi ratkaista tehokkaasti joko
-käyttäen sopivia tietorakenteita
-tai taulukon järjestämistä.
-Vaikka erilaiset ratkaisutavat olisivat kaikki
-periaatteessa tehokkaita, niissä voi olla
-käytännössä merkittäviä eroja.
+Often it's possible to solve a problem
+using either data structures or sorting.
+Sometimes there are remarkable differences
+in the actual efficiency of these approaches,
+which may be hidden in their time complexities.
 
-Tarkastellaan ongelmaa, jossa
-annettuna on kaksi listaa $A$ ja $B$,
-joista kummassakin on $n$ kokonaislukua.
-Tehtävänä on selvittää, moniko luku
-esiintyy kummassakin listassa.
-Esimerkiksi jos listat ovat
-\[A = [5,2,8,9,4] \hspace{10px} \textrm{ja} \hspace{10px} B = [3,2,9,5],\]
-niin vastaus on 3, koska luvut 2, 5
-ja 9 esiintyvät kummassakin listassa.
-Suoraviivainen ratkaisu tehtävään on käydä läpi
-kaikki lukuparit ajassa $O(n^2)$, mutta seuraavaksi
-keskitymme tehokkaampiin ratkaisuihin.
+Let us consider a problem where
+we are given two lists $A$ and $B$
+that both contain $n$ integers.
+Our task is to calculate the number of integers
+that belong to both of the lists.
+For example, for the lists
+\[A = [5,2,8,9,4] \hspace{10px} \textrm{and} \hspace{10px} B = [3,2,9,5],\]
+the answer is 3 because the numbers 2, 5
+and 9 belong to both of the lists.
 
-\subsubsection{Ratkaisu 1}
+A straightforward solution for the problem is
+to go through all pairs of numbers in $O(n^2)$ time,
+but next we will concentrate on
+more efficient solutions.
 
-Tallennetaan listan $A$ luvut joukkoon
-ja käydään sitten läpi listan $B$ luvut ja
-tarkistetaan jokaisesta, esiintyykö se myös listassa $A$.
-Joukon ansiosta on tehokasta tarkastaa,
-esiintyykö listan $B$ luku listassa $A$.
-Kun joukko toteutetaan \texttt{set}-rakenteella,
-algoritmin aikavaativuus on $O(n \log n)$.
+\subsubsection{Solution 1}
 
-\subsubsection{Ratkaisu 2}
+We construct a set of the numbers in $A$,
+and after this, iterate through the numbers
+in $B$ and check for each number if it
+also belongs to $A$.
+This is efficient because the numbers in $A$
+are in a set.
+Using the \texttt{set} structure,
+the time complexity of the algorithm is $O(n \log n)$.
 
-Joukon ei tarvitse säilyttää lukuja
-järjestyksessä, joten
-\texttt{set}-ra\-ken\-teen sijasta voi
-käyttää myös \texttt{unordered\_set}-ra\-ken\-net\-ta.
-Tämä on helppo tapa parantaa algoritmin
-tehokkuutta, koska
-algoritmin toteutus säilyy samana ja vain tietorakenne vaihtuu.
-Uuden algoritmin aikavaativuus on $O(n)$.
+\subsubsection{Solution 2}
 
-\subsubsection{Ratkaisu 3}
+It is not needed to maintain an ordered set,
+so instead of the \texttt{set} structure
+we can also use the \texttt{unordered\_set} structure.
+This is an easy way to make the algorithm
+more efficient because we only have to change
+the data structure that the algorithm uses.
+The time complexity of the new algorithm is $O(n)$.
 
-Tietorakenteiden sijasta voimme käyttää järjestämistä.
-Järjestetään ensin listat $A$ ja $B$,
-minkä jälkeen yhteiset luvut voi löytää
-käymällä listat rinnakkain läpi.
-Järjestämisen aikavaativuus on $O(n \log n)$ ja
-läpikäynnin aikavaativuus on $O(n)$,
-joten kokonaisaikavaativuus on $O(n \log n)$.
+\subsubsection{Solution 3}
 
-\subsubsection{Tehokkuusvertailu}
+Instead of data structures, we can use sorting.
+First, we sort both lists $A$ and $B$.
+After this, we iterate through both the lists
+at the same time and find the common elements.
+The time complexity of sorting is $O(n \log n)$,
+and the rest of the algorithm works in $O(n)$ time,
+so the total time complexity is $O(n \log n)$.
 
-Seuraavassa taulukossa on mittaustuloksia
-äskeisten algoritmien tehokkuudesta,
-kun $n$ vaihtelee ja listojen luvut ovat
-satunnaisia lukuja välillä $1 \ldots 10^9$:
+\subsubsection{Efficiency comparison}
+
+The following table shows how efficient
+the above algorithms are when $n$ varies and
+the elements in the lists are random
+integers between $1 \ldots 10^9$:
 
 \begin{center}
 \begin{tabular}{rrrr}
-$n$ & ratkaisu 1 & ratkaisu 2 & ratkaisu 3 \\
+$n$ & solution 1 & solution 2 & solution 3 \\
 \hline
 $10^6$ & $1{,}5$ s & $0{,}3$ s & $0{,}2$ s \\
 $2 \cdot 10^6$ & $3{,}7$ s & $0{,}8$ s & $0{,}3$ s \\
@@ -747,26 +737,23 @@ $5 \cdot 10^6$ & $10{,}0$ s & $2{,}3$ s & $0{,}9$ s \\
 \end{tabular}
 \end{center}
 
-Ratkaisut 1 ja 2 ovat muuten samanlaisia,
-mutta ratkaisu 1 käyttää \texttt{set}-rakennetta,
-kun taas ratkaisu 2 käyttää
-\texttt{unordered\_set}-rakennetta.
-Tässä tapauksessa tällä valinnalla on
-merkittävä vaikutus suoritusaikaan,
-koska ratkaisu 2 on 4–5 kertaa
-nopeampi kuin ratkaisu 1.
+Solutions 1 and 2 are equal except that
+solution 1 uses the \texttt{set} structure
+and solution 2 uses the \texttt{unordered\_set} structure.
+In this case, this choice has a big effect on
+the running time becase solution 2
+is 4–5 times faster than solution 1.
 
-Tehokkain ratkaisu on kuitenkin järjestämistä
-käyttävä ratkaisu 3, joka on vielä puolet
-nopeampi kuin ratkaisu 2.
-Kiinnostavaa on, että sekä ratkaisun 1 että
-ratkaisun 3 aikavaativuus on $O(n \log n)$,
-mutta siitä huolimatta
-ratkaisu 3 vie aikaa vain kymmenesosan.
-Tämän voi selittää sillä, että
-järjestäminen on kevyt
-operaatio ja se täytyy tehdä vain kerran
-ratkaisussa 3 algoritmin alussa,
-minkä jälkeen algoritmin loppuosa on lineaarinen.
-Ratkaisu 1 taas pitää yllä monimutkaista
-tasapainoista binääripuuta koko algoritmin ajan.
+However, the most efficient solution is solution 3
+that uses sorting.
+It only uses half of the time compared to solution 2.
+Interestingly, the time complexity of both
+solution 1 and solution 3 is $O(n \log n)$,
+but despite this, solution 3 is ten times faster.
+The explanation for this is that
+sorting is a simple procedure and it is done
+only once at the beginning of solution 3,
+and the rest of the algorithm works in linear time.
+On the other hand,
+solution 3 maintains a complex balanced binary tree
+during the whole algorithm.
