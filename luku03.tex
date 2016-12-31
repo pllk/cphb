@@ -768,118 +768,121 @@ sort(v.begin(), v.end(), cmp);
 
 \index{binary search}
 
-Tavallinen tapa etsiä alkiota taulukosta
-on käyttää \texttt{for}-silmukkaa, joka käy läpi
-taulukon sisällön alusta loppuun.
-Esimerkiksi seuraava koodi etsii alkiota
-$x$ taulukosta \texttt{t}.
+A general method for searching for an element
+in an array is to use a \texttt{for} loop
+that iterates through all elements in the array.
+For example, the following code searches for
+an element $x$ in array \texttt{t}:
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
-    if (t[i] == x) // alkio x löytyi kohdasta i
+    if (t[i] == x) // x found at index i
 }
 \end{lstlisting}
 
-Tämän menetelmän aikavaativuus on $O(n)$,
-koska pahimmassa tapauksessa koko taulukko täytyy
-käydä läpi.
-Jos taulukon sisältö voi olla mikä tahansa,
-tämä on kuitenkin tehokkain mahdollinen menetelmä,
-koska saatavilla ei ole lisätietoa siitä,
-mistä päin taulukkoa alkiota $x$ kannattaa etsiä.
+The time complexity of this approach is $O(n)$
+because in the worst case, we have to check
+all elements in the array.
+If the array can contain any elements,
+this is also the best possible approach because
+there is no additional information available where
+in the array we should search for the element $x$.
 
-Tilanne on toinen silloin, kun taulukko on
-järjestyksessä.
-Tässä tapauksessa haku on mahdollista toteuttaa
-paljon nopeammin, koska taulukon järjestys
-ohjaa etsimään alkiota oikeasta suunnasta.
-Seuraavaksi käsiteltävä \key{binäärihaku}
-löytää alkion järjestetystä taulukosta
-tehokkaasti ajassa $O(\log n)$.
+However, if the array is \emph{sorted},
+the situation is different.
+In this case it is possible to perform the
+search much faster, because the order of the
+elements in the array guides us.
+The following \key{binary search} algorithm
+efficiently searches for an element in a sorted array
+in $O(\log n)$ time.
 
-\subsubsection{Toteutus 1}
+\subsubsection{Method 1}
 
-Perinteinen tapa toteuttaa binäärihaku muistuttaa sanan etsimistä
-sanakirjasta. Haku puolittaa joka askeleella hakualueen taulukossa,
-kunnes lopulta etsittävä alkio löytyy tai osoittautuu,
-että sitä ei ole taulukossa.
+The traditional way to implement binary search
+resembles looking for a word in a dictionary.
+At each step, the search halves the active region in the array, 
+until the desired element is found, or it turns out
+that there is no such element.
 
-Haku tarkistaa ensin taulukon keskimmäisen alkion.
-Jos keskimmäinen alkio on etsittävä alkio, haku päättyy.
-Muuten haku jatkuu taulukon vasempaan tai oikeaan osaan sen mukaan,
-onko keskimmäinen alkio suurempi vain pienempi kuin etsittävä alkio.
+First, the search checks the middle element in the array.
+If the middle element is the desired element,
+the search terminates.
+Otherwise, the search recursively continues
+to the left half or to the right half of the array,
+depending on the value of the middle element.
 
-Yllä olevan idean voi toteuttaa seuraavasti:
+The above idea can be implemented as follows:
 \begin{lstlisting}
 int a = 1, b = n;
 while (a <= b) {
     int k = (a+b)/2;
-    if (t[k] == x) // alkio x löytyi kohdasta k
+    if (t[k] == x) // x found at index k
     if (t[k] > x) b = k-1;
     else a = k+1;
 }
 \end{lstlisting}
 
-Algoritmi pitää yllä väliä $a \ldots b$, joka on
-jäljellä oleva hakualue taulukossa.
-Aluksi väli on $1 \ldots n$ eli koko taulukko.
-Välin koko puolittuu algoritmin joka vaiheessa,
-joten aikavaativuus on $O(\log n)$.
+The algorithm maintains a range $a \ldots b$
+that corresponds to the active region in the array.
+Initially, the range is $1 \ldots n$, the whole array.
+The algorithm halves the size of the range at each step,
+so the time complexity is $O(\log n)$.
 
-\subsubsection{Toteutus 2}
+\subsubsection{Method 2}
 
-Vaihtoehtoinen tapa toteuttaa binäärihaku
-perustuu taulukon tehostettuun läpikäyntiin.
-Ideana on käydä taulukkoa läpi hyppien
-ja hidastaa vauhtia, kun etsittävä alkio lähestyy.
+An alternative method for implementing binary search
+is based on a more efficient way to iterate through
+the elements in the array.
+The idea is to make jumps and slow the speed
+when we get closer to the desired element.
 
-Haku käy taulukkoa läpi vasemmalta oikealle aloittaen
-hypyn pituudesta $n/2$.
-Joka vaiheessa hypyn pituus puolittuu:
-ensin $n/4$, sitten $n/8$, sitten $n/16$ jne.,
-kunnes lopulta hypyn pituus on 1.
-Hyppyjen jälkeen joko haettava alkio on löytynyt
-tai selviää, että sitä ei ole taulukossa.
+The search goes through the array from the left to
+the right, and the initial jump length is $n/2$.
+At each step, the jump length will be halved:
+first $n/4$, then $n/8$, $n/16$, etc., until
+finally the length is 1.
+After the jumps, either the desired element has
+been found or we know that it doesn't exist in the array.
 
-Seuraava koodi toteuttaa äskeisen idean:
+The following code implements the above idea:
 \begin{lstlisting}
 int k = 1;
 for (int b = n/2; b >= 1; b /= 2) {
     while (k+b <= n && t[k+b] <= x) k += b;
 }
-if (t[k] == x) // alkio x löytyi kohdasta k
+if (t[k] == x) // x was found at index k
 \end{lstlisting}
 
-Muuttuja $k$ on läpikäynnin kohta taulukossa
-ja muuttuja $b$ on hypyn pituus.
-Jos alkio $x$ esiintyy taulukossa,
-sen kohta on muuttujassa $k$ algoritmin päätteeksi.
-Algoritmin aikavaativuus on $O(\log n)$,
-koska \texttt{while}-silmukassa oleva koodi suoritetaan
-aina enintään kahdesti.
+Variable $k$ is the position in the array,
+and variable $b$ is the jump length.
+If the array contains the element $x$,
+the index of the element will be in variable $k$
+after the search.
+The time complexity of the algorithm is $O(\log n)$,
+because the code in the \texttt{while} loop
+is performed at most twice for each jump length.
 
-\subsubsection{Muutoskohdan etsiminen}
+\subsubsection{Finding the smallest solution}
 
-Käytännössä binäärihakua tarvitsee toteuttaa
-harvoin alkion etsimiseen taulukosta,
-koska sen sijasta voi käyttää standardikirjastoa.
-Esimerkiksi C++:n funktiot \texttt{lower\_bound}
-ja \texttt{upper\_bound} toteuttavat binäärihaun
-ja tietorakenne \texttt{set} ylläpitää joukkoa,
-jonka operaatiot ovat $O(\log n)$-aikaisia.
+In practice, it is seldom needed to implement
+binary search for array search,
+because we can use the standard library instead.
+For example, the C++ functions \texttt{lower\_bound}
+and \texttt{upper\_bound} implement binary search,
+and the data structure \texttt{set} maintains a
+set of elements with $O(\log n)$ time operations.
 
-Sitäkin tärkeämpi binäärihaun käyttökohde on 
-funktion \key{muutoskohdan} etsiminen.
-Oletetaan, että haluamme löytää pienimmän arvon $k$,
-joka on kelvollinen ratkaisu ongelmaan.
-Käytössämme on funktio $\texttt{ok}(x)$,
-joka palauttaa \texttt{true}, jos $x$ on kelvollinen
-ratkaisu, ja muuten \texttt{false}.
-Lisäksi tiedämme, että $\texttt{ok}(x)$ on \texttt{false}
-aina kun $x<k$ ja \texttt{true} aina kun $x \geq k$.
-% Toisin sanoen haluamme löytää funktion \texttt{ok} \emph{muutoskohdan},
-% jossa arvosta \texttt{false} tulee arvo \texttt{true}.
-Tilanne näyttää seuraavalta:
+However, an important use for binary search is
+to find a position where the value of a function changes.
+Suppose that we wish to find the smallest value $k$
+that is a valid solution for a problem.
+We are given a function $\texttt{ok}(x)$
+that returns \texttt{true} if $x$ is a valid solution
+and \texttt{false} otherwise.
+In addition, we know that $\texttt{ok}(x)$ is \texttt{false}
+when $x<k$ and \texttt{true} when $x \ge k$.
+The situation looks as follows:
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrr}
@@ -891,8 +894,7 @@ $\texttt{ok}(x)$ & \texttt{false} & \texttt{false}
 \end{center}
 
 \noindent
-Nyt muutoskohta on mahdollista etsiä käyttämällä
-binäärihakua:
+The value $k$ can be found using binary search:
 
 \begin{lstlisting}
 int x = -1;
@@ -902,43 +904,41 @@ for (int b = z; b >= 1; b /= 2) {
 int k = x+1;
 \end{lstlisting}
 
-Haku etsii suurimman $x$:n arvon,
-jolla $\texttt{ok}(x)$ on \texttt{false}.
-Niinpä tästä seuraava arvo $k=x+1$
-on pienin arvo, jolla $\texttt{ok}(k)$ on \texttt{true}.
-Hypyn aloituspituus $z$ tulee olla 
-sopiva suuri luku, esimerkiksi sellainen,
-jolla $\texttt{ok}(z)$ on varmasti \texttt{true}.
+The search finds the largest value of $x$ for which
+$\texttt{ok}(x)$ is \texttt{false}.
+Thus, the next value $k=x+1$
+is the smallest possible value for which
+$\texttt{ok}(k)$ is \texttt{true}.
+The initial jump length $z$ has to be
+large enough, for example some value
+for which we know beforehand that $\texttt{ok}(z)$ is \texttt{true}.
 
-Algoritmi kutsuu $O(\log z)$ kertaa funktiota
-\texttt{ok}, joten kokonaisaikavaativuus
-riippuu siitä, kauanko funktion \texttt{ok}
-suoritus kestää.
-Esimerkiksi jos ratkaisun tarkastus
-vie aikaa $O(n)$, niin kokonaisaikavaativuus
-on $O(n \log z)$.
+The algorithm calls the function \texttt{ok}
+$O(\log z)$ times, so the total time complexity
+depends on the function \texttt{ok}.
+For example, if the function works in $O(n)$ time,
+the total time complexity becomes $O(n \log z)$.
 
-\subsubsection{Huippuarvon etsiminen}
+\subsubsection{Finding the maximum value}
 
-Binäärihaulla voi myös etsiä
-suurimman arvon funktiolle,
-joka on ensin kasvava ja sitten laskeva.
-Toisin sanoen tehtävänä on etsiä arvo
-$k$ niin, että
+Binary search can also be used for finding
+the maximum value for a function that is
+first increasing and then decreasing.
+Our task is to find a value $k$ such that
 
 \begin{itemize}
 \item
-$f(x)<f(x+1)$, kun $x<k$, ja
+$f(x)<f(x+1)$ when $x<k$, and
 \item
-$f(x)>f(x+1)$, kun $x >= k$.
+$f(x)>f(x+1)$ when $x >= k$.
 \end{itemize}
 
-Ideana on etsiä binäärihaulla
-viimeinen kohta $x$,
-jossa pätee $f(x)<f(x+1)$.
-Tällöin $k=x+1$,
-koska pätee $f(x+1)>f(x+2)$.
-Seuraava koodi toteuttaa haun: 
+The idea is to use binary search
+for finding the largest value of $x$
+for which $f(x)<f(x+1)$.
+This implies that $k=x+1$
+because $f(x+1)>f(x+2)$.
+The following code implements the search: 
 
 \begin{lstlisting}
 int x = -1;
@@ -948,11 +948,8 @@ for (int b = z; b >= 1; b /= 2) {
 int k = x+1;
 \end{lstlisting}
 
-Huomaa, että toisin kuin tavallisessa binäärihaussa,
-tässä ei ole sallittua,
-että peräkkäiset arvot olisivat yhtä suuria.
-Silloin ei olisi mahdollista tietää,
-mihin suuntaan hakua tulee jatkaa.
-
-
-
+Note that unlike in the regular binary search,
+here it is not allowed that successive values
+of the function are equal.
+In this case it would not be possible to know
+how to continue the search.
