@@ -1,131 +1,127 @@
 \chapter{Greedy algorithms}
 
-\index{ahne algoritmi@ahne algoritmi}
+\index{greedy algorithm}
 
-\key{Ahne algoritmi}
-muodostaa tehtävän ratkaisun
-tekemällä joka askeleella
-sillä hetkellä parhaalta näyttävän valinnan.
-Ahne algoritmi ei koskaan 
-peruuta tekemiään valintoja vaan
-muodostaa ratkaisun suoraan valmiiksi.
-Tämän ansiosta ahneet algoritmit ovat
-yleensä hyvin tehokkaita.
+A \key{greedy algorithm}
+constructs a solution for a problem
+by always making a choice that looks
+the best at the moment.
+A greedy algorithm never takes back
+its choices, but directly constructs
+the final solution.
+For this reason, greedy algorithms
+are usually very efficient.
 
-Vaikeutena ahneissa algoritmeissa on
-keksiä toimiva ahne strategia,
-joka tuottaa aina optimaalisen ratkaisun tehtävään.
-Ahneen algoritmin tulee olla sellainen,
-että kulloinkin parhaalta näyttävät valinnat
-tuottavat myös parhaan kokonaisuuden.
-Tämän perusteleminen on usein hankalaa.
+The difficulty in designing a greedy algorithm
+is to invent a greedy strategy
+that always produces an optimal solution
+for the problem.
+The locally optimal choices in a greedy
+algorithm should also be globally optimal.
+It's often difficult to argue why
+a greedy algorithm works.
 
-\section{Kolikkotehtävä}
+\section{Coin problem}
 
-Aloitamme ahneisiin algoritmeihin tutustumisen
-tehtävästä, jossa muodostettavana on
-rahamäärä $x$ kolikoista.
-Kolikoiden arvot ovat $\{c_1,c_2,\ldots,c_k\}$,
-ja jokaista kolikkoa on saatavilla rajattomasti.
-Tehtävänä on selvittää, mikä on pienin määrä
-kolikoita, joilla rahamäärän voi muodostaa.
+As the first example, we consider a problem
+where we are given a set of coin values
+and our task is to form a sum of money
+using the coins.
+The values of the coins are
+$\{c_1,c_2,\ldots,c_k\}$,
+and each coin can be used as many times we want.
+What is the minimum number of coins needed?
 
-Esimerkiksi jos muodostettava
-rahamäärä on 520
-ja kolikot ovat eurokolikot eli sentteinä
-\[\{1,2,5,10,20,50,100,200\},\]
-niin kolikoita tarvitaan vähintään 4.
-Tämä on mahdollista valitsemalla kolikot
-$200+200+100+20$, joiden summa on 520.
+For example, if the coins are euro coins (in cents)
+\[\{1,2,5,10,20,50,100,200\}\]
+and the sum of money is 520,
+we need at least four coins.
+The optimal solution is to select coins
+$200+200+100+20$ whose sum is 520.
 
-\subsubsection{Ahne algoritmi}
+\subsubsection{Greedy algorithm}
 
-Luonteva ahne algoritmi tehtävään
-on poistaa rahamäärästä aina mahdollisimman
-suuri kolikko, kunnes rahamäärä on 0.
-Tämä algoritmi toimii esimerkissä,
-koska rahamäärästä 520 
-poistetaan ensin kahdesti 200, sitten 100
-ja lopuksi 20.
-Mutta toimiiko ahne algoritmi aina oikein?
+A natural greedy algorithm for the problem
+is to always select the largest possible coin,
+until we have constructed the required sum of money.
+This algorithm works in the example case,
+because we first select two 200 cent coins,
+then one 100 cent coin and finally one 20 cent coin.
+But does this algorithm always work?
 
-Osoittautuu, että eurokolikoiden tapauksessa
-ahne algoritmi \emph{toimii} aina oikein,
-eli se tuottaa aina ratkaisun,
-jossa on pienin määrä kolikoita.
-Algoritmin toimivuuden voi perustella
-seuraavasti:
+It turns out that, for the set of euro coins,
+the greedy algorithm \emph{always} works, i.e.,
+it always produces a solution with the fewest
+possible number of coins.
+The correctness of the algorithm can be
+argued as follows:
 
-Kutakin kolikkoa 1, 5, 10, 50 ja 100
-on optimiratkaisussa enintään yksi.
-Tämä johtuu siitä, että jos
-ratkaisussa olisi kaksi tällaista kolikkoa,
-saman ratkaisun voisi muodostaa
-käyttäen vähemmän kolikoita.
-Esimerkiksi jos ratkaisussa on
-kolikot $5+5$, ne voi korvata kolikolla 10.
+Each coin 1, 5, 10, 50 and 100 appears
+at most once in the optimal solution.
+The reason for this is that if the
+solution would contain two such coins,
+we could replace them by one coin and
+obtain a better solution.
+For example, if the solution would contain
+coins $5+5$, we could replace them by coin $10$.
 
-Vastaavasti kumpaakin kolikkoa 2 ja 20
-on optimiratkaisussa enintään kaksi,
-koska kolikot $2+2+2$ voi korvata kolikoilla $5+1$
-ja kolikot $20+20+20$ voi korvata kolikoilla $50+10$.
-Lisäksi ratkaisussa ei voi olla yhdistelmiä
-$2+2+1$ ja $20+20+10$,
-koska ne voi korvata kolikoilla 5 ja 50.
+In the same way, both coins 2 and 20 can appear
+at most twice in the optimal solution
+because, we could replace
+coins $2+2+2$ by coins $5+1$ and
+coins $20+20+20$ by coins $50+10$.
+Moreover, the optimal solution can't contain
+coins $2+2+1$ or $20+20+10$
+because we would replace them by coins $5$ and $50$.
 
-Näiden havaintojen perusteella
-jokaiselle kolikolle $x$ pätee,
-että $x$:ää pienemmistä kolikoista
-ei ole mahdollista saada aikaan summaa
-$x$ tai suurempaa summaa optimaalisesti.
-Esimerkiksi jos $x=100$, pienemmistä kolikoista
-saa korkeintaan summan $50+20+20+5+2+2=99$.
-Niinpä ahne algoritmi,
-joka valitsee aina suurimman kolikon,
-tuottaa optimiratkaisun.
+Using these observations,
+we can show for each coin $x$ that
+it is not possible to optimally construct
+sum $x$ or any larger sum by only using coins
+that are smaller than $x$.
+For example, if $x=100$, the largest optimal
+sum using the smaller coins is  $5+20+20+5+2+2=99$.
+Thus, the greedy algorithm that always selects
+the largest coin produces the optimal solution.
 
-Kuten tästä esimerkistä huomaa,
-ahneen algoritmin toimivuuden perusteleminen
-voi olla työlästä,
-vaikka kyseessä olisi yksinkertainen algoritmi.
+This example shows that it can be difficult
+to argue why a greedy algorithm works,
+even if the algorithm itself is simple.
 
-\subsubsection{Yleinen tapaus}
+\subsubsection{General case}
 
-Yleisessä tapauksessa kolikot voivat olla mitä tahansa.
-Tällöin suurimman kolikon valitseva ahne algoritmi
-\emph{ei} välttämättä tuota optimiratkaisua.
+In the general case, the coin set can contain any coins
+and the greedy algorithm \emph{not} necessarily produces
+an optimal solution.
 
-Jos ahne algoritmi ei toimi, tämän voi osoittaa
-näyttämällä vastaesimerkin, jossa algoritmi
-antaa väärän vastauksen.
-Tässä tehtävässä vastaesimerkki on helppoa keksiä:
-jos kolikot ovat $\{1,3,4\}$ ja muodostettava
-rahamäärä on 6, ahne algoritmi tuottaa ratkaisun
-$4+1+1$, kun taas optimiratkaisu on $3+3$.
+We can prove that a greedy algorithm doesn't work
+by showing a counterexample
+where the algorithm gives a wrong answer.
+In this problem it's easy to find a counterexample:
+if the coins are $\{1,3,4\}$ and the sum of money
+is 6, the greedy algorithm produces the solution
+$4+1+1$, while the optimal solution is $3+3$.
 
-Yleisessä tapauksessa kolikkotehtävän ratkaisuun
-ei tunneta ahnetta algoritmia,
-mutta palaamme tehtävään seuraavassa luvussa.
-Tehtävään on nimittäin olemassa dynaamista
-ohjelmointia käyttävä algoritmi,
-joka tuottaa optimiratkaisun
-millä tahansa kolikoilla ja rahamäärällä.
+We don't know if the general coin problem
+can be solved using any greedy algorithm.
+However, we will revisit the problem in the next chapter
+because the general problem can be solved using a dynamic
+programming algorithm that always gives the
+correct answer.
 
-\section{Aikataulutus}
+\section{Scheduling}
 
-Monet aikataulutukseen liittyvät ongelmat
-ratkeavat ahneesti.
-Klassinen ongelma on seuraava:
-Annettuna on $n$ tapahtumaa,
-jotka alkavat ja päättyvät tiettyinä hetkinä.
-Tehtäväsi on suunnitella aikataulu,
-jota seuraamalla pystyt osallistumaan
-mahdollisimman moneen tapahtumaan.
-Et voi osallistua tapahtumaan vain osittain.
-Esimerkiksi tilanteessa
+Many scheduling problems can be solved
+using a greedy strategy.
+A classic problem is as follows:
+Given $n$ events with their starting and ending
+times, our task is to plan a schedule
+so that we can join as many events as possible.
+It's not possible to join an event partially.
+For example, consider the following events:
 \begin{center}
 \begin{tabular}{lll}
-tapahtuma & alkuaika & loppuaika \\
+event & starting time & ending time \\
 \hline
 $A$ & 1 & 3 \\
 $B$ & 2 & 5 \\
@@ -133,10 +129,9 @@ $C$ & 3 & 9 \\
 $D$ & 6 & 8 \\
 \end{tabular}
 \end{center}
-on mahdollista osallistua korkeintaan
-kahteen tapahtumaan.
-Yksi mahdollisuus on osallistua tapahtumiin
-$B$ ja $D$ seuraavasti:
+In this case the maximum number of events is two.
+For example, we can join events $B$ and $D$
+as follows:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -152,16 +147,15 @@ $B$ ja $D$ seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Tehtävän ratkaisuun on mahdollista 
-keksiä useita ahneita algoritmeja,
-mutta mikä niistä toimii kaikissa tapauksissa?
+It is possible to invent several greedy algorithms
+for the problem, but which of them works in every case?
 
-\subsubsection*{Algoritmi 1}
+\subsubsection*{Algorithm 1}
 
-Ensimmäinen idea on valita ratkaisuun
-mahdollisimman \emph{lyhyitä} tapahtumia.
-Esimerkin tapauksessa tällainen
-algoritmi valitsee seuraavat tapahtumat:
+The first idea is to select as \emph{short}
+events as possible.
+In the example case this algorithm
+selects the following events:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -177,9 +171,9 @@ algoritmi valitsee seuraavat tapahtumat:
 \end{tikzpicture}
 \end{center}
 
-Lyhimpien tapahtumien valinta ei ole kuitenkaan
-aina toimiva strategia,
-vaan algoritmi epäonnistuu esimerkiksi seuraavassa tilanteessa:
+However, choosing short events is not always
+a correct strategy but the algorithm fails,
+for example, in the following case:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -189,16 +183,14 @@ vaan algoritmi epäonnistuu esimerkiksi seuraavassa tilanteessa:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Kun lyhyt tapahtuma valitaan mukaan,
-on mahdollista osallistua vain yhteen tapahtumaan.
-Kuitenkin valitsemalla pitkät tapahtumat
-olisi mahdollista osallistua kahteen tapahtumaan.
+If we select the short event, we can only select one event.
+However, it would be possible to select both the long events.
 
-\subsubsection*{Algoritmi 2}
+\subsubsection*{Algorithm 2}
 
-Toinen idea on valita aina seuraavaksi tapahtuma,
-joka \emph{alkaa} mahdollisimman aikaisin.
-Tämä algoritmi valitsee esimerkissä seuraavat tapahtumat:
+Another idea is to always select the next possible
+event that \emph{begins} as \emph{early} as possible.
+This algorithm selects the following events:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -214,9 +206,10 @@ Tämä algoritmi valitsee esimerkissä seuraavat tapahtumat:
 \end{tikzpicture}
 \end{center}
 
-Tämäkään algoritmi ei kuitenkaan toimi aina.
-Esimerkiksi seuraavassa tilanteessa
-algoritmi valitsee vain yhden tapahtuman:
+However, we can find a counterexample for this
+algorithm, too.
+For example, in the following case,
+the algorithm selects only one event:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -226,18 +219,16 @@ algoritmi valitsee vain yhden tapahtuman:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Kun ensimmäisenä alkava tapahtuma
-valitaan mukaan, mitään muuta tapahtumaa
-ei ole mahdollista valita.
-Kuitenkin olisi mahdollista osallistua
-kahteen tapahtumaan valitsemalla
-kaksi myöhempää tapahtumaa.
+If we select the first event, it is not possible
+to select any other events.
+However, it would be possible to join the
+other two events.
 
-\subsubsection*{Algoritmi 3}
+\subsubsection*{Algorithm 3}
 
-Kolmas idea on valita aina seuraavaksi tapahtuma,
-joka \emph{päättyy} mahdollisimman aikaisin.
-Tämä algoritmi valitsee esimerkissä seuraavat tapahtumat:
+The third idea is to always select the next
+possible event that \emph{ends} as \emph{early} as possible.
+This algorithm selects the following events: 
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -253,26 +244,25 @@ Tämä algoritmi valitsee esimerkissä seuraavat tapahtumat:
 \end{tikzpicture}
 \end{center}
 
-Osoittautuu, että tämä ahne algoritmi
-tuottaa \textit{aina} optimiratkaisun.
-Algoritmi toimii, koska on aina kokonaisuuden
-kannalta optimaalista valita
-ensimmäiseksi tapahtumaksi
-mahdollisimman aikaisin päättyvä tapahtuma.
-Tämän jälkeen on taas optimaalista
-valita seuraava aikatauluun sopiva
-mahdollisimman aikaisin
-päättyvä tapahtua, jne.
+It turns out that this algorithm
+\emph{always} produces an optimal solution.
+The algorithm works because 
+regarding the final solution, it is
+optimal to select an event that
+ends as soon as possible.
+Then it is optimal to select
+the next event using the same strategy, etc.
 
-Yksi tapa perustella valintaa on miettiä,
-mitä tapahtuu, jos ensimmäiseksi tapahtumaksi
-valitaan jokin muu kuin mahdollisimman
-aikaisin päättyvä tapahtuma.
-Tällainen valinta ei ole koskaan parempi,
-koska myöhemmin päättyvän tapahtuman
-jälkeen on joko yhtä paljon tai vähemmän
-mahdollisuuksia valita seuraavia tapahtumia
-kuin aiemmin päättyvän tapahtuman jälkeen.
+One way to justify the choice is to think
+what happens if we first select some event
+that ends later than the event that ends
+as soon as possible.
+This can never be a better choice
+because after an event that ends later,
+we will have at most an equal number of
+possibilities to select for the next events,
+compared to the strategy that we select the
+event that ends as soon as possible.
 
 \section{Tehtävät ja deadlinet}
 
