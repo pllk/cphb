@@ -680,79 +680,74 @@ Especially useful are optimizations that
 occur at the top of the search tree because
 they can prune the search very efficiently.
 
-\section{Puolivälihaku}
+\section{Meet in the middle}
 
-\index{puolivxlihaku@puolivälihaku}
+\index{meet in the middle}
 
-\key{Puolivälihaku} (''meet in the middle'') on tekniikka,
-jossa hakutehtävä jaetaan kahteen yhtä suureen osaan.
-Kumpaankin osaan tehdään erillinen haku,
-ja lopuksi hakujen tulokset yhdistetään.
+\key{Meet in the middle} is a technique
+where the search space is divided into
+two equally large parts.
+A separate search is performed
+for each of the parts,
+and finally the results of the searches are combined.
 
-Puolivälihaun käyttäminen edellyttää,
-että erillisten hakujen tulokset pystyy
-yhdistämään tehokkaasti.
-Tällöin puolivälihaku on tehokkaampi
-kuin yksi haku, joka käy läpi koko hakualueen.
-Tyypillisesti puolivälihaku tehostaa algoritmia
-niin, että aikavaativuuden kertoimesta $2^n$
-tulee kerroin $2^{n/2}$.
+The meet in the middle technique can be used
+if there is an efficient way to combine the
+results of the searches.
+In this case, the two searches may require less
+time than one large search.
+Typically, we can turn a factor of $2^n$
+into a factor of $2^{n/2}$ using the meet in the
+middle technique.
 
-Tarkastellaan ongelmaa, jossa annettuna
-on $n$ lukua sisältävä lista sekä kokonaisluku $x$.
-Tehtävänä on selvittää, voiko listalta valita
-joukon lukuja niin, että niiden summa on $x$.
-Esimerkiksi jos lista on $[2,4,5,9]$ ja $x=15$,
-voimme valita listalta luvut $[2,4,9]$,
-jolloin $2+4+9=15$.
-Jos taas lista säilyy ennallaan ja $x=10$,
-mikään valinta ei täytä vaatimusta.
+As an example, consider a problem where
+we are given a list of $n$ numbers and
+an integer $x$.
+Our task is to find out if it is possible
+to choose some numbers from the list so that
+the sum of the numbers is $x$.
+For example, given the list $[2,4,5,9]$ and $x=15$,
+we can choose the numbers $[2,4,9]$ to get $2+4+9=15$.
+However, if the list remains the same but $x=10$,
+it is not possible to form the sum.
 
-Tavanomainen ratkaisu tehtävään on käydä kaikki
-listan alkioiden osajoukot läpi ja tarkastaa,
-onko jonkin osajoukon summa $x$.
-Tällainen ratkaisu kuluttaa aikaa $O(2^n)$,
-koska erilaisia osajoukkoja on $2^n$.
-Seuraavaksi näemme,
-miten puolivälihaun avulla on mahdollista luoda
-tehokkaampi $O(2^{n/2})$-aikainen ratkaisu.
-Huomaa, että aikavaativuuksissa $O(2^n)$ ja
-$O(2^{n/2})$ on merkittävä ero, koska
-$2^{n/2}$ tarkoittaa samaa kuin $\sqrt{2^n}$.
+A standard solution for the problem is to
+go trough all subsets of the elements and
+check if the sum of any of the subsets is $x$.
+The time complexity of this solution is $O(2^n)$
+because there are $2^n$ possible subsets.
+However, using the meet in the middle technique,
+we can create a more efficient $O(2^{n/2})$ time solution.
+Note that $O(2^n)$ and $O(2^{n/2})$ are different
+complexities because $2^{n/2}$ equals $\sqrt{2^n}$.
 
-Ideana on jakaa syötteenä oleva lista
-kahteen listaan $A$ ja $B$,
-joista kumpikin sisältää noin puolet luvuista.
-Ensimmäinen haku muodostaa kaikki osajoukot
-listan $A$ luvuista ja laittaa muistiin niiden summat
-listaan $S_A$.
-Toinen haku muodostaa vastaavasti listan
-$B$ perusteella listan $S_B$.
-Tämän jälkeen riittää tarkastaa,
-onko mahdollista valita yksi luku listasta $S_A$
-ja toinen luku listasta $S_B$ niin,
-että lukujen summa on $x$.
-Tämä on mahdollista tarkalleen silloin,
-kun alkuperäisen listan luvuista saa summan $x$.
+The idea is to divide the list given as input
+to two lists $A$ and $B$ that each contain
+about half of the numbers.
+The first search generates all subsets
+of the numbers in the list $A$ and stores their sums
+to list $S_A$.
+Correspondingly, the second search creates
+the list $S_B$ from the list $B$.
+After this, it suffices to check if it is possible
+to choose one number from $S_A$ and another
+number from $S_B$ so that their sum is $x$.
+This is possible exactly when there is a way to
+form the sum $x$ using the numbers in the original list.
 
-Tarkastellaan esimerkkiä,
-jossa lista on $[2,4,5,9]$
-ja $x=15$.
-Puolivälihaku jakaa luvut kahteen
-listaan niin, että $A=[2,4]$
-ja $B=[5,9]$.
-Näistä saadaan edelleen summalistat
-$S_A=[0,2,4,6]$ ja $S_B=[0,5,9,14]$.
-Summa $x=15$ on mahdollista muodostaa,
-koska voidaan valita $S_A$:sta luku $6$
-ja $S_B$:stä luku $9$.
-Tämä valinta vastaa ratkaisua $[2,4,9]$.
+For example, assume that the list is $[2,4,5,9]$ and $x=15$.
+First, we divide the list into $A=[2,4]$ and $B=[5,9]$.
+After this, we create the lists
+$S_A=[0,2,4,6]$ and $S_B=[0,5,9,14]$.
+The sum $x=15$ is possible to form
+because we can choose the number $6$ from $S_A$
+and the number $9$ from $S_B$.
+This choice corresponds to the solution $[2,4,9]$.
 
-Ratkaisun aikavaativuus on $O(2^{n/2})$,
-koska kummassakin listassa $A$ ja $B$
-on $n/2$ lukua ja niiden osajoukkojen
-summien laskeminen listoihin $S_A$ ja $S_B$
-vie aikaa $O(2^{n/2})$.
-Tämän jälkeen on mahdollista tarkastaa
-ajassa $O(2^{n/2})$, voiko summaa $x$ muodostaa
-listojen $S_A$ ja $S_B$ luvuista.
+The time complexity of the algorithm is $O(2^{n/2})$
+because both lists $A$ and $B$ contain $n/2$ numbers
+and it takes $O(2^{n/2})$ time to calculate the sums of
+their subsets to lists $S_A$ and $S_B$.
+After this, it is possible to check in 
+$O(2^{n/2})$ time if the sum $x$ can be created
+using the numbers in $S_A$ and $S_B$.
