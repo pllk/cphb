@@ -1,102 +1,102 @@
 \chapter{Complete search}
 
-\key{Täydellinen haku}
-on yleispätevä tapa ratkaista
-lähes mikä tahansa ohjelmointitehtävä.
-Ideana on käydä läpi raa'alla voimalla kaikki
-mahdolliset tehtävän ratkaisut ja tehtävästä riippuen
-valita paras ratkaisu
-tai laskea ratkaisuiden yhteismäärä.
-          
-Täydellinen haku on hyvä menetelmä, jos kaikki
-ratkaisut ehtii käydä läpi,
-koska haku on yleensä suoraviivainen toteuttaa
-ja se antaa varmasti oikean vastauksen.
-Jos täydellinen haku on liian hidas,
-seuraavien lukujen ahneet algoritmit tai
-dynaaminen ohjelmointi voivat soveltua
-tehtävään.
+\key{Compelete search}
+is a general method that can be used
+for solving almost any algorithm problem.
+The idea is to generate all possible
+solutions for the problem using brute force,
+and select the best solution or count the
+number of solutions, depending on the problem.
 
-\section{Osajoukkojen läpikäynti}
+Complete search is a good technique
+if it is feasible to go through all the solutions,
+because the search is usually easy to implement
+and it always gives the correct answer.
+If complete search is too slow,
+greedy algorithms or dynamic programming,
+presented in the next chapters,
+may be used.
 
-\index{osajoukko@osajoukko}
+\section{Generating subsets}
 
-Aloitamme tapauksesta, jossa tehtävän
-mahdollisia ratkaisuja ovat
-$n$-alkioisen joukon osajoukot.
-Tällöin täydellisen haun tulee
-käydä läpi kaikki joukon osa\-joukot,
-joita on yhteensä $2^n$ kappaletta.
-Käymme läpi kaksi menetelmää
-tällaisen haun toteuttamiseen.
+\index{subset}
 
-\subsubsection{Menetelmä 1}
+We first consider the case where
+the possible solutions for the problem
+are the subsets of a set of $n$ elements.
+In this case, a complete search algorithm
+has to generate
+all $2^n$ subsets of the set.
 
-Kätevä tapa käydä läpi
-kaikki joukon osajoukot on
-käyttää rekursiota.
-Seuraava funktio \texttt{haku} muodostaa
-joukon $\{1,2,\ldots,n\}$ osajoukot.
-Funktio pitää yllä vektoria \texttt{v},
-johon se kokoaa osajoukossa olevat luvut.
-Osajoukkojen muodostaminen alkaa
-tekemällä funktiokutsu \texttt{haku(1)}.
+\subsubsection{Method 1}
+
+An elegant way to go through all subsets
+of a set is to use recursion.
+The following function \texttt{gen}
+generates the subsets of the set
+$\{1,2,\ldots,n\}$.
+The function maintains a vector \texttt{v}
+that will contain the elements in the subset.
+The generation of the subsets
+begins when the function
+is called with parameter $1$.
 
 \begin{lstlisting}
-void haku(int k) {
+void gen(int k) {
     if (k == n+1) {
-        // käsittele osajoukko v
+        // process subset v
     } else {
-        haku(k+1);
+        gen(k+1);
         v.push_back(k);
-        haku(k+1);
+        gen(k+1);
         v.pop_back();
     }
 }
 \end{lstlisting}
 
-Funktion parametri $k$ on luku,
-joka on ehdolla lisättäväksi osajoukkoon seuraavaksi.
-Joka kutsulla funktio haarautuu kahteen tapaukseen:
-joko luku $k$ lisätään tai ei lisätä osajoukkoon.
-Aina kun $k=n+1$, kaikki luvut on käyty läpi
-ja yksi osajoukko on muodostettu.
+The parameter $k$ is the number that is the next
+candidate to be included in the subset.
+The function branches to two cases:
+either $k$ is included or it is not included in the subset.
+Finally, when $k=n+1$, a decision has been made for
+all the numbers and one subset has been generated.
 
-Esimerkiksi kun $n=3$, funktiokutsut
-muodostavat seuraavan kuvan mukaisen puun.
-Joka kutsussa 
-vasen haara jättää luvun pois osajoukosta
-ja oikea haara lisää sen osajoukkoon.
+For example, when $n=3$, the function calls
+create a tree illustrated below.
+At each call, the left branch doesn't include
+the number and the right branch includes the number
+in the subset.
+
 \begin{center}
 \begin{tikzpicture}[scale=.45]
   \begin{scope}
     \small
-    \node at (0,0) {$\texttt{haku}(1)$};
+    \node at (0,0) {$\texttt{gen}(1)$};
 
-    \node at (-8,-4) {$\texttt{haku}(2)$};
-    \node at (8,-4) {$\texttt{haku}(2)$};
+    \node at (-8,-4) {$\texttt{gen}(2)$};
+    \node at (8,-4) {$\texttt{gen}(2)$};
 
     \path[draw,thick,->] (0,0-0.5) -- (-8,-4+0.5);
     \path[draw,thick,->] (0,0-0.5) -- (8,-4+0.5);
 
-    \node at (-12,-8) {$\texttt{haku}(3)$};
-    \node at (-4,-8) {$\texttt{haku}(3)$};
-    \node at (4,-8) {$\texttt{haku}(3)$};
-    \node at (12,-8) {$\texttt{haku}(3)$};
+    \node at (-12,-8) {$\texttt{gen}(3)$};
+    \node at (-4,-8) {$\texttt{gen}(3)$};
+    \node at (4,-8) {$\texttt{gen}(3)$};
+    \node at (12,-8) {$\texttt{gen}(3)$};
 
     \path[draw,thick,->] (-8,-4-0.5) -- (-12,-8+0.5);
     \path[draw,thick,->] (-8,-4-0.5) -- (-4,-8+0.5);
     \path[draw,thick,->] (8,-4-0.5) -- (4,-8+0.5);
     \path[draw,thick,->] (8,-4-0.5) -- (12,-8+0.5);
 
-    \node at (-14,-12) {$\texttt{haku}(4)$};
-    \node at (-10,-12) {$\texttt{haku}(4)$};
-    \node at (-6,-12) {$\texttt{haku}(4)$};
-    \node at (-2,-12) {$\texttt{haku}(4)$};
-    \node at (2,-12) {$\texttt{haku}(4)$};
-    \node at (6,-12) {$\texttt{haku}(4)$};
-    \node at (10,-12) {$\texttt{haku}(4)$};
-    \node at (14,-12) {$\texttt{haku}(4)$};
+    \node at (-14,-12) {$\texttt{gen}(4)$};
+    \node at (-10,-12) {$\texttt{gen}(4)$};
+    \node at (-6,-12) {$\texttt{gen}(4)$};
+    \node at (-2,-12) {$\texttt{gen}(4)$};
+    \node at (2,-12) {$\texttt{gen}(4)$};
+    \node at (6,-12) {$\texttt{gen}(4)$};
+    \node at (10,-12) {$\texttt{gen}(4)$};
+    \node at (14,-12) {$\texttt{gen}(4)$};
 
     \node at (-14,-13.5) {$\emptyset$};
     \node at (-10,-13.5) {$\{3\}$};
@@ -120,36 +120,36 @@ ja oikea haara lisää sen osajoukkoon.
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Menetelmä 2}
+\subsubsection{Method 2}
 
-Toinen tapa käydä osajoukot läpi on hyödyntää kokonaislukujen
-bittiesitystä. Jokainen $n$ alkion osajoukko
-voidaan esittää $n$ bitin jonona,
-joka taas vastaa lukua väliltä $0 \ldots 2^n-1$.
-Bittiesityksen ykkösbitit ilmaisevat,
-mitkä joukon alkiot on valittu osajoukkoon.
+Another way to generate the subsets is to exploit
+the bit representation of integers.
+Each subset of a set of $n$ elements
+can be represented as a sequence of $n$ bits,
+which corresponds to an integer between $0 \ldots 2^n-1$.
+The ones in the bit representation indicate
+which elements of the set are included in the subset.
 
-Tavallinen käytäntö on tulkita kokonaisluvun
-bittiesitys osajoukkona niin,
-että alkio $k$ kuuluu osajoukkoon,
-jos lopusta lukien $k$. bitti on 1.
-Esimerkiksi luvun 25 bittiesitys on 11001,
-mikä vastaa osajoukkoa $\{1,4,5\}$.
+The usual interpretation is that element $k$
+is included in the subset if $k$th bit from the
+end of the bit sequence is one.
+For example, the bit representation of 25
+is 11001 that corresponds to the subset $\{1,4,5\}$.
 
-Seuraava koodi käy läpi $n$ alkion joukon
-osajoukkojen bittiesitykset:
+The following iterates through all subsets
+of a set of $n$ elements
 
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
-    // käsittele osajoukko b
+    // process subset b
 }
 \end{lstlisting}
 
-Seuraava koodi muodostaa jokaisen osajoukon
-kohdalla vektorin \texttt{v},
-joka sisältää osajoukossa olevat luvut.
-Ne saadaan selville tutkimalla, mitkä bitit ovat
-ykkösiä osajoukon bittiesityksessä.
+The following code converts each bit
+representation to a vector \texttt{v}
+that contains the elements in the subset.
+This can be done by checking which bits
+are one in the bit representation.
 
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
@@ -160,33 +160,30 @@ for (int b = 0; b < (1<<n); b++) {
 }
 \end{lstlisting}
 
-\section{Permutaatioiden läpikäynti}
+\section{Generating permutations}
 
-\index{permutaatio@permutaatio}
+\index{permutation}
 
-Toinen usein esiintyvä tilanne on,
-että tehtävän ratkaisut ovat $n$-alkioisen
-joukon permutaatioita,
-jolloin täydellisen haun tulee
-käydä läpi $n!$ mahdollista permutaatiota.
-Myös tässä tapauksessa on kaksi luontevaa
-menetelmää täydellisen haun toteuttamiseen.
+Another common situation is that the solutions
+for the problem are permutations of a
+set of $n$ elements.
+In this case, a complete search algorithm has to
+generate $n!$ possible permutations.
 
-\subsubsection{Menetelmä 1}
+\subsubsection{Method 1}
 
-Osajoukkojen tavoin permutaatioita voi muodostaa
-rekursiivisesti.
-Seuraava funktio \texttt{haku} käy läpi
-joukon $\{1,2,\ldots,n\}$ permutaatiot.
-Funktio muodostaa kunkin permutaation
-vuorollaan vektoriin \texttt{v}.
-Permutaatioiden muodostus alkaa kutsumalla
-funktiota ilman parametreja.
+Like subsets, permutations can be generated
+using recursion.
+The following function \texttt{gen} iterates
+through the permutations of the set $\{1,2,\ldots,n\}$.
+The function uses the vector \texttt{v}
+for storing the permutations, and the generation
+begins by calling the function without parameters.
 
 \begin{lstlisting}
 void haku() {
     if (v.size() == n) {
-        // käsittele permutaatio v
+        // process permutation v
     } else {
         for (int i = 1; i <= n; i++) {
             if (p[i]) continue;
@@ -200,26 +197,26 @@ void haku() {
 }
 \end{lstlisting}
 
-Funktion jokainen kutsu lisää uuden
-luvun permutaatioon vektoriin \texttt{v}.
-Taulukko \texttt{p} kertoo, mitkä luvut on jo
-valittu permutaatioon.
-Jos $\texttt{p}[k]=0$, luku $k$ ei ole mukana,
-ja jos $\texttt{p}[k]=1$, luku $k$ on mukana.
-Jos vektorin \texttt{v} koko on sama kuin
-joukon koko $n$, permutaatio on tullut valmiiksi.
+Each function call adds a new element to
+the permutation in the vector \texttt{v}.
+The array \texttt{p} indicates which
+elements are already included in the permutation.
+If $\texttt{p}[k]=0$, element $k$ is not included,
+and if $\texttt{p}[k]=1$, element $k$ is included.
+If the size of the vector equals the size of the set,
+a permutation has been generated.
 
-\subsubsection{Menetelmä 2}
+\subsubsection{Method 2}
 
 \index{next\_permutation@\texttt{next\_permutation}}
 
-Toinen ratkaisu on aloittaa permutaatiosta
-$\{1,2,\ldots,n\}$ ja muodostaa joka askeleella
-järjestyksessä seuraava permutaatio.
-C++:n standardikirjastossa on funktio
-\texttt{next\_permutation}, joka tekee tämän muunnoksen.
-Seuraava koodi käy läpi joukon $\{1,2,\ldots,n\}$
-permutaatiot funktion avulla:
+Another method is to begin from permutation
+$\{1,2,\ldots,n\}$ and at each step generate the
+next permutation in increasing order.
+The C++ standard library contains the function
+\texttt{next\_permutation} that can be used for this.
+The following code generates the permutations
+of the set $\{1,2,\ldots,n\}$ using the function:
 
 \begin{lstlisting}
 vector<int> v;
@@ -227,7 +224,7 @@ for (int i = 1; i <= n; i++) {
     v.push_back(i);
 }
 do {
-    // käsittele permutaatio v
+    // process permutation v
 } while (next_permutation(v.begin(),v.end()));
 \end{lstlisting}
 
