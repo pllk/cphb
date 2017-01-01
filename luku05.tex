@@ -228,26 +228,28 @@ do {
 } while (next_permutation(v.begin(),v.end()));
 \end{lstlisting}
 
-\section{Peruuttava haku}
+\section{Backtracking}
 
-\index{peruuttava haku@peruuttava haku}
+\index{backtracking}
 
-\key{Peruuttava haku}
-aloittaa ratkaisun etsimisen tyhjästä
-ja laajentaa ratkaisua askel kerrallaan.
-Joka askeleella haku haarautuu kaikkiin
-mahdollisiin suuntiin, joihin ratkaisua voi laajentaa.
-Haaran tutkimisen jälkeen haku peruuttaa takaisin
-ja jatkaa muihin mahdollisiin suuntiin.
+A \key{backtracking} algorithm
+begins from an empty solution
+and extends the solution step by step.
+At each step, the search branches
+to all possible directions how the solution
+can be extended.
+After processing one branch, the search
+continues to other possible directions.
 
-\index{kuningatarongelma}
+\index{queen problem}
 
-Tarkastellaan esimerkkinä \key{kuningatarongelmaa},
-jossa laskettavana on,
-monellako tavalla $n \times n$ -shakkilaudalle
-voidaan asettaa $n$ kuningatarta niin,
-että mitkään kaksi kuningatarta eivät uhkaa toisiaan.
-Esimerkiksi kun $n=4$, mahdolliset ratkaisut ovat seuraavat:
+As an example, consider the \key{queen problem}
+where our task is to calculate the number
+of ways we can place $n$ queens to
+an $n \times n$ chessboard so that
+no two queens attack each other.
+For example, when $n=4$,
+there are two possible solutions for the problem:
 
 \begin{center}
 \begin{tikzpicture}[scale=.65]
@@ -268,16 +270,16 @@ Esimerkiksi kun $n=4$, mahdolliset ratkaisut ovat seuraavat:
 \end{tikzpicture}
 \end{center}
 
-Tehtävän voi ratkaista peruuttavalla haulla
-muodostamalla ratkaisua rivi kerrallaan.
-Jokaisella rivillä täytyy valita yksi ruuduista,
-johon sijoitetaan kuningatar niin,
-ettei se uhkaa mitään aiemmin lisättyä kuningatarta.
-Ratkaisu on valmis, kun viimeisellekin
-riville on lisätty kuningatar.
+The problem can be solved using backtracking
+by placing queens to the board row by row.
+More precisely, we should place exactly one queen
+to each row so that no queen attacks
+any of the queens placed before.
+A solution is ready when we have placed all
+$n$ queens to the board.
 
-Esimerkiksi kun $n=4$, osa peruuttavan haun muodostamasta
-puusta näyttää seuraavalta:
+For example, when $n=4$, the tree produced by
+the backtracking algorithm begins like this:
 
 \begin{center}
 \begin{tikzpicture}[scale=.55]
@@ -327,19 +329,16 @@ puusta näyttää seuraavalta:
 \end{tikzpicture}
 \end{center}
 
-Kuvan alimmalla tasolla kolme ensimmäistä osaratkaisua
-eivät kelpaa, koska niissä kuningattaret uhkaavat
-toisiaan.
-Sen sijaan neljäs osaratkaisu kelpaa,
-ja sitä on mahdollista laajentaa loppuun asti
-kokonaiseksi ratkaisuksi
-asettamalla vielä kaksi kuningatarta laudalle.
+At the bottom level, the three first subsolutions
+are not valid because the queens attack each other.
+However, the fourth subsolution is valid
+and it can be extended to a full solution by
+placing two more queens to the board.
 
 \begin{samepage}
-Seuraava koodi toteuttaa peruuttavan haun:
-
+The following code implements the search:
 \begin{lstlisting}
-void haku(int y) {
+void search(int y) {
     if (y == n) {
         c++;
         return;
@@ -347,32 +346,32 @@ void haku(int y) {
     for (int x = 0; x < n; x++) {
         if (r1[x] || r2[x+y] || r3[x-y+n-1]) continue;
         r1[x] = r2[x+y] = r3[x-y+n-1] = 1;
-        haku(y+1);
+        search(y+1);
         r1[x] = r2[x+y] = r3[x-y+n-1] = 0;
     }
 }
 \end{lstlisting}
 \end{samepage}
-Haku alkaa kutsumalla funktiota \texttt{haku(0)}.
-Laudan koko on muuttujassa $n$,
-ja koodi laskee ratkaisuiden määrän
-muuttujaan $c$.
+The search begins by calling \texttt{search(0)}.
+The size of the board is in the variable $n$,
+and the code calculates the number of solutions
+to the variable $c$.
 
-Koodi olettaa, että laudan vaaka- ja pystyrivit
-on numeroitu 0:sta alkaen.
-Funktio asettaa kuningattaren vaakariville $y$,
-kun $0 \le y < n$.
-Jos taas $y=n$, yksi ratkaisu on valmis
-ja funktio kasvattaa muuttujaa $c$.
+The code assumes that the rows and columns
+of the board are numbered from 0.
+The function places a queen to row $y$
+when $0 \le y < n$.
+Finally, if $y=n$, one solution has been found
+and the variable $c$ is increased by one.
 
-Taulukko \texttt{r1} pitää kirjaa,
-millä laudan pystyriveillä on jo kuningatar.
-Vastaavasti taulukot \texttt{r2} ja \texttt{r3}
-pitävät kirjaa vinoriveistä.
-Tällaisille riveille ei voi laittaa enää toista
-kuningatarta.
-Esimerkiksi $4 \times 4$ -laudan tapauksessa
-rivit on numeroitu seuraavasti:
+The array \texttt{r1} keeps track of the columns
+that already contain a queen.
+Similarly, the arrays \texttt{r2} and \texttt{r3}
+keep track of the diagonals.
+It is not allowed to add another queen to a
+column or to a diagonal. 
+For example, the rows and the diagonals of
+the $4 \times 4$ board are numbered as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=.65]
@@ -439,36 +438,38 @@ rivit on numeroitu seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Koodin avulla selviää esimerkiksi,
-että tapauksessa $n=8$ on 92 tapaa sijoittaa 8
-kuningatarta $8 \times 8$ -laudalle.
-Kun $n$ kasvaa, koodi hidastuu nopeasti,
-koska ratkaisujen määrä kasvaa räjähdysmäisesti.
-Tapauksen $n=16$ laskeminen vie jo noin minuutin
-nykyaikaisella tietokoneella (14772512 ratkaisua).
+Using the presented backtracking
+algorithm, we can calculate that,
+for example, there are 92 ways to place 8
+queens to an $8 \times 8$ chessboard.
+When $n$ increases, the search quickly becomes slow
+because the number of the solutions increases
+exponentially.
+For example, calculating the ways to
+place 16 queens to the $16 \times 16$
+chessboard already takes about a minute
+(there are 14772512 solutions).
 
-\section{Haun optimointi}
+\section{Pruning the search}
 
-Peruuttavaa hakua on usein mahdollista tehostaa
-erilaisten optimointien avulla.
-Tavoitteena on lisätä hakuun ''älykkyyttä''
-niin, että haku pystyy havaitsemaan
-mahdollisimman aikaisin,
-jos muodosteilla oleva ratkaisu ei voi
-johtaa kokonaiseen ratkaisuun.
-Tällaiset optimoinnit karsivat haaroja
-hakupuusta, millä voi olla suuri vaikutus
-peruuttavan haun tehokkuuteen.
+A backtracking algorithm can often be optimized
+by pruning the search tree.
+The idea is to add ''intelligence'' to the algorithm
+so that it will notice as soon as possible
+if is not possible to extend a subsolution into
+a full solution.
+This kind of optimization can have a tremendous
+effect on the efficiency of the search.
 
-Tarkastellaan esimerkkinä tehtävää,
-jossa laskettavana on reittien määrä
-$n \times n$ -ruudukon
-vasemmasta yläkulmasta oikeaan alakulmaan,
-kun reitin aikana tulee käydä tarkalleen kerran 
-jokaisessa ruudussa.
-Esimerkiksi $7 \times 7$ -ruudukossa on
-111712 mahdollista reittiä vasemmasta yläkulmasta
-oikeaan alakulmaan, joista yksi on seuraava:
+Let us consider a problem where
+our task is to calculate the number of paths
+in an $n \times n$ grid from the upper-left corner
+to the lower-right corner so that each square
+will be visited exactly once.
+For example, in the $7 \times 7$ grid,
+there are 111712 possible paths from the
+lower-right corner to the upper-right corner.
+One of the paths is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=.55]
@@ -486,38 +487,39 @@ oikeaan alakulmaan, joista yksi on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Keskitymme seuraavaksi nimenomaan tapaukseen $7 \times 7$,
-koska se on laskennallisesti sopivan haastava.
-Lähdemme liikkeelle suoraviivaisesta peruuttavaa hakua
-käyttävästä algoritmista
-ja teemme siihen pikkuhiljaa optimointeja,
-jotka nopeuttavat hakua eri tavoin.
-Mittaamme jokaisen optimoinnin jälkeen
-algoritmin suoritusajan sekä rekursiokutsujen yhteismäärän,
-jotta näemme selvästi, mikä vaikutus kullakin
-optimoinnilla on haun tehokkuuteen.
+We will concentrate on the $7 \times 7$ case
+because it is computationally suitable difficult.
+We begin with a straightforward backtracking algorithm,
+and then optimize it step by step using observations
+how the search tree can be pruned.
+After each optimization, we measure the running time
+of the algorithm and the number of recursive calls,
+so that we will clearly see the effect of each
+optimization on the efficiency of the search.
 
-\subsubsection{Perusalgoritmi}
+\subsubsection{Basic algorithm}
 
-Algoritmin ensimmäisessä versiossa ei ole mitään optimointeja,
-vaan peruuttava haku käy läpi kaikki mahdolliset tavat
-muodostaa reitti ruudukon vasemmasta yläkulmasta
-oikeaan alakulmaan.
+The first version of the algorithm doesn't contain
+any optimizations. We simply use backtracking to generate
+all possible paths from the upper-left corner to
+the lower-right corner.
 
 \begin{itemize}
 \item
-suoritusaika: 483 sekuntia
+running time: 483 seconds
 \item
-rekursiokutsuja: 76 miljardia
+recursive calls: 76 billions
 \end{itemize}
 
-\subsubsection{Optimointi 1}
+\subsubsection{Optimization 1}
 
-Reitin ensimmäinen askel on joko alaspäin
-tai oikealle. Tästä valinnasta seuraavat tilanteet
-ovat symmetrisiä ruudukon lävistäjän suhteen.
-Esimerkiksi seuraavat ratkaisut ovat
-symmetrisiä keskenään:
+The first step in a solution is either
+downward or to the right.
+There are always two paths that 
+are symmetric
+about the diagonal of the grid
+after the first step.
+For example, the following paths are symmetric:
 
 \begin{center}
 \begin{tabular}{ccc}
@@ -552,23 +554,24 @@ symmetrisiä keskenään:
 \end{tabular}
 \end{center}
 
-Tämän ansiosta voimme tehdä päätöksen,
-että reitin ensimmäinen askel on alaspäin,
-ja kertoa lopuksi reittien määrän 2:lla.
+Thus, we can decide that the first step
+in the solution is always downward,
+and finally multiply the number of the solutions by two.
 
 \begin{itemize}
 \item
-suoritusaika: 244 sekuntia
+running time: 244 seconds
 \item
-rekursiokutsuja: 38 miljardia
+recursive calls: 38 billions
 \end{itemize}
 
-\subsubsection{Optimointi 2}
+\subsubsection{Optimization 2}
 
-Jos reitti menee oikean alakulman ruutuun ennen kuin
-se on käynyt kaikissa muissa ruuduissa,
-siitä ei voi mitenkään enää saada kelvollista ratkaisua.
-Näin on esimerkiksi seuraavassa tilanteessa:
+If the path reaches the lower-right square
+before it has visited all other squares of the grid,
+it is clear that
+it will not be possible to complete the solution.
+An example of this is the following case:
 
 \begin{center}
 \begin{tikzpicture}[scale=.55]
@@ -582,23 +585,23 @@ Näin on esimerkiksi seuraavassa tilanteessa:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Niinpä voimme keskeyttää hakuhaaran heti,
-jos tulemme oikean alakulman ruutuun liian aikaisin.
+Using this observation, we can terminate the search branch
+immediately if we reach the lower-right square too early.
 \begin{itemize}
 \item
-suoritusaika: 119 sekuntia
+running time: 119 seconds
 \item
-rekursiokutsuja: 20 miljardia
+recursive calls: 20 billions
 \end{itemize}
 
-\subsubsection{Optimointi 3}
+\subsubsection{Optimization 3}
 
-Jos reitti osuu seinään niin, että kummallakin puolella
-on ruutu, jossa reitti ei ole vielä käynyt,
-ruudukko jakautuu kahteen osaan.
-Esimerkiksi seuraavassa tilanteessa
-sekä vasemmalla että
-oikealla puolella on tyhjä ruutu:
+If the path touches the wall so that there is
+an unvisited square at both sides,
+the grid splits into two parts.
+For example, in the following case
+both the left and the right squares
+are unvisited:
 
 \begin{center}
 \begin{tikzpicture}[scale=.55]
@@ -612,30 +615,31 @@ oikealla puolella on tyhjä ruutu:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Nyt ei ole enää mahdollista käydä kaikissa ruuduissa,
-joten voimme keskeyttää hakuhaaran.
-Tämä optimointi on hyvin hyödyllinen:
+Now it will not be possible to visit every square,
+so we can terminate the search branch.
+This optimization is very useful:
 
 \begin{itemize}
 \item
-suoritusaika: 1{,}8 sekuntia
+running time: 1.8 seconds
 \item
-rekursiokutsuja: 221 miljoonaa
+recursive calls: 221 millions
 \end{itemize}
 
-\subsubsection{Optimointi 4}
+\subsubsection{Optimization 4}
 
-Äskeisen optimoinnin ideaa voi yleistää:
-ruudukko jakaantuu kahteen osaan,
-jos nykyisen ruudun ylä- ja alapuolella on
-tyhjä ruutu sekä vasemmalla ja oikealla
-puolella on seinä tai aiemmin käyty ruutu
-(tai päinvastoin).
+The idea of the previous optimization
+can be generalized:
+the grid splits into two parts
+if the top and bottom neighbors
+of the current square are unvisited and
+the left and right neighbors are
+wall or visited (or vice versa).
 
-Esimerkiksi seuraavassa tilanteessa
-nykyisen ruudun ylä- ja alapuolella on
-tyhjä ruutu eikä reitti voi enää edetä
-molempiin ruutuihin:
+For example, in the following case
+the top and bottom neighbors are unvisited,
+so the path cannot visit all squares
+in the grid anymore:
 \begin{center}
 \begin{tikzpicture}[scale=.55]
   \begin{scope}
@@ -648,32 +652,33 @@ molempiin ruutuihin:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Haku tehostuu entisestään, kun keskeytämme
-hakuhaaran kaikissa tällaisissa tapauksissa:
+The search becomes even faster when we terminate
+the search branch in all such cases:
 
 \begin{itemize}
 \item
-suoritusaika: 0{,}6 sekuntia
+running time: 0.6 seconds
 \item
-rekursiokutsuja: 69 miljoonaa
+recursive calls: 69 millions
 \end{itemize}
 
 ~\\
-Nyt on hyvä hetki lopettaa optimointi ja muistella,
-mistä lähdimme liikkeelle.
-Alkuperäinen algoritmi vei aikaa 483 sekuntia,
-ja nyt optimointien jälkeen algoritmi vie aikaa
-vain 0{,}6 sekuntia.
-Optimointien ansiosta algoritmi nopeutui
-siis lähes 1000-kertaisesti.
+Now it's a good moment to stop optimization
+and remember our starting point.
+The running time of the original algorithm
+was 483 seconds,
+and now after the optimizations,
+the running time is only 0.6 seconds.
+Thus, the algorithm became nearly 1000 times
+faster after the optimizations.
 
-Tämä on yleinen ilmiö peruuttavassa haussa,
-koska hakupuu on yleensä valtava ja
-yksinkertainenkin optimointi voi karsia suuren
-määrän haaroja hakupuusta.
-Erityisen hyödyllisiä ovat optimoinnit,
-jotka kohdistuvat hakupuun yläosaan,
-koska ne karsivat eniten haaroja.
+This is a usual phenomenon in backtracking
+because the search tree is usually large
+and even simple optimizations can prune
+a lot of branches in the tree.
+Especially useful are optimizations that
+occur at the top of the search tree because
+they can prune the search very efficiently.
 
 \section{Puolivälihaku}
 
