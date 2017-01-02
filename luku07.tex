@@ -514,17 +514,19 @@ problem in $O(n \log n)$ time, but this is more difficult.
 
 \section{Path in a grid}
 
-Seuraava tehtävämme on etsiä reitti
-$n \times n$ -ruudukon vasemmasta yläkulmasta
-oikeaan alakulmaan.
-Jokaisessa ruudussa on luku, ja reitti
-tulee muodostaa niin, että reittiin kuuluvien
-lukujen summa on mahdollisimman suuri.
-Rajoituksena ruudukossa on mahdollista
-liikkua vain oikealla ja alaspäin.
+Our next problem is to find a path
+in an $n \times n$ grid
+from the upper-left corner to
+the lower-right corner.
+Each square contains a number,
+and the path should be constructed so
+that the sum of numbers along
+the path is as large as possible.
+In addition, it is only allowed to move
+downwards and to the right.
 
-Seuraavassa ruudukossa paras reitti
-on merkitty harmaalla taustalla:
+In the followig grid, the best path is
+marked with gray background:
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
@@ -566,21 +568,25 @@ on merkitty harmaalla taustalla:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Tällä reitillä lukujen summa on $3+9+8+7+9+8+5+10+8=67$,
-joka on suurin mahdollinen summa vasemmasta yläkulmasta
-oikeaan alakulmaan.
+The sum of numbers is
+$3+9+8+7+9+8+5+10+8=67$
+that is the largest possible sum in a path
+from the
+upper-left corner to the lower-right corner.
 
-Hyvä lähestymistapa tehtävään on laskea
-kuhunkin ruutuun $(y,x)$ suurin summa
-reitillä vasemmasta yläkulmasta kyseiseen ruutuun.
-Merkitään tätä suurinta summaa $f(y,x)$,
-jolloin $f(n,n)$ on suurin summa
-reitillä vasemmasta yläkulmasta oikeaan alakulmaan.
+A good approach for the problem is to
+calculate for each square $(y,x)$
+the largest possible sum in a path
+from the upper-left corner to the square $(y,x)$.
+We denote this sum $f(y,x)$,
+so $f(n,n)$ is the largest sum in a path
+from the upper-left corner to
+the lower-right corner.
 
-Rekursio syntyy havainnosta,
-että ruutuun $(y,x)$ saapuvan reitin
-täytyy tulla joko vasemmalta ruudusta $(y,x-1)$
-tai ylhäältä ruudusta $(y-1,x)$:
+The recursive formula is based on the observation
+that a path that ends to square$(y,x)$
+can either come from square $(y,x-1)$
+or from square $(y-1,x)$:
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
@@ -594,9 +600,9 @@ tai ylhäältä ruudusta $(y-1,x)$:
 \end{tikzpicture}
 \end{center}
 
-Kun $r(y,x)$
-on ruudukon luku kohdassa $(y,x)$,
-rekursion pohjatapaukset ovat seuraavat:
+Let $r(y,x)$ denote the number in square $(y,x)$.
+The base cases for the recursive function
+are as follows:
 
 \[
 \begin{array}{lcl}
@@ -606,15 +612,15 @@ f(y,1) & = & f(y-1,1)+r(y,1)\\
 \end{array}
 \]
 
-Yleisessä tapauksessa valittavana on
-kaksi reittiä,
-joista kannattaa valita se,
-joka tuottaa suuremman summan:
+In the general case there are two
+possible paths, and we should select the path
+that produces the larger sum:
 \[ f(y,x) = \max(f(y,x-1),f(y-1,x))+r(y,x)\]
 
-Ratkaisun aikavaativuus on $O(n^2)$, koska jokaisessa
-ruudussa $f(y,x)$ saadaan laskettua vakioajassa
-viereisten ruutujen arvoista.
+The time complexity of the solution is $O(n^2)$,
+because each value $f(y,x)$ can be calculated
+in constant time using the values of the
+adjacent squares.
 
 \section{Repunpakkaus}
 
