@@ -710,85 +710,88 @@ The efficiency of solution 1 depends on the weights
 of the objects, while the efficiency of solution 2
 depends on the values of the objects.
 
-\section{Editointietäisyys}
+\section{Edit distance}
 
-\index{editointietxisyys@editointietäisyys}
-\index{Levenšteinin etäisyys}
+\index{edit distance}
+\index{Levenshtein distance}
 
-\key{Editointietäisyys} eli
-\key{Levenšteinin etäisyys}
-kuvaa, kuinka kaukana kaksi merkkijonoa ovat toisistaan.
-Se on pienin määrä editointioperaatioita,
-joilla ensimmäisen merkkijonon saa muutettua toiseksi.
-Sallitut operaatiot ovat:
+The \key{edit distance},
+also known as the \key{Levenshtein distance},
+indicates how similar two strings are.
+It is the minimum number of editing operations
+needed for transforming the first string
+into the second string.
+The allowed editing operations are as follows:
 \begin{itemize}
-\item merkin lisäys (esim. \texttt{ABC} $\rightarrow$ \texttt{ABCA})
-\item merkin poisto (esim. \texttt{ABC} $\rightarrow$ \texttt{AC})
-\item merkin muutos (esim. \texttt{ABC} $\rightarrow$ \texttt{ADC})
+\item insert a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{ABCA})
+\item remove a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{AC})
+\item change a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{ADC})
 \end{itemize}
 
-Esimerkiksi merkkijonojen \texttt{TALO} ja \texttt{PALLO}
-editointietäisyys on 2, koska voimme tehdä ensin
-operaation \texttt{TALO} $\rightarrow$ \texttt{TALLO}
-(merkin lisäys) ja sen jälkeen operaation
-\texttt{TALLO} $\rightarrow$ \texttt{PALLO}
-(merkin muutos).
-Tämä on pienin mahdollinen määrä operaatioita, koska
-selvästikään yksi operaatio ei riitä.
+For example, the edit distance between
+\texttt{LOVE} and \texttt{MOVIE} is 2
+because we can first perform operation
+ \texttt{LOVE} $\rightarrow$ \texttt{MOVE}
+(change) and then operation
+\texttt{MOVE} $\rightarrow$ \texttt{MOVIE}
+(insertion).
+This is the smallest possible number of operations
+because it is clear that one operation is not enough.
 
-Oletetaan, että annettuna on merkkijonot
-\texttt{x} (pituus $n$ merkkiä) ja
-\texttt{y} (pituus $m$ merkkiä),
-ja haluamme laskea niiden editointietäisyyden.
-Tämä onnistuu tehokkaasti dynaamisella
-ohjelmoinnilla ajassa $O(nm)$.
-Merkitään funktiolla $f(a,b)$
-editointietäisyyttä \texttt{x}:n $a$
-ensimmäisen merkin sekä
-\texttt{y}:n $b$:n ensimmäisen merkin välillä.
-Tätä funktiota käyttäen
-merkkijonojen
-\texttt{x} ja \texttt{y} editointietäisyys
-on $f(n,m)$, ja funktio kertoo myös tarvittavat
-editointioperaatiot.
+Suppose we are given strings
+\texttt{x} of $n$ characters and
+\texttt{y} of $m$ characters,
+and we want to calculate the edit distance
+between them.
+This can be efficiently done using
+dynamic programming in $O(nm)$ time.
+Let $f(a,b)$ denote the edit distance
+between the first $a$ characters of \texttt{x}
+and the first $b$ characters of \texttt{y}.
+Using this function, the edit distance between
+\texttt{x} and \texttt{y} is $f(n,m)$,
+and the function also determines
+the editing operations needed.
 
-Funktion pohjatapaukset ovat
+The base cases for the function are
 \[
 \begin{array}{lcl}
 f(0,b) & = & b \\
 f(a,0) & = & a \\
 \end{array}
 \]
-ja yleisessä tapauksessa pätee kaava
+and in the general case the formula is
 \[ f(a,b) = \min(f(a,b-1)+1,f(a-1,b)+1,f(a-1,b-1)+c),\]
-missä $c=0$, jos \texttt{x}:n merkki $a$
-ja \texttt{y}:n merkki $b$ ovat samat,
-ja muussa tapauksessa $c=1$.
-Kaava käy läpi mahdollisuudet lyhentää merkkijonoja:
+where $c=0$ if the $a$th character of \texttt{x}
+equals the $b$th character of \texttt{y},
+and otherwise $c=1$.
+The formula covers all ways to shorten the strings:
 \begin{itemize}
-\item $f(a,b-1)$ tarkoittaa, että $x$:ään lisätään merkki
-\item $f(a-1,b)$ tarkoittaa, että $x$:stä poistetaan merkki
-\item $f(a-1,b-1)$ tarkoittaa, että $x$:ssä ja $y$:ssä on
-sama merkki ($c=0$) tai $x$:n merkki muutetaan $y$:n merkiksi ($c=1$)
+\item $f(a,b-1)$ means that a character is inserted to \texttt{x}
+\item $f(a-1,b)$ means that a chacater is removed from \texttt{x}
+\item $f(a-1,b-1)$ means that \texttt{x} and \texttt{y} contain
+the same character ($c=0$),
+or a character in \texttt{x} is transformed into
+a character in \texttt{y} ($c=1$)
 \end{itemize}
-Seuraava taulukko sisältää funktion $f$ arvot
-esimerkin tapauksessa:
+The following table shows the values of $f$
+in the example case:
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
     %\fill [color=lightgray] (5, -3) rectangle (6, -4);
     \draw (1, -1) grid (7, -6);
     
-    \node at (0.5,-2.5) {\texttt{T}};
-    \node at (0.5,-3.5) {\texttt{A}};
-    \node at (0.5,-4.5) {\texttt{L}};
-    \node at (0.5,-5.5) {\texttt{O}};
+    \node at (0.5,-2.5) {\texttt{L}};
+    \node at (0.5,-3.5) {\texttt{O}};
+    \node at (0.5,-4.5) {\texttt{V}};
+    \node at (0.5,-5.5) {\texttt{E}};
 
-    \node at (2.5,-0.5) {\texttt{P}};
-    \node at (3.5,-0.5) {\texttt{A}};
-    \node at (4.5,-0.5) {\texttt{L}};
-    \node at (5.5,-0.5) {\texttt{L}};
-    \node at (6.5,-0.5) {\texttt{O}};
+    \node at (2.5,-0.5) {\texttt{M}};
+    \node at (3.5,-0.5) {\texttt{O}};
+    \node at (4.5,-0.5) {\texttt{V}};
+    \node at (5.5,-0.5) {\texttt{I}};
+    \node at (6.5,-0.5) {\texttt{E}};
 
     \node at (1.5,-1.5) {$0$};
     \node at (1.5,-2.5) {$1$};
@@ -824,29 +827,28 @@ esimerkin tapauksessa:
 \end{tikzpicture}
 \end{center}
 
-Taulukon oikean alanurkan ruutu
-kertoo, että merkkijonojen \texttt{TALO}
-ja \texttt{PALLO} editointietäisyys on 2.
-Taulukosta pystyy myös
-lukemaan, miten pienimmän editointietäisyyden
-voi saavuttaa.
-Tässä tapauksessa polku on seuraava:
+The lower-right corner of the table
+indicates that the edit distance between
+\texttt{LOVE} and \texttt{MOVIE} is 2.
+The table also shows how to construct
+the shortest sequence of editing operations.
+In this case the path is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
     \draw (1, -1) grid (7, -6);
     
-    \node at (0.5,-2.5) {\texttt{T}};
-    \node at (0.5,-3.5) {\texttt{A}};
-    \node at (0.5,-4.5) {\texttt{L}};
-    \node at (0.5,-5.5) {\texttt{O}};
+    \node at (0.5,-2.5) {\texttt{L}};
+    \node at (0.5,-3.5) {\texttt{O}};
+    \node at (0.5,-4.5) {\texttt{V}};
+    \node at (0.5,-5.5) {\texttt{E}};
 
-    \node at (2.5,-0.5) {\texttt{P}};
-    \node at (3.5,-0.5) {\texttt{A}};
-    \node at (4.5,-0.5) {\texttt{L}};
-    \node at (5.5,-0.5) {\texttt{L}};
-    \node at (6.5,-0.5) {\texttt{O}};
+    \node at (2.5,-0.5) {\texttt{M}};
+    \node at (3.5,-0.5) {\texttt{O}};
+    \node at (4.5,-0.5) {\texttt{V}};
+    \node at (5.5,-0.5) {\texttt{I}};
+    \node at (6.5,-0.5) {\texttt{E}};
 
     \node at (1.5,-1.5) {$0$};
     \node at (1.5,-2.5) {$1$};
