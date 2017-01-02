@@ -1,87 +1,86 @@
 \chapter{Dynamic programming}
 
-\index{dynaaminen ohjelmointi@dynaaminen ohjelmointi}
+\index{dynamic programming}
 
-\key{Dynaaminen ohjelmointi}
-on tekniikka, joka yhdistää täydellisen haun
-toimivuuden ja ahneiden algoritmien tehokkuuden.
-Dynaamisen ohjelmoinnin käyttäminen edellyttää,
-että tehtävä jakautuu osaongelmiin,
-jotka voidaan käsitellä toisistaan riippumattomasti.
+\key{Dynamic programming}
+is a technique that combines the correctness
+of complete search and the efficiency
+of greedy algorithms.
+Dynamic programming can be used if the
+problem can be divided into subproblems
+that can be calculated independently.
 
-Dynaamisella ohjelmoinnilla on kaksi käyttötarkoitusta:
+There are two uses for dynamic programming:
 
 \begin{itemize}
 \item
-\key{Optimiratkaisun etsiminen}:
-Haluamme etsiä ratkaisun, joka on
-jollakin tavalla suurin mahdollinen
-tai pienin mahdollinen.
+\key{Findind an optimal solution}:
+We want to find a solution that is
+as large as possible or as small as possible.
 \item
-\key{Ratkaisuiden määrän laskeminen}:
-Haluamme laskea, kuinka monta mahdollista
-ratkaisua on olemassa.
+\key{Couting the number of solutions}:
+We want to calculate the total number of
+possible solutions.
 \end{itemize}
 
-Tutustumme dynaamiseen ohjelmointiin ensin
-optimiratkaisun etsimisen kautta ja käytämme sitten
-samaa ideaa ratkaisujen määrän laskemiseen.
+We will first see how dynamic programming can
+be used for finding an optimal solution,
+and then we will use the same idea for
+counting the solutions.
 
-Dynaamisen ohjelmoinnin ymmärtäminen on yksi merkkipaalu
-jokaisen kisakoodarin uralla.
-Vaikka menetelmän perusidea on yksinkertainen,
-haasteena on oppia soveltamaan sitä sujuvasti
-erilaisissa tehtävissä.
-Tämä luku esittelee joukon
-perusesimerkkejä, joista on hyvä lähteä liikkeelle.
+Understanding dynamic programming is a milestone
+in every competitive programmer's career.
+While the basic idea of the technique is simple,
+the challenge is how to apply it for different problems.
+This chapter introduces a set of classic problems
+that are a good starting point.
 
-\section{Kolikkotehtävä}
+\section{Coin problem}
 
-Aloitamme dynaamisen ohjelmoinnin tutun tehtävän kautta:
-Muodostettavana on rahamäärä $x$
-käyttäen mahdollisimman vähän kolikoita.
-Kolikoiden arvot ovat $\{c_1,c_2,\ldots,c_k\}$
-ja jokaista kolikkoa on saatavilla rajattomasti.
+We first consider a problem that we
+have already seen:
+Given a set of coin values $\{c_1,c_2,\ldots,c_k\}$
+and a sum of money $x$, our task is to
+form the sum $x$ using as few coins as possible.
 
-Luvussa 6.1 ratkaisimme tehtävän ahneella algoritmilla,
-joka muodostaa rahamäärän valiten mahdollisimman
-suuria kolikoita.
-Ahne algoritmi toimii esimerkiksi silloin,
-kun kolikot ovat eurokolikot,
-mutta yleisessä tapauksessa ahne algoritmi
-ei välttämättä valitse pienintä määrää kolikoita.
+In Chapter 6.1, we solved the problem using a
+greedy algorithm that always selects the largest
+possible coin for the sum.
+The greedy algorithm works, for example,
+when the coins are the euro coins,
+but in the general case the greedy algorithm
+doesn't necessarily produce an optimal solution.
 
-Nyt on aika ratkaista tehtävä tehokkaasti
-dynaamisella ohjelmoinnilla niin,
-että algoritmi toimii millä tahansa kolikoilla.
-Algoritmi perustuu rekursiiviseen funktioon,
-joka käy läpi kaikki vaihtoehdot rahamäärän
-muodostamiseen täydellisen haun kaltaisesti.
-Algoritmi toimii kuitenkin tehokkaasti, koska
-se tallentaa välituloksia muistitaulukkoon,
-minkä ansiosta sen ei tarvitse laskea samoja
-asioita moneen kertaan.
+Now it's time to solve the problem efficiently
+using dynamic programming, so that the algorithms
+works for any coin set.
+The dynamic programming
+algorithm is based on a recursive function
+that goes through all possibilities how to
+select the coins, like a brute force algorithm.
+However, the dynamic programming
+algorithm is efficient because
+it uses memoization to
+calculate the answer for each subproblem only once.
 
-\subsubsection{Rekursiivinen esitys}
+\subsubsection{Recursive formulation}
 
-\index{rekursioyhtxlz@rekursioyhtälö}
+The idea in dynamic programming is to
+formulate the problem recursively so
+that the answer for the problem can be
+calculated from the answers for the smaller
+subproblems.
+In this case, a natural problem is as follows:
+what is the smallest number of coins
+required for constructing sum $x$?
 
-Dynaamisessa ohjelmoinnissa on ideana esittää
-ongelma rekursiivisesti niin,
-että ongelman ratkaisun voi laskea
-saman ongelman pienempien tapausten ratkaisuista.
-Tässä tehtävässä luonteva ongelma on seuraava:
-mikä on pienin määrä kolikoita,
-joilla voi muodostaa rahamäärän $x$?
-
-Merkitään $f(x)$ funktiota,
-joka antaa vastauksen ongelmaan,
-eli $f(x)$ on pienin määrä kolikoita,
-joilla voi muodostaa rahamäärän $x$.
-Funktion arvot riippuvat siitä,
-mitkä kolikot ovat käytössä.
-Esimerkiksi jos kolikot ovat $\{1,3,4\}$,
-funktion ensimmäiset arvot ovat:
+Let $f(x)$ be a function that gives the answer
+for the problem, i.e., $f(x)$ is the smallest
+number of coins required for constructing sum $x$.
+The values of the function depend on the
+values of the coins.
+For example, if the values are $\{1,3,4\}$,
+the first values of the function are as follows:
 
 \[
 \begin{array}{lcl}
@@ -99,44 +98,46 @@ f(10) & = & 3 \\
 \end{array}
 \]
 
-Nyt $f(0)=0$, koska jos rahamäärä on 0,
-ei tarvita yhtään kolikkoa.
-Vastaavasti $f(3)=1$, koska rahamäärän 3
-voi muodostaa kolikolla 3,
-ja $f(5)=2$, koska rahamäärän 5
-voi muodostaa kolikoilla 1 ja 4.
+First, $f(0)=0$ because no coins are needed
+for sum $0$.
+Moreover, $f(3)=1$ because the sum $3$
+can be formed using coin 3,
+and $f(5)=2$ because the sum 5 can
+be formed using coins 1 and 4.
 
-Oleellinen ominaisuus funktiossa on,
-että arvon $f(x)$ pystyy laskemaan
-rekursiivisesti käyttäen pienempiä
-funktion arvoja.
-Esimerkiksi jos kolikot ovat $\{1,3,4\}$,
-on kolme tapaa alkaa muodostaa rahamäärää $x$:
-valitaan kolikko 1, 3 tai 4.
-Jos valitaan kolikko 1, täytyy
-muodostaa vielä rahamäärä $x-1$.
-Vastaavasti jos valitaan kolikko 3 tai 4,
-täytyy muodostaa rahamäärä $x-3$ tai $x-4$.
+The essential property in the function is
+that the value $f(x)$ can be calculated
+recursively from the smaller values of the function.
+For example, if the coin set is $\{1,3,4\}$,
+there are three ways to select the first coin
+in a solution: we can choose coin 1, 3 or 4.
+If coin 1 is chosen, the remaining task is to
+form the sum $x-1$.
+Similarly, if coin 3 or 4 is chosen,
+we should form the sum $x-3$ or $x-4$.
 
-Niinpä rekursiivinen kaava on
-\[f(x) = \min(f(x-1),f(x-3),f(x-4))+1,\]
-missä funktio $\min$ valitsee pienimmän parametreistaan.
-Yleisemmin jos kolikot ovat $\{c_1,c_2,\ldots,c_k\}$,
-rekursiivinen kaava on
+Thus, the recursive formula is
+\[f(x) = \min(f(x-1),f(x-3),f(x-4))+1\]
+where the function $\min$ returns the smallest
+of its parameters.
+In the general case, for the coin set
+$\{c_1,c_2,\ldots,c_k\}$,
+the recursive formula is
 \[f(x) = \min(f(x-c_1),f(x-c_2),\ldots,f(x-c_k))+1.\]
-Funktion pohjatapauksena on
+The base case for the function is
 \[f(0)=0,\]
-koska rahamäärän 0 muodostamiseen ei tarvita
-yhtään kolikkoa.
-Lisäksi on hyvä määritellä
+because no coins are needed for constructing
+the sum 0.
+In addition, it's a good idea to define
 \[f(x)=\infty,\hspace{8px}\textrm{jos $x<0$}.\]
-Tämä tarkoittaa, että negatiivisen rahamäärän
-muodostaminen vaatii äärettömästi kolikoita,
-mikä estää sen, että rekursio muodostaisi
-ratkaisun, johon kuuluu negatiivinen rahamäärä.
+This means that an infinite number of coins
+is needed to create a negative sum of money.
+This prevents the situation that the recursive
+function would form a solution where the
+initial sum of money is negative.
 
-Nyt voimme toteuttaa funktion C++:lla suoraan
-rekursiivisen määritelmän perusteella:
+Now it's possible to implement the function in C++
+directly using the recursive definition:
 
 \begin{lstlisting}
 int f(int x) {
@@ -150,41 +151,42 @@ int f(int x) {
 }
 \end{lstlisting}
 
-Koodi olettaa, että käytettävät kolikot ovat
+The code assumes that the available coins are
 $\texttt{c}[1], \texttt{c}[2], \ldots, \texttt{c}[k]$,
-ja arvo $10^9$ kuvastaa ääretöntä.
-Tämä on toimiva funktio, mutta se ei ole vielä tehokas,
-koska funktio käy läpi valtavasti erilaisia tapoja
-muodostaa rahamäärä.
-Seuraavaksi esiteltävä muistitaulukko tekee
-funktiosta tehokkaan.
+and the value $10^9$ means infinity.
+This function works but it is not efficient yet
+because it goes through a large number
+of ways to construct the sum.
+However, the function becomes efficient by
+using memoization.
 
-\subsubsection{Muistitaulukko}
+\subsubsection{Memoization}
 
-\index{muistitaulukko@muistitaulukko}
+\index{memoization}
 
-Dynaaminen ohjelmointi tehostaa
-rekursiivisen funktion laskentaa
-tallentamalla funktion arvoja \key{muistitaulukkoon}.
-Taulukon avulla funktion arvo
-tietyllä parametrilla riittää laskea
-vain kerran, minkä jälkeen sen voi
-hakea suoraan taulukosta.
-Tämä muutos nopeuttaa algoritmia ratkaisevasti.
+Dynamic programming allows to calculate the
+value of a recursive function efficiently
+using \key{memoization}.
+This means that an auxiliary array is used
+for storing the values of the function
+for different parameters.
+For each parameter, the value of the function
+is calculated only once, and after this,
+it can be directly retrieved from the array.
 
-Tässä tehtävässä muistitaulukoksi sopii taulukko
-
+In this problem, we can use the array
 \begin{lstlisting}
 int d[N];
 \end{lstlisting}
 
-jonka kohtaan $\texttt{d}[x]$
-lasketaan funktion arvo $f(x)$.
-Vakio $N$ valitaan niin, että kaikki
-laskettavat funktion arvot mahtuvat taulukkoon.
+where $\texttt{d}[x]$ will contain
+the value $f(x)$.
+The constant $N$ should be chosen so
+that there is space for all needed
+values of the function.
 
-Tämän jälkeen funktion voi toteuttaa
-tehokkaasti näin:
+After this, the function can be efficiently
+implemented as follows:
 
 \begin{lstlisting}
 int f(int x) {
@@ -200,32 +202,34 @@ int f(int x) {
 }
 \end{lstlisting}
 
-Funktio käsittelee pohjatapaukset $x=0$
-ja $x<0$ kuten ennenkin.
-Sitten funktio tarkastaa,
-onko $f(x)$ laskettu jo taulukkoon $\texttt{d}[x]$.
-Jos $f(x)$ on laskettu,
-funktio palauttaa sen suoraan.
-Muussa tapauksessa funktio laskee arvon rekursiivisesti
-ja tallentaa sen kohtaan $\texttt{d}[x]$.
+The function handles the base cases
+$x=0$ and $x<0$ as previously.
+Then the function checks if
+$f(x)$ has already been calculated
+and stored to $\texttt{d}[x]$.
+If $f(x)$ can be found in the array,
+the function directly returns it.
+Otherwise the function calculates the value
+recursively and stores it to $\texttt{d}[x]$.
 
-Muistitaulukon ansiosta funktio toimii
-nopeasti, koska sen tarvitsee laskea
-vastaus kullekin $x$:n arvolle
-vain kerran rekursiivisesti.
-Heti kun arvo $f(x)$ on tallennettu muistitaulukkoon,
-sen saa haettua sieltä suoraan,
-kun funktiota kutsutaan seuraavan kerran parametrilla $x$.
+Using memoization the function works
+efficiently because it is needed to
+recursively calculate
+the answer for each $x$ only once.
+After a value $f(x)$ has been stored to the array,
+it can be directly retrieved whenever the
+function will be called again with parameter $x$.
 
-Tuloksena olevan algoritmin aikavaativuus on $O(xk)$,
-kun rahamäärä on $x$ ja kolikoiden määrä on $k$.
-Käytännössä ratkaisu on mahdollista toteuttaa,
-jos $x$ on niin pieni, että on mahdollista varata 
-riittävän suuri muistitaulukko.
+The time complexity of the resulting algorithm
+is $O(xk)$ when the sum is $x$ and the number of
+coins is $k$.
+In practice, the algorithm is usable if
+$x$ is so small that it is possible to allocate
+an array for all possible function parameters.
 
-Huomaa, että muistitaulukon voi muodostaa
-myös suoraan silmukalla ilman rekursiota
-laskemalla arvot pienimmästä suurimpaan:
+Note that the array can also be constructed using
+a loop that calculates all the values
+instead of a recursive function:
 \begin{lstlisting}
 d[0] = 0;
 for (int i = 1; i <= x; i++) {
@@ -238,31 +242,29 @@ for (int i = 1; i <= x; i++) {
 }
 \end{lstlisting}
 
-Silmukkatoteutus on lyhyempi ja
-hieman tehokkaampi kuin rekursiototeutus,
-minkä vuoksi kokeneet kisakoodarit
-toteuttavat dynaamisen ohjelmoinnin
-usein silmukan avulla.
-Kuitenkin silmukkatoteutuksen taustalla
-on sama rekursiivinen idea kuin ennenkin.
+This implementation is shorter and somewhat
+more efficient than recursion,
+and experienced competitive programmers
+often implement dynamic programming solutions
+using loops.
+Still, the underlying idea is the same as
+in the recursive function.
 
-\subsubsection{Ratkaisun muodostaminen}
+\subsubsection{Constructing the solution}
 
-Joskus optimiratkaisun arvon selvittämisen lisäksi
-täytyy muodostaa näytteeksi yksi mahdollinen optimiratkaisu.
-Tässä tehtävässä tämä tarkoittaa,
-että ohjelman täytyy antaa esimerkki
-tavasta valita kolikot,
-joista muodostuu rahamäärä $x$
-käyttäen mahdollisimman vähän kolikoita.
+Sometimes it is not enough to find out the value
+of the optimal solution, but we should also give
+an example how such a solution can be constructed.
+In this problem, this means that the algorithm
+should show how to select the coins that produce
+the sum $x$ using as few coins as possible.
 
-Ratkaisun muodostaminen onnistuu lisäämällä
-koodiin uuden taulukon, joka kertoo
-kullekin rahamäärälle,
-mikä kolikko siitä tulee poistaa
-optimiratkaisussa.
-Seuraavassa koodissa taulukko \texttt{e}
-huolehtii asiasta:
+We can construct the solution by adding another
+array to the code. The array indicates for
+each sum of money the first coin that should be
+chosen in an optimal solution.
+In the following code, the array \texttt{e}
+is used for this:
 
 \begin{lstlisting}
 d[0] = 0;
@@ -279,8 +281,8 @@ for (int i = 1; i <= x; i++) {
 }
 \end{lstlisting}
 
-Tämän jälkeen rahamäärän $x$ muodostavat
-kolikot voi tulostaa näin:
+After this, we can print the coins needed
+for the sum $x$ as follows:
 
 \begin{lstlisting}
 while (x > 0) {
@@ -289,14 +291,15 @@ while (x > 0) {
 }
 \end{lstlisting}
 
-\subsubsection{Ratkaisuiden määrän laskeminen}
+\subsubsection{Counting the number of solutions}
 
-Tarkastellaan sitten kolikkotehtävän muunnelmaa,
-joka on muuten samanlainen kuin ennenkin,
-mutta laskettavana on mahdollisten ratkaisuiden yhteismäärä
-optimaalisen ratkaisun sijasta.
-Esimerkiksi jos kolikot ovat $\{1,3,4\}$ ja rahamäärä on 5,
-niin ratkaisuja on kaikkiaan 6:
+Let us now consider a variation of the problem
+that it's like the original problem but we should
+count the total number of solutions instead
+of finding the optimal solution.
+For example, if the coins are $\{1,3,4\}$ and
+the required sum is $5$,
+there are a total of 6 solutions:
 
 \begin{multicols}{2}
 \begin{itemize}
@@ -309,29 +312,30 @@ niin ratkaisuja on kaikkiaan 6:
 \end{itemize}
 \end{multicols}
 
-Ratkaisujen määrän laskeminen tapahtuu melko samalla tavalla
-kuin optimiratkaisun etsiminen.
-Erona on, että optimiratkaisun etsivässä rekursiossa
-valitaan pienin tai suurin aiempi arvo,
-kun taas ratkaisujen määrän laskevassa rekursiossa lasketaan
-yhteen kaikki vaihtoehdot.
+The number of the solutions can be calculated
+using the same idea as finding the optimal solution.
+The difference is that when finding the optimal solution,
+we maximize or minimize something in the recursion,
+but now we will sum together all possible alternatives to
+construct a solution.
 
-Tässä tapauksessa voimme määritellä funktion $f(x)$,
-joka kertoo, monellako tavalla rahamäärän $x$
-voi muodostaa kolikoista.
-Esimerkiksi $f(5)=6$, kun kolikot ovat $\{1,3,4\}$.
-Funktion $f(x)$ saa laskettua rekursiivisesti kaavalla
-\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_k),\]
-koska rahamäärän $x$ muodostamiseksi pitää
-valita jokin kolikko $c_i$ ja muodostaa sen jälkeen rahamäärä $x-c_i$.
-Pohjatapauksina ovat $f(0)=1$, koska rahamäärä 0 syntyy
-ilman yhtään kolikkoa,
-sekä $f(x)=0$, kun $x<0$, koska negatiivista rahamäärää
-ei ole mahdollista muodostaa.
+In this case, we can define a function $f(x)$
+that returns the number of ways to construct
+the sum $x$ using the coins.
+For example, $f(5)=6$ when the coins are $\{1,3,4\}$.
+The function $f(x)$ can be recursively calculated
+using the formula
+\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_k)\]
+because to form the sum $x$ we should first
+choose some coin $c_i$ and after this form the sum $x-c_i$.
+The base cases are $f(0)=1$ because there is exactly
+one way to form the sum 0 using an empty set of coins,
+and $f(x)=0$, when $x<0$, because it's not possible
+to form a negative sum of money.
 
-Yllä olevassa esimerkissä funktioksi tulee
+In the above example the function becomes
 \[ f(x) = f(x-1)+f(x-3)+f(x-4) \]
-ja funktion ensimmäiset arvot ovat:
+and the first values of the function are:
 \[
 \begin{array}{lcl}
 f(0) & = & 1 \\
@@ -347,9 +351,9 @@ f(9) & = & 40 \\
 \end{array}
 \]
 
-Seuraava koodi laskee funktion $f(x)$ arvon
-dynaamisella ohjelmoinnilla täyttämällä taulukon
-\texttt{d} rahamäärille $0 \ldots x$:
+The following code calculates the value $f(x)$
+using dynamic programming by filling the array
+\texttt{d} for parameters $0 \ldots x$:
 
 \begin{lstlisting}
 d[0] = 1;
@@ -361,27 +365,29 @@ for (int i = 1; i <= x; i++) {
 }
 \end{lstlisting}
 
-Usein ratkaisujen määrä on niin suuri, että sitä ei tarvitse
-laskea kokonaan vaan riittää ilmoittaa vastaus
-modulo $m$, missä esimerkiksi $m=10^9+7$.
-Tämä onnistuu muokkaamalla koodia niin,
-että kaikki laskutoimitukset lasketaan modulo $m$.
-Tässä tapauksessa riittää lisätä rivin
-\begin{lstlisting}
-        d[i] += d[i-c[j]];
-\end{lstlisting}
-jälkeen rivi
+Often the number of the solutions is so large
+that it is not required to calculate the exact number
+but it is enough to give the answer modulo $m$
+where, for example, $m=10^9+7$.
+This can be done by changing the code so that
+all calculations will be done in modulo $m$.
+In this case, it is enough to add the line
 \begin{lstlisting}
         d[i] %= m;
 \end{lstlisting}
+after the line
+\begin{lstlisting}
+        d[i] += d[i-c[j]];
+\end{lstlisting}
 
-Nyt olemme käyneet läpi kaikki dynaamisen
-ohjelmoinnin perusasiat.
-Dynaamista ohjelmointia voi soveltaa monilla
-tavoilla erilaisissa tilanteissa,
-minkä vuoksi tutustumme seuraavaksi
-joukkoon tehtäviä, jotka esittelevät
-dynaamisen ohjelmoinnin mahdollisuuksia.
+Now we have covered all basic
+techniques related to
+dynamic programming.
+Since dynamic programming can be used
+in many different situations,
+we will now go through a set of problems
+that show further examples how dynamic
+programming can be used.
 
 \section{Pisin nouseva alijono}
 
