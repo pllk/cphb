@@ -622,25 +622,23 @@ because each value $f(y,x)$ can be calculated
 in constant time using the values of the
 adjacent squares.
 
-\section{Repunpakkaus}
+\section{Knapsack}
 
-\index{repunpakkaus@repunpakkaus}
+\index{knapsack}
 
-\key{Repunpakkaus} on klassinen ongelma,
-jossa annettuna on $n$ tavaraa,
-joiden painot ovat
-$p_1,p_2,\ldots,p_n$ ja arvot ovat
+\key{Knapsack} is a classic problem where we
+are given $n$ objects with weights
+$p_1,p_2,\ldots,p_n$ and values
 $a_1,a_2,\ldots,a_n$.
-Tehtävänä on valita reppuun pakattavat tavarat
-niin, että tavaroiden
-painojen summa on enintään $x$
-ja tavaroiden arvojen summa on mahdollisimman suuri.
+Our task is to choose a subset of the objects
+such that the sum of the weights is at most $x$
+and the sum of the values is as large as possible.
 
 \begin{samepage}
-Esimerkiksi jos tavarat ovat
+For example, if the objects are
 \begin{center}
 \begin{tabular}{rrr}
-tavara & paino & arvo \\
+object & weight & value \\
 \hline
 A & 5 & 1 \\
 B & 6 & 3 \\
@@ -649,65 +647,68 @@ D & 5 & 3 \\
 \end{tabular}
 \end{center}
 \end{samepage}
-ja suurin sallittu yhteispaino on 12,
-niin paras ratkaisu on pakata reppuun tavarat $B$ ja $D$.
-Niiden yhteispaino $6+5=11$ ei ylitä rajaa 12
-ja arvojen summa
-on $3+3=6$, mikä on paras mahdollinen tulos.
+and the maximum total weight is 12,
+the optimal solution is to select objects $B$ and $D$.
+Their total weight $6+5=11$ doesn't exceed 12,
+and their total value $3+3=6$ is as large as possible.
 
-Tämä tehtävä on mahdollista ratkaista kahdella eri
-tavalla dynaamisella ohjelmoinnilla
-riippuen siitä, tarkastellaanko ongelmaa
-maksimointina vai minimointina.
-Käymme seuraavaksi läpi molemmat ratkaisut.
+This task is possible to solve in two different ways
+using dynamic programming.
+We can either regard the problem as maximizing the
+total value of the objects or 
+minimizing the total weight of the objects.
 
-\subsubsection{Ratkaisu 1}
+\subsubsection{Solution 1}
 
-\textit{Maksimointi:} Merkitään $f(k,u)$
-suurinta mahdollista tavaroiden yhteisarvoa,
-kun reppuun pakataan jokin osajoukko
-tavaroista $1 \ldots k$,
-jossa tavaroiden yhteispaino on $u$.
-Ratkaisu tehtävään on suurin arvo
-$f(n,u)$, kun $0 \le u \le x$.
-Rekursiivinen kaava funktion laskemiseksi on
-\[f(k,u) = \max(f(k-1,u),f(k-1,u-p_k)+a_k),\]
-koska kohdassa $k$ oleva tavara joko otetaan tai ei oteta
-mukaan ratkaisuun.
-Pohjatapauksina on $f(0,0)=0$ ja $f(0,u)=-\infty$,
-kun $u \neq 0$. Tämän ratkaisun aikavaativuus on $O(nx)$.
+\textit{Maximization:} Let $f(k,u)$
+denote the largest possible total value
+when a subset of objects $1 \ldots k$ is selected
+such that the total weight is $u$.
+The solution for the problem is
+the largest value
+$f(n,u)$ where $0 \le u \le x$.
+A recursive formula for calculating
+the function is
+\[f(k,u) = \max(f(k-1,u),f(k-1,u-p_k)+a_k)\]
+because we can either include or not include
+object $k$ in the solution.
+The base cases are $f(0,0)=0$ and $f(0,u)=-\infty$
+when $u \neq 0$. The time compexity of
+the solution is $O(nx)$.
 
-Esimerkin tilanteessa optimiratkaisu on
-$f(4,11)=6$, joka muodostuu seuraavan ketjun kautta:
+In the example case, the optimal solution is
+$f(4,11)=6$ that can be constructed
+using the following sequence:
 \[f(4,11)=f(3,6)+3=f(2,6)+3=f(1,0)+3+3=f(0,0)+3+3=6.\]
 
-\subsubsection{Ratkaisu 2}
+\subsubsection{Solution 2}
 
-\textit{Minimointi:} Merkitään $f(k,u)$
-pienintä mahdollista tavaroiden yhteispainoa,
-kun reppuun pakataan jokin osajoukko
-tavaroista $1 \ldots k$,
-jossa tavaroiden yhteisarvo on $u$.
-Ratkaisu tehtävään on suurin arvo $u$,
-jolle pätee $0 \le u \le s$ ja $f(n,u) \le x$,
-missä $s=\sum_{i=1}^n a_i$.
-Rekursiivinen kaava funktion laskemiseksi on
-\[f(k,u) = \min(f(k-1,u),f(k-1,u-a_k)+p_k)\]
-ratkaisua 1 vastaavasti.
-Pohjatapauksina on $f(0,0)=0$ ja $f(0,u)=\infty$, kun $u \neq 0$.
-Tämän ratkaisun aikavaativuus on $O(ns)$.
+\textit{Minization:} Let $f(k,u)$
+denote the smallest possible total weight
+when a subset of objects
+$1 \ldots k$ is selected such
+that the total weight is $u$.
+The solution for the problem is the
+largest value $u$
+for which  $0 \le u \le s$ and $f(n,u) \le x$
+where $s=\sum_{i=1}^n a_i$.
+A recursive formula for calculating the function is
+\[f(k,u) = \min(f(k-1,u),f(k-1,u-a_k)+p_k).\]
+as in solution 1.
+The base cases are $f(0,0)=0$ and $f(0,u)=\infty$
+when $u \neq 0$.
+The time complexity of the solution is $O(ns)$.
 
-Esimerkin tilanteessa optimiratkaisu on
-$f(4,6)=11$, joka muodostuu seuraavan ketjun kautta:
+In the example case, the optimal solution is $f(4,6)=11$
+that can be constructed using the following sequence:
 \[f(4,6)=f(3,3)+5=f(2,3)+5=f(1,0)+6+5=f(0,0)+6+5=11.\]
 
 ~\\
-Kiinnostava seikka on, että eri asiat syötteessä
-vaikuttavat ratkaisuiden tehokkuuteen.
-Ratkaisussa 1 tavaroiden painot vaikuttavat tehokkuuteen
-mutta arvoilla ei ole merkitystä.
-Ratkaisussa 2 puolestaan tavaroiden arvot vaikuttavat
-tehokkuuteen mutta painoilla ei ole merkitystä.
+It is interesting to note how the features of the input
+affect on the efficiency of the solutions.
+The efficiency of solution 1 depends on the weights
+of the objects, while the efficiency of solution 2
+depends on the values of the objects.
 
 \section{Editointietäisyys}
 
