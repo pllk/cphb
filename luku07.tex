@@ -389,20 +389,20 @@ we will now go through a set of problems
 that show further examples how dynamic
 programming can be used.
 
-\section{Pisin nouseva alijono}
+\section{Longest increasing subsequence}
 
-\index{pisin nouseva alijono@pisin nouseva alijono}
+\index{longest increasing subsequence}
 
-Annettuna on taulukko, jossa on $n$
-kokonaislukua $x_1,x_2,\ldots,x_n$.
-Tehtävänä on selvittää,
-kuinka pitkä on taulukon
-\key{pisin nouseva alijono}
-eli vasemmalta oikealle kulkeva
-ketju taulukon alkioita,
-jotka on valittu niin,
-että jokainen alkio on edellistä suurempi.
-Esimerkiksi taulukossa
+Given an array that contains $n$
+numbers $x_1,x_2,\ldots,x_n$,
+our task is find the
+\key{longest increasing subsequence}
+in the array.
+This is a sequence of array elements
+that goes from the left to the right,
+and each element in the sequence is larger
+than the previous element.
+For example, in the array
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -427,7 +427,8 @@ Esimerkiksi taulukossa
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-pisin nouseva alijono sisältää 4 alkiota:
+the longest increasing subsequence
+contains 4 elements:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (2,1);
@@ -460,12 +461,14 @@ pisin nouseva alijono sisältää 4 alkiota:
 \end{tikzpicture}
 \end{center}
 
-Merkitään $f(k)$ kohtaan $k$ päättyvän
-pisimmän nousevan alijonon pituutta,
-jolloin ratkaisu tehtävään on suurin
-arvoista $f(1),f(2),\ldots,f(n)$.
-Esimerkiksi yllä olevassa taulukossa
-funktion arvot ovat seuraavat:
+Let $f(k)$ be the length of the
+longest increasing subsequence
+that ends to index $k$.
+Thus, the answer for the problem
+is the largest of values
+$f(1),f(2),\ldots,f(n)$.
+For example, in the above array
+the values for the function are as follows:
 \[
 \begin{array}{lcl}
 f(1) & = & 1 \\
@@ -479,33 +482,37 @@ f(8) & = & 2 \\
 \end{array}
 \]
 
-Arvon $f(k)$ laskemisessa on kaksi vaihtoehtoa,
-millainen kohtaan $k$ päättyvä pisin nouseva alijono on:
+When calculating the value $f(k)$,
+there are two possibilities how the subsequence
+that ends to index $k$ is constructed:
 \begin{enumerate}
-\item Pisin nouseva alijono sisältää vain luvun $x_k$,
-jolloin $f(k)=1$.
-\item Valitaan jokin kohta $i$, jolle pätee $i<k$
-ja $x_i<x_k$.
-Pisin nouseva alijono saadaan liittämällä
-kohtaan $i$ päättyvän pisimmän nousevan alijonon perään luku $x_k$.
-Tällöin $f(k)=f(i)+1$.
+\item The subsequence
+only contains the element $x_k$, so $f(k)=1$.
+\item We choose some index $i$ for which $i<k$
+and $x_i<x_k$.
+We extend the longest increasing subsequence
+that ends to index $i$ by adding the element $x_k$
+to it. In this case $f(k)=f(i)+1$.
 \end{enumerate}
 
-Tarkastellaan esimerkkinä arvon $f(7)$ laskemista.
-Paras ratkaisu on ottaa pohjaksi kohtaan 5
-päättyvä pisin nouseva alijono $[2,5,7]$
-ja lisätä sen perään luku $x_7=8$.
-Tuloksena on alijono $[2,5,7,8]$ ja $f(7)=f(5)+1=4$.
+Consider calculating the value $f(7)$.
+The best solution is to extend the longest
+increasing subsequence that ends to index 5,
+i.e., the sequence $[2,5,7]$, by adding
+the element $x_7=8$.
+The result is
+$[2,5,7,8]$, and $f(7)=f(5)+1=4$.
 
-Suoraviivainen tapa toteuttaa algoritmi on
-käydä kussakin kohdassa $k$ läpi kaikki kohdat
-$i=1,2,\ldots,k-1$, joissa voi olla alijonon
-edellinen luku.
-Tällaisen algoritmin aikavaativuus on $O(n^2)$.
-Yllättävää kyllä, algoritmin voi toteuttaa myös
-ajassa $O(n \log n)$, mutta tämä on vaikeampaa.
+A straightforward way to calculate the
+value $f(k)$ is to
+go through all indices
+$i=1,2,\ldots,k-1$ that can contain the
+previous element in the subsequence.
+The time complexity of such an algorithm is $O(n^2)$.
+Surprisingly, it is also possible to solve the
+problem in $O(n \log n)$ time, but this is more difficult.
 
-\section{Reitinhaku ruudukossa}
+\section{Path in a grid}
 
 Seuraava tehtävämme on etsiä reitti
 $n \times n$ -ruudukon vasemmasta yläkulmasta
