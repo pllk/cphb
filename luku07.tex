@@ -888,24 +888,25 @@ In this case the path is as follows:
 \end{tikzpicture}
 \end{center}
 
-Merkkijonojen \texttt{PALLO} ja \texttt{TALO} viimeinen merkki on sama,
-joten niiden editointietäisyys on sama kuin
-merkkijonojen \texttt{PALL} ja \texttt{TAL}.
-Nyt voidaan poistaa viimeinen \texttt{L} merkkijonosta \texttt{PAL},
-mistä tulee yksi operaatio.
-Editointietäisyys on siis yhden suurempi
-kuin merkkijonoilla \texttt{PAL} ja \texttt{TAL}, jne.
+The last characters of \texttt{LOVE} and \texttt{MOVIE}
+are equal, so the edit distance between them
+equals the edit distance between \texttt{LOV} and \texttt{MOVI}.
+We can use one editing operation to remove the
+character \texttt{I} from \texttt{MOVI}.
+Thus, the edit distance is one larger than
+the edit distance between \texttt{LOV} and \texttt{MOV}, etc.
 
-\section{Laatoitukset}
+\section{Tilings}
 
-Joskus dynaamisen ohjelmoinnin tila on monimutkaisempi kuin
-kiinteä yhdistelmä lukuja.
-Tarkastelemme lopuksi tehtävää, jossa
-laskettavana on, monellako tavalla
-kokoa $1 \times 2$ ja $2 \times 1$ olevilla laatoilla
-voi täyttää $n \times m$ -kokoisen ruudukon.
-Esimerkiksi ruudukolle kokoa $4 \times 7$
-yksi mahdollinen ratkaisu on
+Sometimes the dynamic programming state
+is more complex than a fixed combination of numbers.
+As an example,
+we consider a problem where our task
+is to calculate the number of different ways to
+fill an $n \times m$ grid using
+$1 \times 2$ and $2 \times 1$ size tiles.
+For example, one valid solution
+for the $4 \times 7$ grid is
 \begin{center}
 \begin{tikzpicture}[scale=.65]
     \draw (0,0) grid (7,4);
@@ -927,72 +928,77 @@ yksi mahdollinen ratkaisu on
 
 \end{tikzpicture}
 \end{center}
-ja ratkaisujen yhteismäärä on 781.
+and the total number of solutions is 781.
 
-Tehtävän voi ratkaista dynaamisella ohjelmoinnilla
-käymällä ruudukkoa läpi rivi riviltä.
-Jokainen ratkaisun rivi pelkistyy merkkijonoksi,
-jossa on $m$ merkkiä joukosta $\{\sqcap, \sqcup, \sqsubset, \sqsupset \}$.
-Esimerkiksi yllä olevassa ratkaisussa on 4 riviä,
-jotka vastaavat merkkijonoja
+The problem can be solved using dynamic programming
+by going through the grid row by row.
+Each row in a solution can be represented as a
+string that contains $m$ characters from the set
+$\{\sqcap, \sqcup, \sqsubset, \sqsupset \}$.
+For example, the above solution consists of four rows
+that correspond to the following strings:
 \begin{itemize}
 \item
-$\sqcap \sqsubset \sqsupset \sqcap \sqsubset \sqsupset \sqcap$,
+$\sqcap \sqsubset \sqsupset \sqcap \sqsubset \sqsupset \sqcap$
 \item
-$\sqcup \sqsubset \sqsupset \sqcup \sqcap \sqcap \sqcup$,
+$\sqcup \sqsubset \sqsupset \sqcup \sqcap \sqcap \sqcup$
 \item
-$\sqsubset \sqsupset \sqsubset \sqsupset \sqcup \sqcup \sqcap$ ja
+$\sqsubset \sqsupset \sqsubset \sqsupset \sqcup \sqcup \sqcap$ 
 \item
-$\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$.
+$\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$
 \end{itemize}
 
-Tehtävään sopiva rekursiivinen funktio on $f(k,x)$,
-joka laskee, montako tapaa on muodostaa ratkaisu
-ruudukon riveille $1 \ldots k$ niin,
-että riviä $k$ vastaa merkkijono $x$.
-Dynaaminen ohjelmointi on mahdollista,
-koska jokaisen rivin sisältöä
-rajoittaa vain edellisen rivin sisältö.
+Let $f(k,x)$ denote the number of ways to
+construct a solution for the rows $1 \ldots k$
+in the grid so that string $x$ corresponds to row $k$.
+It is possible to use dynamic programing here
+because the state of a row is constrained
+only be the state of the previous row.
 
-Riveistä muodostuva ratkaisu on kelvollinen,
-jos rivillä 1 ei ole merkkiä $\sqcup$,
-rivillä $n$ ei ole merkkiä $\sqcap$
-ja kaikki peräkkäiset rivit ovat \emph{yhteensopivat}.
-Esimerkiksi rivit
-$\sqcup \sqsubset \sqsupset \sqcup \sqcap \sqcap \sqcup$ ja
+A solution is valid if row $1$ doesn't contain
+the character $\sqcup$,
+row $n$ doesn't contain the character $\sqcap$,
+and all successive rows are \emph{compatible}.
+For example, the rows
+$\sqcup \sqsubset \sqsupset \sqcup \sqcap \sqcap \sqcup$ and
 $\sqsubset \sqsupset \sqsubset \sqsupset \sqcup \sqcup \sqcap$ 
-ovat yhteensopivat,
-kun taas rivit
-$\sqcap \sqsubset \sqsupset \sqcap \sqsubset \sqsupset \sqcap$ ja
+are compatible, while the rows
+$\sqcap \sqsubset \sqsupset \sqcap \sqsubset \sqsupset \sqcap$ and
 $\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$
-eivät ole yhteensopivat.
+are not compatible.
 
-Koska rivillä on $m$ merkkiä ja jokaiselle merkille on 4
-vaihtoehtoa, erilaisia rivejä on korkeintaan $4^m$.
-Niinpä ratkaisun aikavaativuus on $O(n 4^{2m})$,
-koska joka rivillä käydään läpi $O(4^m)$
-vaihtoehtoa rivin sisällölle
-ja jokaista vaihtoehtoa kohden on $O(4^m)$
-vaihtoehtoa edellisen rivin sisällölle.
-Käytännössä ruudukko kannattaa kääntää niin
-päin, että pienempi sivun pituus on $m$:n roolissa,
-koska $m$:n suuruus on ratkaiseva ajankäytön kannalta.
+Since a row consists of $m$ characters and there are
+four choices for each character, the number of different
+rows is at most $4^m$.
+Thus, the time complexity of the solution is
+$O(n 4^{2m})$ because we can check the
+$O(4^m)$ possible states for each row,
+and for each state, there are $O(4^m)$
+possible states for the previous row.
+In practice, it's a good idea to rotate the grid
+so that the shorter side has length $m$
+because the factor $4^{2m}$ dominates the time complexity.
 
-Ratkaisua on mahdollista tehostaa parantamalla rivien esitystapaa merkkijonoina.
-Osoittautuu, että ainoa seuraavalla rivillä tarvittava tieto on,
-missä kohdissa riviltä lähtee laattoja alaspäin.
-Niinpä rivin voikin tallentaa käyttäen vain merkkejä
-$\sqcap$ ja $\Box$, missä $\Box$ kokoaa yhteen vanhat merkit
-$\sqcup$, $\sqsubset$ ja $\sqsupset$.
-Tällöin erilaisia rivejä on vain $2^m$
-ja aikavaativuudeksi tulee $O(n 2^{2m})$.
+It is possible to make the solution more efficient
+by using a better representation for the rows as strings.
+It turns out that it is sufficient to know the
+columns of the previous row that contain the first square
+of a vertical tile.
+Thus, we can represent a row using only characters
+$\sqcap$ and $\Box$ where $\Box$ is a combination
+of characters
+$\sqcup$, $\sqsubset$ and $\sqsupset$.
+In this case, there are only
+$2^m$ distinct rows and the time complexity becomes
+$O(n 2^{2m})$.
 
-Mainittakoon lopuksi, että laatoitusten määrän laskemiseen
-on myös yllättävä suora kaava
+As a final note, there is also a surprising direct formula
+for calculating the number of tilings:
 \[ \prod_{a=1}^{\lceil n/2 \rceil} \prod_{b=1}^{\lceil m/2 \rceil} 4 \cdot (\cos^2 \frac{\pi a}{n + 1} + \cos^2 \frac{\pi b}{m+1}).\]
-Tämä kaava on sinänsä hyvin tehokas,
-koska se laskee laatoitusten määrän ajassa $O(nm)$,
-mutta käytännön ongelma kaavan käyttämisessä
-on, kuinka tallentaa välitulokset riittävän tarkkoina lukuina.
+This formula is very efficient because it calculates
+the number of tilings on $O(nm)$ time,
+but since the answer is a product of real numbers,
+a practical problem in using the formula is
+how to store the intermediate results accurately.
 
 
