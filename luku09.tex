@@ -228,7 +228,7 @@ for all subarrays that begin from the upper-left corner.
 \begin{samepage}
 The following picture illustrates the idea:
 \begin{center}
-\begin{tikzpicture}[scale=0.55]
+\begin{tikzpicture}[scale=0.54]
 \draw[fill=lightgray] (3,2) rectangle (7,5);
 \draw (0,0) grid (10,7);
 %\draw[line width=2pt] (3,2) rectangle (7,5);
@@ -710,36 +710,38 @@ values in the binary indexed tree and each move
 to the next index
 takes $O(1)$ time using the bit operation.
 
-\section{Segmenttipuu}
+\section{Segment tree}
 
-\index{segmenttipuu@segmenttipuu}
+\index{segment tree}
 
-\key{Segmenttipuu} on tietorakenne,
-jonka operaatiot ovat taulukon välin $[a,b]$ välikysely
-sekä kohdan $k$ arvon päivitys.
-Segmenttipuun avulla voi toteuttaa summakyselyn,
-minimikyselyn ja monia muitakin kyselyitä niin,
-että kummankin operaation aikavaativuus on $O(\log n)$.
+A \key{segment tree} is a data structure
+whose supported operations are
+handling a range query for range $[a,b]$
+and updating the element at index $k$.
+Using a segment tree, we can implement sum
+queries, minimum queries and many other
+queries so that both operations work in $O(\log n)$ time.
 
-Segmenttipuun etuna binääri-indeksipuuhun verrattuna on,
-että se on yleisempi tietorakenne.
-Binääri-indeksipuulla voi toteuttaa vain summakyselyn,
-mutta segmenttipuu sallii muitakin kyselyitä.
-Toisaalta segmenttipuu vie enemmän muistia ja
-on hieman vaikeampi toteuttaa kuin binääri-indeksipuu.
+Compared to a binary indexed tree,
+the advantage of a segment tree is that it is
+a more general data structure.
+While binary indexed trees only support
+sum queries, segment trees also support other queries.
+On the other hand, a segment tree requires more
+memory and is a bit more difficult to implement.
 
-\subsubsection{Rakenne}
+\subsubsection{Structure}
 
-Segmenttipuussa on $2n-1$ solmua niin,
-että alimmalla tasolla on $n$ solmua,
-jotka kuvaavat taulukon sisällön,
-ja ylemmillä tasoilla on välikyselyihin
-tarvittavaa tietoa.
-Segmenttipuun sisältö riippuu siitä,
-mikä välikysely puun tulee toteuttaa.
-Oletamme aluksi, että välikysely on tuttu summakysely.
+A segment tree contains $2n-1$ nodes
+so that the bottom $n$ nodes correspond
+to the original array and the other nodes
+contain information needed for range queries.
+The values in a segment tree depend on
+the supported query type.
+We will first assume that the supported
+query is the sum query.
 
-Esimerkiksi taulukkoa
+For example, the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -764,7 +766,7 @@ Esimerkiksi taulukkoa
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-vastaa seuraava segmenttipuu:
+corresponds to the following segment tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -804,34 +806,32 @@ vastaa seuraava segmenttipuu:
 \end{tikzpicture}
 \end{center}
 
-Jokaisessa segmenttipuun solmussa on tietoa
-$2^k$-kokoisesta välistä taulukossa.
-Tässä tapauksessa solmussa oleva arvo kertoo,
-mikä on taulukon lukujen summa solmua vastaavalla
-välillä.
-Kunkin solmun arvo saadaan laskemalla yhteen
-solmun alapuolella vasemmalla ja oikealla
-olevien solmujen arvot.
+Each internal node in the segment tree contains
+information about a range of size $2^k$
+in the original array.
+In the above tree, the value of each internal
+node is the sum of the corresponding array elements,
+and it can be calculated as the sum of
+the values of its left and right child node.
 
-Segmenttipuu on mukavinta rakentaa niin,
-että taulukon koko on 2:n potenssi,
-jolloin tuloksena on täydellinen binääripuu.
-Jatkossa oletamme aina,
-että taulukko täyttää tämän vaatimuksen.
-Jos taulukon koko ei ole 2:n potenssi,
-sen loppuun voi lisätä tyhjää niin,
-että koosta tulee 2:n potenssi.
+It is convenient to build a segment tree
+when the size of the array is a power of two
+and the tree is a complete binary tree.
+In the sequel, we will assume that the tree
+is built like this.
+If the size of the array is not a power of two,
+we can always extend it using zero elements.
 
-\subsubsection{Välikysely}
+\subsubsection{Range query}
 
-Segmenttipuussa vastaus välikyselyyn lasketaan
-väliin kuuluvista solmuista,
-jotka ovat mahdollisimman korkealla puussa.
-Jokainen solmu antaa vastauksen väliin kuuluvalle osavälille,
-ja vastaus kyselyyn selviää yhdistämällä
-segmenttipuusta saadut osavälejä koskeva tiedot.
+In a segment tree, the answer for a range query
+is calculated from nodes that belong to the range
+and are as high as possible in the tree.
+Each node gives the answer for a subrange,
+and the answer for the entire range can be
+calculated by combining these values.
 
-Tarkastellaan esimerkiksi seuraavaa taulukon väliä:
+For example, consider the following range:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=gray!50] (2,0) rectangle (8,1);
@@ -857,9 +857,10 @@ Tarkastellaan esimerkiksi seuraavaa taulukon väliä:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-Lukujen summa välillä $[3,8]$ on $6+3+2+7+2+6=26$.
-Segmenttipuusta summa saadaan laskettua seuraavien
-osasummien avulla:
+The sum of elements in the range $[3,8]$ is
+$6+3+2+7+2+6=26$.
+The sum can be calculated from the segment tree
+using the following subranges:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -898,27 +899,26 @@ osasummien avulla:
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-Taulukon välin summaksi tulee osasummista $9+17=26$.
+Thus, the sum of the range is $9+17=26$.
 
-Kun vastaus välikyselyyn lasketaan mahdollisimman
-korkealla segmenttipuussa olevista solmuista,
-väliin kuuluu enintään kaksi solmua
-jokaiselta segmenttipuun tasolta.
-Tämän ansiosta välikyselyssä
-tarvittavien solmujen yhteismäärä on vain $O(\log n)$.
+When the answer for a range query is
+calculated using as high nodes as possible,
+at most two nodes on each level
+of the segment tree are needed.
+Because of this, the total number of nodes
+examined is only $O(\log n)$.
 
-\subsubsection{Taulukon päivitys}
+\subsubsection{Array update}
 
-Kun taulukossa oleva arvo muuttuu,
-segmenttipuussa täytyy päivittää
-kaikkia solmuja, joiden arvo
-riippuu muutetusta taulukon kohdasta.
-Tämä tapahtuu kulkemalla puuta ylöspäin huipulle
-asti ja tekemällä muutokset.
+When an element in the array changes,
+we should update all nodes in the segment tree
+whose value depends on the changed element.
+This can be done by travelling from the bottom
+to the top in the tree and updating the nodes along the path.
 
 \begin{samepage}
-Seuraava kuva näyttää, mitkä solmut segmenttipuussa muuttuvat,
-jos taulukon luku 7 muuttuu.
+The following picture shows which nodes in the segment tree
+change if the element 7 in the array changes.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -961,28 +961,26 @@ jos taulukon luku 7 muuttuu.
 \end{center}
 \end{samepage}
 
-Polku segmenttipuun pohjalta huipulle muodostuu aina $O(\log n)$ solmusta,
-joten taulukon arvon muuttuminen vaikuttaa $O(\log n)$ solmuun puussa.
+The path from the bottom of the segment tree to the top
+always consists of $O(\log n)$ nodes,
+so updating the array affects $O(\log n)$ nodes in the tree.
 
-\subsubsection{Puun tallennus}
+\subsubsection{Storing the tree}
 
-Segmenttipuun voi tallentaa muistiin 
-$2N$ alkion taulukkona,
-jossa $N$ on riittävän suuri 2:n potenssi.
-Tällaisen segmenttipuun avulla voi ylläpitää
-taulukkoa, jonka indeksialue on $[0,N-1]$.
+A segment tree can be stored as an array
+of $2N$ elements where $N$ is a power of two.
+From now on, we will assume that the indices
+of the original array are between $0$ and $N-1$.
 
-Segmenttipuun taulukon
-kohdassa 1 on puun ylimmän solmun arvo,
-kohdat 2 ja 3 sisältävät seuraavan tason
-solmujen arvot, jne.
-Segmenttipuun alin taso eli varsinainen
-taulukon sisältä tallennetaan
-kohdasta $N$ alkaen.
-Niinpä taulukon kohdassa $k$ oleva alkio
-on segmenttipuun taulukossa kohdassa $k+N$.
+The element at index 1 in the segment tree array
+contains the top node of the tree,
+the elements at indices 2 and 3 correspond to
+the second level of the tree, and so on.
+Finally, the elements beginning from index $N$
+contain the bottom level of the tree, i.e.,
+the actual content of the original array.
 
-Esimerkiksi segmenttipuun
+For example, the segment tree
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -1021,7 +1019,7 @@ Esimerkiksi segmenttipuun
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-voi tallentaa taulukkoon seuraavasti ($N=8$):
+can be stored as follows ($N=8$):
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -1061,30 +1059,24 @@ voi tallentaa taulukkoon seuraavasti ($N=8$):
 \node at (14.5,1.4) {$15$};
 \end{tikzpicture}
 \end{center}
-Tätä tallennustapaa käyttäen kohdassa $k$
-olevalle solmulle pätee, että
+Using this representation,
+for a node at index $k$,
 \begin{itemize}
-\item ylempi solmu on kohdassa $\lfloor k/2 \rfloor$,
-\item vasen alempi solmu on kohdassa $2k$ ja
-\item oikea alempi solmu on kohdassa $2k+1$.
+\item the parent node is at index $\lfloor k/2 \rfloor$,
+\item the left child node is at index $2k$, and
+\item the right child node is at index $2k+1$.
 \end{itemize}
-Huomaa, että tämän seurauksena solmun kohta on parillinen,
-jos se on vasemmalla ylemmästä solmusta katsoen,
-ja pariton, jos se on oikealla.
+Note that this implies that the index of a node
+is even if it is a left child and odd if it is a right child.
 
-\subsubsection{Toteutus}
+\subsubsection{Functions}
 
-Tarkastellaan seuraavaksi välikyselyn ja päivityksen
-toteutusta segmenttipuuhun.
-Seuraavat funktiot olettavat, että segmenttipuu
-on tallennettu $2n-1$-kokoi\-seen taulukkoon $\texttt{p}$
-edellä kuvatulla tavalla.
-
-Funktio \texttt{summa} laskee summan
-välillä $a \ldots b$:
+We assume that the segment tree is stored
+in the array \texttt{p}.
+The following function calculates the sum of range $[a,b]$:
 
 \begin{lstlisting}
-int summa(int a, int b) {
+int sum(int a, int b) {
     a += N; b += N;
     int s = 0;
     while (a <= b) {
@@ -1096,17 +1088,18 @@ int summa(int a, int b) {
 }
 \end{lstlisting}
 
-Funktio aloittaa summan laskeminen segmenttipuun
-pohjalta ja liikkuu askel kerrallaan ylemmille tasoille.
-Funktio laskee välin summan muuttujaan $s$
-yhdistämällä puussa olevia osasummia.
-Välin reunalla oleva osasumma lisätään summaan
-aina silloin, kun se ei kuulu ylemmän tason osasummaan.
+The function begins from the bottom of the tree
+and moves step by step upwards in the tree.
+The function calculates the range sum to
+the variable $s$ by combining the sums in the tree nodes.
+The value of a node is added to the sum if
+the parent node doesn't belong to the range.
 
-Funktio \texttt{lisaa} kasvattaa kohdan $k$ arvoa $x$:llä:
+The function \texttt{add} increases the value
+of element $k$ by $x$:
 
 \begin{lstlisting}
-void lisaa(int k, int x) {
+void add(int k, int x) {
     k += N;
     p[k] += x;
     for (k /= 2; k >= 1; k /= 2) {
@@ -1114,35 +1107,32 @@ void lisaa(int k, int x) {
     }
 }
 \end{lstlisting}
-Ensin funktio tekee muutoksen puun alimmalle
-tasolle taulukkoon.
-Tämän jälkeen se päivittää kaikki osasummat
-puun huipulle asti.
-Taulukon \texttt{p} indeksoinnin ansiosta
-kohdasta $k$ alemmalla tasolla
-ovat kohdat $2k$ ja $2k+1$.
+First the function updates the bottom level
+of the tree that corresponds to the original array.
+After this, the function updates the values of all
+internal nodes in the tree, until it reaches
+the root node of the tree.
 
-Molemmat segmenttipuun operaatiot toimivat ajassa
-$O(\log n)$, koska $n$ lukua sisältävässä
-segmenttipuussa on $O(\log n)$ tasoa
-ja operaatiot siirtyvät askel kerrallaan
-segmenttipuun tasoja ylöspäin.
+Both operations in the segment tree work
+in $O(\log n)$ time because a segment tree
+of $n$ elements consists of $O(\log n)$ levels,
+and the operations move one level forward at each step.
 
-\subsubsection{Muut kyselyt}
+\subsubsection{Other queries}
 
-Segmenttipuu mahdollistaa summan lisäksi minkä
-tahansa välikyselyn,
-jossa vierekkäisten välien $[a,b]$ ja $[b+1,c]$
-tuloksista pystyy laskemaan tehokkaasti
-välin $[a,c]$ tuloksen.
-Tällaisia kyselyitä
-ovat esimerkiksi minimi ja maksimi,
-suurin yhteinen tekijä
-sekä bittioperaatiot and, or ja xor.
+Besides the sum query,
+the segment tree can support any range query
+where the answer for range $[a,b]$
+can be efficiently calculated
+from ranges $[a,c]$ and $[c+1,b]$ where
+$c$ is some element between $a$ and $b$.
+Such queries are, for example,
+minimum and maximum, greatest common divisor,
+and bit operations.
 
 \begin{samepage}
-Esimerkiksi seuraavan segmenttipuun avulla voi laskea
-taulukon välien minimejä:
+For example, the following segment tree
+supports minimum queries:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1184,27 +1174,25 @@ taulukon välien minimejä:
 \end{center}
 \end{samepage}
 
-Tässä segmenttipuussa jokainen puun solmu kertoo,
-mikä on pienin luku sen alapuolella olevassa
-taulukon osassa.
-Segmenttipuun ylin luku on pienin luku
-koko taulukon alueella.
-Puun toteutus on samanlainen kuin summan laskemisessa,
-mutta joka kohdassa pitää laskea summan sijasta
-lukujen minimi.
+In this segment tree, every node in the tree
+contains the smallest element in the corresponding
+range of the original array.
+The top node of the tree contains the smallest
+element in the array.
+The tree can be implemented like previously,
+but instead of sums, minima are calculated.
 
-\subsubsection{Binäärihaku puussa}
+\subsubsection{Binary search in tree}
 
-Segmenttipuun sisältämää tietoa voi käyttää
-binäärihaun kaltaisesti aloittamalla
-haun puun huipulta.
-Näin on mahdollista selvittää esimerkiksi
-minimisegmenttipuusta $O(\log n)$-ajassa,
-missä kohdassa on taulukon pienin luku.
+The structure of the segment tree makes it possible
+to use binary search.
+For example, if the tree supports the minimum query,
+we can find the index of the smallest
+element in $O(\log n)$ time.
 
-Esimerkiksi seuraavassa puussa pienin
-alkio on 1, jonka sijainti löytyy
-kulkemalla puussa huipulta alaspäin:
+For example, in the following tree the
+smallest element is 1 that can be found
+by following a path downwards from the top node:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
