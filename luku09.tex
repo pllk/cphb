@@ -76,13 +76,13 @@ any possible range query efficiently.
 \index{prefix sum array}
 
 Sum queries can be answered efficiently
-by constructing a \key{prefix sum array}
+by constructing a \key{sum array}
 that contains the sum of the range $[1,k]$
 for each $k=1,2,\ldots,n$.
 After this, the sum of any range $[a,b]$ of the
 original array
 can be calculated in $O(1)$ time using the
-prefix sum array.
+precalculated sum array.
 
 For example, for the array
 \begin{center}
@@ -110,7 +110,7 @@ For example, for the array
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-the corresponding prefix sum array is as follows:
+the corresponding sum array is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -155,12 +155,12 @@ int sum(int a, int b) {
 The function calculates the sum of range $[a,b]$
 by subtracting the sum of range $[1,a-1]$
 from the sum of range $[1,b]$.
-Thus, only two values from the prefix sum array
+Thus, only two values from the sum array
 are needed, and the query takes $O(1)$ time.
 Note that thanks to the one-based indexing,
 the function also works when $a=1$ if $\texttt{s}[0]=0$. 
 
-As an example, let us consider the range $[4,7]$:
+As an example, consider the range $[4,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -187,7 +187,7 @@ As an example, let us consider the range $[4,7]$:
 \end{tikzpicture}
 \end{center}
 The sum of the range $[4,7]$ is $8+6+1+4=19$.
-This can be calculated from the prefix sum array
+This can be calculated from the sum array
 using the sums $[1,3]$ and $[1,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -218,12 +218,12 @@ using the sums $[1,3]$ and $[1,7]$:
 \end{center}
 Thus, the sum of the range $[4,7]$ is $27-8=19$.
 
-We can also generalize the idea of prefix sum array
+We can also generalize the idea of a sum array
 for a two-dimensional array.
 In this case, it will be possible to calculate the sum of
 any rectangular subarray in $O(1)$ time.
-The prefix sum array will contain sums
-of all subarrays that begin from the upper-left corner.
+The sum array will contain sums
+for all subarrays that begin from the upper-left corner.
 
 \begin{samepage}
 The following picture illustrates the idea:
@@ -250,7 +250,7 @@ to the position of letter $X$.
 \subsubsection{Minimum query}
 
 It is also possible to answer a minimum query
-in $O(1)$ after preprocessing, though it is
+in $O(1)$ time after preprocessing, though it is
 more difficult than answer a sum query.
 Note that minimum and maximum queries can always
 be implemented using same techniques,
@@ -438,36 +438,36 @@ The minimum of the range $[2,5]$ is 3,
 and the minimum of the range $[4,7]$ is 1.
 Thus, the minimum of the range $[2,7]$ is 1.
 
-\section{Binääri-indeksipuu}
+\section{Binary indexed tree}
 
-\index{binxxri-indeksipuu@binääri-indeksipuu}
-\index{Fenwick-puu}
+\index{binary indexed tree}
+\index{Fenwick tree}
 
-\key{Binääri-indeksipuu} eli \key{Fenwick-puu} on
-summataulukkoa muistuttava tietorakenne,
-joka toteuttaa kaksi operaatiota:
-taulukon välin $[a,b]$ summakysely
-sekä taulukon kohdassa $k$ olevan luvun päivitys.
-Kummankin operaation aikavaativuus on $O(\log n)$.
+A \key{binary indexed tree} or a \key{Fenwick tree}
+is a data structure that resembles a sum array.
+The supported operations are answering
+a sum query for range $[a,b]$,
+and updating the element at index $k$.
+The time complexity for both of the operations is $O(\log n)$.
 
-Binääri-indeksipuun etuna summataulukkoon verrattuna on,
-että taulukkoa pystyy päivittämään tehokkaasti
-summakyselyiden välissä.
-Summataulukossa tämä ei olisi mahdollista,
-vaan koko summataulukko tulisi muodostaa uudestaan $O(n)$-ajassa
-taulukon päivityksen jälkeen.
+Unlike a sum array, a binary indexed tree
+can be efficiently updated between the sum queries.
+This would not be possible using a sum array
+because we should build the whole sum array again
+in $O(n)$ time after each update.
 
-\subsubsection{Rakenne}
+\subsubsection{Structure}
 
-Binääri-indeksipuu on taulukko, jonka
-kohdassa $k$ on kohtaan $k$ päättyvän välin lukujen summa
-alkuperäisessä taulukossa.
-Välin pituus on suurin 2:n potenssi, jolla $k$ on jaollinen.
-Esimerkiksi jos $k=6$, välin pituus on 2, koska
-6 on jaollinen 2:lla mutta ei ole jaollinen 4:llä.
+A binary indexed tree can be represented as an array
+where index $k$ contains the sum of a range in the
+original array that ends to index $k$.
+The length of the range is the largest power of two
+that divides $k$.
+For example, if $k=6$, the length of the range is $2$
+because $2$ divides $6$ but $4$ doesn't divide $6$.
 
 \begin{samepage}
-Esimerkiksi taulukkoa
+For example, for the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -493,7 +493,7 @@ Esimerkiksi taulukkoa
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-vastaava binääri-indeksipuu on seuraava:
+the corresponding binary indexed tree is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -538,18 +538,21 @@ vastaava binääri-indeksipuu on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Esimerkiksi binääri-indeksipuun kohdassa 6 on luku 7,
-koska välin $[5,6]$ lukujen summa on $6+1=7$.
+For example, the binary indexed tree
+contains the value 7 at index 6
+because the sum of the elements in the range $[5,6]$
+of the original array is $6+1=7$.
 
-\subsubsection{Summakysely}
+\subsubsection{Sum query}
 
-Binääri-indeksipuun perusoperaatio on välin $[1,k]$
-summan laskeminen, missä $k$ on mikä tahansa taulukon kohta.
-Tällaisen summan pystyy muodostamaan aina laskemalla yhteen
-puussa olevia välien summia.
+The basic operation in a binary indexed tree is
+calculating the sum of a range $[1,k]$ where $k$
+is any index in the array.
+The sum of any range can be constructed by combining
+sums of subranges in the tree.
 
-Esimerkiksi välin $[1,7]$
-summa muodostuu seuraavista summista:
+For example, the range $[1,7]$ will be divided
+into three subranges:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -594,25 +597,26 @@ summa muodostuu seuraavista summista:
 \end{tikzpicture}
 \end{center}
 
-Välin $[1,7]$ summa on siis $16+7+4=27$.
-Binääri-indeksipuun rakenteen ansiosta
-jokainen summaan kuuluva väli on eripituinen.
-Niinpä summa muodostuu aina $O(\log n)$ välin summasta.
+Thus, the sum of the range $[1,7]$ is $16+7+4=27$.
+Because of the structure of the binary indexed tree,
+the length of each subrange inside a range is distinct,
+so the sum of a range
+always consists of sums of $O(\log n)$ subranges.
 
-Summataulukon tavoin binääri-indeksipuusta voi laskea
-tehokkaasti minkä tahansa taulukon välin summan,
-koska välin $[a,b]$ summa saadaan vähentämällä
-välin $[1,b]$ summasta välin $[1,a-1]$ summa.
-Aikavaativuus on edelleen $O(\log n)$,
-koska riittää laskea kaksi $[1,k]$-välin summaa.
+Using the same technique that we previously used
+with a sum array,
+we can efficiently calculate the sum of any range
+$[a,b]$ by substracting the sum of the range $[1,a-1]$
+from the sum of the range $[1,b]$.
+The time complexity remains $O(\log n)$
+because it suffices to calculate two sums of $[1,k]$ ranges.
 
-\subsubsection{Taulukon päivitys}
+\subsubsection{Array update}
 
-Kun taulukon kohdassa $k$ oleva luku muuttuu,
-tämä vaikuttaa useaan
-binääri-indeksi\-puussa olevaan summaan.
-Esimerkiksi jos kohdassa 3 oleva luku muuttuu,
-seuraavat välien summat muuttuvat:
+When an element in the original array changes,
+several sums in the binary indexed tree change.
+For example, if the value at index 3 changes,
+the sums of the following ranges change:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -657,33 +661,30 @@ seuraavat välien summat muuttuvat:
 \end{tikzpicture}
 \end{center}
 
-Myös tässä tapauksessa kaikki välit,
-joihin muutos vaikuttaa, ovat eripituisia,
-joten muutos kohdistuu $O(\log n)$ kohtaan
-binääri-indeksipuussa.
+Also in this case, the length of each range is distinct,
+so $O(\log n)$ ranges will be updated in the binary indexed tree.
 
-\subsubsection{Toteutus}
+\subsubsection{Implementation}
 
-Binääri-indeksipuun operaatiot on mahdollista toteuttaa 
-lyhyesti ja tehokkaasti bittien käsittelyn avulla.
-Oleellinen bittioperaatio on $k \& -k$,
-joka eristää luvusta $k$ viimeisenä olevan ykkösbitin.
-Esimerkiksi $6 \& -6=2$, koska luku $6$ on bittimuodossa 110
-ja luku $2$ on bittimuodossa on 10.
+The operations of a binary indexed tree can be implemented
+in an elegant and efficient way using bit manipulation.
+The bit operation needed is $k \& -k$ that
+returns the last bit one from number $k$.
+For example, $6 \& -6=2$ because the number $6$
+corresponds to 110 and the number $2$ corresponds to 10.
 
-Osoittautuu, että summan laskemisessa
-binääri-indeksipuun kohtaa $k$ tulee muuttaa joka askeleella niin,
-että siitä poistetaan luku $k \& -k$.
-Vastaavasti taulukon päivityksessä kohtaa $k$ tulee muuttaa joka askeleella niin,
-että siihen lisätään luku $k \& -k$.
+It turns out that when calculating a range sum,
+the index $k$ in the binary indexed tree should be
+decreased by $k \& -k$ at every step.
+Correspondingly, when updating the array,
+the index $k$ should be increased by $k \& -k$ at every step.
 
+The following functions assume that the binary indexed tree
+is stored to array \texttt{b} and it consists of indices $1 \ldots n$.
 
-Seuraavat funktiot olettavat, että binääri-indeksipuu on
-tallennettu taulukkoon \texttt{b} ja se muodostuu kohdista $1 \ldots n$.
-
-Funktio \texttt{summa} laskee välin $[1,k]$ summan:
+The function \texttt{sum} calculates the sum of the range $[1,k]$:
 \begin{lstlisting}
-int summa(int k) {
+int sum(int k) {
     int s = 0;
     while (k >= 1) {
         s += b[k];
@@ -693,9 +694,9 @@ int summa(int k) {
 }
 \end{lstlisting}
 
-Funktio \texttt{lisaa} kasvattaa taulukon kohtaa $k$ arvolla $x$:
+The function \texttt{add} increases the value of element $k$ by $x$:
 \begin{lstlisting}
-void lisaa(int k, int x) {
+void add(int k, int x) {
     while (k <= n) {
         b[k] += x;
         k += k&-k;
@@ -703,10 +704,11 @@ void lisaa(int k, int x) {
 }
 \end{lstlisting}
 
-Kummankin yllä olevan funktion aikavaativuus on $O(\log n)$,
-koska funktiot muuttavat $O(\log n)$ kohtaa
-binääri-indeksipuussa ja uuteen kohtaan siirtyminen
-vie aikaa $O(1)$ bittioperaation avulla.
+The time complexity of both above functions is
+$O(\log n)$ because the functions change $O(\log n)$
+values in the binary indexed tree and each move
+to the next index
+takes $O(1)$ time using the bit operation.
 
 \section{Segmenttipuu}
 
