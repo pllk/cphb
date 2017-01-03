@@ -1240,40 +1240,39 @@ by following a path downwards from the top node:
 \end{tikzpicture}
 \end{center}
 
-\section{Lisätekniikoita}
+\section{Additional techniques}
 
-\subsubsection{Indeksien pakkaus}
+\subsubsection{Index compression}
 
-Taulukon päälle rakennettujen tietorakenteiden
-rajoituksena on, että alkiot on indeksoitu
-kokonaisluvuin $1,2,3,$ jne.
-Tästä seuraa ongelmia,
-jos tarvittavat indeksit ovat suuria.
-Esimerkiksi indeksin $10^9$ käyttäminen
-vaatisi, että taulukossa olisi $10^9$ alkiota,
-mikä ei ole realistista.
+A limitation in data structures that have
+been built upon an array is that
+the elements are indexed using integers
+$1,2,3,$ etc.
+Difficulties arise when the indices
+needed are large.
+For example, using the index $10^9$ would
+require that the array would contain $10^9$
+elements which is not realistic.
 
-\index{indeksien pakkaus@indeksien pakkaus}
+\index{index compression}
 
-Tätä rajoitusta on kuitenkin mahdollista
-kiertää usein käyttämällä \key{indeksien pakkausta},
-jolloin indeksit jaetaan
-uudestaan niin, että ne ovat
-kokonaisluvut $1,2,3,$ jne.
-Tämä on mahdollista silloin, kun kaikki
-algoritmin aikana tarvittavat indeksit
-ovat tiedossa algoritmin alussa.
+However, we can often bypass this limitation
+by using \key{index compression}
+where the indices are redistributed so that
+they are integers $1,2,3,$ etc.
+This can be done if we know all the indices
+needed during the algorithm beforehand.
 
-Ideana on korvata jokainen alkuperäinen
-indeksi $x$ indeksillä $p(x)$,
-missä $p$ jakaa indeksit uudestaan.
-Vaatimuksena on, että indeksien järjestys
-ei muutu, eli jos $a<b$, niin $p(a)<p(b)$,
-minkä ansiosta kyselyitä voi tehdä
-melko tavallisesti indeksien pakkauksesta huolimatta.
+The idea is to replace each original index $x$
+with index $p(x)$ where $p$ is a function that
+redistributes the indices.
+We require that the order of the indices
+doesn't change, so if $a<b$, then $p(a)<p(b)$.
+Thanks to this, we can conviently perform queries
+despite the fact that the indices are compressed.
 
-Esimerkiksi jos alkuperäiset indeksit ovat
-$555$, $10^9$ ja $8$, ne muuttuvat näin:
+For example, if the original indices are
+$555$, $10^9$ and $8$, the new indices are:
 
 \[
 \begin{array}{lcl}
@@ -1283,23 +1282,23 @@ p(10^9) & = & 3 \\
 \end{array}
 \]
 
-\subsubsection{Välin muuttaminen}
+\subsubsection{Range update}
 
-Tähän asti olemme toteuttaneet tietorakenteita,
-joissa voi tehdä tehokkaasti välikyselyitä
-ja muuttaa yksittäisiä taulukon arvoja.
-Tarkastellaan lopuksi käänteistä tilannetta,
-jossa pitääkin muuttaa välejä ja 
-kysellä yksittäisiä arvoja.
-Keskitymme operaatioon,
-joka kasvattaa kaikkia välin $[a,b]$ arvoja $x$:llä.
+So far, we have implemented data structures
+that support range queries and modifications
+of single values.
+Let us now consider a reverse situation
+where we should update ranges and
+retrieve single values.
+We focus on an operation that increases all
+elements in range $[a,b]$ by $x$.
 
-Yllättävää kyllä,
-voimme käyttää tämän luvun tietorakenteita myös tässä tilanteessa.
-Tämä vaatii, että muutamme taulukkoa niin,
-että jokainen taulukon arvo kertoo \textit{muutoksen}
-edelliseen arvoon nähden.
-Esimerkiksi taulukosta
+Surprisingly, we can use the data structures
+presented in this chapter also in this situation.
+This requires that we change the array so that
+each element indicates the \emph{change}
+with respect to the previous element.
+For example, the array
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1326,7 +1325,7 @@ Esimerkiksi taulukosta
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-tulee seuraava:
+becomes as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -1353,19 +1352,20 @@ tulee seuraava:
 \end{tikzpicture}
 \end{center}
 
-Minkä tahansa vanhan arvon saa uudesta taulukosta
-laskemalla summan taulukon alusta kyseiseen kohtaan asti.
-Esimerkiksi kohdan 6 vanha arvo 5 saadaan
-summana $3-2+4=5$.
+The original array is the sum array of the new array.
+Thus, any value in the original array corresponds
+to a sum of elements in the new array.
+For example, the value 6 at index 5 in the original array
+corresponds to the sum $3-2+4=5$.
 
-Uuden tallennustavan etuna on,
-että välin muuttamiseen riittää muuttaa
-kahta taulukon kohtaa.
-Esimerkiksi jos välille $2 \ldots 5$
-lisätään luku 5,
-taulukon kohtaan 2 lisätään 5
-ja taulukon kohdasta 6 poistetaan 5.
-Tulos on tässä:
+The benefit in using the new array is
+that we can update a range by changing just
+two elements in the new array.
+For example, if we want to 
+increase the range $2 \ldots 5$ by 5,
+it suffices to increase the element at index 2 by 5
+and decrease the element at index 6 by 5.
+The result is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1392,20 +1392,18 @@ Tulos on tässä:
 \end{tikzpicture}
 \end{center}
 
-Yleisemmin kun taulukon välille $a \ldots b$
-lisätään $x$, taulukon kohtaan $a$
-lisätään $x$ ja taulukon kohdasta $b+1$
-vähennetään $x$.
-Tarvittavat operaatiot 
-ovat summan laskeminen
-taulukon alusta tiettyyn kohtaan
-sekä yksittäisen alkion muuttaminen,
-joten voimme käyttää tuttuja menetelmiä tässäkin tilanteessa.
+More generally, to increase the range
+$a \ldots b$ by $x$,
+we increase the element at index $a$ by $x$
+and decrease the element at index $b+1$ by $x$.
+The required operations are calculating
+the sum in a range and updating a value,
+so we can use a binary indexed tree or a segment tree.
 
-Hankalampi tilanne on, jos samaan aikaan pitää pystyä
-sekä kysymään tietoa väleiltä että muuttamaan välejä.
-Myöhemmin luvussa 28 tulemme näkemään,
-että tämäkin on mahdollista.
+A more difficult problem is to support both
+range queries and range updates.
+In Chapter 28 we will see that this is possible
+as well.
 
 
 
