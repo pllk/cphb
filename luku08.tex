@@ -592,39 +592,38 @@ Thus, each element causes $O(1)$ operations
 to the chain, and the total time complexity
 of the algorithm is $O(n)$.
 
-\section{Liukuvan ikkunan minimi}
+\section{Sliding window minimum}
 
-\index{liukuva ikkuna}
-\index{liukuvan ikkunan minimi@liukuvan ikkunan minimi}
+\index{sliding window}
+\index{sliding window minimum}
 
-\key{Liukuva ikkuna} on taulukon halki kulkeva
-aktiivinen alitaulukko, jonka pituus on vakio.
-Jokaisessa liukuvan ikkunan sijainnissa
-halutaan tyypillisesti laskea jotain tietoa
-ikkunan alueelle osuvista alkioista.
-Kiinnostava tehtävä on pitää yllä
-\key{liukuvan ikkunan minimiä}.
-Tämä tarkoittaa, että jokaisessa liukuvan ikkunan
-sijainnissa tulee ilmoittaa pienin alkio
-ikkunan alueella.
+A \key{sliding window} is an active subarray
+that moves through the array whose size is constant.
+At each position of the window,
+we typically want to calculate some information
+about the elements inside the window.
+An interesting problem is to maintain
+the \key{sliding window minimum}.
+This means that at each position of the window,
+we should report the smallest element inside the window.
 
-Liukuvan ikkunan minimit voi laskea
-lähes samalla tavalla kuin lähimmät
-pienimmät edeltäjät.
-Ideana on pitää yllä ketjua, jonka alussa
-on ikkunan viimeinen luku ja jossa jokainen
-luku on edellistä pienempi. Joka vaiheessa
-ketjun viimeinen luku on ikkunan pienin luku.
-Kun liukuva ikkuna liikkuu eteenpäin ja välille
-tulee uusi luku, ketjusta poistetaan kaikki luvut,
-jotka ovat uutta lukua suurempia.
-Tämän jälkeen uusi luku lisätään ketjun alkuun.
-Lisäksi jos ketjun viimeinen luku ei enää kuulu
-välille, se poistetaan ketjusta.
+The sliding window minima can be calculated
+using the same idea that we used for calculating
+the nearest smaller elements.
+The idea is to maintain a chain whose
+first element is the last element in the window,
+and each element is smaller than the previous element.
+The last element in the chain is always the
+smallest element inside the window.
+When the sliding window moves forward and
+a new element appears, we remove all elements
+from the chain that are larger than the new element.
+After this, we add the new number to the chain.
+In addition, if the last element in the chain
+doesn't belong to the window anymore, it is removed from the chain.
 
-Tarkastellaan esimerkkinä, kuinka algoritmi selvittää
-minimit seuraavassa taulukossa,
-kun ikkunan koko $k=4$.
+As an example, consider the following array
+when the window size is $k=4$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -651,8 +650,8 @@ kun ikkunan koko $k=4$.
 \end{tikzpicture}
 \end{center}
 
-Liukuva ikkuna aloittaa matkansa taulukon vasemmasta reunasta.
-Ensimmäisessä ikkunan sijainnissa pienin luku on 1:
+The sliding window begins from the left border of the array.
+At the first window position, the smallest element is 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (0,0) rectangle (4,1);
@@ -683,10 +682,11 @@ Ensimmäisessä ikkunan sijainnissa pienin luku on 1:
 \end{tikzpicture}
 \end{center}
 
-Kun ikkuna siirtyy eteenpäin, mukaan tulee luku 3,
-joka on pienempi kuin luvut 5 ja 4 ketjun alussa.
-Niinpä luvut 5 ja 4 poistuvat ketjusta ja luku 3
-siirtyy sen alkuun. Pienin luku on edelleen 1.
+Then the window moves one step forward.
+The new number 3 is smaller than the numbers
+5 and 4 in the chain, so the numbers 5 and 4
+are removed and the number 3 is added to the chain.
+The smallest element is 1 as before.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -716,10 +716,11 @@ siirtyy sen alkuun. Pienin luku on edelleen 1.
 \end{tikzpicture}
 \end{center}
 
-Ikkuna siirtyy taas eteenpäin, minkä seurauksena pienin luku 1
-putoaa pois ikkunasta. Niinpä se poistetaan ketjun lopusta
-ja uusi pienin luku on 3. Lisäksi uusi ikkunaan tuleva luku 4
-lisätään ketjun alkuun.
+After this, the window moves again and the smallest element 1
+doesn't belong to the window anymore.
+Thus, it is removed from the chain and the smallest
+element is now 3. In addition, the new number 4
+is added to the chain.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (6,1);
@@ -748,10 +749,10 @@ lisätään ketjun alkuun.
 \end{tikzpicture}
 \end{center}
 
-Seuraavaksi ikkunaan tuleva luku 1 on pienempi
-kuin kaikki ketjussa olevat luvut.
-Tämän seurauksena koko ketju tyhjentyy ja
-siihen jää vain luku 1:
+The next new element 1 is smaller than all elements
+in the chain.
+Thus, all elements are removed from the chain
+and it will only contain the element 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -782,9 +783,10 @@ siihen jää vain luku 1:
 \end{tikzpicture}
 \end{center}
 
-Lopuksi ikkuna saapuu viimeiseen sijaintiinsa.
-Luku 2 lisätään ketjun alkuun,
-mutta ikkunan pienin luku on edelleen 1.
+Finally the window reaches its last position.
+The number 2 is added to the chain,
+but the smallest element inside the window
+is still 1.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (8,1);
@@ -813,10 +815,10 @@ mutta ikkunan pienin luku on edelleen 1.
 \end{tikzpicture}
 \end{center}
 
-Tässäkin algoritmissa jokainen taulukon luku lisätään
-ketjuun tarkalleen kerran ja poistetaan ketjusta korkeintaan kerran,
-joko ketjun alusta tai ketjun lopusta.
-Niinpä algoritmin kokonaisaikavaativuus on $O(n)$.
+Also in this algorithm, each element in the array
+is added to the chain exactly once and
+removed from the chain at most once.
+Thus, the total time complexity of the algorithm is $O(n)$.
 
 
 
