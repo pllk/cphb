@@ -1,20 +1,20 @@
 \chapter{Range queries}
 
-\index{vxlikysely@välikysely}
-\index{summakysely@summakysely}
-\index{minimikysely@minimikysely}
-\index{maksimikysely@maksimikysely}
+\index{range query}
+\index{sum query}
+\index{minimum query}
+\index{maximum query}
 
-\key{Välikysely} kohdistuu taulukon välille $[a,b]$,
-ja tehtävänä on laskea haluttu tieto välillä olevista alkioista.
-Tavallisia välikyselyitä ovat:
+In a \key{range query}, a range of an array
+is given and we should calculate some value from the
+elements in the range. Typical range queries are:
 \begin{itemize}
-\item \key{summakysely}: laske välin $[a,b]$ summa
-\item \key{minimikysely}: etsi pienin alkio välillä $[a,b]$
-\item \key{maksimikysely}: etsi suurin alkio välillä $[a,b]$
+\item \key{sum query}: calculate the sum of elements in range $[a,b]$
+\item \key{minimum query}: find the smallest element in range $[a,b]$
+\item \key{maximum query}: find the largest element in range $[a,b]$
 \end{itemize}
-Esimerkiksi seuraavan taulukon välillä $[4,7]$
-summa on $4+6+1+3=14$, minimi on 1 ja maksimi on 6:
+For example, in range $[4,7]$ of the following array,
+the sum is $4+6+1+3=14$, the minimum is 1 and the maximum is 6:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -41,12 +41,12 @@ summa on $4+6+1+3=14$, minimi on 1 ja maksimi on 6:
 \end{tikzpicture}
 \end{center}
 
-Helppo tapa vastata välikyselyyn on
-käydä läpi kaikki välin alkiot silmukalla.
-Esimerkiksi seuraava funktio toteuttaa summakyselyn:
+An easy way to answer a range query is
+to iterate through all the elements in the range.
+For example, we can answer a sum query as follows:
 
 \begin{lstlisting}
-int summa(int a, int b) {
+int sum(int a, int b) {
     int s = 0;
     for (int i = a; i <= b; i++) {
         s += t[i];
@@ -55,34 +55,36 @@ int summa(int a, int b) {
 }
 \end{lstlisting}
 
-Yllä oleva funktio toteuttaa summakyselyn
-ajassa $O(n)$, mikä on hidasta,
-jos taulukko on suuri ja kyselyitä tulee paljon.
-Tässä luvussa opimme, miten välikyselyitä pystyy
-toteuttamaan huomattavasti nopeammin.
+The above function handles a sum query
+in $O(n)$ time, which is slow if the array is large
+and there are a lot of queries.
+In this chapter we will learn how
+range queries can be answered much more efficiently.
 
-\section{Staattisen taulukon kyselyt}
+\section{Static array queries}
 
-Aloitamme yksinkertaisesta
-tilanteesta, jossa taulukko on \key{staattinen}
-eli sen sisältö ei muutu kyselyiden välillä.
-Tällöin riittää muodostaa ennen kyselyitä
-taulukon pohjalta tietorakenne,
-josta voi selvittää tehokkaasti vastauksen mihin tahansa väliin
-kohdistuvaan kyselyyn.
+We will first focus on a simple case where
+the array is \key{static}, i.e.,
+the elements never change between the queries.
+In this case, it suffices to process the
+contents of the array beforehand and construct
+a data structure that can be used for answering
+any possible range query efficiently.
 
-\subsubsection{Summakysely}
+\subsubsection{Sum query}
 
-\index{summataulukko@summataulukko}
+\index{prefix sum array}
 
-Summakyselyyn on mahdollista vastata tehokkaasti
-muodostamalla taulukosta etukäteen \key{summataulukko},
-jonka kohdassa $k$ on taulukon välin $[1,k]$ summa.
-Tämän jälkeen minkä tahansa välin $[a,b]$
-summan saa laskettua $O(1)$-ajassa
-summataulukkoa käyttäen.
+Sum queries can be answered efficiently
+by constructing a \key{prefix sum array}
+that contains the sum of the range $[1,k]$
+for each $k=1,2,\ldots,n$.
+After this, the sum of any range $[a,b]$ of the
+original array
+can be calculated in $O(1)$ time using the
+prefix sum array.
 
-Esimerkiksi taulukon
+For example, for the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -108,7 +110,7 @@ Esimerkiksi taulukon
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-summataulukko on seuraava:
+the corresponding prefix sum array is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -135,32 +137,30 @@ summataulukko on seuraava:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-
-Seuraava koodi muodostaa taulukosta \texttt{t}
-summataulukon \texttt{s} ajassa $O(n)$:
+The following code constructs a prefix sum
+array \texttt{s} from array \texttt{t} in $O(n)$ time:
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     s[i] = s[i-1]+t[i];
 }
 \end{lstlisting}
-Tämän jälkeen summakyselyyn voi vastata
-ajassa $O(1)$ seuraavasti:
+After this, the following function answers
+a sum query in $O(1)$ time:
 \begin{lstlisting}
-int summa(int a, int b) {
+int sum(int a, int b) {
     return s[b]-s[a-1];
 }
 \end{lstlisting}
 
-Funktio laskee välin $[a,b]$ summan
-vähentämällä välin $[1,b]$ summasta
-välin $[1,a-1]$ summan.
-Summataulukosta riittää siis hakea kaksi arvoa
-ja aikaa kuluu vain $O(1)$.
-Huomaa, että 1-indeksoinnin ansiosta
-funktio toimii myös tapauksessa $a=1$,
-kunhan $\texttt{s}[0]=0$.
+The function calculates the sum of range $[a,b]$
+by subtracting the sum of range $[1,a-1]$
+from the sum of range $[1,b]$.
+Thus, only two values from the prefix sum array
+are needed, and the query takes $O(1)$ time.
+Note that thanks to the one-based indexing,
+the function also works when $a=1$ if $\texttt{s}[0]=0$. 
 
-Tarkastellaan esimerkiksi väliä $[4,7]$:
+As an example, let us consider the range $[4,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -186,9 +186,9 @@ Tarkastellaan esimerkiksi väliä $[4,7]$:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-Välin $[4,7]$ summa on $8+6+1+4=19$.
-Tämän saa laskettua tehokkaasti summataulukosta
-etsimällä välien $[1,3]$ ja $[1,7]$ summat:
+The sum of the range $[4,7]$ is $8+6+1+4=19$.
+This can be calculated from the prefix sum array
+using the sums $[1,3]$ and $[1,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (3,1);
@@ -216,18 +216,17 @@ etsimällä välien $[1,3]$ ja $[1,7]$ summat:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-Välin $[4,7]$ summa on siis $27-8=19$.
+Thus, the sum of the range $[4,7]$ is $27-8=19$.
 
-Summataulukon idean voi yleistää
-myös kaksiulotteiseen taulukkoon,
-jolloin summataulukosta voi laskea
-minkä tahansa suorakulmaisen alueen
-summan $O(1)$-ajassa.
-Tällöin summataulukkoon tallennetaan summia
-alueista, jotka alkavat taulukon vasemmasta yläkulmasta.
+We can also generalize the idea of prefix sum array
+for a two-dimensional array.
+In this case, it will be possible to calculate the sum of
+any rectangular subarray in $O(1)$ time.
+The prefix sum array will contain sums
+of all subarrays that begin from the upper-left corner.
 
 \begin{samepage}
-Seuraava ruudukko havainnollistaa asiaa:
+The following picture illustrates the idea:
 \begin{center}
 \begin{tikzpicture}[scale=0.55]
 \draw[fill=lightgray] (3,2) rectangle (7,5);
@@ -241,23 +240,25 @@ Seuraava ruudukko havainnollistaa asiaa:
 \end{center}
 \end{samepage}
 
-Harmaan suorakulmion summan saa laskettua kaavalla
-\[S(A) - S(B) - S(C) + S(D),\]
-missä $S(X)$ tarkoittaa summaa vasemmasta
-yläkulmasta kirjaimen $X$ osoittamaan kohtaan asti.
+The sum inside the gray subarray can be calculated
+using the formula
+\[S(A) - S(B) - S(C) + S(D)\]
+where $S(X)$ denotes the sum in a rectangular
+subarray from the upper-left corner
+to the position of letter $X$.
 
-\subsubsection{Minimikysely}
+\subsubsection{Minimum query}
 
-Myös minimikyselyyn on mahdollista
-vastata $O(1)$-ajassa sopivan esikäsittelyn avulla,
-joskin tämä on vaikeampaa kuin summakyselyssä.
-Huomaa, että minimikysely ja maksimikysely on
-mahdollista toteuttaa aina samalla tavalla,
-joten riittää keskittyä minimikyselyn toteutukseen. 
+It is also possible to answer a minimum query
+in $O(1)$ after preprocessing, though it is
+more difficult than answer a sum query.
+Note that minimum and maximum queries can always
+be implemented using same techniques,
+so it suffices to focus on the minimum query.
 
-Ideana on laskea etukäteen taulukon jokaiselle
-$2^k$-kokoiselle välille, mikä on kyseisen välin minimi.
-Esimerkiksi taulukosta
+The idea is to find the minimum element for each range
+of size $2^k$ in the array.
+For example, in the array
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -283,13 +284,13 @@ Esimerkiksi taulukosta
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-lasketaan seuraavat minimit:
+the following minima will be calculated:
 
 \begin{center}
 \begin{tabular}{ccc}
 
 \begin{tabular}{ccc}
-väli & koko & minimi \\
+range & size & min \\
 \hline
 $[1,1]$ & 1 & 1 \\
 $[2,2]$ & 1 & 3 \\
@@ -304,7 +305,7 @@ $[8,8]$ & 1 & 2 \\
 &
 
 \begin{tabular}{ccc}
-väli & koko & minimi \\
+range & size & min \\
 \hline
 $[1,2]$ & 2 & 1 \\
 $[2,3]$ & 2 & 3 \\
@@ -319,7 +320,7 @@ $[7,8]$ & 2 & 2 \\
 &
 
 \begin{tabular}{ccc}
-väli & koko & minimi \\
+range & size & min \\
 \hline
 $[1,4]$ & 4 & 1 \\
 $[2,5]$ & 4 & 3 \\
@@ -335,24 +336,23 @@ $[1,8]$ & 8 & 1 \\
 
 \end{center}
 
-Taulukon $2^k$-välien määrä on $O(n \log n)$,
-koska jokaisesta taulukon kohdasta alkaa
-$O(\log n)$ väliä.
-Kaikkien $2^k$-välien minimit pystytään laskemaan
-ajassa $O(n \log n)$, koska jokainen $2^k$-väli
-muodostuu kahdesta $2^{k-1}$ välistä ja
-$2^k$-välin minimi on pienempi $2^{k-1}$-välien minimeistä.
+The number of $2^k$ ranges in an array is $O(n \log n)$
+because there are $O(\log n)$ ranges that begin
+from each array index.
+The minima for all $2^k$ ranges can be calculated
+in $O(n \log n)$ time because each $2^k$ range
+consists of two $2^{k-1}$ ranges, so the minima
+can be calculated recursively.
 
-Tämän jälkeen minkä tahansa välin $[a,b]$ minimin
-saa laskettua $O(1)$-ajassa miniminä kahdesta $2^k$-välistä,
-missä $k=\lfloor \log_2(b-a+1) \rfloor$.
-Ensimmäinen väli alkaa kohdasta $a$
-ja toinen väli päättyy kohtaan $b$.
-Parametri $k$ on valittu niin,
-että kaksi $2^k$-kokoista väliä
-kattaa koko välin $[a,b]$.
+After this, the minimum of any range $[a,b]$c
+can be calculated in $O(1)$ time as a minimum of
+two $2^k$ ranges where $k=\lfloor \log_2(b-a+1) \rfloor$.
+The first range begins from index $a$,
+and the second range ends to index $b$.
+The parameter $k$ is so chosen that
+two $2^k$ ranges cover the range $[a,b]$ entirely.
 
-Tarkastellaan esimerkiksi väliä $[2,7]$:
+As an example, consider the range $[2,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (7,1);
@@ -378,10 +378,11 @@ Tarkastellaan esimerkiksi väliä $[2,7]$:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-Välin $[2,7]$ pituus on 6 ja $\lfloor \log_2(6) \rfloor = 2$.
-Niinpä välin minimin saa selville kahden 4-pituisen
-välin minimistä.
-Välit ovat $[2,5]$ ja $[4,7]$:
+The length of the range $[2,7]$ is 6,
+and $\lfloor \log_2(6) \rfloor = 2$.
+Thus, the minimum can be calculated
+from two ranges of length 4.
+The ranges are $[2,5]$ and $[4,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -433,14 +434,9 @@ Välit ovat $[2,5]$ ja $[4,7]$:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-Välin $[2,5]$ minimi on 3 ja välin $[4,7]$ minimi on 1.
-Tämän seurauksena välin $[2,7]$ minimi on pienempi näistä eli 1.
-% 
-% Mainittakoon, että $O(1)$-aikaiset minimikyselyt pystyy
-% toteuttamaan myös niin, että esikäsittely vie aikaa
-% vain $O(n)$ eikä $O(n \log n)$.
-% Tämä on kuitenkin selvästi vaikeampaa, eikä 
-% sillä ole merkitystä kisakoodauksessa.
+The minimum of the range $[2,5]$ is 3,
+and the minimum of the range $[4,7]$ is 1.
+Thus, the minimum of the range $[2,7]$ is 1.
 
 \section{Binääri-indeksipuu}
 
