@@ -413,41 +413,44 @@ to find \emph{three} numbers whose sum is $x$.
 This problem can be solved in $O(n^2)$ time.
 Can you see how it is possible?
 
-\section{Lähin pienempi edeltäjä}
+\section{Nearest smaller elements}
 
-\index{lzhin pienempi edeltxjx@lähin pienempi edeltäjä}
+\index{nearest smaller elements}
 
-Tasoitetun analyysin avulla arvioidaan usein
-tietorakenteeseen kohdistuvien operaatioiden määrää.
-Algoritmin operaatiot voivat jakautua epätasaisesti
-niin, että useimmat operaatiot tehdään tietyssä
-algoritmin vaiheessa, mutta operaatioiden
-yhteismäärä on kuitenkin rajoitettu.
+Amortized analysis is often used for
+estimating the number of operations
+performed for a data structure.
+The operations may be distributed unevenly so
+that the most operations appear during a
+certain phase in the algorithm, but the total
+number of the operations is limited.
 
-Tarkastellaan esimerkkinä ongelmaa,
-jossa tehtävänä on etsiä kullekin taulukon
-alkiolle
-\key{lähin pienempi edeltäjä} eli
-lähinnä oleva pienempi alkio taulukon alkuosassa.
-On mahdollista, ettei tällaista alkiota ole olemassa,
-jolloin algoritmin tulee huomata asia.
-Osoittautuu, että tehtävä on mahdollista ratkaista
-tehokkaasti ajassa $O(n)$ sopivan tietorakenteen avulla.
+As an example, let us consider a problem
+where our task is to find for each element
+in an array the
+\key{nearest smaller element}, i.e.,
+the nearest smaller element that precedes
+the element in the array.
+It is possible that no such element exists,
+and the algorithm should notice this.
+It turns out that the problem can be efficiently solved
+in $O(n)$ time using a suitable data structure.
 
-Tehokas ratkaisu tehtävään on käydä
-taulukko läpi alusta loppuun ja pitää samalla yllä ketjua,
-jonka ensimmäinen luku on käsiteltävä taulukon luku
-ja jokainen seuraava luku on luvun lähin
-pienempi edeltäjä.
-Jos ketjussa on vain yksi luku,
-käsiteltävällä luvulla ei ole pienempää edeltäjää.
-Joka askeleella ketjun alusta poistetaan lukuja
-niin kauan, kunnes ketjun ensimmäinen luku on 
-pienempi kuin käsiteltävä taulukon luku tai ketju on tyhjä.
-Tämän jälkeen käsiteltävä luku lisätään ketjun alkuun.
+An efficient solution for the problem is to
+iterate through the array from the left to the right,
+and maintain a chain of elements where the
+first element is the active element in the array
+and each following element is the nearest smaller
+element of the previous element.
+If the chain only contains one element,
+the active element doesn't have a nearest smaller element.
+At each step, we remove elements from the chain
+until the first element is smaller
+than the active element, or the chain is empty.
+After this, the active element becomes the first element
+in the chain.
 
-Tarkastellaan esimerkkinä algoritmin toimintaa
-seuraavassa taulukossa:
+As an example, consider the following array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -473,9 +476,11 @@ seuraavassa taulukossa:
 \end{tikzpicture}
 \end{center}
 
-Aluksi luvut 1, 3 ja 4 liittyvät ketjuun, koska jokainen luku on
-edellistä suurempi. Siis luvun 4 lähin pienempi edeltäjä on luku 3,
-jonka lähin pienempi edeltäjä on puolestaan luku 1. Tilanne näyttää tältä:
+First, numbers 1, 3 and 4 are added to the chain
+because each element is larger than the previous element.
+This means that the nearest smaller element of
+number 4 is number 3 whose nearest smaller element
+is number 1.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (3,1);
@@ -505,9 +510,10 @@ jonka lähin pienempi edeltäjä on puolestaan luku 1. Tilanne näyttää tält�
 \end{tikzpicture}
 \end{center}
 
-Taulukon seuraava luku 2 on pienempi kuin ketjun kaksi ensimmäistä lukua 4 ja 3.
-Niinpä luvut 4 ja 3 poistetaan ketjusta, minkä jälkeen luku 2
-lisätään ketjun alkuun. Sen lähin pienempi edeltäjä on luku 1:
+The next number 2 is smaller than two first numbers in the chain.
+Thus, numbers 4 and 3 are removed, and then number 2 becomes
+the first element in the chain.
+Its nearest smaller element is number 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (4,1);
@@ -536,9 +542,9 @@ lisätään ketjun alkuun. Sen lähin pienempi edeltäjä on luku 1:
 \end{tikzpicture}
 \end{center}
 
-Seuraava luku 5 on suurempi kuin luku 2,
-joten se lisätään suoraan ketjun alkuun ja
-sen lähin pienempi edeltäjä on luku 2:
+After this, number 5 is larger than number 2,
+so it will be added to the chain and
+its nearest smaller element is number 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (5,1);
@@ -568,25 +574,23 @@ sen lähin pienempi edeltäjä on luku 2:
 \end{tikzpicture}
 \end{center}
 
-Algoritmi jatkaa samalla tavalla taulukon loppuun
-ja selvittää jokaisen luvun lähimmän
-pienemmän edeltäjän.
-Mutta kuinka tehokas algoritmi on?
+Algorithm continues in a similar way
+and finds out the nearest smaller element
+for each number in the array.
+But how efficient is the algorithm?
 
-Algoritmin tehokkuus riippuu siitä,
-kauanko ketjun käsittelyyn kuluu aikaa yhteensä.
-Jos uusi luku on suurempi kuin ketjun ensimmäinen
-luku, se vain lisätään ketjun alkuun,
-mikä on tehokasta.
-Joskus taas ketjussa voi olla useita
-suurempia lukuja, joiden poistaminen vie aikaa.
-Oleellista on kuitenkin, että jokainen
-taulukossa oleva luku liittyy
-tarkalleen kerran ketjuun ja poistuu
-korkeintaan kerran ketjusta.
-Niinpä jokainen luku aiheuttaa $O(1)$
-ketjuun liittyvää operaatiota
-ja algoritmin kokonaisaikavaativuus on $O(n)$.
+The efficiency of the algorithm depends on
+the total time used for manipulating the chain.
+If an element is larger than the first
+element in the chain, it will only be inserted
+to the beginning of the chain which is efficient.
+However, sometimes the chain can contain several
+larger elements and it takes time to remove them.
+Still, each element is added exactly once to the chain
+and removed at most once.
+Thus, each element causes $O(1)$ operations
+to the chain, and the total time complexity
+of the algorithm is $O(n)$.
 
 \section{Liukuvan ikkunan minimi}
 
