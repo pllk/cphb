@@ -377,66 +377,66 @@ do {
 % $\emptyset$, $\{2\}$, $\{5\}$, $\{7\}$,
 % $\{2,5\}$, $\{2,7\}$, $\{5,7\}$ ja $\{2,5,7\}$.
 
-\section{Dynaaminen ohjelmointi}
+\section{Dynamic programming}
 
-\subsubsection{Permutaatioista osajoukoiksi}
+\subsubsection{From permutations to subsets}
 
-Dynaamisen ohjelmoinnin avulla on usein mahdollista
-muuttaa permutaatioiden läpikäynti osajoukkojen läpikäynniksi.
-Tällöin dynaamisen ohjelmoinnin tilana on
-joukon osajoukko sekä mahdollisesti muuta tietoa.
+Using dynamic programming, it is often possible
+to change iteration over permutations into
+iteration over subsets.
+In this case, the dynamic programming state
+contains a subset of a set and possibly
+some additional information.
 
-Tekniikan hyötynä on,
-että $n$-alkioisen joukon permutaatioiden määrä $n!$
-on selvästi suurempi kuin osajoukkojen määrä $2^n$.
-Esimerkiksi jos $n=20$, niin $n!=2432902008176640000$,
-kun taas $2^n=1048576$.
-Niinpä tietyillä $n$:n arvoilla permutaatioita ei ehdi
-käydä läpi mutta osajoukot ehtii käydä läpi.
+The benefit in this technique is that
+$n!$, the number of permutations of an $n$ element set,
+is much larger than $2^n$, the number of subsets.
+For example, if $n=20$, then
+$n!=2432902008176640000$ and $2^n=1048576$.
+Thus, for certain values of $n$,
+we can go through subsets but not through permutations.
 
-Lasketaan esimerkkinä, monessako
-joukon $\{0,1,\ldots,n-1\}$
-permutaatiossa ei ole 
-missään kohdassa kahta peräkkäistä lukua.
-Esimerkiksi tapauksessa $n=4$ ratkaisuja on kaksi:
+As an example, let's calculate the number of
+permutations of set $\{0,1,\ldots,n-1\}$
+where the difference between any two successive
+elements is larger than one.
+For example, there are two solutions for $n=4$:
 \begin{itemize}
 \item $(1,3,0,2)$
 \item $(2,0,3,1)$
 \end{itemize}
 
-Merkitään $f(x,k)$:llä,
-monellako tavalla osajoukon
-$x$ luvut voi järjestää niin,
-että viimeinen luku on $k$ ja missään kohdassa
-ei ole kahta peräkkäistä lukua.
-Esimerkiksi $f(\{0,1,3\},1)=1$,
-koska voidaan muodostaa permutaatio $(0,3,1)$,
-ja $f(\{0,1,3\},3)=0$, koska 0 ja 1 eivät
-voi olla peräkkäin alussa.
+Let $f(x,k)$ denote the number of permutations
+for a subset $x$
+where the last number is $k$ and
+the difference between any two successive
+elements is larger than one.
+For example, $f(\{0,1,3\},1)=1$
+because there is a permutation $(0,3,1)$,
+and $f(\{0,1,3\},3)=0$ because 0 and 1
+can't be next to each other.
 
-Funktion $f$ avulla ratkaisu tehtävään
-on summa
+Using $f$, the solution for the problem is the sum
 
 \[ \sum_{i=0}^{n-1} f(\{0,1,\ldots,n-1\},i). \]
 
 \noindent
-Dynaamisen ohjelmoinnin tilat voi
-tallentaa seuraavasti:
+The dynamic programming states can be stored as follows:
 
 \begin{lstlisting}
 long long d[1<<n][n];
 \end{lstlisting}
 
 \noindent
-Perustapauksena $f(\{k\},k)=1$ kaikilla $k$:n arvoilla:
+First, $f(\{k\},k)=1$ for all values of $k$:
 
 \begin{lstlisting}
 for (int i = 0; i < n; i++) d[1<<i][i] = 1;
 \end{lstlisting}
 
 \noindent
-Tämän jälkeen muut funktion arvot
-saa laskettua seuraavasti:
+After this, the other values can be calculated
+as follows:
 
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
@@ -451,15 +451,15 @@ for (int b = 0; b < (1<<n); b++) {
 \end{lstlisting}
 
 \noindent
-Muuttujassa $b$ on osajoukon bittiesitys,
-ja osajoukon luvuista muodostettu
-permutaatio on muotoa $(\ldots,j,i)$.
-Vaatimukset ovat, että lukujen $i$ ja $j$
-etäisyyden tulee olla yli 1
-ja lukujen tulee olla osajoukossa $b$.
+The variable $b$ contains the bit representation
+of the subset, and the corresponding
+permutation is of the form $(\ldots,j,i)$.
+It is required that the difference between
+$i$ and $j$ is larger than 1, and the
+numbers belong to subset $b$.
 
-Lopuksi ratkaisujen määrän saa laskettua näin
-muuttujaan $s$:
+Finally, the number of solutions can be
+calculated as follows to $s$:
 
 \begin{lstlisting}
 long long s = 0;
@@ -468,18 +468,19 @@ for (int i = 0; i < n; i++) {
 }
 \end{lstlisting}
 
-\subsubsection{Osajoukkojen summat}
+\subsubsection{Sums of subsets}
 
-Oletetaan sitten, että jokaista
-joukon $\{0,1,\ldots,n-1\}$
-osajoukkoa $x$ vastaa arvo $c(x)$ ja
-tehtävänä on laskea kullekin
-osajoukolle $x$ summa
-\[s(x)=\sum_{y \subset x} c(y) \]
-eli bittimuodossa ilmaistuna
-\[s(x)=\sum_{y \& x = y} c(y). \]
-Seuraavassa on esimerkki funktioiden arvoista,
-kun $n=3$:
+Let's assume that every subset $x$
+of $\{0,1,\ldots,n-1\}$
+is assigned a value $c(x)$,
+and our task is to calculate for
+each subset $x$ the sum
+\[s(x)=\sum_{y \subset x} c(y)\]
+that corresponds to the sum
+\[s(x)=\sum_{y \& x = y} c(y)\]
+using bit operations.
+The following table gives an example of
+the values of the functions when $n=3$:
 \begin{center}
 \begin{tabular}{rrr}
 $x$ & $c(x)$ & $s(x)$ \\
@@ -494,35 +495,37 @@ $x$ & $c(x)$ & $s(x)$ \\
 111 & 0 & 12 \\
 \end{tabular}
 \end{center}
-Esimerkiksi $s(110)=c(000)+c(010)+c(100)+c(110)=5$. 
+For example, $s(110)=c(000)+c(010)+c(100)+c(110)=5$. 
 
-Tehtävä on mahdollista ratkaista ajassa $O(2^n n)$
-laskemalla arvoja funktiolle $f(x,k)$:
-mikä on lukujen $c(y)$ summa, missä $x$:stä saa $y$:n
-muuttamalla millä tahansa tavalla bittien $0,1,\ldots,k$
-joukossa ykkösbittejä nollabiteiksi.
-Tämän funktion avulla ilmaistuna $s(x)=f(x,n-1)$.
+The problem can be solved in $O(2^n n)$ time
+by defining a function $f(x,k)$ that calculates
+the sum of values $c(y)$ where $x$ can be
+converted into $y$ by changing any one bits
+in positions $0,1,\ldots,k$ to zero bits.
+Using this function, the solution for the
+problem is $s(x)=f(x,n-1)$.
 
-Funktion pohjatapaukset ovat:
+The base cases for the function are:
 \begin{equation*}
     f(x,0) = \begin{cases}
-               c(x)          & \textrm{jos $x$:n bitti 0 on 0}\\
-               c(x)+c(x \XOR 1) & \textrm{jos $x$:n bitti 0 on 1}\\
+               c(x)          & \textrm{if bit 0 in $x$ is 0}\\
+               c(x)+c(x \XOR 1) & \textrm{if bit 0 in $x$ is 1}\\
            \end{cases}
 \end{equation*}
-Suuremmille $k$:n arvoille pätee seuraava rekursio:
+For larger values of $k$, the following recursion holds:
 \begin{equation*}
     f(x,k) = \begin{cases}
-               f(x,k-1)          & \textrm{jos $x$:n bitti $k$ on 0}\\
-               f(x,k-1)+f(x \XOR (1 < < k),k-1)    & \textrm{jos $x$:n bitti $k$ on 1}\\
+               f(x,k-1)          & \textrm{if bit $k$ in $x$ is 0}\\
+               f(x,k-1)+f(x \XOR (1 < < k),k-1)    & \textrm{if bit $k$ in $x$ is 1}\\
            \end{cases}
 \end{equation*}
 
-Niinpä funktion arvot voi laskea seuraavasti
-dynaamisella ohjelmoinnilla.
-Koodi olettaa, että taulukko \texttt{c} sisältää
-funktion $c$ arvot ja muodostaa taulukon \texttt{s},
-jossa on funktion $s$ arvot.
+Thus, we can calculate the values for the function
+as follows using dynamic programming.
+The code assumes that the array \texttt{c}
+contains the values for $c$,
+and it constructs an array \texttt{s}
+that contains the values for $s$.
 \begin{lstlisting}
 for (int x = 0; x < (1<<n); x++) {
     f[x][0] = c[x];
@@ -537,9 +540,9 @@ for (int k = 1; k < n; k++) {
 }
 \end{lstlisting}
 
-Itse asiassa saman laskennan voi toteuttaa lyhyemmin
-seuraavasti niin, että tulokset lasketaan
-suoraan taulukkoon \texttt{s}:
+Actually, a much shorter implementation is possible
+because we can calculate the results directly
+to array \texttt{s}:
 \begin{lstlisting}
 for (int x = 0; x < (1<<n); x++) s[x] = c[x];
 for (int k = 0; k < n; k++) {
