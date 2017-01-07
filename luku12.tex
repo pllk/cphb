@@ -1,38 +1,38 @@
 \chapter{Graph search}
 
-Tässä luvussa tutustumme
-syvyyshakuun ja leveyshakuun, jotka
-ovat keskeisiä menetelmiä verkon läpikäyntiin.
-Molemmat algoritmit lähtevät liikkeelle
-tietystä alkusolmusta ja 
-käyvät läpi kaikki solmut,
-joihin alkusolmusta pääsee.
-Algoritmien erona on,
-missä järjestyksessä ne kulkevat verkossa.
+This chapter introduces two fundamental
+graph algorithms:
+depth-first search and breadth-first search.
+Both algorithms are given a starting
+node in the graph,
+and they visit all nodes that can be reached
+from the starting node.
+The difference in the algorithms is the order
+in which they visit the nodes.
 
-\section{Syvyyshaku}
+\section{Depth-first search}
 
-\index{syvyyshaku@syvyyshaku}
+\index{depth-first search}
 
-\key{Syvyyshaku}
-on suoraviivainen menetelmä verkon läpikäyntiin.
-Algoritmi lähtee liikkeelle tietystä
-verkon solmusta ja etenee siitä
-kaikkiin solmuihin, jotka ovat
-saavutettavissa kaaria kulkemalla.
+\key{Depth-first search} (DFS)
+is a straightforward graph search technique.
+The algorithm begins at a starting node,
+and proceeds to all other nodes that are
+reachable from the starting node using
+the edges in the graph.
 
-Syvyyshaku etenee verkossa syvyyssuuntaisesti
-eli kulkee eteenpäin verkossa niin kauan
-kuin vastaan tulee uusia solmuja.
-Tämän jälkeen haku perääntyy kokeilemaan
-muita suuntia.
-Algoritmi pitää kirjaa vierailemistaan solmuista,
-jotta se käsittelee kunkin solmun vain kerran.
+Depth-first search always follows a single
+path in the graph as long as it finds
+new nodes.
+After this, it returns back to previous
+nodes and begins to explore other parts of the graph.
+The algorithm keeps track of visited nodes,
+so that it processes each node only once.
 
-\subsubsection*{Esimerkki}
+\subsubsection*{Example}
 
-Tarkastellaan syvyyshaun toimintaa
-seuraavassa verkossa:
+Let's consider how depth-first search processes
+the following graph:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -48,13 +48,11 @@ seuraavassa verkossa:
 \path[draw,thick,-] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-Syvyyshaku voi lähteä liikkeelle
-mistä tahansa solmusta,
-mutta oletetaan nyt,
-että haku lähtee liikkeelle solmusta 1.
+The algorithm can begin at any node in the graph,
+but we will now assume that it begins
+at node 1.
 
-Solmun 1 naapurit ovat solmut 2 ja 4,
-joista haku etenee ensin solmuun 2:
+The search first proceeds to node 2:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -72,8 +70,7 @@ joista haku etenee ensin solmuun 2:
 \path[draw=red,thick,->,line width=2pt] (1) -- (2);
 \end{tikzpicture}
 \end{center}
-Tämän jälkeen haku etenee vastaavasti
-solmuihin 3 ja 5:
+After this, nodes 3 and 5 will be visited:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -93,13 +90,12 @@ solmuihin 3 ja 5:
 \path[draw=red,thick,->,line width=2pt] (3) -- (5);
 \end{tikzpicture}
 \end{center}
-Solmun 5 naapurit ovat 2 ja 3,
-mutta haku on käynyt jo molemmissa,
-joten on aika peruuttaa taaksepäin.
-Myös solmujen 3 ja 2 naapurit on käyty,
-joten haku peruuttaa solmuun 1 asti.
-Siitä lähtee kaari, josta pääsee
-solmuun 4:
+The neighbors of node 5 are 2 and 3,
+but the search has already visited both of them,
+so it's time to return back.
+Also the neighbors of nodes 3 and 2
+have been visited, so we'll next proceed
+from node 1 to node 4:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -117,74 +113,70 @@ solmuun 4:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-Tämän jälkeen haku päättyy,
-koska se on käynyt kaikissa solmuissa.
+After this, the search terminates because it has visited
+all nodes.
 
-Syvyyshaun aikavaativuus on $O(n+m)$,
-missä $n$ on solmujen määrä ja $m$ on kaarten määrä,
-koska haku käsittelee kerran jokaisen solmun ja kaaren.
+The time complexity of depth-first search is $O(n+m)$
+where $n$ is the number of nodes and $m$ is the
+number of edges,
+because the algorithm processes each node and edge once.
 
-\subsubsection*{Toteutus}
+\subsubsection*{Implementation}
 
-Syvyyshaku on yleensä mukavinta toteuttaa
-rekursiolla.
-Seuraava funktio \texttt{haku}
-suorittaa syvyyshaun sille parametrina
-annetusta solmusta lähtien.
-Funktio olettaa, että
-verkko on tallennettu vieruslistoina
-taulukkoon
+Depth-first search can be conveniently
+implemented using recursion.
+The following function \texttt{dfs} begins
+a depth-first search at a given node.
+The function assumes that the graph is
+stored as adjacency lists in array
 \begin{lstlisting}
 vector<int> v[N];
 \end{lstlisting}
-ja pitää lisäksi yllä taulukkoa
+and also maintains an array
 \begin{lstlisting}
 int z[N];
 \end{lstlisting}
-joka kertoo, missä solmuissa haku on käynyt.
-Alussa taulukon jokainen arvo on 0,
-ja kun haku saapuu solmuun $s$,
-kohtaan \texttt{z}[$s$] merkitään 1.
-Funktion toteutus on seuraavanlainen:
+that keeps track of the visited nodes.
+Initially, each array value is 0,
+and when the search arrives at node $s$,
+the value of \texttt{z}[$s$] becomes 1.
+The function can be implemented as follows:
 \begin{lstlisting}
-void haku(int s) {
+void dfs(int s) {
     if (z[s]) return;
     z[s] = 1;
-    // solmun s käsittely tähän
+    // process node s
     for (auto u: v[s]) {
-        haku(u);
+        dfs(u);
     }
 }
 \end{lstlisting}
 
-\section{Leveyshaku}
+\section{Breadth-first search}
 
-\index{leveyshaku@leveyshaku}
+\index{breadth-first search}
 
-\key{Leveyshaku}
-käy solmut läpi järjestyksessä sen mukaan,
-kuinka kaukana ne ovat alkusolmusta.
-Niinpä leveyshaun avulla pystyy laskemaan
-etäisyyden alkusolmusta kaikkiin
-muihin solmuihin.
-Leveyshaku on kuitenkin vaikeampi
-toteuttaa kuin syvyyshaku.
+\key{Breadth-first search} (BFS) visits the nodes
+in increasing order of their distance
+from the starting node.
+Thus, we can calculate the distance
+from the starting node to all other
+nodes using breadth-first search.
+However, breadth-first search is more difficult
+to implement than depth-first search.
 
-Leveyshakua voi ajatella niin,
-että se käy solmuja läpi kerros kerrallaan.
-Ensin haku käy läpi solmut,
-joihin pääsee yhdellä kaarella
-alkusolmusta.
-Tämän jälkeen vuorossa ovat
-solmut, joihin pääsee kahdella
-kaarella alkusolmusta, jne.
-Sama jatkuu, kunnes uusia käsiteltäviä
-solmuja ei enää ole.
+Breadth-first search goes through the nodes
+one level after another.
+First the search explores the nodes whose
+distance from the starting node is 1,
+then the nodes whose distance is 2, and so on.
+This process continues until all nodes
+have been visited.
 
-\subsubsection*{Esimerkki}
+\subsubsection*{Example}
 
-Tarkastellaan leveyshaun toimintaa
-seuraavassa verkossa:
+Let's consider how the algorithm processes
+the following graph:
 
 \begin{center}
 \begin{tikzpicture}
@@ -204,11 +196,9 @@ seuraavassa verkossa:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Oletetaan jälleen,
-että haku alkaa solmusta 1.
-Haku etenee ensin kaikkiin solmuihin,
-joihin pääsee alkusolmusta:
-\\
+Assume again that the search begins at node 1.
+First, we process all nodes that can be reached
+from node 1 using a single edge:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -234,8 +224,7 @@ joihin pääsee alkusolmusta:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-Seuraavaksi haku etenee solmuihin 3 ja 5:
-\\
+After this, we procees to nodes 3 and 5:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -261,8 +250,7 @@ Seuraavaksi haku etenee solmuihin 3 ja 5:
 \path[draw=red,thick,->,line width=2pt] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-Viimeisenä haku etenee solmuun 6:
-\\
+Finally, we visit node 6:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -288,14 +276,13 @@ Viimeisenä haku etenee solmuun 6:
 \path[draw=red,thick,->,line width=2pt] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Leveyshaun tuloksena selviää etäisyys
-kuhunkin verkon solmuun alkusolmusta.
-Etäisyys on sama kuin kerros,
-jossa solmu käsiteltiin haun aikana:
+Now we have calculated the distances
+from the starting node to all nodes in the graph.
+The distances are as follows:
 
 \begin{tabular}{ll}
 \\
-solmu & etäisyys \\
+node & distance \\
 \hline
 1 & 0 \\
 2 & 1 \\
@@ -306,49 +293,50 @@ solmu & etäisyys \\
 \\
 \end{tabular}
 
-Leveyshaun aikavaativuus on syvyyshaun tavoin $O(n+m)$,
-missä $n$ on solmujen määrä ja $m$ on kaarten määrä.
+Like in depth-first search,
+the time complexity of breadth-first search
+is $O(n+m)$ where $n$ is the number of nodes
+and $m$ is the number of edges.
 
-\subsubsection*{Toteutus}
+\subsubsection*{Implementation}
 
-Leveyshaku on syvyyshakua hankalampi toteuttaa,
-koska haku käy läpi solmuja verkon eri
-puolilta niiden etäisyyden mukaan.
-Tyypillinen toteutus on pitää yllä jonoa
-käsiteltävistä solmuista.
-Joka askeleella otetaan käsittelyyn seuraava
-solmu jonosta ja uudet solmut lisätään
-jonon perälle.
+Breadth-first search is more difficult
+to implement than depth-first search
+because the algorithm visits nodes
+in different parts in the graph.
+A typical implementation is to maintain
+a queue of nodes to be processed.
+At each step, the next node in the queue
+will be processed.
 
-Seuraava koodi toteuttaa leveyshaun
-solmusta $x$ lähtien.
-Koodi olettaa, että verkko on tallennettu
-vieruslistoina, ja pitää yllä jonoa
+The following code begins a breadth-first
+search at node $x$.
+The code assumes that the graph is stored
+as adjacency lists and maintains a queue
 \begin{lstlisting}
 queue<int> q;
 \end{lstlisting}
-joka sisältää solmut käsittelyjärjestyksessä.
-Koodi lisää aina uudet vastaan tulevat solmut
-jonon perään ja ottaa seuraavaksi käsiteltävän
-solmun jonon alusta,
-minkä ansiosta solmut käsitellään
-kerroksittain alkusolmusta lähtien.
+that contains the nodes in increasing order
+of their distance.
+New nodes are always added to the end
+of the queue, and the node at the beginning
+of the queue is the next node to be processed.
 
-Lisäksi koodi käyttää taulukoita
+In addition, the code uses arrays
 \begin{lstlisting}
 int z[N], e[N];
 \end{lstlisting}
-niin, että taulukko \texttt{z} sisältää tiedon,
-missä solmuissa haku on käynyt,
-ja taulukkoon \texttt{e} lasketaan lyhin
-etäisyys alkusolmusta kaikkiin verkon solmuihin.
-Toteutuksesta tulee seuraavanlainen:
+so that array \texttt{z} indicates
+which nodes the search already has visited
+and array \texttt{e} will contain the
+minimum distance to all nodes in the graph.
+The search can be implemented as follows:
 \begin{lstlisting}
 z[s] = 1; e[x] = 0;
 q.push(x);
 while (!q.empty()) {
     int s = q.front(); q.pop();
-    // solmun s käsittely tähän     
+    // process node s
     for (auto u : v[s]) {
         if (z[u]) continue;
         z[u] = 1; e[u] = e[s]+1;
