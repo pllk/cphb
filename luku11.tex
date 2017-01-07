@@ -1,35 +1,35 @@
 \chapter{Basics of graphs}
 
-Monen ohjelmointitehtävän voi ratkaista tulkitsemalla
-tehtävän verkko-on\-gel\-ma\-na ja käyttämällä
-sopivaa verkkoalgoritmia.
-Tyypillinen esimerkki verkosta on tieverkosto,
-jonka rakenne muistuttaa luonnostaan verkkoa.
-Joskus taas verkko kätkeytyy syvemmälle ongelmaan
-ja sitä voi olla vaikeaa huomata.
+Many programming problems can be solved by
+interpreting the problem as a graph problem
+and using a suitable graph algorithm.
+A typical example of a graph is a network
+of roads and cities in a country.
+Sometimes, though, the graph is hidden
+in the problem and it can be difficult to detect it.
 
-Tässä kirjan osassa tutustumme verkkojen käsittelyyn
-liittyviin tekniikoihin ja kisakoodauksessa
-keskeisiin verkkoalgoritmeihin.
-Aloitamme aiheeseen perehtymisen
-käymällä läpi verkkoihin liittyviä käsitteitä
-sekä erilaisia tapoja pitää verkkoa muistissa algoritmeissa.
+This part of the book discusses techniques and algorithms
+involving graphs
+that are important in competitive programming.
+We will first go through graph terminology
+and different ways to store graphs in algorithms.
 
-\section{Käsitteitä}
+\section{Terminology}
 
-\index{verkko@verkko}
-\index{solmu@solmu}
-\index{kaari@kaari}
+\index{graph}
+\index{node}
+\index{edge}
 
-\key{Verkko} muodostuu \key{solmuista}
-ja niiden välisistä \key{kaarista}.
-Merkitsemme tässä kirjassa
-verkon solmujen määrää
-muuttujalla $n$ ja kaarten määrää muuttujalla $m$.
-Lisäksi numeroimme verkon solmut kokonaisluvuin
-$1,2,\ldots,n$.
+A \key{graph} consists of \key{nodes}
+and \key{edges} between them.
+In this book,
+the variable $n$ denotes the number of nodes
+in a graph, and the variable $m$ denotes
+the number of edges.
+In addition, the nodes are numbered
+using integers $1,2,\ldots,n$.
 
-Esimerkiksi seuraavassa verkossa on 5 solmua ja 7 kaarta:
+For example, the following graph contains 5 nodes and 7 edges:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -49,30 +49,31 @@ Esimerkiksi seuraavassa verkossa on 5 solmua ja 7 kaarta:
 \end{tikzpicture}
 \end{center}
 
-\index{polku@polku}
+\index{path}
 
-\key{Polku} on solmusta $a$ solmuun $b$
-johtava reitti, joka kulkee verkon kaaria pitkin.
-Polun \key{pituus} on kaarten määrä polulla.
-Esimerkiksi yllä olevassa verkossa
-polkuja solmusta 1 solmuun 5 ovat:
+A \key{path} is a route from node $a$ to node $b$
+that goes through the edges in the graph.
+The \key{length} of a path is the number of
+edges in the path.
+For example, in the above graph, paths
+from node 1 to node 5 are:
 
 \begin{itemize}
-\item $1 \rightarrow 2 \rightarrow 5$ (pituus 2)
-\item $1 \rightarrow 4 \rightarrow 5$ (pituus 2)
-\item $1 \rightarrow 2 \rightarrow 4 \rightarrow 5$ (pituus 3)
-\item $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ (pituus 3)
-\item $1 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (pituus 3)
-\item $1 \rightarrow 3 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (pituus 4)
+\item $1 \rightarrow 2 \rightarrow 5$ (length 2)
+\item $1 \rightarrow 4 \rightarrow 5$ (length 2)
+\item $1 \rightarrow 2 \rightarrow 4 \rightarrow 5$ (length 3)
+\item $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ (length 3)
+\item $1 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (length 3)
+\item $1 \rightarrow 3 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (length 4)
 \end{itemize}
 
-\subsubsection{Yhtenäisyys}
+\subsubsection{Connectivity}
 
-\index{yhtenxinen verkko@yhtenäinen verkko}
+\index{connected graph}
 
-Verkko on \key{yhtenäinen}, jos siinä on polku
-mistä tahansa solmusta mihin tahansa solmuun.
-Esimerkiksi seuraava verkko on yhtenäinen:
+A graph is \key{connected}, if there is path
+between any two nodes.
+For example, the following graph is connected:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -87,8 +88,9 @@ Esimerkiksi seuraava verkko on yhtenäinen:
 \end{tikzpicture}
 \end{center}
 
-Seuraava verkko taas ei ole yhtenäinen,
-koska solmusta 4 ei pääse muihin verkon solmuihin.
+The following graph is not connected
+because it is not possible to get to other
+nodes from node 4.
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -98,17 +100,17 @@ koska solmusta 4 ei pääse muihin verkon solmuihin.
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (2) -- (3);
-%\path[draw,thick,-] (3) -- (4);
-%\path[draw,thick,-] (2) -- (4);
 \end{tikzpicture}
 \end{center}
 
-Verkon yhtenäiset osat muodostavat sen
-\key{komponentit}. \index{komponentti@komponentti}
-Esimerkiksi seuraavassa verkossa on
-kolme komponenttia:
+\index{compomnent}
+
+The connected parts of a graph are
+its \key{components}.
+For example, the following graph
+contains three components:
 $\{1,\,2,\,3\}$,
-$\{4,\,5,\,6,\,7\}$ ja
+$\{4,\,5,\,6,\,7\}$ and
 $\{8\}$.
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -133,13 +135,13 @@ $\{8\}$.
 \end{tikzpicture}
 \end{center}
 
-\index{puu@puu}
+\index{tree}
 
-\key{Puu} on yhtenäinen verkko,
-jossa on $n$ solmua ja $n-1$ kaarta.
-Puussa minkä tahansa kahden solmun välillä
-on yksikäsitteinen polku.
-Esimerkiksi seuraava verkko on puu:
+A \key{tree} is a connected graph
+that contains $n$ nodes and $n-1$ edges.
+In a tree, there is a unique path
+between any two nodes.
+For example, the following graph is a tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -158,14 +160,14 @@ Esimerkiksi seuraava verkko on puu:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Kaarten suunnat}
+\subsubsection{Edge directions}
 
-\index{suunnattu verkko@suunnattu verkko}
+\index{directed graph}
 
-Verkko on \key{suunnattu},
-jos verkon kaaria pystyy
-kulkemaan vain niiden merkittyyn suuntaan.
-Esimerkiki seuraava verkko on suunnattu:
+A graph is \key{directed}
+if the edges can be travelled only
+in one direction.
+For example, the following graph is directed:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -182,30 +184,31 @@ Esimerkiki seuraava verkko on suunnattu:
 \end{tikzpicture}
 \end{center}
 
-Yllä olevassa verkossa on polku solmusta
-3 solmuun 5, joka kulkee kaaria
+The above graph contains a path from
+node $3$ to $5$ using edges
 $3 \rightarrow 1 \rightarrow 2 \rightarrow 5$.
-Sen sijaan verkossa ei ole polkua
-solmusta 5 solmuun 3.
+However, the graph doesn't contain
+a path from node $5$ to $3$.
 
+\index{cycle}
+\index{acyclic graph}
 
-\index{sykli@sykli}
-\index{syklitzn verkko@syklitön verkko}
-
-\key{Sykli} on polku, jonka ensimmäinen
-ja viimeinen solmu on sama.
-Esimerkiksi yllä olevassa verkossa on sykli
+A \key{cycle} is a path whose first and
+last node is the same.
+For example, the above graph contains
+a cycle
 $1 \rightarrow 2 \rightarrow 4 \rightarrow 1$.
-Jos verkossa ei ole yhtään sykliä, se on \key{syklitön}.
+If a graph doesn't contain any cycles,
+it is called \key{acyclic}.
 
-\subsubsection{Kaarten painot}
+\subsubsection{Edge weights}
 
-\index{painotettu verkko@painotettu verkko}
+\index{weighted graph}
 
-\key{Painotetussa} verkossa
-jokaiseen kaareen liittyy \key{paino}.
-Usein painot kuvaavat kaarien pituuksia.
-Esimerkiksi seuraava verkko on painotettu:
+In a \key{weighted} graph, each edge is assigned
+a \key{weight}.
+Often, the weights are interpreted as edge lengths.
+For example, the following graph is weighted:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -222,27 +225,27 @@ Esimerkiksi seuraava verkko on painotettu:
 \end{tikzpicture}
 \end{center}
 
-Nyt polun pituus on 
-polulla olevien kaarten painojen summa.
-Esimerkiksi yllä olevassa verkossa
-polun $1 \rightarrow 2 \rightarrow 5$
-pituus on $5+7=12$ ja polun
-$1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ pituus on $1+7+3=11$.
-Jälkimmäinen on lyhin polku solmusta 1 solmuun 5.
+Now the length of a path is the sum of
+edge weights.
+For example, in the above graph
+the length of path
+$1 \rightarrow 2 \rightarrow 5$
+is $12$, and the length of path
+$1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ is $11$.
+The latter is the shortest path from node $1$ to node $5$.
 
-\subsubsection{Naapurit ja asteet}
+\subsubsection{Neighbors and degrees}
 
-\index{naapuri@naapuri}
-\index{aste@aste}
+\index{neighbor}
+\index{degree}
 
-Kaksi solmua ovat \key{naapureita},
-jos ne ovat verkossa
-\key{vierekkäin} eli niiden välillä on kaari.
-Solmun \key{aste} on
-sen naapurien määrä.
-Esimerkiksi seuraavassa verkossa
-solmun 2 naapurit ovat 1, 4 ja 5,
-joten sen aste on 3.
+Two nodes are \key{neighbors} or \key{adjacent}
+if there is a edge between them.
+The \key{degree} of a node
+is the number of its neighbors.
+For example, in the following graph,
+the neighbors of node 2 are 1, 4 and 5,
+so its degree is 3.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -262,31 +265,31 @@ joten sen aste on 3.
 \end{tikzpicture}
 \end{center}
 
-Verkon solmujen asteiden summa on aina $2m$,
-missä $m$ on kaarten määrä.
-Tämä johtuu siitä, että jokainen kaari lisää
-kahden solmun astetta yhdellä.
-Niinpä solmujen asteiden summa on aina parillinen.
+The sum of degrees in a graph is always $2m$
+where $m$ is the number of edges.
+The reason for this is that each edge
+increases the degree of two nodes by one.
+Thus, the sum of degrees is always even.
 
-\index{szznnollinen verkko@säännöllinen verkko}
-\index{tzydellinen verkko@täydellinen verkko}
+\index{regular graph}
+\index{complete graph}
 
-Verkko on \key{säännöllinen},
-jos jokaisen solmun aste on vakio $d$.
-Verkko on \key{täydellinen},
-jos jokaisen solmun aste on $n-1$ eli
-verkossa on kaikki mahdolliset kaaret
-solmujen välillä.
+A graph is \key{regular} if the
+degree of every node is a constant $d$.
+A graph is \key{complete} if the
+degree of every node is $n-1$, i.e.,
+the graph contains all possible edges
+between the nodes.
 
-\index{lzhtzaste@lähtöaste}
-\index{tuloaste@tuloaste}
+\index{indegree}
+\index{outdegree}
 
-Suunnatussa verkossa \key{lähtöaste}
-on solmusta lähtevien kaarten määrä ja
-\key{tuloaste} on solmuun tulevien
-kaarten määrä.
-Esimerkiksi seuraavassa verkossa solmun 2
-lähtöaste on 1 ja tuloaste on 2.
+In a directed graph, the \key{indegree}
+and \key{outdegree} of a node is
+the number of edges that end and begin
+at the node, respectively.
+For example, in the following graph,
+node 2 has indegree 2 and outdegree 1.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -305,21 +308,21 @@ lähtöaste on 1 ja tuloaste on 2.
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Väritykset}
+\subsubsection{Colorings}
 
-\index{vxritys@väritys}
-\index{kaksijakoinen verkko@kaksijakoinen verkko}
+\index{coloring}
+\index{bipartite graph}
 
-Verkon \key{värityksessä} jokaiselle solmulle valitaan
-tietty väri niin, että millään kahdella
-vierekkäisellä solmulla ei ole samaa väriä.
+In a \key{coloring} of a graph,
+each node is assigned a color so that
+no adjacent nodes have the same color.
 
-Verkko on \key{kaksijakoinen},
-jos se on mahdollista värittää kahdella värillä.
-Osoittautuu, että verkko on kaksijakoinen tarkalleen silloin,
-kun siinä ei ole sykliä, johon kuuluu
-pariton määrä solmuja.
-Esimerkiksi verkko
+A graph is \key{bipartite} if
+it is possible to color it using two colors.
+It turns out that a graph is bipartite
+exactly when it doesn't contain a cycle
+with odd number of edges.
+For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -336,7 +339,7 @@ Esimerkiksi verkko
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-on kaksijakoinen, koska sen voi värittää seuraavasti:
+is bipartite because we can color it as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle, fill=blue!40] (1) at (1,3) {$2$};
@@ -354,16 +357,16 @@ on kaksijakoinen, koska sen voi värittää seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Yksinkertaisuus}
+\subsubsection{Simplicity}
 
-\index{yksinkertainen verkko@yksinkertainen verkko}
+\index{simple graph}
 
-Verkko on \key{yksinkertainen},
-jos mistään solmusta ei ole kaarta itseensä
-eikä minkään kahden solmun välillä ole
-monta kaarta samaan suuntaan.
-Usein oletuksena on, että verkko on yksinkertainen.
-Esimerkiksi verkko
+A graph is \key{simple}
+if no edge begins and ends at the same node,
+and there are no multiple
+edges between two nodes.
+Often we will assume that the graph is simple.
+For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -386,8 +389,9 @@ Esimerkiksi verkko
 \path[draw,thick,-] (5) edge [loop left] (5);
 \end{tikzpicture}
 \end{center}
-\emph{ei} ole yksinkertainen, koska solmusta 4 on kaari itseensä
-ja solmujen 2 ja 3 välillä on kaksi kaarta.
+is \emph{not} simple because there is an edge that begins
+and ends at node 4, and there are two edges
+between nodes 2 and 3.
 
 \section{Verkko muistissa}
 
