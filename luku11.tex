@@ -393,36 +393,38 @@ is \emph{not} simple because there is an edge that begins
 and ends at node 4, and there are two edges
 between nodes 2 and 3.
 
-\section{Verkko muistissa}
+\section{Graph representation}
 
-On monia tapoja pitää verkkoa muistissa algoritmissa.
-Sopiva tietorakenne riippuu siitä,
-kuinka suuri verkko on ja
-millä tavoin algoritmi käsittelee sitä.
-Seuraavaksi käymme läpi kolme tavallista vaihtoehtoa.
+There are several ways how to represent graphs in memory
+in an algorithm.
+The choice of a data structure
+depends on the size of the graph and
+how the algorithm manipulates it.
+Next we will go through three representations.
 
-\subsubsection{Vieruslistaesitys}
+\subsubsection{Adjacency list representation}
 
-\index{vieruslista@vieruslista}
+\index{adjacency list}
 
-Tavallisin tapa pitää verkkoa muistissa on
-luoda jokaisesta solmusta \key{vieruslista},
-joka sisältää kaikki solmut,
-joihin solmusta pystyy siirtymään kaarta pitkin.
-Vieruslistaesitys on tavallisin verkon esitysmuoto, ja
-useimmat algoritmit pystyy toteuttamaan
-tehokkaasti sitä käyttäen.
+A usual way to represent a graph is
+to create an \key{adjacency list} for each node.
+An adjacency list contains contains all nodes
+that can be reached from the node using a single edge.
+The adjacency list representation is the most popular
+way to store a graph, and most algorithms can be
+efficiently implemented using it.
 
-Kätevä tapa tallentaa verkon vieruslistaesitys on luoda taulukko,
-jossa jokainen alkio on vektori:
+A good way to store the adjacency lists is to allocate an array
+whose each element is a vector:
 \begin{lstlisting}
 vector<int> v[N];
 \end{lstlisting}
 
-Taulukossa solmun $s$ vieruslista on kohdassa $\texttt{v}[s]$.
-Vakio $N$ on valittu niin suureksi,
-että kaikki vieruslistat mahtuvat taulukkoon.
-Esimerkiksi verkon
+The adjacency list for node $s$ is in position
+$\texttt{v}[s]$ in the array.
+The constant $N$ is so chosen that all
+adjacency lists can be stored.
+For example, the graph
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -438,7 +440,7 @@ Esimerkiksi verkon
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-voi tallentaa seuraavasti:
+can be stored as follows:
 \begin{lstlisting}
 v[1].push_back(2);
 v[2].push_back(3);
@@ -447,18 +449,20 @@ v[3].push_back(4);
 v[4].push_back(1);
 \end{lstlisting}
 
-Jos verkko on suuntaamaton, sen voi tallentaa samalla tavalla,
-mutta silloin jokainen kaari lisätään kumpaankin suuntaan.
+If the graph is undirected, it can be stored in a similar way,
+but each edge each is store in both directions.
 
-Painotetun verkon tapauksessa rakennetta voi laajentaa näin:
+For an weighted graph, the structure can be extended
+as follows:
 
 \begin{lstlisting}
 vector<pair<int,int>> v[N];
 \end{lstlisting}
 
-Nyt vieruslistalla on pareja, joiden ensimmäinen kenttä on
-kaaren kohdesolmu ja toinen kenttä on kaaren paino.
-Esimerkiksi verkon
+Now each adjacency list contains pairs whose first
+element is the target node,
+and the second element is the edge weight.
+For example, the graph
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -474,7 +478,7 @@ Esimerkiksi verkon
 \path[draw,thick,->,>=latex] (4) -- node[font=\small,label=left:2] {} (1);
 \end{tikzpicture}
 \end{center}
-voi tallentaa seuraavasti:
+can be stored as follows:
 \begin{lstlisting}
 v[1].push_back({2,5});
 v[2].push_back({3,7});
@@ -483,40 +487,40 @@ v[3].push_back({4,5});
 v[4].push_back({1,2});
 \end{lstlisting}
 
-Vieruslistaesityksen etuna on, että sen avulla on nopeaa selvittää,
-mihin solmuihin tietystä solmusta pääsee kulkemaan.
-Esimerkiksi seuraava silmukka käy läpi kaikki solmut,
-joihin pääsee solmusta $s$:
+The benefit in the adjacency list representation is that
+we can efficiently find the nodes that can be
+reached from a certain node.
+For example, the following loop goes trough all nodes
+that can be reached from node $s$:
 
 \begin{lstlisting}
 for (auto u : v[s]) {
-    // käsittele solmu u
+    // process node u
 }
 \end{lstlisting}
 
-\subsubsection{Vierusmatriisiesitys}
+\subsubsection{Adjacency matrix representation}
 
-\index{vierusmatriisi@vierusmatriisi}
+\index{adjacency matrix}
 
-\key{Vierusmatriisi} on kaksiulotteinen taulukko,
-joka kertoo jokaisesta mahdollisesta kaaresta,
-onko se mukana verkossa.
-Vierusmatriisista on nopeaa tarkistaa,
-onko kahden solmun välillä kaari.
-Toisaalta matriisi vie paljon tilaa,
-jos verkko on suuri.
-Vierusmatriisi tallennetaan taulukkona
-
+An \key{adjacency matrix} is a two-dimensional array
+that indicates for each possible edge if it is
+included in the graph.
+Using an adjacency matrix, we can efficiently check
+if there is an edge between two nodes.
+On the other hand, the matrix takes a lot of memory
+if the graph is large.
+We can store the matrix as an array
 \begin{lstlisting}
 int v[N][N];
 \end{lstlisting}
-
-jossa arvo $\texttt{v}[a][b]$ ilmaisee,
-onko kaari solmusta $a$ solmuun $b$ mukana verkossa.
-Jos kaari on mukana verkossa,
-niin $\texttt{v}[a][b]=1$,
-ja muussa tapauksessa $\texttt{v}[a][b]=0$.
-Nyt esimerkiksi verkkoa
+where the value $\texttt{v}[a][b]$ indicates
+whether the graph contains an edge from
+node $a$ to node $b$.
+If the edge is included in the graph,
+then $\texttt{v}[a][b]=1$,
+and otherwise $\texttt{v}[a][b]=0$.
+For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -531,7 +535,7 @@ Nyt esimerkiksi verkkoa
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-vastaa seuraava vierusmatriisi:
+can be represented as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,4);
@@ -562,10 +566,11 @@ vastaa seuraava vierusmatriisi:
 \end{tikzpicture}
 \end{center}
 
-Jos verkko on painotettu, vierusmatriisiesitystä voi 
-laajentaa luontevasti niin, että matriisissa kerrotaan
-kaaren paino, jos kaari on olemassa.
-Tätä esitystapaa käyttäen esimerkiksi verkkoa
+If the graph is directed, the adjacency matrix
+representation can be extended so that
+the matrix contains the weight of the edge
+if the edge exists.
+Using this representation, the graph
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -582,7 +587,7 @@ Tätä esitystapaa käyttäen esimerkiksi verkkoa
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-vastaa seuraava vierusmatriisi:
+corresponds to the following matrix:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,4);
@@ -614,23 +619,23 @@ vastaa seuraava vierusmatriisi:
 \end{center}
 \end{samepage}
 
-\subsubsection{Kaarilistaesitys}
+\subsubsection{Edge list representation}
 
-\index{kaarilista@kaarilista}
+\index{edge list}
 
-\key{Kaarilista} sisältää kaikki verkon kaaret.
-Kaarilista on hyvä tapa tallentaa verkko,
-jos algoritmissa täytyy käydä läpi
-kaikki verkon kaaret eikä ole tarvetta
-etsiä kaarta alkusolmun perusteella.
+An \key{edge list} contains all edges of a graph.
+This is a convenient way to represent a graph,
+if the algorithm will go trough all edges of the graph,
+and it is not needed to find edges that begin
+at a given node.
 
-Kaarilistan voi tallentaa vektoriin
+The edge list can be stored in a vector
 \begin{lstlisting}
 vector<pair<int,int>> v;
 \end{lstlisting}
-jossa jokaisessa solmussa on parina kaaren
-alku- ja loppusolmu.
-Tällöin esimerkiksi verkon
+where each element contains the starting
+and ending node of an edge.
+Thus, the graph
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -646,7 +651,7 @@ Tällöin esimerkiksi verkon
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-voi tallentaa seuraavasti:
+can be represented as follows:
 \begin{lstlisting}
 v.push_back({1,2});
 v.push_back({2,3});
@@ -656,15 +661,15 @@ v.push_back({4,1});
 \end{lstlisting}
 
 \noindent
-Painotetun verkon tapauksessa rakennetta voi laajentaa
-esimerkiksi näin:
+If the graph is weighted, we can extend the
+structure as follows:
 \begin{lstlisting}
 vector<pair<pair<int,int>,int>> v;
 \end{lstlisting}
-Nyt listalla on pareja, joiden ensimmäinen jäsen
-sisältää parina kaaren alku- ja loppusolmun,
-ja toinen jäsen on kaaren paino.
-Esimerkiksi verkon
+Now the list contains pairs whose first element
+contains the starting and ending node of an edge,
+and the second element corresponds to the edge weight.
+For example, the graph
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -681,7 +686,7 @@ Esimerkiksi verkon
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-voi tallentaa seuraavasti:
+can be represented as follows:
 \begin{lstlisting}
 v.push_back({{1,2},5});
 v.push_back({{2,3},7});
