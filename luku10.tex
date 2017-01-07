@@ -266,119 +266,116 @@ but there are also \texttt{long long} versions
 of the functions
 available with the prefix \texttt{ll}.
 
+\section{Bit representation of sets}
 
-\section{Joukon bittiesitys}
+Each subset of a set $\{0,1,2,\ldots,n-1\}$
+corresponds to a $n$ bit number
+where the one bits indicate which elements
+are included in the subset.
+For example, the bit representation for $\{1,3,4,8\}$
+is 100011010 that equals $2^8+2^4+2^3+2^1=282$.
 
-Joukon $\{0,1,2,\ldots,n-1\}$
-jokaista osajoukkoa
-vastaa $n$-bittinen luku,
-jossa ykkösbitit ilmaisevat,
-mitkä alkiot ovat mukana osajoukossa.
-Esimerkiksi joukkoa $\{1,3,4,8\}$
-vastaa bittiesitys 100011010 eli luku
-$2^8+2^4+2^3+2^1=282$.
+The bit representation of a set uses little memory
+because only one bit is needed for the information
+whether an element belongs to the set.
+In addition, we can efficiently manipulate sets
+that are stored as bits.
 
-Joukon bittiesitys vie vähän muistia,
-koska tieto kunkin alkion kuulumisesta
-osajoukkoon vie vain yhden bitin tilaa.
-Lisäksi bittimuodossa tallennettua joukkoa
-on tehokasta käsitellä bittioperaatioilla.
+\subsubsection{Set operations}
 
-\subsubsection{Joukon käsittely}
-
-Seuraavan koodin muuttuja $x$
-sisältää joukon $\{0,1,2,\ldots,31\}$
-osajoukon.
-Koodi lisää luvut 1, 3, 4 ja 8
-joukkoon ja tulostaa
-joukon sisällön.
+In the following code, the variable $x$
+contains a subset of $\{0,1,2,\ldots,31\}$.
+The code adds elements 1, 3, 4 and 8
+to the set and then prints the elements in the set.
 
 \begin{lstlisting}
-// x on tyhjä joukko
+// x is an empty set
 int x = 0;
-// lisätään luvut 1, 3, 4 ja 8 joukkoon
+// add numbers 1, 3, 4 and 8 to the set
 x |= (1<<1);
 x |= (1<<3);
 x |= (1<<4);
 x |= (1<<8);
-// tulostetaan joukon sisältö
+// print the elements in the set
 for (int i = 0; i < 32; i++) {
     if (x&(1<<i)) cout << i << " ";
 }
 cout << "\n";
 \end{lstlisting}
 
-Koodin tulostus on seuraava:
+The output of the code is as follows:
 \begin{lstlisting}
 1 3 4 8
 \end{lstlisting}
 
-Kun joukko on tallennettu bittiesityksenä,
-niin joukko-operaatiot voi toteuttaa 
-tehokkaasti bittioperaatioiden avulla:
+Using the bit representation of a set,
+we can efficiently implement set operations
+using bit operations:
 \begin{itemize}
-\item $a$ \& $b$ on joukkojen $a$ ja $b$ leikkaus $a \cap b$
-(tämä sisältää alkiot,
-jotka ovat kummassakin joukossa)
-\item $a$ | $b$ on joukkojen $a$ ja $b$ yhdiste $a \cup b$
-(tämä sisältää alkiot,
-jotka ovat ainakin toisessa joukossa)
-\item $a$ \& (\textasciitilde$b$) on joukkojen $a$ ja $b$ erotus
-$a \setminus b$ (tämä sisältää alkiot,
-jotka ovat joukossa $a$ mutta eivät joukossa $b$)
+\item $a$ \& $b$ is the intersection $a \cap b$ of $a$ and $b$
+(this contains the elements that are in both the sets)
+\item $a$ | $b$ is the union $a \cup b$ of $a$ and $b$
+(this contains the elements that are at least
+in one of the sets)
+\item $a$ \& (\textasciitilde$b$) is the difference
+$a \setminus b$ of $a$ and $b$
+(this contains the elements that are in $a$
+but not in $b$)
 \end{itemize}
 
-Seuraava koodi muodostaa
-joukkojen $\{1,3,4,8\}$ ja $\{3,6,8,9\}$ yhdisteen:
+The following code constructs the union
+of $\{1,3,4,8\}$ and $\{3,6,8,9\}$:
 
 \begin{lstlisting}
-// joukko {1,3,4,8}
+// set {1,3,4,8}
 int x = (1<<1)+(1<<3)+(1<<4)+(1<<8);
-// joukko {3,6,8,9}
+// set {3,6,8,9}
 int y = (1<<3)+(1<<6)+(1<<8)+(1<<9);
-// joukkojen yhdiste
+// union of the sets
 int z = x|y;
-// tulostetaan yhdisteen sisältö
+// print the elements in the union
 for (int i = 0; i < 32; i++) {
     if (z&(1<<i)) cout << i << " ";
 }
 cout << "\n";
 \end{lstlisting}
 
-Koodin tulostus on seuraava:
+The output of the code is as follows:
 \begin{lstlisting}
 1 3 4 6 8 9
 \end{lstlisting}
 
-\subsubsection{Osajoukkojen läpikäynti}
+\subsubsection{Iterating through subsets}
 
-Seuraava koodi käy läpi joukon $\{0,1,\ldots,n-1\}$ osajoukot:
+The following code iterates through
+the subsets of $\{0,1,\ldots,n-1\}$:
 
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
-    // osajoukon b käsittely
+    // process subset b
 }
 \end{lstlisting}
-Seuraava koodi käy läpi
-osajoukot, joissa on $k$ alkiota:
+The following code goes through
+subsets with exactly $k$ elements:
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
     if (__builtin_popcount(b) == k) {
-        // osajoukon b käsittely
+        // process subset b
     }
 }
 \end{lstlisting}
-Seuraava koodi käy läpi joukon $x$ osajoukot:
+The following code goes through the subsets
+of a set $x$:
 \begin{lstlisting}
 int b = 0;
 do {
-    // osajoukon b käsittely
+    // process subset b
 } while (b=(b-x)&x);
 \end{lstlisting}
-Esimerkiksi jos $x$ esittää joukkoa $\{2,5,7\}$,
-niin koodi käy läpi osajoukot
-$\emptyset$, $\{2\}$, $\{5\}$, $\{7\}$,
-$\{2,5\}$, $\{2,7\}$, $\{5,7\}$ ja $\{2,5,7\}$.
+% Esimerkiksi jos $x$ esittää joukkoa $\{2,5,7\}$,
+% niin koodi käy läpi osajoukot
+% $\emptyset$, $\{2\}$, $\{5\}$, $\{7\}$,
+% $\{2,5\}$, $\{2,7\}$, $\{5,7\}$ ja $\{2,5,7\}$.
 
 \section{Dynaaminen ohjelmointi}
 
