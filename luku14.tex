@@ -1,16 +1,16 @@
-\chapter{Puiden käsittely}
+\chapter{Tree algorithms}
 
-\index{puu@puu}
+\index{tree}
 
-\key{Puu} on yhtenäinen, syklitön verkko,
-jossa on $n$ solmua ja $n-1$ kaarta.
-Jos puusta poistaa yhden kaaren, se ei ole enää yhtenäinen,
-ja jos puuhun lisää yhden kaaren, se ei ole enää syklitön.
-Puussa pätee myös aina, että
-jokaisen kahden puun solmun välillä on yksikäsitteinen polku.
+A \key{tree} is a connected, acyclic graph
+that contains $n$ nodes and $n-1$ edges.
+Removing any edge from a tree divides it
+into two components,
+and adding any edge to a tree creates a cycle.
+Moreover, there is always a unique path between any
+two nodes in a tree.
 
-Esimerkiksi seuraavassa puussa on 7 solmua ja 6 kaarta:
-
+For example, the following tree contains 7 nodes and 6 edges:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -29,21 +29,21 @@ Esimerkiksi seuraavassa puussa on 7 solmua ja 6 kaarta:
 \end{tikzpicture}
 \end{center}
 
-\index{lehti@lehti}
+\index{leaf}
 
-Puun \key{lehdet} ovat solmut,
-joiden aste on 1 eli joista lähtee vain yksi kaari.
-Esimerkiksi yllä olevan puun lehdet ovat
-solmut 3, 5, 6 ja 7.
+The \key{leaves} of a tree are nodes
+with degree 1, i.e., with only one neighbor.
+For example, the leaves in the above tree
+are nodes 3, 5, 6 and 7.
 
-\index{juuri@juuri}
-\index{juurellinen puu@juurellinen puu}
+\index{root}
+\index{rooted tree}
 
-Jos puu on \key{juurellinen}, yksi solmuista
-on puun \key{juuri},
-jonka alapuolelle muut solmut asettuvat.
-Esimerkiksi jos yllä olevassa puussa valitaan
-juureksi solmu 1, solmut asettuvat seuraavaan järjestykseen:
+In a \key{rooted} tree, one of the nodes
+is chosen to be a \key{root}, and all other nodes are
+placed underneath the root.
+For example, in the following tree,
+node 1 is the root of the tree.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -63,84 +63,82 @@ juureksi solmu 1, solmut asettuvat seuraavaan järjestykseen:
 \end{tikzpicture}
 \end{center}
 
-\index{lapsi@lapsi}
-\index{vanhempi@vanhempi}
+\index{child}
+\index{parent}
 
-Juurellisessa puussa solmun \key{lapset}
-ovat sen alemman tason naapurit
-ja solmun \key{vanhempi}
-on sen ylemmän tason naapuri.
-Jokaisella solmulla on tasan yksi vanhempi,
-paitsi juurella ei ole vanhempaa.
-Esimerkiksi yllä olevassa puussa solmun 4
-lapset ovat solmut 3 ja 7 ja solmun 4 vanhempi on solmu 1.
+In a rooted tree, the \key{childern} of a node
+are its lower neighbors, and the \key{parent} of a node
+is its upper neighbor.
+Each node has exactly one parent,
+except that the root doesn't have a parent.
+For example, in the above tree,
+the childern of node 4 are nodes 3 and 7,
+and the parent is node 1.
 
-\index{alipuu@alipuu}
+\index{subtree}
 
-Juurellisen puun rakenne on \emph{rekursiivinen}:
-jokaisesta puun solmusta alkaa \key{alipuu},
-jonka juurena on solmu itse ja johon kuuluvat
-kaikki solmut, joihin solmusta pääsee kulkemalla alaspäin puussa.
-Esimerkiksi solmun 4 alipuussa
-ovat solmut 4, 3 ja 7.
+The structure of a rooted tree is \emph{recursive}:
+each node in the tree is the root of a \key{subtree}
+that contains the node itself and all other nodes
+that can be reached by travelling downwards in the tree.
+For example, in the above tree, the subtree of node 4
+contains nodes 4, 3 and 7.
 
-\section{Puun läpikäynti}
+\section{Tree search}
 
-Puun läpikäyntiin voi käyttää syvyyshakua ja
-leveyshakua samaan
-tapaan kuin yleisen verkon läpikäyntiin.
-Erona on kuitenkin, että puussa ei ole silmukoita,
-minkä ansiosta ei tarvitse huolehtia siitä,
-että läpikäynti päätyisi tiettyyn
-solmuun monesta eri suunnasta.
+Depth-first search and breadth-first search
+can be used for going through the nodes in a tree.
+However, the search is easier to implement than
+for a general graph, because
+there are no cycles in the tree, and it is not
+possible that the search would visit a node several times.
 
-Tavallisin menetelmä puun läpikäyntiin on
-valita tietty solmu juureksi ja aloittaa
-siitä syvyyshaku.
-Seuraava rekursiivinen funktio toteuttaa sen:
+Often, we start a depth-first search from a chosen
+root node.
+The following recursive function implements it:
 
 \begin{lstlisting}
-void haku(int s, int e) {
-    // solmun s käsittely tähän
+void dfs(int s, int e) {
+    // process node s
     for (auto u : v[s]) {
-        if (u != e) haku(u, s);
+        if (u != e) dfs(u, s);
     }
 }
 \end{lstlisting}
 
-Funktion parametrit ovat käsiteltävä solmu $s$
-sekä edellinen käsitelty solmu $e$.
-Parametrin $e$ ideana on varmistaa, että
-läpikäynti etenee vain alaspäin puussa
-sellaisiin solmuihin, joita ei ole vielä käsitelty.
+The function parameters are the current node $s$
+and the previous node $e$.
+The idea of the parameter $e$ is to ensure
+that the search only proceeds downwards in the tree
+towards nodes that have not been visited yet.
 
-Seuraava kutsu käy läpi puun aloittaen juuresta $x$:
+The following function call starts the search
+at node $x$:
 
 \begin{lstlisting}
-haku(x, 0);
+dfs(x, 0);
 \end{lstlisting}
 
-Ensimmäisessä kutsussa $e=0$, koska läpikäynti
-saa edetä juuresta kaikkiin suuntiin alaspäin.
+In the first call $e=0$ because there is no
+previous node, and it is allowed
+to proceed to any direction in the tree.
 
-\subsubsection{Dynaaminen ohjelmointi}
+\subsubsection{Dynamic programming}
 
-Puun läpikäyntiin voi myös yhdistää dynaamista
-ohjelmointia ja laskea sen avulla jotakin tietoa puusta.
-Dynaamisen ohjelmoinnin avulla voi esimerkiksi
-laskea ajassa $O(n)$ jokaiselle solmulle,
-montako solmua sen alipuussa
-on tai kuinka pitkä on pisin solmusta
-alaspäin jatkuva polku puussa.
+We can also use dynamic programming to calculate
+some information from the tree during the search.
+Using dynamic programming, we can, for example,
+calculate in $O(n)$ time for each node the
+number of nodes in its subtree,
+or the length of the longest path downwards
+that begins at the node.
 
-Lasketaan esimerkiksi jokaiselle solmulle $s$
-sen alipuun solmujen määrä $\texttt{c}[s]$.
-Solmun alipuuhun kuuluvat solmu itse
-sekä kaikki sen lasten alipuut.
-Niinpä solmun alipuun solmujen määrä on
-yhden suurempi kuin summa lasten
-alipuiden solmujen määristä.
-Laskennan voi toteuttaa seuraavasti:
+As an example, let's calculate for each node $s$
+a value $\texttt{c}[s]$: the number of nodes in its subtree.
+The subtree contains the node itself and
+all nodes in the subtrees of its children.
+Thus, we can calculate the number of nodes
+recursively using the following code:
 
 \begin{lstlisting}
 void haku(int s, int e) {
@@ -153,13 +151,14 @@ void haku(int s, int e) {
 }
 \end{lstlisting}
 
-\section{Läpimitta}
+\section{Diameter}
 
-\index{lzpimitta@läpimitta}
+\index{diameter}
 
-Puun \key{läpimitta} on pisin polku
-kahden puussa olevan solmun välillä.
-Esimerkiksi puussa
+The \key{diameter} of a tree
+is the length of the longest path
+between two nodes in the tree.
+For example, in the tree
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -177,33 +176,28 @@ Esimerkiksi puussa
 \path[draw,thick,-] (3) -- (7);
 \end{tikzpicture}
 \end{center}
-läpimitta on 4, jota vastaa kaksi polkua:
-solmujen 3 ja 6 välinen polku sekä
-solmujen 7 ja 6 välinen polku.
+the diameter is 4, and it corresponds to two paths:
+the path between nodes 3 and 6,
+and the path between nodes 7 and 6.
 
-Käymme seuraavaksi läpi kaksi tehokasta
-algoritmia puun läpimitan laskeminen.
-Molemmat algoritmit laskevat läpimitan ajassa
-$O(n)$.
-Ensimmäinen algoritmi perustuu dynaamiseen
-ohjelmointiin, ja toinen algoritmi
-laskee läpimitan kahden syvyyshaun avulla.
+Next we will learn two efficient algorithms
+for calculating the diameter of a tree.
+Both algorithms calculate the diameter in $O(n)$ time.
+The first algorithm is based on dynamic programming,
+and the second algorithm uses two depth-first searches
+to calculate the diameter.
 
-\subsubsection{Algoritmi 1}
+\subsubsection{Algorithm 1}
 
-Algoritmin alussa
-yksi solmuista valitaan puun juureksi.
-Tämän jälkeen algoritmi laskee
-jokaiseen solmuun,
-kuinka pitkä on pisin polku,
-joka alkaa jostakin lehdestä,
-nousee kyseiseen solmuun asti
-ja laskeutuu toiseen lehteen.
-Pisin tällainen polku vastaa puun läpimittaa.
+First, one of the nodes is chosen to be the root.
+After this, the algorithm calculates for each node
+the length of the longest path that begins at some leaf,
+ascends to the node and then descends to another leaf.
+The length of the
+longest such path equals the diameter of the tree.
 
-Esimerkissä pisin polku alkaa lehdestä 7,
-nousee solmuun 1 asti ja laskeutuu
-sitten alas lehteen 6:
+In the example case, the longest path begins at node 7,
+ascends to node 1, and then descends to node 6:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -227,32 +221,32 @@ sitten alas lehteen 6:
 \end{tikzpicture}
 \end{center}
 
-Algoritmi laskee ensin dynaamisella ohjelmoinnilla
-jokaiselle solmulle, kuinka pitkä on pisin polku,
-joka lähtee solmusta alaspäin.
-Esimerkiksi yllä olevassa puussa pisin polku
-solmusta 1 alaspäin on pituudeltaan 2
-(vaihtoehdot $1 \rightarrow 4 \rightarrow 3$,
-$1 \rightarrow 4 \rightarrow 7$ ja $1 \rightarrow 2 \rightarrow 6$).
+The algorithm first calculates using dynamic programming
+for each node the length of the longest path
+that goes downwards from the node.
+For example, in the above tree,
+the longest path from node 1 downwards has length 2
+(the path can be $1 \rightarrow 4 \rightarrow 3$,
+$1 \rightarrow 4 \rightarrow 7$ or $1 \rightarrow 2 \rightarrow 6$).
 
-Tämän jälkeen algoritmi laskee kullekin solmulle,
-kuinka pitkä on pisin polku, jossa solmu on käännekohtana.
-Pisin tällainen polku syntyy valitsemalla kaksi lasta,
-joista lähtee alaspäin mahdollisimman pitkä polku.
-Esimerkiksi yllä olevassa puussa solmun 1 lapsista valitaan solmut 2 ja 4.
+After this, the algorithm calculates for each node
+the length of the longest path where the node
+is the turning point of the path.
+The longest such path can be found by selecting
+two children with longest paths downwards.
+For example, in the above graph, 
+nodes 2 and 4 are chosen for node 1.
 
-\subsubsection{Algoritmi 2}
+\subsubsection{Algorithm 2}
 
-Toinen tehokas tapa laskea puun läpimitta 
-perustuu kahteen syvyyshakuun.
-Ensin valitaan mikä tahansa solmu $a$ puusta
-ja etsitään siitä kaukaisin solmu $b$
-syvyyshaulla.
-Tämän jälkeen etsitään $b$:stä kaukaisin
-solmu $c$ syvyyshaulla.
-Puun läpimitta on etäisyys $b$:n ja $c$:n välillä.
+Another efficient way to calculate the diameter
+of a tree is based on two depth-first searches.
+First, we choose an arbitrary node $a$ in the tree
+and find a node $b$ with maximum distance to $a$.
+Then, we find a node $c$ with maximum distance to $b$.
+The diameter is the distance between nodes $b$ and $c$.
 
-Esimerkissä $a$, $b$ ja $c$ voisivat olla:
+In the example case, $a$, $b$ and $c$ could be:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -279,12 +273,12 @@ Esimerkissä $a$, $b$ ja $c$ voisivat olla:
 \end{tikzpicture}
 \end{center}
 
-Menetelmä on tyylikäs, mutta miksi se toimii?
+This is an elegant method, but why does it work?
 
-Tässä auttaa tarkastella puuta niin,
-että puun läpimittaa vastaava polku on
-levitetty vaakatasoon ja muut puun osat
-riippuvat siitä alaspäin:
+It helps to draw the tree differently so that
+the path that corresponds to the diameter
+is horizontal, and all other
+nodes hang from it:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (2,1) {$1$};
@@ -312,29 +306,25 @@ riippuvat siitä alaspäin:
 \end{tikzpicture}
 \end{center}
 
-Solmu $x$ on kohta,
-jossa polku solmusta $a$ liittyy
-läpimittaa vastaavaan polkuun.
-Kaukaisin solmu $a$:sta
-on solmu $b$, solmu $c$
-tai jokin muu solmu, joka
-on ainakin yhtä kaukana solmusta $x$.
-Niinpä tämä solmu on aina sopiva
-valinta läpimittaa vastaavan polun
-toiseksi päätesolmuksi.
+Node $x$ indicates the place where the path
+from node $a$ joins the path that corresponds
+to the diameter.
+The farthest node from $a$
+is node $b$, node $c$ or some other node
+that is at least as far from node $x$.
+Thus, this node can always be chosen for
+a starting node of a path that corresponds to the diameter.
 
-\section{Solmujen etäisyydet}
+\section{Distances between nodes}
 
-Vaikeampi tehtävä on laskea
-jokaiselle puun solmulle
-jokaiseen suuntaan, mikä on suurin
-etäisyys johonkin kyseisessä suunnassa
-olevaan solmuun.
-Osoittautuu, että tämäkin tehtävä ratkeaa
-ajassa $O(n)$ dynaamisella ohjelmoinnilla.
+A more difficult problem is to calculate
+for each node in the tree and for each direction,
+the maximum distance to a node in that direction.
+It turns out that this can be calculated in
+$O(n)$ time as well using dynamic programming.
 
 \begin{samepage}
-Esimerkkipuussa etäisyydet ovat:
+In the example case, the distances are as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -365,16 +355,16 @@ Esimerkkipuussa etäisyydet ovat:
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-Esimerkiksi solmussa 4
-kaukaisin solmu ylöspäin mentäessä
-on solmu 6, johon etäisyys on 3 käyttäen
-polkua $4 \rightarrow 1 \rightarrow 2 \rightarrow 6$.
+For example, the furthest node from node 4
+upwards is node 6, and the distance to this
+node is 3 using the path
+$4 \rightarrow 1 \rightarrow 2 \rightarrow 6$.
 
 \begin{samepage}
-Tässäkin tehtävässä hyvä lähtökohta on
-valita jokin solmu puun juureksi,
-jolloin kaikki etäisyydet alaspäin
-saa laskettua dynaamisella ohjelmoinnilla:
+Also in this problem, a good starting point
+is to root the tree.
+After this, all distances downwards can
+be calculated using dynamic programming:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -403,16 +393,14 @@ saa laskettua dynaamisella ohjelmoinnilla:
 \end{center}
 \end{samepage}
 
-Jäljelle jäävä tehtävä on laskea etäisyydet ylöspäin.
-Tämä onnistuu tekemällä puuhun toinen läpikäynti,
-joka pitää mukana tietoa,
-mikä on suurin etäisyys solmun vanhemmasta
-johonkin toisessa suunnassa olevaan solmuun.
+The remaining task is to calculate the distances upwards.
+This can be done by going through the nodes once again
+and keeping track of the largest distance from the parent
+of the current node to some other node in another direction.
 
-Esimerkiksi solmun 2
-suurin etäisyys ylöspäin on yhtä suurempi
-kuin solmun 1 suurin etäisyys
-johonkin muuhun suuntaan kuin solmuun 2:
+For example, the distance from node 2 upwards
+is one larger than the distance from node 1
+downwards in some other direction than node 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -435,8 +423,8 @@ johonkin muuhun suuntaan kuin solmuun 2:
 
 \end{tikzpicture}
 \end{center}
-Lopputuloksena on etäisyydet kaikista solmuista
-kaikkiin suuntiin:
+Finally, we can calculate the distances for all nodes
+and all directions:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -471,23 +459,20 @@ kaikkiin suuntiin:
 \node[color=red] at (0.2,1.6) {$3$};
 \end{tikzpicture}
 \end{center}
-% 
-% Kummankin läpikäynnin aikavaativuus on $O(n)$,
-% joten algoritmin kokonais\-aikavaativuus on $O(n)$.
 
-\section{Binääripuut}
+\section{Binary trees}
 
-\index{binxxripuu@binääripuu}
+\index{binary tree}
 
 \begin{samepage}
-\key{Binääripuu} on juurellinen puu,
-jonka jokaisella solmulla on vasen ja oikea alipuu.
-On mahdollista, että alipuu on tyhjä,
-jolloin puu ei jatku siitä pidemmälle alaspäin.
-Binääripuun jokaisella solmulla on 0, 1 tai 2 lasta.
+A \key{binary tree} is a rooted tree
+where each node has a left subtree
+and a right subtree.
+It is possible that a subtree of a node is empty.
+Thus, every node in a binary tree has
+0, 1 or 2 children.
 
-Esimerkiksi seuraava puu on binääripuu:
-
+For example, the following tree is a binary tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -508,37 +493,42 @@ Esimerkiksi seuraava puu on binääripuu:
 \end{center}
 \end{samepage}
 
-Binääripuun solmuilla on kolme luontevaa järjestystä,
-jotka syntyvät rekursiivisesta läpikäynnistä:
+\index{pre-order}
+\index{in-order}
+\index{post-order}
 
-\index{esijxrjestys@esijärjestys}
-\index{sisxjxrjestys@sisäjärjestys}
-\index{jxlkijxrjestys@jälkijärjestys}
+The nodes in a binary tree have three natural
+orders that correspond to different ways to 
+recursively traverse the nodes: 
 
 \begin{itemize}
-\item \key{esijärjestys}: juuri, vasen alipuu, oikea alipuu
-\item \key{sisäjärjestys}: vasen alipuu, juuri, oikea alipuu
-\item \key{jälkijärjestys}: vasen alipuu, oikea alipuu, juuri
+\item \key{pre-order}: first process the root,
+then traverse the left subtree, then traverse the right subtree
+\item \key{in-order}: first traverse the left subtree,
+then process the root, then traverse the right subtree
+\item \key{post-order}: first traverse the left subtree,
+then traverse the right subtree, then process the root
 \end{itemize}
 
-Esimerkissä kuvatun puun esijärjestys on
+For the above tree, the nodes in
+pre-order are
 $[1,2,4,5,6,3,7]$,
-sisäjärjestys on $[4,2,6,5,1,3,7]$
-ja jälkijärjestys on $[4,6,5,2,7,3,1]$.
+in in-order $[4,2,6,5,1,3,7]$
+and in post-order $[4,6,5,2,7,3,1]$.
 
-Osoittautuu, että tietämällä puun esijärjestyksen
-ja sisäjärjestyksen voi päätellä puun koko rakenteen.
-Esimerkiksi yllä oleva puu on ainoa mahdollinen
-puu, jossa esijärjestys on
-$[1,2,4,5,6,3,7]$ ja sisäjärjestys on $[4,2,6,5,1,3,7]$.
-Vastaavasti myös jälkijärjestys ja sisäjärjestys
-määrittävät puun rakenteen.
+If we know the pre-order and the in-order
+of a tree, we can find out the exact structure of the tree.
+For example, the tree above is the only possible tree
+with pre-order $[1,2,4,5,6,3,7]$ and
+in-order $[4,2,6,5,1,3,7]$.
+Correspondingly, the post-order and the in-order
+also determine the structure of a tree.
 
-Tilanne on toinen, jos tiedossa on vain
-esijärjestys ja jälkijärjestys.
-Nämä järjestykset eivät
-kuvaa välttämättä puuta yksikäsitteisesti.
-Esimerkiksi molemmissa puissa
+However, the situation is different if we only know
+the pre-order and the post-order of a tree.
+In this case, there may be more than one tree
+that match the orders.
+For example, in both of the trees
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -550,6 +540,6 @@ Esimerkiksi molemmissa puissa
 \path[draw,thick,-] (1b) -- (2b);
 \end{tikzpicture}
 \end{center}
-esijärjestys on $(1,2)$ ja jälkijärjestys on $(2,1)$,
-mutta siitä huolimatta puiden rakenteet eivät ole samat.
+the pre-order is $[1,2]$ and the post-order is $[2,1]$
+but the trees have different structures.
 
