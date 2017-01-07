@@ -1,97 +1,105 @@
 \chapter{Bit manipulation}
 
-Tietokone käsittelee tietoa sisäisesti bitteinä
-eli numeroina 0 ja 1.
-Tässä luvussa tutustumme tarkemmin kokonaisluvun
-bittiesitykseen sekä bittioperaatioihin,
-jotka muokkaavat luvun bittejä.
-Osoittautuu, että näistä operaatioista on
-monenlaista hyötyä algoritmien ohjelmoinnissa.
+A computer internally manipulates data
+as bits, i.e., as numbers 0 and 1.
+In this chapter, we will learn how integers
+are represented as bits, and how bit operations
+can be used for manipulating them.
+It turns out that there are many uses for
+bit operations in the implementation of algorithms.
 
-\section{Luvun bittiesitys}
+\section{Bit representation}
 
-\index{bittiesitys@bittiesitys}
+\index{bit representation}
 
-Luvun \key{bittiesitys} ilmaisee, mistä 2:n potensseista
-luku muodostuu. Esimerkiksi luvun 43 bittiesitys on 101011, koska
-$43 = 2^5 + 2^3 + 2^1 + 2^0$
-eli oikealta lukien bitit 0, 1, 3 ja 5 ovat ykkösiä
-ja kaikki muut bitit ovat nollia.
+The \key{bit representation} of a number
+indicates which powers of two form the number.
+For example, the bit representation of the number 43
+is 101011 because
+$43 = 2^5 + 2^3 + 2^1 + 2^0$ where
+bits 0, 1, 3 and 5 from the right are ones,
+and all other bits are zeros.
 
-Tietokoneessa luvun bittiesityksen
-bittien määrä on kiinteä ja riippuu käytetystä tietotyypistä.
-Esimerkiksi C++:n \texttt{int}-tyyppi on tavallisesti 32-bittinen,
-jolloin \texttt{int}-luku tallennetaan 32 bittinä.
-Tällöin esimerkiksi luvun 43 bittiesitys \texttt{int}-lukuna on seuraava:
+The length of a bit representation of a number
+in a computer is static, and depends on the
+data type chosen.
+For example, the \texttt{int} type in C++ is
+usually a 32-bit type, and an \texttt{int} number
+consists of 32 bits.
+In this case, the bit representation of 43
+as an \texttt{int} number is as follows:
 
 \[00000000000000000000000000101011\]
 
-Luvun bittiesitys on joko \key{etumerkillinen}
-tai \key{etumerkitön}.
-Etumerkillisen bittiesityksen ensimmäinen bitti on etumerkki
-($+$ tai $-$) ja $n$ bitillä voi esittää luvut $-2^{n-1} \ldots 2^{n-1}-1$.
-Jos taas bittiesitys on etumerkitön,
-kaikki bitit kuuluvat lukuun ja $n$ bitillä voi esittää luvut $0 \ldots 2^n-1$.
+The bit representation of a number is either
+\key{signed} or \key{unsigned}.
+The first bit of a signed number is the sign
+($+$ or $-$), and we can represent numbers
+$-2^{n-1} \ldots 2^{n-1}-1$ using $n$ bits.
+In an unsigned number, in turn,
+all bits belong to the number and we
+can represent numbers $0 \ldots 2^n-1$ using $n$ bits.
 
-Etumerkillisessä bittiesityksessä ei-negatiivisen luvun
-ensimmäinen bitti on 0 ja negatiivisen luvun
-ensimmäinen bitti on 1.
-Bittiesityksenä on \key{kahden komplementti},
-jossa luvun luvun vastaluvun saa laskettua
-muuttamalla
-kaikki bitit käänteiseksi ja lisäämällä
-tulokseen yksi.
+In an signed bit representation,
+the first bit of a nonnegative number is 0,
+and the first bit of a negative number is 1.
+\key{Two's complement} is used which means that
+the opposite number of a number can be calculated
+by first inversing all the bits in the number,
+and then increasing the number by one.
 
-Esimerkiksi luvun $-43$ esitys \texttt{int}-lukuna on seuraava:
+For example, the representation of $-43$
+as an \texttt{int} number is as follows:
 
 \[11111111111111111111111111010101\]
 
-Etumerkillisen ja etumerkittömän bittiesityksen
-yhteys on, että etumerkillisen luvun $-x$
-ja etumerkittömän luvun $2^n-x$ bittiesitykset ovat samat.
-Niinpä yllä oleva bittiesitys tarkoittaa
-etumerkittömänä lukua $2^{32}-43$.
+The connection between signed and unsigned numbers
+is that the representations of a signed
+number $-x$ and an unsigned number $2^n-x$
+are equal.
+Thus, the above representation corresponds to
+the unsigned number $2^{32}-43$.
 
-C++:ssa luvut ovat oletuksena etumerkillisiä,
-mutta avainsanan \texttt{unsigned} avulla
-luvusta saa etumerkittömän.
-Esimerkiksi koodissa
+In C++, the numbers are signed as default,
+but we can create unsigned numbers by
+using the keyword \texttt{unsigned}.
+For example, in the code
 \begin{lstlisting}
 int x = -43;
 unsigned int y = x;
 cout << x << "\n"; // -43
 cout << y << "\n"; // 4294967253
 \end{lstlisting}
-etumerkillistä lukua $x=-43$ vastaa etumerkitön luku $y=2^{32}-43$.
+the signed number
+$x=-43$ becomes the unsigned number $y=2^{32}-43$.
 
-Jos luvun suuruus menee käytössä
-olevan bittiesityksen ulkopuolelle,
-niin luku pyörähtää ympäri.
-Etumerkillisessä bittiesityksessä
-luvusta $2^{n-1}-1$ seuraava luku on $-2^{n-1}$
-ja vastaavasti etumerkittömässä bittiesityksessä
-luvusta $2^n-1$ seuraava luku on $0$.
-Esimerkiksi koodissa
+If a number becomes too large or too small for the
+bit representation chosen, it will overflow.
+In practice, in a signed representation,
+the next number after $2^{n-1}-1$ is $-2^{n-1}$,
+and in an unsigned representation,
+the next number after $2^{n-1}$ is $0$.
+For example, in the code
 \begin{lstlisting}
 int x = 2147483647
 cout << x << "\n"; // 2147483647
 x++;
 cout << x << "\n"; // -2147483648
 \end{lstlisting}
-muuttuja $x$ pyörähtää ympäri luvusta $2^{31}-1$ lukuun $-2^{31}$.
+we increase $2^{31}-1$ by one to get $-2^{31}$.
 
-\section{Bittioperaatiot}
+\section{Bit operations}
 
 \newcommand\XOR{\mathbin{\char`\^}}
 
-\subsubsection{And-operaatio}
+\subsubsection{And operation}
 
-\index{and-operaatio}
+\index{and operation}
 
-And-operaatio $x$ \& $y$ tuottaa luvun,
-jossa on ykkösbitti niissä kohdissa,
-joissa molemmissa luvuissa $x$ ja $y$ on ykkösbitti.
-Esimerkiksi $22$ \& $26$ = 18, koska
+The \key{and} operation $x$ \& $y$ produces a number
+that has bit 1 in positions where both the numbers
+$x$ and $y$ have bit 1.
+For example, $22$ \& $26$ = 18 because
 
 \begin{center}
 \begin{tabular}{rrr}
@@ -102,18 +110,20 @@ Esimerkiksi $22$ \& $26$ = 18, koska
 \end{tabular}
 \end{center}
 
-And-operaation avulla voi tarkastaa luvun parillisuuden,
-koska $x$ \& $1$ = 0, jos luku on parillinen,
-ja $x$ \& $1$ = 1, jos luku on pariton.
+Using the and operation, we can check if a number
+$x$ is even because
+$x$ \& $1$ = 0 if $x$ is even, and
+$x$ \& $1$ = 1 if $x$ is odd.
 
-\subsubsection{Or-operaatio}
+\subsubsection{Or operation}
 
-\index{or-operaatio}
+\index{or operation}
 
-Or-operaatio $x$ | $y$ tuottaa luvun,
-jossa on ykkösbitti niissä kohdissa,
-joissa ainakin toisessa luvuista $x$ ja $y$ on ykkösbitti.
-Esimerkiksi $22$ | $26$ = 30, koska
+The \key{or} operation $x$ | $y$ produces a number
+that has bit 1 in positions where at least one
+of the numbers
+$x$ and $y$ have bit 1.
+For example, $22$ | $26$ = 30 because
 
 \begin{center}
 \begin{tabular}{rrr}
@@ -124,14 +134,15 @@ Esimerkiksi $22$ | $26$ = 30, koska
 \end{tabular}
 \end{center}
 
-\subsubsection{Xor-operaatio}
+\subsubsection{Xor operation}
 
-\index{xor-operaatio}
+\index{xor operation}
 
-Xor-operaatio $x$ $\XOR$ $y$ tuottaa luvun,
-jossa on ykkösbitti niissä kohdissa,
-joissa tarkalleen toisessa luvuista $x$ ja $y$ on ykkösbitti.
-Esimerkiksi $22$ $\XOR$ $26$ = 12, koska
+The \key{xor} operation $x$ $\XOR$ $y$ produces a number
+that has bit 1 in positions where exactly one
+of the numbers
+$x$ and $y$ have bit 1.
+For example, $22$ $\XOR$ $26$ = 12 because
 
 \begin{center}
 \begin{tabular}{rrr}
@@ -142,20 +153,21 @@ $\XOR$ & 11010 & (26) \\
 \end{tabular}
 \end{center}
 
-\subsubsection{Not-operaatio}
+\subsubsection{Not operation}
 
-\index{not-operaatio}
+\index{not operation}
 
-Not-operaatio \textasciitilde$x$ tuottaa luvun,
-jossa kaikki $x$:n bitit on muutettu käänteisiksi.
-Operaatiolle pätee kaava \textasciitilde$x = -x-1$,
-esimerkiksi \textasciitilde$29 = -30$.
+The \key{not} operation \textasciitilde$x$
+produces a number where all the bits of $x$
+have been inversed.
+The formula \textasciitilde$x = -x-1$ holds,
+for example, \textasciitilde$29 = -30$.
 
-Not-operaation toiminta bittitasolla riippuu siitä,
-montako bittiä luvun bittiesityksessä on,
-koska operaatio vaikuttaa kaikkiin luvun bitteihin.
-Esimerkiksi 32-bittisenä \texttt{int}-lukuna
-tilanne on seuraava:
+The result of the not operation at the bit level
+depends on the length of the bit representation
+because the operation changes all bits.
+For example, if the numbers are 32-bit
+\texttt{int} numbers, the result is as follows:
 
 \begin{center}
 \begin{tabular}{rrrr}
@@ -164,108 +176,82 @@ $x$ & = & 29 &   00000000000000000000000000011101 \\
 \end{tabular}
 \end{center}
 
-\subsubsection{Bittisiirrot}
+\subsubsection{Bit shifts}
 
-\index{bittisiirto@bittisiirto}
+\index{bit shift}
 
-Vasen bittisiirto $x < < k$ tuottaa luvun, jossa luvun $x$ bittejä
-on siirretty $k$ askelta vasemmalle eli
-luvun loppuun tulee $k$ nollabittiä.
-Oikea bittisiirto $x > > k$ tuottaa puolestaan
-luvun, jossa luvun $x$ bittejä
-on siirretty $k$ askelta oikealle eli
-luvun lopusta lähtee pois $k$ viimeistä bittiä.
+The left bit shift $x < < k$ produces a number
+where the bits of $x$ have been moved $k$ steps to
+the left by adding $k$ zero bits to the number.
+The right bit shift $x > > k$ produces a number
+where the bits of $x$ have been moved $k$ steps
+to the right by removing $k$ last bits from the number.
 
-Esimerkiksi $14 < < 2 = 56$,
-koska $14$ on bitteinä 1110,
-josta tulee bittisiirron jälkeen 111000 eli $56$.
-Vastaavasti $49 > > 3 = 6$,
-koska $49$ on bitteinä 110001,
-josta tulee bittisiirron jälkeen 110 eli $6$.
+For example, $14 < < 2 = 56$
+because $14$ equals 1110,
+and it becomes $56$ that equals 111000.
+Correspondingly, $49 > > 3 = 6$
+because $49$ equals 110001,
+and it becomes $6$ that equals 110.
 
-Huomaa, että vasen bittisiirto $x < < k$
-vastaa luvun $x$ kertomista $2^k$:lla
-ja oikea bittisiirto $x > > k$
-vastaa luvun $x$ jakamista $2^k$:lla
-alaspäin pyöristäen.
+Note that the left bit shift $x < < k$
+corresponds to multiplying $x$ by $2^k$,
+and the right bit shift $x > > k$
+corresponds to dividing $x$ by $2^k$
+rounding downwards.
 
-\subsubsection{Bittien käsittely}
+\subsubsection{Bit manipulation}
 
-Luvun bitit indeksoidaan oikealta vasemmalle
-nollasta alkaen.
-Luvussa $1 < < k$ on yksi ykkösbitti
-kohdassa $k$ ja kaikki muut bitit ovat nollia, joten sen avulla voi käsitellä
-muiden lukujen yksittäisiä bittejä.
+The bits in a number are indexed from the right
+to the left beginning from zero.
+A number of the form $1 < < k$ contains a one bit
+in position $k$, and all other bits are zero,
+so we can manipulate single bits of numbers
+using these numbers.
 
-Luvun $x$ bitti $k$ on ykkösbitti, jos
+The $k$th bit in $x$ is one if
 $x$ \& $(1 < < k) = (1 < < k)$.
-Lauseke $x$ | $(1 < < k)$ asettaa luvun $x$ bitin $k$
-ykköseksi, lauseke
+The formula $x$ | $(1 < < k)$
+sets the $k$th bit of $x$ to one,
+the formula
 $x$ \& \textasciitilde $(1 < < k)$
-asettaa luvun $x$ bitin $k$ nollaksi ja
-lauseke $x$ $\XOR$ $(1 < < k)$
-muuttaa luvun $x$ bitin $k$ käänteiseksi.
-% 
-% Seuraava koodi muuttaa luvun bittejä:
-% 
-% \begin{lstlisting}
-% int x = 181; // 10110101
-% cout << (x|(1<<2)) << "\n"; // 181 = 10110101
-% cout << (x|(1<<3)) << "\n"; // 189 = 10111101
-% cout << (x&~(1<<2)) << "\n"; // 177 = 10110001
-% cout << (x&~(1<<3)) << "\n"; // 181 = 10110101
-% cout << (x^(1<<2)) << "\n"; // 177 = 10110001
-% cout << (x^(1<<3)) << "\n"; // 189 = 10111101
-% \end{lstlisting}
-% 
-% % Bittiesityksen vasemmanpuoleisin bitti on eniten merkitsevä
-% % (\textit{most significant}) ja
-% % oikeanpuoleisin bitti on vähiten merkitsevä (\textit{least significant}).
+sets the $k$th bit of $x$ to zero,
+and the formula
+$x$ $\XOR$ $(1 < < k)$
+inverses the $k$th bit of $x$.
 
-Lauseke $x$ \& $(x-1)$ muuttaa luvun $x$ viimeisen
-ykkösbitin nollaksi, ja lauseke $x$ \& $-x$ nollaa
-luvun $x$ kaikki bitit paitsi viimeisen ykkösbitin.
-Lauseke $x$ | $(x-1)$ vuorostaan muuttaa kaikki
-viimeisen ykkösbitin jälkeiset bitit ykkösiksi.
+The formula $x$ \& $(x-1)$ sets the last
+one bit of $x$ to zero,
+and the formula $x$ \& $-x$ sets all the
+one bits to zero, except for the last one bit.
+The formula $x$ | $(x-1)$, in turn,
+inverses all the bits after the last one bit.
 
-Huomaa myös, että positiivinen luku $x$ on muotoa $2^k$,
-jos $x$ \& $(x-1) = 0$.
-% 
-% Seuraava koodi esittelee operaatioita:
-% 
-% \begin{lstlisting}
-% int x = 168; // 10101000
-% cout << (x&(x-1)) << "\n"; // 160 = 10100000
-% cout << (x&-x) << "\n"; // 8 = 00001000
-% cout << (x|(x-1)) << "\n"; // 175 = 10101111
-% \end{lstlisting}
+Also note that a positive number $x$ is
+of the form $2^k$ if $x$ \& $(x-1) = 0$.
 
-\subsubsection*{Lisäfunktiot}
+\subsubsection*{Additional functions}
 
-Kääntäjä g++ sisältää mm. seuraavat funktiot
-bittien käsittelyyn:
+The g++ compiler contains the following
+functions for bit manipulation:
 
 \begin{itemize}
 \item
 $\texttt{\_\_builtin\_clz}(x)$:
-nollien määrä bittiesityksen alussa
+the number of zeros at the beginning of the number
 \item
 $\texttt{\_\_builtin\_ctz}(x)$:
-nollien määrä bittiesityksen lopussa
+the number of zeros at the end of the number
 \item
 $\texttt{\_\_builtin\_popcount}(x)$:
-ykkösten määrä bittiesityksessä
+the number of ones in the number
 \item
 $\texttt{\_\_builtin\_parity}(x)$:
-ykkösten määrän parillisuus
+the parity (even or odd) of the number of ones
 \end{itemize}
 \begin{samepage}
-Nämä funktiot käsittelevät \texttt{int}-lukuja,
-mutta funktioista on myös \texttt{long long} -versiot,
-joiden lopussa on pääte \texttt{ll}.
 
-Seuraava koodi esittelee funktioiden käyttöä:
-
+The following code shows how to use the functions:
 \begin{lstlisting}
 int x = 5328; // 00000000000000000001010011010000
 cout << __builtin_clz(x) << "\n"; // 19
@@ -274,6 +260,12 @@ cout << __builtin_popcount(x) << "\n"; // 5
 cout << __builtin_parity(x) << "\n"; // 1
 \end{lstlisting}
 \end{samepage}
+
+The functions support \texttt{int} numbers,
+but there are also \texttt{long long} versions
+of the functions
+available with the prefix \texttt{ll}.
+
 
 \section{Joukon bittiesitys}
 
