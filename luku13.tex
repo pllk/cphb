@@ -590,33 +590,28 @@ $O(n+m \log m)$ because the algorithm goes through
 all nodes in the graph, and adds for each edge
 at most one estimated distance to the priority queue.
 
-\section{Floyd–Warshallin algoritmi}
+\section{Floyd–Warshall algorithm}
 
-\index{Floyd–Warshallin algoritmi}
+\index{Floyd–Warshall algorithm}
 
-\key{Floyd–Warshallin algoritmi}
-on toisenlainen lähestymistapa
-lyhimpien polkujen etsintään.
-Toisin kuin muut tämän luvun algoritmit,
-se  etsii yhdellä kertaa lyhimmät polut kaikkien
-verkon solmujen välillä.
+The \key{Floyd–Warshall algorithm}
+is an alternative way to approach the problem
+of finding shortest paths.
+Unlike other algorihms in this chapter,
+it finds all shortest paths between the nodes
+in a single run.
 
+The algorithm maintains a two-dimensional array
+that contains distances between the nodes.
+First, the distances are calculated only using
+direct edges between the nodes.
+After this the algorithm updates the distances
+by allowing to use intermediate nodes in the paths.
 
-Algoritmi ylläpitää kaksiulotteista
-taulukkoa etäisyyksistä solmujen
-välillä.
-Ensin taulukkoon on merkitty
-etäisyydet käyttäen vain solmujen
-välisiä kaaria.
-Tämän jälkeen algoritmi
-päivittää etäisyyksiä,
-kun verkon solmut saavat yksi kerrallaan
-toimia välisolmuina poluilla.
+\subsubsection{Example}
 
-\subsubsection{Esimerkki}
-
-Tarkastellaan Floyd–Warshallin
-algoritmin toimintaa seuraavassa verkossa:
+Let's consider how the Floyd–Warshall algorithm
+works in the following graph:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -635,13 +630,12 @@ algoritmin toimintaa seuraavassa verkossa:
 \end{tikzpicture}
 \end{center}
 
-Algoritmi merkitsee aluksi taulukkoon
-etäisyyden 0 jokaisesta solmusta itseensä
-sekä etäisyyden $x$, jos solmuparin välillä
-on kaari, jonka pituus on $x$.
-Muiden solmuparien etäisyys on aluksi ääretön.
+Initially, the distance from each node to itself is $0$,
+and the distance between nodes $a$ and $b$ is $x$
+if there is an edge between nodes $a$ and $b$ with weight $x$.
+All other distances are infinite.
 
-Tässä verkossa taulukosta tulee:
+In this graph, the initial array is as follows:
 \begin{center}
 \begin{tabular}{r|rrrrr}
  & 1 & 2 & 3 & 4 & 5 \\
@@ -654,18 +648,17 @@ Tässä verkossa taulukosta tulee:
 \end{tabular}
 \end{center}
 \vspace{10pt}
-Algoritmin toiminta muodostuu peräkkäisistä kierroksista.
-Jokaisella kierroksella valitaan yksi uusi solmu,
-joka saa toimia välisolmuna poluilla,
-ja algoritmi parantaa taulukon
-etäisyyksiä muodostaen polkuja tämän solmun avulla.
+The algorithm consists of successive rounds.
+On each round, one new node is selected that
+can act as intermediate node in paths,
+and the algorithm improves the distances in the array
+using this node.
 
-Ensimmäisellä kierroksella solmu 1 on välisolmu.
-Tämän ansiosta solmujen 2 ja 4 välille muodostuu
-polku, jonka pituus on 14,
-koska solmu 1 yhdistää ne toisiinsa.
-Vastaavasti solmut 2 ja 5 yhdistyvät polulla,
-jonka pituus on 6.
+On the first round, node 1 is the intermediate node.
+Now there is a new path between nodes 2 and 4
+with length 14 because node 1 connects them.
+Correspondingly, there is a new path 
+between nodes 2 and 5 with length 6.
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -680,9 +673,9 @@ jonka pituus on 6.
 \end{center}
 \vspace{10pt}
 
-Toisella kierroksella solmu 2 saa toimia välisolmuna.
-Tämä mahdollistaa uudet polut solmuparien 1 ja 3
-sekä 3 ja 5 välille:
+On the second round, node 2 is the intermediate node.
+This creates new paths between nodes 1 and 3,
+and between nodes 3 and 5:
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -697,8 +690,8 @@ sekä 3 ja 5 välille:
 \end{center}
 \vspace{10pt}
 
-Kolmannella kierroksella solmu 3 saa toimia välisolmuna,
-jolloin syntyy uusi polku solmuparin 2 ja 4 välille:
+On the third round, node 3 is the intermediate round.
+There is a new path between nodes 2 and 4:
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -713,13 +706,10 @@ jolloin syntyy uusi polku solmuparin 2 ja 4 välille:
 \end{center}
 \vspace{10pt}
 
-
-Algoritmin toiminta jatkuu samalla tavalla
-niin, että kukin solmu tulee vuorollaan
-välisolmuksi.
-Algoritmin päätteeksi taulukko sisältää
-lyhimmän etäisyyden minkä tahansa
-solmuparin välillä:
+The algorithm continues like this,
+until all nodes have been intermediate nodes.
+After the algorithm has finished, the array contains
+the minimum distance between any two nodes:
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -733,9 +723,9 @@ solmuparin välillä:
 \end{tabular}
 \end{center}
 
-Esimerkiksi taulukosta selviää, että lyhin polku
-solmusta 2 solmuun 4 on pituudeltaan 8.
-Tämä vastaa seuraavaa polkua:
+For example, the array indicates that the
+shortest path between nodes 2 and 4 has length 8.
+This corresponds to the following path:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -758,16 +748,17 @@ Tämä vastaa seuraavaa polkua:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Toteutus}
+\subsubsection{Implementation}
 
-Floyd–Warshallin algoritmin etuna on,
-että se on helppoa toteuttaa.
-Seuraava toteutus muodostaa etäisyysmatriisin
-\texttt{d}, jossa $\texttt{d}[a][b]$
-on pienin etäisyys polulla solmusta $a$ solmuun $b$.
-Aluksi algoritmi alustaa matriisin \texttt{d}
-verkon vierusmatriisin \texttt{v} perusteella
-(arvo $10^9$ kuvastaa ääretöntä):
+The benefit in the
+Floyd–Warshall algorithm that it is
+easy to implement.
+The following code constructs a
+distance matrix \texttt{d} where $\texttt{d}[a][b]$
+is the smallest distance in a path between nodes $a$ and $b$.
+First, the algorithm initializes \texttt{d}
+using the adjacency matrix \texttt{v} of the graph
+(value $10^9$ means infinity):
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
@@ -779,7 +770,7 @@ for (int i = 1; i <= n; i++) {
 }
 \end{lstlisting}
 
-Tämän jälkeen lyhimmät polut löytyvät seuraavasti:
+After this, the shortest paths can be found as follows:
 
 \begin{lstlisting}
 for (int k = 1; k <= n; k++) {
@@ -791,16 +782,13 @@ for (int k = 1; k <= n; k++) {
 }
 \end{lstlisting}
 
-Algoritmin aikavaativuus on
-$O(n^3)$, koska siinä on kolme sisäkkäistä
-silmukkaa,
-jotka käyvät läpi verkon solmut.
+The time complexity of the algorithm is $O(n^3)$
+because it contains three nested loops
+that go through the nodes in the graph.
 
-Koska Floyd–Warshallin
-algoritmin toteutus on yksinkertainen,
-algoritmi voi olla hyvä valinta jopa silloin,
-kun haettavana on yksittäinen
-lyhin polku verkossa.
-Tämä on kuitenkin mahdollista vain silloin,
-kun verkko on niin pieni,
-että kuutiollinen aikavaativuus on riittävä.
+Since the implementation of the Floyd–Warshall
+algorithm is simple, the algorithm can be
+a good choice even if we need to find only a
+single shortest path in the graph.
+However, this is only possible when the graph
+is so small that a cubic time complexity is enough.
