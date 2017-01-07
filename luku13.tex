@@ -325,36 +325,32 @@ $O(nm)$ and it is possible to create inputs
 that make the algorithm as slow as the
 standard Bellman–Ford algorithm.
 
-\section{Dijkstran algoritmi}
+\section{Dijkstra's algorithm}
 
-\index{Dijkstran algoritmi@Dijkstran algoritmi}
+\index{Dijkstra's algorithm}
 
-\key{Dijkstran algoritmi} etsii Bellman–Fordin
-algoritmin tavoin lyhimmät polut
-alkusolmusta kaikkiin muihin solmuihin.
-Dijkstran algoritmi on tehokkaampi kuin
-Bellman–Fordin algoritmi,
-minkä ansiosta se soveltuu suurten
-verkkojen käsittelyyn.
-Algoritmi vaatii kuitenkin,
-ettei verkossa ole negatiivisia kaaria.
+\key{Dijkstra's algorithm} finds the shortest
+paths from the starting node to all other nodes,
+like the Bellman–Ford algorithm.
+The benefit in Dijsktra's algorithm is that
+it is more efficient and can be used for
+processing large graphs.
+However, the algorithm requires that there
+are no negative weight edges in the graph.
 
-Dijkstran algoritmi vastaa
-Bellman–Fordin algoritmia siinä,
-että se pitää
-yllä etäisyysarvioita solmuihin
-ja parantaa niitä algoritmin aikana.
-Algoritmin tehokkuus perustuu
-siihen, että sen riittää käydä läpi
-verkon kaaret vain kerran
-hyödyntäen tietoa,
-ettei verkossa ole negatiivisia kaaria.
+Like the Bellman–Ford algorithm,
+Dijkstra's algorithm maintains estimated distances
+for the nodes and improves them during the algorithm.
+Dijkstra's algorithm is efficient because
+it only processes
+each edge in the graph once, using the fact
+that there are no negative edges.
 
-\subsubsection{Esimerkki}
+\subsubsection{Example}
 
-Tarkastellaan Dijkstran algoritmin toimintaa
-seuraavassa verkossa, kun alkusolmuna
-on solmu 1:
+Let's consider how Dijkstra's algorithm
+works in the following graph when the
+starting node is node 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -377,25 +373,18 @@ on solmu 1:
 \path[draw,thick,-] (4) -- node[font=\small,label=below:1] {} (5);
 \end{tikzpicture}
 \end{center}
-Bellman–Fordin algoritmin tavoin
-alkusolmun etäisyysarvio on 0
-ja kaikissa muissa solmuissa etäisyysarvio
-on aluksi ääretön.
+Like in the Bellman–Ford algorithm,
+the estimated distance is 0 to the starting node
+and infinite to all other nodes.
 
-Dijkstran algoritmi
-ottaa joka askeleella käsittelyyn
-sellaisen solmun,
-jota ei ole vielä käsitelty
-ja jonka etäisyysarvio on
-mahdollisimman pieni.
-Alussa tällainen solmu on solmu 1,
-jonka etäisyysarvio on 0.
+At each step, Dijkstra's algorithm selects a node
+that has not been processed yet and whose estimated distance
+is as small as possible.
+The first such node is node 1 with distance 0.
 
-Kun solmu tulee käsittelyyn,
-algoritmi käy läpi kaikki
-siitä lähtevät kaaret ja
-parantaa etäisyysarvioita
-niiden avulla:
+When a node is selected, the algorithm
+goes through all edges that begin from the node
+and improves the distances using them:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -422,12 +411,10 @@ niiden avulla:
 \path[draw=red,thick,->,line width=2pt] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-Solmun 1 käsittely paransi etäisyysarvioita
-solmuihin 2, 4 ja 5,
-joiden uudet etäisyydet ovat nyt 5, 9 ja 1.
+The edges from node 1 improved distances to
+nodes 2, 4 and 5 whose now distances are now 5, 9 and 1.
 
-Seuraavaksi käsittelyyn tulee solmu 5,
-jonka etäisyys on 1:
+The next node to be processed is node 5 with distance 1:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {3};
@@ -452,7 +439,7 @@ jonka etäisyys on 1:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-Tämän jälkeen vuorossa on solmu 4:
+After this, the next node is node 4:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -478,17 +465,14 @@ Tämän jälkeen vuorossa on solmu 4:
 \end{tikzpicture}
 \end{center}
 
-Dijkstran algoritmissa on hienoutena,
-että aina kun solmu tulee käsittelyyn,
-sen etäisyysarvio on siitä lähtien lopullinen.
-Esimerkiksi tässä vaiheessa
-etäisyydet 0, 1 ja 3 ovat lopulliset
-etäisyydet solmuihin 1, 5 ja 4.
+A nice property in Dijkstra's algorithm is that
+whenever a node is selected, its distance is final.
+For example, at this point of the algorithm,
+the distances 0, 1 and 3 are the final distances
+to nodes 1, 5 and 4.
 
-Algoritmi käsittelee vastaavasti
-vielä kaksi viimeistä solmua,
-minkä jälkeen algoritmin päätteeksi
-etäisyydet ovat:
+After this, the algorithm processes the two
+remaining nodes, and the final distances are as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -513,13 +497,14 @@ etäisyydet ovat:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Negatiiviset kaaret}
+\subsubsection{Negative edges}
 
-Dijkstran algoritmin tehokkuus perustuu siihen,
-että verkossa ei ole negatiivisia kaaria.
-Jos verkossa on negatiivinen kaari,
-algoritmi ei välttämättä toimi oikein.
-Tarkastellaan esimerkkinä seuraavaa verkkoa:
+The efficiency of Dijkstra's algorithm is
+based on the fact that the graph doesn't
+contain negative edges.
+If there is a negative edge,
+the algorithm may give incorrect results.
+As an example, consider the following graph:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -535,54 +520,53 @@ Tarkastellaan esimerkkinä seuraavaa verkkoa:
 \end{tikzpicture}
 \end{center}
 \noindent
-Lyhin polku solmusta 1 solmuun 4 on
+The shortest path from node 1 to node 4 is
 $1 \rightarrow 3 \rightarrow 4$,
-ja sen pituus on 1.
-Dijkstran algoritmi löytää
-kuitenkin keveimpiä kaaria seuraten
-polun $1 \rightarrow 2 \rightarrow 4$.
-Algoritmi ei pysty ottamaan huomioon,
-että alemmalla polulla kaaren paino $-5$
-kumoaa aiemman suuren kaaren painon $6$.
+and its length is 1.
+However, Dijkstra's algorithm
+finds the path $1 \rightarrow 2 \rightarrow 4$
+by following the lightest edges.
+The algorithm cannot recognize that
+in the lower path, the weight $-5$
+compensates the previous large weight $6$.
 
-\subsubsection{Toteutus}
+\subsubsection{Implementation}
 
-Seuraava Dijkstran algoritmin toteutus laskee
-pienimmän etäisyyden solmusta $x$ kaikkiin muihin solmuihin.
-Verkko on tallennettu taulukkoon \texttt{v}
-vieruslistoina, joissa on pareina kohdesolmu
-ja kaaren pituus.
+The following implementation of Dijkstra's algorithm
+calculates the minimum distance from a node $x$
+to all other nodes.
+The graph is stored in an array \texttt{v}
+as adjacency lists that contain target nodes
+and weights for each edge.
 
-Dijkstran algoritmin tehokas toteutus vaatii,
-että verkosta pystyy löytämään
-nopeasti vielä käsittelemättömän solmun,
-jonka etäisyysarvio on pienin.
-Sopiva tietorakenne tähän on prioriteettijono,
-jossa solmut ovat järjestyksessä etäisyys\-arvioiden mukaan.
-Prioriteettijonon avulla
-seuraavaksi käsiteltävän solmun saa selville logaritmisessa ajassa.
+An efficient implementation of Dijkstra's algorithm
+requires that it is possible to quickly find the
+smallest node that has not been processed.
+A suitable data structure for this is a priority queue
+that contains the nodes ordered by the estimated distances.
+Using a priority queue, the next node to be processed
+can be retrieved in logarithmic time.
 
-Seuraavassa toteutuksessa prioriteettijono sisältää
-pareja, joiden ensimmäinen kenttä on etäisyysarvio
-ja toinen kenttä on solmun tunniste:
+In the following implementation,
+the priority queue contains pairs whose first
+element is the estimated distance and second
+element is the identifier of the corresponding node.
 \begin{lstlisting}
 priority_queue<pair<int,int>> q;
 \end{lstlisting}
-Pieni hankaluus on,
-että Dijkstran algoritmissa täytyy saada selville
-\emph{pienimmän} etäisyysarvion solmu,
-kun taas C++:n prioriteettijono antaa oletuksena
-\emph{suurimman} alkion.
-Helppo ratkaisu on tallentaa etäisyysarviot
-\emph{negatiivisina}, jolloin C++:n prioriteettijonoa
-voi käyttää suoraan.
+A small difficulty is that in Dijkstra's algorithm,
+we should find the node with \emph{minimum} distance,
+while the C++ priority queue finds the \emph{maximum}
+element as default.
+An easy solution is to use \emph{negative} distances,
+so we can directly use the C++ priority queue.
 
-Koodi merkitsee taulukkoon \texttt{z},
-onko solmu käsitelty,
-ja pitää yllä etäisyysarvioita taulukossa \texttt{e}.
-Alussa alkusolmun etäisyysarvio on 0
-ja jokaisen muun solmun etäisyysarviona
-on ääretöntä vastaava $10^9$.
+The code keeps track of processed nodes
+in array \texttt{z},
+and maintains estimated distances in array \texttt{e}.
+Initially, the distance to the starting node is 0,
+and the distance to all other nodes is $10^9$
+that corresponds to infinity.
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) e[i] = 1e9;
@@ -601,10 +585,10 @@ while (!q.empty()) {
 }
 \end{lstlisting}
 
-Yllä olevan toteutuksen aikavaativuus on $O(n+m \log m)$,
-koska algoritmi käy läpi kaikki verkon solmut
-ja lisää jokaista kaarta kohden korkeintaan
-yhden etäisyysarvion prioriteettijonoon.
+The time complexity of the above implementation is
+$O(n+m \log m)$ because the algorithm goes through
+all nodes in the graph, and adds for each edge
+at most one estimated distance to the priority queue.
 
 \section{Floyd–Warshallin algoritmi}
 
