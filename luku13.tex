@@ -1,50 +1,48 @@
 \chapter{Shortest paths}
 
-\index{lyhin polku@lyhin polku}
+\index{shortest path}
 
-Lyhimmän polun etsiminen alkusolmusta loppusolmuun
-on keskeinen verkko-ongelma, joka esiintyy usein
-käytännön tilanteissa.
-Esimerkiksi tieverkostossa
-luonteva ongelma on selvittää,
-mikä on lyhin reitti kahden kaupungin välillä,
-kun tiedossa ovat kaupunkien väliset tiet ja niiden pituudet.
+Finding the shortest path between two nodes
+is an important graph problem that has many
+applications in practice.
+For example, a natural problem in a road network
+is to calculate the length of the shorthest route
+between two cities, given the lengths of the roads.
 
-Jos verkon kaarilla ei ole painoja,
-polun pituus on sama kuin kaarten
-määrä polulla, jolloin lyhimmän polun
-voi etsiä leveyshaulla.
-Tässä luvussa keskitymme kuitenkin
-tapaukseen, jossa kaarilla on painot.
-Tällöin lyhimpien polkujen etsimiseen
-tarvitaan kehittyneempiä algoritmeja.
+In an unweighted graph, the length of a path equals
+the number of edges in the path and we can
+simply use breadth-first search for finding
+the shortest path.
+However, in this chapter we concentrate on
+weighted graphs.
+In this case we need more sophisticated algorithms
+for finding shortest paths.
 
-\section{Bellman–Fordin algoritmi}
+\section{Bellman–Ford algorithm}
 
-\index{Bellman–Fordin algoritmi}
+\index{Bellman–Ford algorithm}
 
-\key{Bellman–Fordin algoritmi} etsii
-lyhimmän polun alkusolmusta
-kaikkiin muihin verkon solmuihin.
-Algoritmi toimii kaikenlaisissa verkoissa,
-kunhan verkossa ei ole sykliä,
-jonka kaarten yhteispaino on negatiivinen.
-Jos verkossa on negatiivinen sykli,
-algoritmi huomaa tilanteen.
+The \key{Bellman–Fordin algoritmi} finds the
+shortest path from a starting node to all
+other nodes in the graph.
+The algorithm works in all kinds of graphs,
+provided that the graph doesn't contain a
+cycle with negative length.
+If the graph contains a negative cycle,
+the algorithm can detect this.
 
-Algoritmi pitää yllä etäisyysarvioita
-alkusolmusta kaikkiin muihin verkon solmuihin.
-Alussa alkusolmun etäisyysarvio on 0
-ja muiden solmujen etäisyys\-arvio on ääretön.
-Algoritmi parantaa arvioita
-etsimällä verkosta kaaria,
-jotka lyhentävät polkuja,
-kunnes mitään arviota ei voi enää parantaa.
+The algorithm keeps track of estimated distances
+from the starting node to other nodes.
+Initially, the estimated distance is 0
+to the starting node and infinite to all other nodes.
+The algorithm improves the estimates by finding
+edges that shorten the paths until it is not
+possible to improve any estimate.
 
-\subsubsection{Esimerkki}
+\subsubsection{Example}
 
-Tarkastellaan Bellman–Fordin
-algoritmin toimintaa seuraavassa verkossa:
+Let's consider how the Bellman–Ford algorithm
+works in the following graph:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -66,15 +64,13 @@ algoritmin toimintaa seuraavassa verkossa:
 \path[draw,thick,-] (1) -- node[font=\small,label=above:7] {} (4);
 \end{tikzpicture}
 \end{center}
-Verkon jokaiseen solmun viereen on merkitty etäisyysarvio.
-Alussa alkusolmun etäisyysarvio on 0
-ja muiden solmujen etäisyysarvio on
-ääretön.
+Each node in the graph is assigned an estimated distance.
+Initially, the distance is 0 to the starting node
+and infinite to all other nodes.
 
-Algoritmi etsii verkosta kaaria,
-jotka parantavat etäisyysarvioita.
-Aluksi kaikki solmusta 0 lähtevät kaaret
-parantavat arvioita:
+The algorithm searches for edges that improve the
+estimated distances.
+First, all edges from node 1 improve the estimates:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -100,8 +96,9 @@ parantavat arvioita:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-Sitten kaaret $2 \rightarrow 5$ ja $3 \rightarrow 4$
-parantavat arvioita:
+After this, edges
+$2 \rightarrow 5$ and $3 \rightarrow 4$
+improve the estimates:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -126,7 +123,7 @@ parantavat arvioita:
 \path[draw=red,thick,->,line width=2pt] (3) -- (4);
 \end{tikzpicture}
 \end{center}
-Lopuksi tulee vielä yksi parannus:
+Finally, there is one more improvment:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -151,16 +148,15 @@ Lopuksi tulee vielä yksi parannus:
 \end{tikzpicture}
 \end{center}
 
-Tämän jälkeen mikään kaari
-ei paranna etäisyysarvioita.
-Tämä tarkoittaa, että etäisyydet
-ovat lopulliset, eli joka solmussa
-on nyt pienin etäisyys alkusolmusta
-kyseiseen solmuun.
+After this, no edge improves the estimates.
+This means that the distances are final
+and we have successfully
+calculated the shortest distance
+from the starting node to all other nodes.
 
-Esimerkiksi pienin etäisyys 3
-solmusta 1 solmuun 5 toteutuu käyttämällä
-seuraavaa polkua:
+For example, the smallest distance 3
+from node 1 to node 5 corresponds to
+the following path:
 
 \begin{center}
 \begin{tikzpicture}
@@ -188,26 +184,27 @@ seuraavaa polkua:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Toteutus}
+\subsubsection{Implementation}
 
-Seuraava Bellman–Fordin algoritmin toteutus
-etsii lyhimmät polut solmusta $x$
-kaikkiin muihin verkon solmuihin.
-Koodi olettaa, että verkko on tallennettuna
-vieruslistoina taulukossa
+The following implementation of the
+Bellman–Ford algorithm finds the shortest paths
+from a node $x$ to all other nodes in the graph.
+The code assumes that the graph is stored
+as adjacency lists in array
 \begin{lstlisting}
 vector<pair<int,int>> v[N];
 \end{lstlisting}
-niin, että parissa on ensin kaaren kohdesolmu
-ja sitten kaaren paino.
+so that each pair contains the target node
+and the edge weight.
 
-Algoritmi muodostuu $n-1$ kierroksesta,
-joista jokaisella algoritmi käy läpi kaikki
-verkon kaaret ja koettaa parantaa etäisyysarvioita.
-Algoritmi laskee taulukkoon \texttt{e}
-etäisyyden solmusta $x$ kuhunkin verkon solmuun.
-Koodissa oleva alkuarvo $10^9$ kuvastaa
-ääretöntä.
+The algorithm consists of $n-1$ rounds,
+and on each round the algorithm goes through
+all nodes in the graph and tries to improve
+the estimated distances.
+The algorithm builds an array \texttt{e}
+that will contain the distance from $x$
+to all nodes in the graph.
+The initial value $10^9$ means infinity.
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) e[i] = 1e9;
@@ -221,27 +218,26 @@ for (int i = 1; i <= n-1; i++) {
 }
 \end{lstlisting}
 
-Algoritmin aikavaativuus on $O(nm)$,
-koska se muodostuu $n-1$ kierroksesta ja
-käy läpi jokaisen kierroksen aikana kaikki $m$ kaarta.
-Jos verkossa ei ole negatiivista sykliä,
-kaikki etäisyysarviot ovat lopulliset $n-1$
-kierroksen jälkeen, koska jokaisessa lyhimmässä
-polussa on enintään $n-1$ kaarta.
+The time complexity of the algorithm is $O(nm)$
+because it consists of $n-1$ rounds and
+iterates through all $m$ nodes during a round.
+If there are no negative cycles in the graph,
+all distances are final after $n-1$ rounds
+because each shortest path can contain at most $n-1$ edges.
 
-Käytännössä kaikki lopulliset etäisyysarviot
-saadaan usein laskettua selvästi alle $n-1$ kierroksessa,
-joten mahdollinen tehostus algoritmiin on lopettaa heti,
-kun mikään etäisyysarvio ei parane kierroksen aikana.
+In practice, the final distances can usually
+be found much faster than in $n-1$ rounds.
+Thus, a possible way to make the algorithm more efficient
+is to stop the algorithm if we can't
+improve any distance during a round.
 
-\subsubsection{Negatiivinen sykli}
+\subsubsection{Negative cycle}
 
-\index{negatiivinen sykli@negatiivinen sykli}
+\index{negative cycle}
 
-Bellman–Fordin algoritmin avulla voi myös tarkastaa,
-onko verkossa sykliä,
-jonka pituus on negatiivinen.
-Esimerkiksi verkossa
+Using the Bellman–Ford algorithm we can also
+check if the graph contains a cycle with negative length.
+For example, the graph
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -258,45 +254,52 @@ Esimerkiksi verkossa
 \end{tikzpicture}
 \end{center}
 \noindent
-on negatiivinen sykli $2 \rightarrow 3 \rightarrow 4 \rightarrow 2$,
-jonka pituus on $-4$.
+contains a negative cycle
+$2 \rightarrow 3 \rightarrow 4 \rightarrow 2$
+with length $-4$.
 
-Jos verkossa on negatiivinen sykli,
-sen kautta kulkevaa polkua voi lyhentää äärettömästi
-toistamalla negatiivista sykliä uudestaan ja uudestaan,
-minkä vuoksi lyhimmän polun käsite ei ole mielekäs.
+If the graph contains a negative cycle,
+we can shorten a path that contains the cycle
+infinitely many times by repeating the cycle
+again and again.
+Thus, the concept of a shortest path
+is not meaningful here.
 
-Negatiivisen syklin voi tunnistaa
-Bellman–Fordin algoritmilla
-suorittamalla algoritmia $n$ kierrosta.
-Jos viimeinen kierros parantaa jotain
-etäisyysarviota, verkossa on negatiivinen sykli.
-Huomaa, että algoritmi etsii negatiivista sykliä
-koko verkon alueelta alkusolmusta välittämättä.
+A negative cycle can be detected
+using the Bellman–Ford algorithm by
+running the algorithm for $n$ rounds.
+If the last round improves any distance,
+the graph contains a negative cycle.
+Note that this algorithm searches for
+a negative cycle in the whole graph
+regardless of the starting node.
 
-\subsubsection{SPFA-algoritmi}
+\subsubsection{SPFA algorithm}
 
-\index{SPFA-algoritmi}
+\index{SPFA algorithm}
 
-\key{SPFA-algoritmi} (''Shortest Path Faster Algorithm'')
-on Bellman–Fordin algoritmin muunnelma,
-joka on usein alkuperäistä algoritmia tehokkaampi.
-Se ei tutki joka kierroksella koko verkkoa läpi
-parantaakseen etäisyysarvioita, vaan valitsee
-tutkittavat kaaret älykkäämmin.
+The \key{SPFA algoritmi} (''Shortest Path Faster Algorithm'')
+is a variation for the Bellman–Ford algorithm,
+that is often more efficient than the original algorithm.
+It doesn't go through all the edges on each round,
+but instead, it chooses the edges to be examined
+in a more intelligent way.
 
-Algoritmi pitää yllä jonoa solmuista,
-joiden kautta saattaa pystyä parantamaan etäisyysarvioita.
-Algoritmi lisää jonoon aluksi alkusolmun $x$
-ja valitsee aina seuraavan
-tutkittavan solmun $a$ jonon alusta.
-Aina kun kaari $a \rightarrow b$ parantaa
-etäisyysarviota, algoritmi lisää jonoon solmun $b$.
+The algorithm maintains a queue of nodes that might
+be used for improving the distances.
+First, the algorithm adds the starting node $x$
+to the queue.
+Then, the algorithm always processes the
+first node in the queue, and when an edge
+$a \rightarrow b$ improves a distance,
+node $b$ is added to the end of the queue.
 
-Seuraavassa toteutuksessa jonona on \texttt{queue}-rakenne
-\texttt{q}. Lisäksi taulukko \texttt{z} kertoo,
-onko solmu valmiina jonossa, jolloin algoritmi ei
-lisää solmua jonoon uudestaan.
+The following implementation uses a
+\texttt{queue} structure \texttt{q}.
+In addition, array \texttt{z} indicates
+if a node is already in the queue,
+in which case the algorithm doesn't add
+the node to the queue again.
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) e[i] = 1e9;
@@ -314,12 +317,13 @@ while (!q.empty()) {
 }
 \end{lstlisting}
 
-SPFA-algoritmin tehokkuus riippuu verkon rakenteesta:
-algoritmi on keskimäärin hyvin tehokas, mutta
-sen pahimman tapauksen aikavaativuus on edelleen
-$O(nm)$ ja on mahdollista
-laatia syötteitä, jotka saavat algoritmin yhtä hitaaksi
-kuin tavallisen Bellman–Fordin algoritmin.
+The efficiency of the SPFA algorithm depends
+on the structure of the graph:
+the algorithm is usually very efficient,
+but its worst case time complexity is still
+$O(nm)$ and it is possible to create inputs
+that make the algorithm as slow as the
+standard Bellman–Ford algorithm.
 
 \section{Dijkstran algoritmi}
 
