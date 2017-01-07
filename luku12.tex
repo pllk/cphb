@@ -345,31 +345,29 @@ while (!q.empty()) {
 }
 \end{lstlisting}
 
-\section{Sovelluksia}
+\section{Applications}
 
-Verkon läpikäynnin avulla
-saa selville monia asioita
-verkon rakenteesta.
-Läpikäynnin voi yleensä aina toteuttaa
-joko syvyyshaulla tai leveyshaulla,
-mutta käytännössä syvyyshaku on parempi valinta,
-koska sen toteutus on helpompi.
-Oletamme seuraavaksi, että käsiteltävänä on
-suuntaamaton verkko.
+Using the graph search algorithms,
+we can check many properties of the graph.
+Usually, either depth-first search or
+bredth-first search can be used,
+but in practice, depth-first search
+is a better choice because it is
+easier to implement.
+In the following applications we will
+assume that the graph is undirected.
 
-\subsubsection{Yhtenäisyyden tarkastaminen}
+\subsubsection{Connectivity check}
 
-\index{yhtenxisyys@yhtenäisyys}
+\index{connected graph}
 
-Verkko on yhtenäinen,
-jos mistä tahansa solmuista
-pääsee kaikkiin muihin solmuihin.
-Niinpä verkon yhtenäisyys selviää
-aloittamalla läpikäynti
-jostakin verkon solmusta ja
-tarkastamalla, pääseekö siitä kaikkiin solmuihin.
+A graph is connected if there is a path
+between any two nodes in the graph.
+Thus, we can check if a graph is connected
+by selecting an arbitrary node and
+finding out if we can reach all other nodes.
 
-Esimerkiksi verkossa
+For example, in the graph
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (7,5) {$2$};
@@ -384,8 +382,8 @@ Esimerkiksi verkossa
 \path[draw,thick,-] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-solmusta $1$ alkava syvyyshaku löytää seuraavat
-solmut:
+a depth-first search from node $1$ visits
+the following nodes:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (7,5) {$2$};
@@ -405,22 +403,22 @@ solmut:
 \end{tikzpicture}
 \end{center}
 
-Koska syvyyshaku ei pääse kaikkiin solmuihin,
-tämä tarkoittaa, että verkko ei ole yhtenäinen.
-Vastaavalla tavalla voi etsiä myös verkon komponentit
-käymällä solmut läpi ja aloittamalla uuden syvyyshaun
-aina, jos käsiteltävä solmu ei kuulu vielä mihinkään komponenttiin.
+Since the search didn't visit all the nodes,
+we can conclude that the graph is not connected.
+In a similar way, we can also find all components
+in a graph by iterating trough the nodes and always
+starting a new depth-first search if the node
+doesn't belong to a component.
 
-\subsubsection{Syklin etsiminen}
+\subsubsection{Finding cycles}
 
-\index{sykli@sykli}
+\index{cycle}
 
-Verkossa on sykli,
-jos jonkin komponentin läpikäynnin
-aikana tulee vastaan solmu,
-jonka naapuri on jo käsitelty
-ja solmuun ei ole saavuttu kyseisen naapurin kautta.
-Esimerkiksi verkossa
+A graph contains a cycle if during a graph search,
+we find a node whose neighbor (other than the
+previous node in the current path) has already been
+visited.
+For example, the graph
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (2) at (7,5) {$2$};
@@ -442,46 +440,39 @@ Esimerkiksi verkossa
 
 \end{tikzpicture}
 \end{center}
-on sykli, koska tultaessa solmusta 2 solmuun 5
-havaitaan, että naapurina oleva solmu 3 on jo käsitelty.
-Niinpä verkossa täytyy olla solmun 3 kautta
-kulkeva sykli.
-Tällainen sykli on esimerkiksi
-$3 \rightarrow 2 \rightarrow 5 \rightarrow 3$.
+contains a cycle because when we move from
+node 2 to node 5 it turns out
+that the neighbor node 3 has already been visited.
+Thus, the graph contains a cycle that goes through node 3,
+for example, $3 \rightarrow 2 \rightarrow 5 \rightarrow 3$.
 
-Syklin olemassaolon voi myös päätellä laskemalla,
-montako solmua ja kaarta komponentissa on.
-Jos komponentissa on $c$ solmua ja siinä ei ole sykliä,
-niin siinä on oltava tarkalleen $c-1$ kaarta.
-Jos kaaria on $c$ tai enemmän, niin komponentissa
-on varmasti sykli.
+Another way to find out whether a graph contains a cycle
+is to simply calculate the number of nodes and edges
+in every component.
+If a component contains $c$ nodes and no cycle,
+it must contain exactly $c-1$ edges.
+If there are $c$ or more edges, the component
+always contains a cycle.
 
-\subsubsection{Kaksijakoisuuden tarkastaminen}
+\subsubsection{Bipartiteness check}
 
-\index{kaksijakoisuus@kaksijakoisuus}
+\index{bipartite graph}
 
-Verkko on kaksijakoinen,
-jos sen solmut voi värittää
-kahdella värillä
-niin, että kahta samanväristä
-solmua ei ole vierekkäin.
-On yllättävän helppoa selvittää
-verkon läpikäynnin avulla,
-onko verkko kaksijakoinen.
+A graph is bipartite if its nodes can be colored
+using two colors so that there are no adjacent
+nodes with same color.
+It is suprisingly easy to check if a graph
+is bipartite using graph search algorithms.
 
-Ideana on värittää alkusolmu
-siniseksi, sen kaikki naapurit
-punaiseksi, niiden kaikki naapurit
-siniseksi, jne.
-Jos jossain vaiheessa
-ilmenee ristiriita
-(saman solmun tulisi olla sekä
-sininen että punainen),
-verkko ei ole kaksijakoinen.
-Muuten verkko on kaksijakoinen
-ja yksi väritys on muodostunut.
+The idea is to color the starting node blue,
+all its neighbors red, all their neighbors blue, and so on.
+If at some point of the search we notice that
+two adjacent nodes have the same color,
+this means that the graph is not bipartite.
+Otherwise the graph is bipartite and one coloring
+has been found.
 
-Esimerkiksi verkko
+For example, the graph
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (5,5) {$2$};
@@ -498,9 +489,8 @@ Esimerkiksi verkko
 \path[draw,thick,-] (5) -- (3);
 \end{tikzpicture}
 \end{center}
-ei ole kaksijakoinen, koska
-läpikäynti solmusta 1 alkaen
-aiheuttaa seuraavan ristiriidan:
+is not bipartite because a search from node 1
+produces the following situation:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=red!40] (2) at (5,5) {$2$};
@@ -522,107 +512,20 @@ aiheuttaa seuraavan ristiriidan:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-Tässä vaiheessa havaitaan,
-että sekä solmun 2 että solmun 5 väri on punainen,
-vaikka solmut ovat vierekkäin verkossa,
-joten verkko ei ole kaksijakoinen.
+We notice that the color or both node 2 and node 5
+is red, while they are adjacent nodes in the graph.
+Thus, the graph is not bipartite.
 
-Tämä algoritmi on luotettava tapa selvittää
-verkon kaksijakoisuus,
-koska kun värejä on vain kaksi,
-ensimmäisen solmun värin valinta
-määrittää kaikkien muiden
-samassa komponentissa olevien
-solmujen värin.
-Ei ole merkitystä,
-kumman värin ensimmäinen
-solmu saa.
+This algorithm always works because when there
+are only two colors available,
+the color of the starting node in a component
+determines the colors of all other nodes in the component.
+It doesn't make any difference whether the
+starting node is red or blue.
 
-Huomaa, että yleensä ottaen on vaikeaa
-selvittää, voiko verkon solmut
-värittää $k$ värillä niin,
-ettei missään kohtaa ole vierekkäin
-kahta samanväristä solmua.
-Edes tapaukseen $k=3$ ei tunneta
-mitään tehokasta algoritmia,
-vaan kyseessä on NP-vaikea ongelma.
-% 
-% \section{Labyrintin käsittely}
-% 
-% Labyrintti on ruudukko, joka muodostuu lattia- ja seinäruuduista,
-% ja labyrintissa on sallittua kulkea lattiaruutuja pitkin.
-% Labyrinttia
-% \begin{center}
-% \begin{tikzpicture}[scale=0.7]
-% \fill[color=gray] (0,0) rectangle (8,1);
-% \fill[color=gray] (0,5) rectangle (8,6);
-% \fill[color=gray] (0,0) rectangle (1,6);
-% \fill[color=gray] (7,0) rectangle (8,6);
-% 
-% \fill[color=gray] (2,0) rectangle (3,4);
-% \fill[color=gray] (4,2) rectangle (6,4);
-% 
-% \draw (0,0) grid (8,6);
-% 
-% \node at (1.5,1.5) {$a$};
-% \node at (6.5,3.5) {$b$};
-% \end{tikzpicture}
-% \end{center}
-% vastaa luontevasti verkko
-% \begin{center}
-% \begin{tikzpicture}[scale=0.7]
-% \node[draw,circle,minimum size=20pt] (a) at (1,1) {$a$};
-% \node[draw,circle,minimum size=20pt] (b) at (1,2.5) {};
-% \node[draw,circle,minimum size=20pt] (c) at (1,4) {};
-% \node[draw,circle,minimum size=20pt] (d) at (1,5.5) {};
-% \node[draw,circle,minimum size=20pt] (e) at (2.5,5.5) {};
-% \node[draw,circle,minimum size=20pt] (f) at (4,5.5) {};
-% \node[draw,circle,minimum size=20pt] (g) at (5.5,5.5) {};
-% \node[draw,circle,minimum size=20pt] (h) at (7,5.5) {};
-% \node[draw,circle,minimum size=20pt] (i) at (8.5,5.5) {};
-% \node[draw,circle,minimum size=20pt] (j) at (8.5,4) {$b$};
-% \node[draw,circle,minimum size=20pt] (k) at (8.5,2.5) {};
-% \node[draw,circle,minimum size=20pt] (l) at (8.5,1) {};
-% \node[draw,circle,minimum size=20pt] (m) at (7,1) {};
-% \node[draw,circle,minimum size=20pt] (n) at (5.5,1) {};
-% \node[draw,circle,minimum size=20pt] (o) at (4,1) {};
-% \node[draw,circle,minimum size=20pt] (p) at (4,2.5) {};
-% \node[draw,circle,minimum size=20pt] (q) at (4,4) {};
-% 
-% \path[draw,thick,-] (a) -- (b);
-% \path[draw,thick,-] (b) -- (c);
-% \path[draw,thick,-] (c) -- (d);
-% \path[draw,thick,-] (d) -- (e);
-% \path[draw,thick,-] (e) -- (f);
-% \path[draw,thick,-] (f) -- (g);
-% \path[draw,thick,-] (g) -- (h);
-% \path[draw,thick,-] (h) -- (i);
-% \path[draw,thick,-] (i) -- (j);
-% \path[draw,thick,-] (j) -- (k);
-% \path[draw,thick,-] (k) -- (l);
-% \path[draw,thick,-] (l) -- (m);
-% \path[draw,thick,-] (m) -- (n);
-% \path[draw,thick,-] (n) -- (o);
-% \path[draw,thick,-] (o) -- (p);
-% \path[draw,thick,-] (p) -- (q);
-% \path[draw,thick,-] (q) -- (f);
-% \end{tikzpicture}
-% \end{center}
-% jossa verkon solmuja ovat labyrintin lattiaruudut
-% ja solmujen välillä on kaari, jos lattiaruudusta
-% toiseen pääsee kulkemaan yhdellä askeleella.
-% Niinpä erilaiset labyrinttiin liittyvät ongelmat
-% palautuvat verkko-ongelmiksi.
-% 
-% Esimerkiksi syvyyshaulla pystyy selvittämään,
-% onko ruudusta $a$ reittiä ruutuun $b$
-% ja leveyshaku kertoo lisäksi,
-% mikä on pienin mahdollinen askelten määrä reitillä.
-% Samoin voi esimerkiksi vaikkapa, kuinka monta
-% toisistaan erillistä huonetta labyrintissa on
-% sekä kuinka monta ruutua huoneissa on.
-% 
-% Labyrintin tapauksessa ei kannata muodostaa erikseen
-% verkkoa, vaan syvyyshaun ja leveyshaun voi toteuttaa
-% suoraan labyrintin ruudukkoon.
-
+Note that in the general case,
+it is difficult to find out if the nodes
+in a graph can be colored using $k$ colors
+so that no adjacent nodes have the same color.
+Even when $k=3$, no efficient algorithm is known
+but the problem is NP-hard.
