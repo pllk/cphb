@@ -560,30 +560,30 @@ The function \texttt{union} ensures that the
 length of each path is $O(\log n)$ by connecting
 the smaller set to the larger set.
 
-\section{Primin algoritmi}
+\section{Prim's algorithm}
 
-\index{Primin algoritmi@Primin algoritmi}
+\index{Prim's algorithm}
 
-\key{Primin algoritmi} on vaihtoehtoinen menetelmä
-verkon pienimmän virittävän puun muodostamiseen.
-Algoritmi aloittaa puun muodostamisen jostakin
-verkon solmusta ja lisää puuhun aina kaaren,
-joka on mahdollisimman kevyt ja joka
-liittää puuhun uuden solmun.
-Lopulta kaikki solmut on lisätty puuhun
-ja pienin virittävä puu on valmis.
+\key{Prim's algorithm} is an alternative method
+for finding a minimum spanning tree.
+The algorithm first adds an arbitrary node
+to the tree, and then always selects an edge
+whose weight is as small as possible and
+that adds a new node to the tree.
+Finally, all nodes have been added to the tree
+and a minimum spanning tree has been found.
 
-Primin algoritmin toiminta on lähellä
-Dijkstran algoritmia.
-Erona on, että Dijkstran algoritmissa valitaan
-kaari, jonka kautta syntyy lyhin polku alkusolmusta
-uuteen solmuun, mutta Primin algoritmissa
-valitaan vain kevein kaari, joka johtaa uuteen solmuun.
+Prim's algorithm resembles Dijkstra's algorithm.
+The difference is that Dijkstra's algorithm always
+selects an edge that creates a shortest path
+from the starting node to another node,
+but Prim's algorithm simply selects the lightest
+edge that adds a new node to the tree.
 
-\subsubsection{Esimerkki}
+\subsubsection{Example}
 
-Tarkastellaan Primin algoritmin toimintaa
-seuraavassa verkossa:
+Let's consider how Prim's algorithm works
+in the following graph:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -605,8 +605,7 @@ seuraavassa verkossa:
 %\path[draw=red,thick,-,line width=2pt] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-
-Aluksi solmujen välillä ei ole mitään kaaria:
+Initially, there are no edges between the nodes:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -625,10 +624,9 @@ Aluksi solmujen välillä ei ole mitään kaaria:
 %\path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-
-Puun muodostuksen voi aloittaa mistä tahansa solmusta,
-ja aloitetaan se nyt solmusta 1.
-Kevein kaari on painoltaan 3 ja se johtaa solmuun 2:
+We can select an arbitrary node as a starting node,
+so let's select node 1.
+First, an edge with weight 3 connects nodes 1 and 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -648,10 +646,9 @@ Kevein kaari on painoltaan 3 ja se johtaa solmuun 2:
 \end{tikzpicture}
 \end{center}
 
-Nyt kevein uuteen solmuun johtavan
-kaaren paino on 5,
-ja voimme laajentaa joko solmuun 3 tai 5.
-Valitaan solmu 3:
+After this, there are two edges with weight 5,
+so we can add either node 3 or node 5 to the tree.
+Let's add node 3 first:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -672,7 +669,7 @@ Valitaan solmu 3:
 \end{center}
 
 \begin{samepage}
-Sama jatkuu, kunnes kaikki solmut ovat mukana puussa:
+The process continues until all nodes have been included in the tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -693,19 +690,19 @@ Sama jatkuu, kunnes kaikki solmut ovat mukana puussa:
 \end{center}
 \end{samepage}
 
-\subsubsection{Toteutus}
+\subsubsection{Implementation}
 
-Dijkstran algoritmin tavoin Primin algoritmin voi toteuttaa
-tehokkaasti käyttämällä prioriteettijonoa.
-Primin algoritmin tapauksessa jono sisältää kaikki solmut,
-jotka voi yhdistää nykyiseen komponentiin kaarella,
-järjestyksessä kaaren painon mukaan kevyimmästä raskaimpaan.
+Like Dijkstra's algorithm, Prim's algorithm can be
+efficiently implemented using a priority queue.
+In this case, the priority queue contains all nodes
+that can be connected to the current component using
+a single edge, in increasing order of the weights
+of the corresponding edges.
 
-Primin algoritmin aikavaativuus on $O(n + m \log m)$
-eli sama kuin Dijkstran algoritmissa.
-Käytännössä Primin algoritmi on suunnilleen
-yhtä nopea kuin Kruskalin algoritmi,
-ja onkin makuasia, kumpaa algoritmia käyttää.
-Useimmat kisakoodarit käyttävät kuitenkin Kruskalin algoritmia.
-
-
+The time complexity of Prim's algorithm is
+$O(n + m \log m)$ that equals the time complexity
+of Dijkstra's algorithm.
+In practice, Prim's algorithm and Kruskal's algorithm
+are both efficient, and the choice of the algorithm
+is a matter of taste.
+Still, most competitive programmers use Kruskal's algorithm.
