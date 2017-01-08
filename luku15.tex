@@ -394,35 +394,29 @@ called for each edge in the graph.
 We will solve the problem using a union-find structure
 that implements both the functions in $O(\log n)$ time.
 Thus, the time complexity of Kruskal's algorithm
-will be only $O(m \log n)$ after sorting the edge list.
+will be $O(m \log n)$ after sorting the edge list.
 
-\section{Union-find-rakenne}
+\section{Union-find structure}
 
-\index{union-find-rakenne}
+\index{union-find structure}
 
-\key{Union-find-rakenne} pitää yllä
-alkiojoukkoja.
-Joukot ovat erillisiä,
-eli tietty alkio on tarkalleen
-yhdessä joukossa.
-Rakenne tarjoaa kaksi operaatiota,
-jotka toimivat ajassa $O(\log n)$.
-Ensimmäinen operaatio tarkistaa,
-ovatko kaksi alkiota samassa joukossa.
-Toinen operaatio yhdistää kaksi
-joukkoa toisiinsa.
+The \key{union-find structure} maintains
+a collection of sets.
+The sets are disjoint, so no element
+belongs to more than one set.
+Two $O(\log n)$ time operations are supported.
+The first operation checks if two elements
+belong to the same set,
+and the second operation joins two sets into a single set.
 
-\subsubsection{Rakenne}
+\subsubsection{Structure}
 
-Union-find-rakenteessa jokaisella
-joukolla on edustaja-alkio.
-Kaikki muut joukon alkiot osoittavat
-edustajaan joko suoraan tai
-muiden alkioiden kautta.
-
-Esimerkiksi jos joukot ovat
-$\{1,4,7\}$, $\{5\}$ ja $\{2,3,6,8\}$,
-tilanne voisi olla:
+In the union-find structure, one element in each set
+is the representative of the set.
+All other elements in the set point to the
+representative directly or through other elements in the set.
+For example, in the following picture there are three sets:
+$\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$.
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,-1) {$1$};
@@ -443,26 +437,23 @@ tilanne voisi olla:
 
 \end{tikzpicture}
 \end{center}
-Tässä tapauksessa alkiot 4, 5 ja 2
-ovat joukkojen edustajat.
-Minkä tahansa alkion edustaja
-löytyy kulkemalla alkiosta lähtevää polkua
-eteenpäin niin kauan, kunnes polku päättyy.
-Esimerkiksi alkion 6 edustaja on 2,
-koska alkiosta 6 lähtevä
-polku on $6 \rightarrow 3 \rightarrow 2$.
-Tämän avulla voi selvittää,
-ovatko kaksi alkiota samassa joukossa:
-jos kummankin alkion edustaja on sama,
-alkiot ovat samassa joukossa,
-ja muuten ne ovat eri joukoissa.
+In this case the representatives
+of the sets are 4, 5 and 2.
+For each element, we can find the representative
+for the corresponding set by following the
+path that begins at the element.
+For example, element 2 is the representative for the set
+that contains element 6 because
+the path is $6 \rightarrow 3 \rightarrow 2$.
+Thus, two elements belong to the same set exactly when
+they point to the same representative.
 
-Kahden joukon yhdistäminen tapahtuu
-valitsemalla toinen edustaja
-joukkojen yhteiseksi edustajaksi
-ja kytkemällä toinen edustaja siihen.
-Esimerkiksi joukot $\{1,4,7\}$ ja $\{2,3,6,8\}$
-voi yhdistää näin joukoksi $\{1,2,3,4,6,7,8\}$:
+Two sets can be combined by connecting the
+representative of one set to the
+representative of another set.
+For example, sets
+$\{1,4,7\}$ and $\{2,3,6,8\}$
+can be combined as follows into set $\{1,2,3,4,6,7,8\}$:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (2,-1) {$1$};
@@ -484,73 +475,75 @@ voi yhdistää näin joukoksi $\{1,2,3,4,6,7,8\}$:
 \end{tikzpicture}
 \end{center}
 
-Joukkojen yhteiseksi edustajaksi valitaan alkio 2,
-minkä vuoksi alkio 4 yhdistetään siihen.
-Tästä lähtien alkio 2 edustaa kaikkia joukon alkioita.
+In this case, element 2 becomes the representative
+for the whole set and the old representative 4
+points to it.
 
-Tehokkuuden kannalta oleellista on,
-miten yhdistäminen tapahtuu.
-Osoittautuu, että ratkaisu on yksinkertainen:
-riittää yhdistää aina pienempi joukko suurempaan,
-tai kummin päin tahansa,
-jos joukot ovat yhtä suuret.
-Tällöin pisin ketju
-alkiosta edustajaan on aina luokkaa $O(\log n)$,
-koska jokainen askel eteenpäin
-ketjussa kaksinkertaistaa
-vastaavan joukon koon.
+The efficiency of the operations depends on
+the way the sets are combined.
+It turns out that we can follow a simple strategy
+and always connect the representative of the
+smaller set to the representative of the larger set
+(or, if the sets are of the same size,
+both choices are fine).
+Using this strategy, the length of a path from
+a element in a set to a representative is
+always $O(\log n)$ because each step forward
+in the path doubles the size of the corresponding set.
 
-\subsubsection{Toteutus}
+\subsubsection{Implementation}
 
-Union-find-rakenne on kätevää toteuttaa
-taulukoiden avulla.
-Seuraavassa toteutuksessa taulukko \texttt{k}
-viittaa seuraavaan alkioon ketjussa
-tai alkioon itseensä, jos alkio on edustaja.
-Taulukko \texttt{s} taas kertoo jokaiselle edustajalle,
-kuinka monta alkiota niiden joukossa on.
+We can implement the union-find structure
+using arrays.
+In the following implementation,
+array \texttt{k} contains for each element
+the next element
+in the path, or the element itself if it is
+a representative,
+and array \texttt{s} indicates for each representative
+the size of the corresponding set.
 
-Aluksi jokainen alkio on omassa joukossaan,
-jonka koko on 1:
-
+Initially, each element has an own set with size 1:
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) k[i] = i;
 for (int i = 1; i <= n; i++) s[i] = 1;
 \end{lstlisting}
 
-Funktio \texttt{id} kertoo alkion $x$
-joukon edustajan. Alkion edustaja löytyy
-käymällä ketju läpi alkiosta $x$ alkaen.
+The function \texttt{find} returns
+the representative for element $x$.
+The representative can be found by following
+the path that begins at element $x$.
 
 \begin{lstlisting}
-int id(int x) {
+int find(int x) {
     while (x != k[x]) x = k[x];
     return x;
 }
 \end{lstlisting}
 
-Funktio \texttt{sama} kertoo,
-ovatko alkiot $a$ ja $b$ samassa joukossa.
-Tämä onnistuu helposti funktion
-\texttt{id} avulla.
+The function \texttt{same} finds out
+whether elements $a$ and $b$ belong to the same set.
+This can easily be done by using the
+function \texttt{find}.
 
 \begin{lstlisting}
-bool sama(int a, int b) {
-    return id(a) == id(b);
+bool same(int a, int b) {
+    return find(a) == find(b);
 }
 \end{lstlisting}
 
 \begin{samepage}
-Funktio \texttt{liita} yhdistää
-puolestaan alkioiden $a$ ja $b$ osoittamat
-joukot yhdeksi joukoksi.
-Funktio etsii ensin joukkojen edustajat
-ja yhdistää sitten pienemmän joukon suurempaan.
+The function \texttt{union} combines the sets
+that contain elements $a$ and $b$
+into a single set.
+The function first finds the representatives
+of the sets and then connects the smaller
+set to the larger set.
 
 \begin{lstlisting}
-void liita(int a, int b) {
-    a = id(a);
-    b = id(b);
+void union(int a, int b) {
+    a = find(a);
+    b = find(b);
     if (s[b] > s[a]) swap(a,b);
     s[a] += s[b];
     k[b] = a;
@@ -558,31 +551,14 @@ void liita(int a, int b) {
 \end{lstlisting}
 \end{samepage}
 
-Funktion \texttt{id} aikavaativuus on $O(\log n)$
-olettaen, että ketjun pituus on luokkaa $O(\log n)$.
-Niinpä myös funktioiden \texttt{sama} ja \texttt{liita}
-aikavaativuus on $O(\log n)$.
-Funktio \texttt{liita} varmistaa,
-että ketjun pituus on luokkaa $O(\log n)$
-yhdistämällä pienemmän joukon suurempaan.
-
-% Funktiota \texttt{id} on mahdollista vielä tehostaa
-% seuraavasti:
-% 
-% \begin{lstlisting}
-% int id(int x) {
-%   if (x == k[x]) return x;
-%   return k[x] = id(x);
-% }
-% \end{lstlisting}
-% 
-% Nyt joukon edustajan etsimisen yhteydessä kaikki ketjun
-% alkiot laitetaan osoittamaan suoraan edustajaan.
-% On mahdollista osoittaa, että tämän avulla
-% funktioiden \texttt{sama} ja \texttt{liita}
-% aikavaativuus on tasoitetusti
-% vain $O(\alpha(n))$, missä $\alpha(n)$ on
-% hyvin hitaasti kasvava käänteinen Ackermannin funktio.
+The time complexity of the function \texttt{find}
+is $O(\log n)$ assuming that the length of the
+path is $O(\log n)$.
+Thus, the functions \texttt{same} and \texttt{union}
+also work in $O(\log n)$ time.
+The function \texttt{union} ensures that the
+length of each path is $O(\log n)$ by connecting
+the smaller set to the larger set.
 
 \section{Primin algoritmi}
 
