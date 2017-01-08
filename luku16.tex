@@ -475,28 +475,29 @@ corresponds to a solution with minimum number of coins,
 and the total number of paths from node 0 to node $x$
 equals the total number of solutions.
 
-\section{Tehokas eteneminen}
+\section{Successor paths}
 
-\index{seuraajaverkko@seuraajaverkko}
-\index{funktionaalinen verkko@funktionaalinen verkko}
+\index{successor graph}
+\index{functional graph}
 
-Seuraavaksi oletamme, että
-suunnaton verkko on \key{seuraajaverkko},
-jolloin jokaisen solmun lähtöaste on 1
-eli siitä lähtee tasan yksi kaari ulospäin.
-Niinpä verkko muodostuu yhdestä tai useammasta
-komponentista, joista jokaisessa on yksi sykli
-ja joukko siihen johtavia polkuja.
+For the rest of the chapter,
+we concentrate on \key{successor graphs}
+where the outdegree of each node is 1, i.e.,
+exactly one edge begins at the node.
+Thus, the graph consists of one or more
+components, and each component contains
+one cycle and some paths that lead to it.
 
-Seuraajaverkosta käytetään joskus nimeä
-\key{funktionaalinen verkko}.
-Tämä johtuu siitä, että jokaista seuraajaverkkoa
-vastaa funktio $f$, joka määrittelee verkon kaaret.
-Funktion parametrina on verkon solmu ja
-se palauttaa solmusta lähtevän kaaren kohdesolmun.
+Successor graphs are sometimes called
+\key{functional graphs}.
+The reason for this is that any successor graph
+corresponds to a function $f$ that defines
+the edges in the graph.
+The parameter for the function is a node in the graph,
+and the function returns the successor of the node.
 
 \begin{samepage}
-Esimerkiksi funktio
+For example, the function
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
 $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
@@ -505,7 +506,7 @@ $f(x)$ & 3 & 5 & 7 & 6 & 2 & 2 & 1 & 6 & 3 \\
 \end{tabular}
 \end{center}
 \end{samepage}
-määrittelee seuraavan verkon:
+defines the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -530,12 +531,13 @@ määrittelee seuraavan verkon:
 \end{tikzpicture}
 \end{center}
 
-Koska seuraajaverkon jokaisella solmulla
-on yksikäsitteinen seuraaja, voimme määritellä funktion $f(x,k)$,
-joka kertoo solmun, johon päätyy solmusta $x$
-kulkemalla $k$ askelta.
-Esimerkiksi yllä olevassa verkossa $f(4,6)=2$,
-koska solmusta 4 päätyy solmuun 2 kulkemalla 6 askelta:
+Since each node in a successor graph has a
+unique successor, we can define a function $f(x,k)$
+that returns the node that we will reach if
+we begin at node $x$ and walk $k$ steps forward.
+For example, in the above graph $f(4,6)=2$
+because by walking 6 steps from node 4,
+we will reach node 2:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -556,15 +558,16 @@ koska solmusta 4 päätyy solmuun 2 kulkemalla 6 askelta:
 \end{tikzpicture}
 \end{center}
 
-Suoraviivainen tapa laskea arvo $f(x,k)$
-on käydä läpi polku askel askeleelta, mihin kuluu aikaa $O(k)$.
-Sopivan esikäsittelyn avulla voimme laskea kuitenkin
-minkä tahansa arvon $f(x,k)$ ajassa $O(\log k)$.
+A straightforward way to calculate a value $f(x,k)$
+is to walk through the path step by step which takes $O(k)$ time.
+However, using preprocessing, we can calculate any
+value $f(x,k)$ in only $O(\log k)$ time.
 
-Ideana on laskea etukäteen kaikki arvot $f(x,k)$, kun $k$ on 2:n potenssi
-ja enintään $u$, missä $u$ on suurin mahdollinen määrä
-askeleita, joista olemme kiinnostuneita.
-Tämä onnistuu tehokkaasti, koska voimme käyttää rekursiota
+The idea is to precalculate all values $f(x,k)$ where
+$k$ is a power of two and at most $u$ where $u$ is
+the maximum number of steps we will ever walk.
+This can be done efficiently because
+we can use the following recursion:
 
 \begin{equation*}
     f(x,k) = \begin{cases}
@@ -573,9 +576,9 @@ Tämä onnistuu tehokkaasti, koska voimme käyttää rekursiota
            \end{cases}
 \end{equation*}
 
-Arvojen $f(x,k)$ esilaskenta vie aikaa $O(n \log u)$,
-koska jokaisesta solmusta lasketaan $O(\log u)$ arvoa.
-Esimerkin tapauksessa taulukko alkaa muodostua seuraavasti:
+Precalculating values $f(x,k)$ takes $O(n \log u)$ time
+because we calculate $O(\log u)$ values for each node.
+In the above graph, the first values are as follows:
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
@@ -589,29 +592,29 @@ $\cdots$ \\
 \end{tabular}
 \end{center}
 
-Tämän jälkeen funktion $f(x,k)$ arvon saa laskettua
-esittämällä luvun $k$ summana 2:n potensseja.
-Esimerkiksi jos haluamme laskea arvon $f(x,11)$,
-muodostamme ensin esityksen $11=8+2+1$.
-Tämän ansiosta
+After this, any value $f(x,k)$ can be calculated
+by presenting the value $k$ as a sum of powers of two.
+For example, if we want to calculate the value $f(x,11)$,
+we first form the representation $11=8+2+1$.
+Using this,
 \[f(x,11)=f(f(f(x,8),2),1).\]
-Esimerkiksi yllä olevassa verkossa 
+For example, in the above graph
 \[f(4,11)=f(f(f(4,8),2),1)=5.\]
 
-Tällaisessa esityksessä on aina
-$O(\log k)$ osaa, joten arvon $f(x,k)$ laskemiseen
-kuluu aikaa $O(\log k)$.
+Such a representation always consists of
+$O(\log k)$ parts so calculating a value $f(x,k)$
+takes $O(\log k)$ time.
 
-\section{Syklin tunnistaminen}
+\section{Cycle detection}
 
-\index{sykli@sykli}
-\index{syklin tunnistaminen@syklin tunnistaminen}
+\index{cycle}
+\index{cycle detection}
 
-Kiinnostavia kysymyksiä seuraajaverkossa ovat,
-minkä solmun kohdalla saavutaan sykliin
-solmusta $x$ lähdettäessä
-ja montako solmua kyseiseen sykliin kuuluu.
-Esimerkiksi verkossa
+Interesting questions in a successor graph are
+which node is the first node in the cycle
+if we begin our walk at node $x$,
+and what is the size of the cycle.
+For example, in the graph
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -630,35 +633,37 @@ Esimerkiksi verkossa
 \path[draw,thick,->] (6) -- (4);
 \end{tikzpicture}
 \end{center}
-solmusta 1 lähdettäessä ensimmäinen sykliin kuuluva
-solmu on solmu 4 ja syklissä on kolme solmua
-(solmut 4, 5 ja 6).
+if we begin at node 1, the first node that belongs
+to the cycle is node 4, and the cycle consists
+of three nodes (4, 5 and 6).
 
-Helppo tapa tunnistaa sykli on alkaa kulkea verkossa
-solmusta $x$ alkaen ja pitää kirjaa kaikista vastaan tulevista
-solmuista. Kun jokin solmu tulee vastaan toista kertaa,
-sykli on löytynyt. Tämän menetelmän aikavaativuus on $O(n)$
-ja muistia kuluu myös $O(n)$.
+An easy way to detect a cycle is to walk in the
+graph beginning from node $x$ and keep track of
+all visited nodes. Once we will visit a node
+for the second time, the first node in the cycle has been found.
+This method works in $O(n)$ time and also uses
+$O(n)$ memory.
 
-Osoittautuu kuitenkin, että syklin tunnistamiseen on
-olemassa parempia algoritmeja.
-Niissä aikavaativuus on edelleen $O(n)$,
-mutta muistia kuluu vain $O(1)$.
-Tästä on merkittävää hyötyä, jos $n$ on suuri.
-Tutustumme seuraavaksi Floydin algoritmiin,
-joka saavuttaa nämä ominaisuudet.
+However, there are better algorithms for cycle detection.
+The time complexity of those algorithms is still $O(n)$,
+but they only use $O(1)$ memory.
+This is an important improvement if $n$ is large.
+Next we will learn Floyd's algorithm that
+achieves these properties.
 
-\subsubsection{Floydin algoritmi}
+\subsubsection{Floyd's algorithm}
 
-\index{Floydin algoritmi@Floydin algoritmi}
+\index{Floyd's algorithm}
 
-\key{Floydin algoritmi} kulkee verkossa eteenpäin rinnakkain
-kahdesta kohdasta.
-Algoritmissa on kaksi osoitinta $a$ ja $b$,
-jotka molemmat ovat ensin alkusolmussa.
-Osoitin $a$ liikkuu joka vuorolla askeleen eteenpäin,
-kun taas osoitin $b$ liikkuu kaksi askelta eteenpäin.
-Haku jatkuu, kunnes osoittimet kohtaavat:
+\key{Floyd's algorithm} walks forward 
+in the graph using two pointers $a$ and $b$.
+Both pointers begin at the starting node
+of the graph.
+Then, on each turn, pointer $a$ walks
+one step forward, while pointer $b$
+walks two steps forward.
+The search continues like that until
+the pointers will meet each other:
 
 \begin{lstlisting}
 a = f(x);
@@ -669,12 +674,13 @@ while (a != b) {
 }
 \end{lstlisting}
 
-Tässä vaiheessa osoitin $a$ on kulkenut $k$ askelta
-ja osoitin $b$ on kulkenut $2k$ askelta,
-missä $k$ on jaollinen syklin pituudella.
-Niinpä ensimmäinen sykliin kuuluva solmu löytyy siirtämällä
-osoitin $a$ alkuun ja liikuttamalla osoittimia
-rinnakkain eteenpäin, kunnes ne kohtaavat:
+At this point, pointer $a$ has walked $k$ steps,
+and pointer $b$ has walked $2k$ steps
+where the length of the cycle divides $k$.
+Thus, the first node that belongs to the cycle
+can be found by moving pointer $a$ to the
+starting node and advancing the pointers
+step by step until they will meet again:
 
 \begin{lstlisting}
 a = x;
@@ -684,9 +690,10 @@ while (a != b) {
 }
 \end{lstlisting}
 
-Nyt $a$ ja $b$ osoittavat ensimmäiseen syklin
-solmuun, joka tulee vastaan solmusta $x$ lähdettäessä.
-Lopuksi syklin pituus $c$ voidaan laskea näin:
+Now $a$ and $b$ point to the first node in the cycle
+that can be reached from node $x$.
+Finally, the length $c$ of the cycle
+can be calculated as follows:
 
 \begin{lstlisting}
 b = f(a);
