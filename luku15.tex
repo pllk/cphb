@@ -1,17 +1,15 @@
 \chapter{Spanning trees}
 
-\index{virittxvx puu@virittävä puu}
+\index{spanning tree}
 
-\key{Virittävä puu} on kokoelma
-verkon kaaria,
-joka kytkee kaikki
-verkon solmut toisiinsa.
-Kuten puut yleensäkin,
-virittävä puu on yhtenäinen ja syklitön.
-Virittävän puun muodostamiseen
-on yleensä monia tapoja.
+A \key{spanning tree} is a set of edges of a graph
+such that there is a path between any two nodes
+in the graph using only the edges in the spanning tree.
+Like trees in general, a spanning tree is
+connected and acyclic.
+Usually, there are many ways to construct a spanning tree.
 
-Esimerkiksi verkossa
+For example, in the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -30,7 +28,7 @@ Esimerkiksi verkossa
 \path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-yksi mahdollinen virittävä puu on seuraava:
+one possible spanning tree is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -47,13 +45,16 @@ yksi mahdollinen virittävä puu on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Virittävän puun paino on siihen kuuluvien kaarten painojen summa.
-Esimerkiksi yllä olevan puun paino on $3+5+9+3+2=22$.
+The weight of a spanning tree is the sum of the edge weights.
+For example, the weight of the above spanning tree is
+$3+5+9+3+2=22$.
 
-\key{Pienin virittävä puu}
-on virittävä puu, jonka paino on mahdollisimman pieni.
-Yllä olevan verkon pienin virittävä puu
-on painoltaan 20, ja sen voi muodostaa seuraavasti:
+\index{minimum spanning tree}
+
+A \key{minimum spanning tree}
+is a spanning tree whose weight is as small as possible.
+The weight of a minimum spanning tree for the above graph
+is 20, and a tree can be constructed as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -75,10 +76,12 @@ on painoltaan 20, ja sen voi muodostaa seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Vastaavasti \key{suurin virittävä puu}
-on virittävä puu, jonka paino on mahdollisimman suuri.
-Yllä olevan verkon suurin virittävä puu on
-painoltaan 32:
+\index{maximum spanning tree}
+
+Correspondingly, a \key{maximum spanning tree}
+is a spanning tree whose weight is as large as possible.
+The weight of a maximum spanning tree for the
+above graph is 32:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -99,53 +102,46 @@ painoltaan 32:
 \end{tikzpicture}
 \end{center}
 
-Huomaa, että voi olla monta erilaista
-tapaa muodostaa pienin tai
-suurin virittävä puu, eli puut eivät ole yksikäsitteisiä.
+Note that there may be several different ways
+for constructing a minimum or maximum spanning tree,
+so the trees are not unique.
 
-Tässä luvussa tutustumme algoritmeihin,
-jotka muodostavat verkon pienimmän tai suurimman
-virittävän puun.
-Osoittautuu, että virittävien puiden etsiminen
-on siinä mielessä helppo ongelma,
-että monenlaiset ahneet menetelmät tuottavat
-optimaalisen ratkaisun.
+This chapter discusses algorithms that construct
+a minimum or maximum spanning tree for a graph.
+It turns out that it is easy to find such spanning trees
+because many greedy methods produce an optimal solution.
 
-Käymme läpi kaksi algoritmia, jotka molemmat valitsevat
-puuhun mukaan kaaria painojärjestyksessä.
-Keskitymme pienimmän virittävän puun etsimiseen,
-mutta samoilla algoritmeilla voi muodostaa myös suurimman virittävän
-puun käsittelemällä kaaret käänteisessä järjestyksessä.
+We will learn two algorithms that both construct the
+tree by choosing edges ordered by weights.
+We will focus on finding a minimum spanning tree,
+but the same algorithms can be used for finding a
+maximum spanning tree by processing the edges in reverse order.
 
-\section{Kruskalin algoritmi}
+\section{Kruskal's algorithm}
 
-\index{Kruskalin algoritmi@Kruskalin algoritmi}
+\index{Kruskal's algorithm}
 
-\key{Kruskalin algoritmi} aloittaa pienimmän
-virittävän
-puun muodostamisen tilanteesta,
-jossa puussa ei ole yhtään kaaria.
-Sitten algoritmi alkaa lisätä
-puuhun kaaria järjestyksessä
-kevyimmästä raskaimpaan.
-Kunkin kaaren kohdalla
-algoritmi ottaa kaaren mukaan puuhun,
-jos tämä ei aiheuta sykliä.
+In \key{Kruskal's algorithm}, the initial spanning tree
+is empty and doesn't contain any edges.
+Then the algorithm adds edges to the tree
+one at a time
+in increasing order of their weights.
+At each step, the algorithm includes an edge in the tree
+if it doesn't create a cycle.
 
-Kruskalin algoritmi pitää yllä
-tietoa verkon komponenteista.
-Aluksi jokainen solmu on omassa
-komponentissaan,
-ja komponentit yhdistyvät pikkuhiljaa
-algoritmin aikana puuhun tulevista kaarista.
-Lopulta kaikki solmut ovat samassa
-komponentissa, jolloin pienin virittävä puu on valmis.
+Kruskal's algorithm maintains the components
+in the tree.
+Initially, each node of the graph
+is in its own component,
+and each edge added to the tree joins two components.
+Finally, all nodes will be in the same component,
+and a minimum spanning tree has been found.
 
-\subsubsection{Esimerkki}
+\subsubsection{Example}
 
 \begin{samepage}
-Tarkastellaan Kruskalin algoritmin toimintaa
-seuraavassa verkossa:
+Let's consider how Kruskal's algorithm processes the
+following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -167,13 +163,13 @@ seuraavassa verkossa:
 \end{samepage}
 
 \begin{samepage}
-Algoritmin ensimmäinen vaihe on
-järjestää verkon kaaret niiden painon mukaan.
-Tuloksena on seuraava lista:
+The first step in the algorithm is to sort the
+edges in increasing order of their weights.
+The result is the following list:
 
 \begin{tabular}{ll}
 \\
-kaari & paino \\
+edge & weight \\
 \hline
 5--6 & 2 \\
 1--2 & 3 \\
@@ -187,11 +183,11 @@ kaari & paino \\
 \end{tabular}
 \end{samepage}
 
-Tämän jälkeen algoritmi käy listan läpi
-ja lisää kaaren puuhun,
-jos se yhdistää kaksi erillistä komponenttia.
+After this, the algorithm goes through the list
+and adds an edge to the tree if it joins
+two separate components.
 
-Aluksi jokainen solmu on omassa komponentissaan:
+Initially, each node is in its own component:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -211,9 +207,9 @@ Aluksi jokainen solmu on omassa komponentissaan:
 %\path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-Ensimmäinen virittävään puuhun lisättävä
-kaari on 5--6, joka yhdistää
-komponentit $\{5\}$ ja $\{6\}$ komponentiksi $\{5,6\}$:
+The first edge to be added to the tree is
+edge 5--6 that joins components
+$\{5\}$ and $\{6\}$ into component $\{5,6\}$:
 
 \begin{center}
 \begin{tikzpicture}
@@ -234,8 +230,7 @@ komponentit $\{5\}$ ja $\{6\}$ komponentiksi $\{5,6\}$:
 %\path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-Tämän jälkeen algoritmi lisää puuhun vastaavasti
-kaaret 1--2, 3--6 ja 1--5:
+After this, edges 1--2, 3--6 and 1--5 are added in a similar way:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -257,18 +252,18 @@ kaaret 1--2, 3--6 ja 1--5:
 \end{tikzpicture}
 \end{center}
 
-Näiden lisäysten jälkeen monet
-komponentit ovat yhdistyneet ja verkossa on kaksi
-komponenttia: $\{1,2,3,5,6\}$ ja $\{4\}$.
+After those steps, many components have been joined
+and there are two components in the tree:
+$\{1,2,3,5,6\}$ and $\{4\}$.
 
-Seuraavaksi käsiteltävä kaari on 2--3,
-mutta tämä kaari ei tule mukaan puuhun,
-koska solmut 2 ja 3 ovat jo samassa komponentissa.
-Vastaavasta syystä myöskään kaari 2--5 ei tule mukaan puuhun.
+The next edge in the list is edge 2--3,
+but it will not be included in the tree because
+nodes 2 and 3 are already in the same component.
+For the same reason, edge 2--5 will not be added
+to the tree.
 
 \begin{samepage}
-Lopuksi puuhun tulee kaari 4--6,
-joka luo yhden komponentin:
+Finally, edge 4--6 will be included in the tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -291,29 +286,26 @@ joka luo yhden komponentin:
 \end{center}
 \end{samepage}
 
-Tämän lisäyksen jälkeen algoritmi päättyy,
-koska kaikki solmut on kytketty toisiinsa kaarilla
-ja verkko on yhtenäinen.
-Tuloksena on verkon pienin virittävä puu,
-jonka paino on $2+3+3+5+7=20$.
+After this, the algorithm terminates because
+there is a path between any two nodes and
+the graph is connected.
+The resulting graph is a minimum spanning tree
+with weight $2+3+3+5+7=20$.
 
-\subsubsection{Miksi algoritmi toimii?}
+\subsubsection{Why does this work?}
 
-On hyvä kysymys, miksi Kruskalin algoritmi
-toimii aina eli miksi ahne strategia tuottaa
-varmasti pienimmän mahdollisen virittävän puun.
+It's a good question why Kruskal's algorithm works.
+Why does the greedy strategy guarantee that we
+will find a minimum spanning tree?
 
-Voimme perustella algoritmin toimivuuden
-tekemällä vastaoletuksen, että pienimmässä
-virittävässä puussa ei olisi verkon keveintä kaarta.
-Oletetaan esimerkiksi, että äskeisen verkon
-pienimmässä virittävässä puussa ei olisi
-2:n painoista kaarta solmujen 5 ja 6 välillä.
-Emme tiedä tarkalleen, millainen uusi pienin
-virittävä puu olisi, mutta siinä täytyy olla
-kuitenkin joukko kaaria.
-Oletetaan, että virittävä puu olisi
-vaikkapa seuraavanlainen:
+Let's see what happens if the lightest edge in
+the graph is not included in the minimum spanning tree.
+For example, assume that a minimum spanning tree
+for the above graph would not contain the edge
+between nodes 5 and 6 with weight 2.
+We don't know exactly how the new minimum spanning tree
+would look like, but still it has to contain some edges.
+Assume that the tree would be as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -332,12 +324,12 @@ vaikkapa seuraavanlainen:
 \end{tikzpicture}
 \end{center}
 
-Ei ole kuitenkaan mahdollista,
-että yllä oleva virittävä puu olisi todellisuudessa
-verkon pienin virittävä puu.
-Tämä johtuu siitä, että voimme poistaa siitä
-jonkin kaaren ja korvata sen 2:n painoisella kaarella.
-Tuloksena on virittävä puu, jonka paino on \emph{pienempi}:
+However, it's not possible that the above tree
+would be a real minimum spanning tree for the graph.
+The reason for this is that we can remove an edge
+from it and replace it with the edge with weight 2.
+This produces a spanning tree whose weight is
+\emph{smaller}:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -356,55 +348,53 @@ Tuloksena on virittävä puu, jonka paino on \emph{pienempi}:
 \end{tikzpicture}
 \end{center}
 
-Niinpä on aina optimaalinen ratkaisu valita pienimpään
-virittävään puuhun verkon kevein kaari.
-Vastaavalla tavalla voimme perustella
-seuraavaksi keveimmän kaaren valinnan, jne.
-Niinpä Kruskalin algoritmi toimii oikein ja
-tuottaa aina pienimmän virittävän puun.
+For this reason, it is always optimal to include the lightest edge
+in the minimum spanning tree.
+Using a similar argument, we can show that we
+can also add the second lightest edge to the tree, and so on.
+Thus, Kruskal's algorithm works correctly and
+always produces a minimum spanning tree.
 
-\subsubsection{Toteutus}
+\subsubsection{Implementation}
 
-Kruskalin algoritmi on mukavinta toteuttaa
-kaarilistan avulla. Algoritmin ensimmäinen vaihe
-on järjestää kaaret painojärjestykseen,
-missä kuluu aikaa $O(m \log m)$.
-Tämän jälkeen seuraa algoritmin toinen vaihe,
-jossa listalta valitaan kaaret mukaan puuhun.
+Kruskal's algorithm can be conveniently
+implemented using an edge list.
+The first phase of the algorithm sorts the
+edges in $O(m \log m)$ time.
+After this, the second phase of the algorithm
+builds the minimum spanning tree. 
 
-Algoritmin toinen vaihe rakentuu seuraavanlaisen silmukan ympärille:
+The second phase of the algorithm looks as follows:
 
 \begin{lstlisting}
 for (...) {
-  if (!sama(a,b)) liita(a,b);
+  if (!same(a,b)) union(a,b);
 }
 \end{lstlisting}
 
-Silmukka käy läpi kaikki listan kaaret
-niin, että muuttujat $a$ ja $b$ ovat kulloinkin kaaren
-päissä olevat solmut.
-Koodi käyttää kahta funktiota:
-funktio \texttt{sama} tutkii,
-ovatko solmut samassa komponentissa,
-ja funktio \texttt{liita}
-yhdistää kaksi komponenttia toisiinsa.
+The loop goes through the edges in the list
+and always processes an edge $a$--$b$
+where $a$ and $b$ are two nodes.
+The code uses two functions:
+the function \texttt{same} determines
+if the nodes are in the same component,
+and the function \texttt{unite}
+joins two components into a single component.
 
-Ongelmana on, kuinka toteuttaa tehokkaasti
-funktiot \texttt{sama} ja \texttt{liita}.
-Yksi mahdollisuus on pitää yllä verkkoa tavallisesti
-ja toteuttaa funktio \texttt{sama} verkon läpikäyntinä.
-Tällöin kuitenkin funktion \texttt{sama}
-suoritus veisi aikaa $O(n+m)$,
-mikä on hidasta, koska funktiota kutsutaan
-jokaisen kaaren kohdalla.
+The problem is how to efficiently implement
+the functions \texttt{same} and \texttt{unite}.
+One possibility is to maintain the graph
+in a usual way and implement the function
+\texttt{same} as graph traversal.
+However, using this technique,
+the running time of the function \texttt{same} would be $O(n+m)$,
+and this would be slow because the function will be
+called for each edge in the graph.
 
-Seuraavaksi esiteltävä union-find-rakenne
-ratkaisee asian.
-Se toteuttaa molemmat funktiot
-ajassa $O(\log n)$,
-jolloin Kruskalin algoritmin
-aikavaativuus on vain $O(m \log n)$
-kaarilistan järjestämisen jälkeen.
+We will solve the problem using a union-find structure
+that implements both the functions in $O(\log n)$ time.
+Thus, the time complexity of Kruskal's algorithm
+will be only $O(m \log n)$ after sorting the edge list.
 
 \section{Union-find-rakenne}
 
