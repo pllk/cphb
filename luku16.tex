@@ -1,32 +1,29 @@
 \chapter{Directed graphs}
 
-Tässä luvussa tutustumme kahteen suunnattujen
-verkkojen alaluokkaan:
+In this chapter, we focus on two classes of directed graphs:
 
 \begin{itemize}
-\item \key{Syklitön verkko}:
-Tällaisessa verkossa ei ole yhtään sykliä,
-eli mistään solmusta ei ole polkua takaisin
-solmuun itseensä.
-\item \key{Seuraajaverkko}:
-Tällaisessa verkossa jokaisen solmun lähtöaste on 1
-eli kullakin solmulla on yksikäsitteinen seuraaja.
+\item \key{Acyclic graph}:
+There are no cycles in the graph,
+so there is no path from any node to itself.
+\item \key{Successor graph}:
+The outdegree of each node is 1,
+so each node has a unique successor.
 \end{itemize}
-Osoittautuu, että kummassakin tapauksessa
-verkon käsittely on yleistä verkkoa helpompaa
-ja voimme käyttää tehokkaita algoritmeja, jotka
-hyödyntävät oletuksia verkon rakenteesta.
+It turns out that in both cases,
+we can design efficient algorithms that are based
+on the special properties of the graphs.
 
-\section{Topologinen järjestys}
+\section{Topological sorting}
 
-\index{topologinen jxrjestys@topologinen järjestys}
-\index{sykli@sykli}
+\index{topological sorting}
+\index{cycle}
 
-\key{Topologinen järjestys} on tapa
-järjestää suunnatun verkon solmut niin,
-että jos solmusta $a$ pääsee solmuun $b$,
-niin $a$ on ennen $b$:tä järjestyksessä.
-Esimerkiksi verkon
+A \key{topological sort} is a ordering
+of the nodes of a directed graph
+where node $a$ is always before node $b$
+if there is a path from node $a$ to node $b$.
+For example, for the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -45,7 +42,7 @@ Esimerkiksi verkon
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-yksi topologinen järjestys on
+a possible topological sort is
 $[4,1,5,2,3,6]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -66,50 +63,49 @@ $[4,1,5,2,3,6]$:
 \end{tikzpicture}
 \end{center}
 
-Topologinen järjestys on olemassa
-aina silloin, kun verkko on syklitön.
-Jos taas verkossa on sykli,
-topologista järjestystä ei voi muodostaa,
-koska mitään syklissä olevaa solmua ei voi
-valita ensimmäisenä topologiseen järjestykseen.
-Seuraavaksi näemme, miten syvyyshaun avulla
-voi muodostaa topologisen järjestyksen tai
-todeta, että tämä ei ole mahdollista syklin takia.
+A topological sort always exists
+if the graph is acyclic.
+However, if the graph contains a cycle,
+it is not possible to find a topological sort
+because no node in the cycle can appear
+before other nodes in the cycle in the ordering.
+It turns out that we can use depth-first search
+to both construct a topological sort or find out
+that it is not possible because the graph contains a cycle.
 
-\subsubsection{Algoritmi}
+\subsubsection{Algorithm}
 
-Ideana on käydä läpi verkon solmut ja aloittaa
-solmusta uusi syvyyshaku aina silloin, kun solmua
-ei ole vielä käsitelty.
-Kunkin syvyyshaun aikana solmuilla on
-kolme mahdollista tilaa:
+The idea is to go through the nodes in the graph
+and always begin a depth-first search if the
+node has not been processed yet.
+During each search, the nodes have three possible states:
 
 \begin{itemize}
-\item tila 0: solmua ei ole käsitelty (valkoinen)
-\item tila 1: solmun käsittely on alkanut (vaaleanharmaa)
-\item tila 2: solmu on käsitelty (tummanharmaa)
+\item state 0: the node has not been processed (white)
+\item state 1: the node is under processing (light gray)
+\item state 2: the node has been processed (dark gray)
 \end{itemize}
 
-Aluksi jokaisen verkon solmun tila on 0.
-Kun syvyyshaku saapuu solmuun, sen tilaksi tulee 1.
-Lopuksi kun syvyyshaku on käsitellyt kaikki
-solmun naapurit, solmun tilaksi tulee 2.
+Initially, the state of each node is 0.
+When a search reaches a node for the first time,
+the state of the node becomes 1.
+Finally, after all neighbors of a node have
+been processed, the state of the node becomes 2.
 
-Jos verkossa on sykli, tämä selviää syvyyshaun aikana siitä,
-että jossain vaiheessa haku saapuu solmuun,
-jonka tila on 1. Tässä tapauksessa topologista
-järjestystä ei voi muodostaa.
+If the graph contains a cycle, we will realize this
+during the search because sooner or later
+we will arrive at a node whose state is 1.
+In this case, it is not possible to construct a topological sort.
 
-Jos verkossa ei ole sykliä, topologinen järjestys
-saadaan muodostamalla lista, johon kukin solmu lisätään
-silloin, kun sen tilaksi tulee 2.
-Tämä lista käänteisenä on yksi verkon
-topologinen järjestys.
+If the graph doesn't contain a cycle, we can construct
+a topological sort by adding each node to the end of a list
+when its state becomes 2.
+This list in reverse order is a topological sort.
 
-\subsubsection{Esimerkki 1}
+\subsubsection{Example 1}
 
-Esimerkkiverkossa syvyyshaku etenee ensin solmusta 1
-solmuun 6 asti:
+In the example graph, the search first proceeds
+from node 1 to node 6:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -132,8 +128,8 @@ solmuun 6 asti:
 \end{tikzpicture}
 \end{center}
 
-Tässä vaiheessa solmu 6 on käsitelty, joten se lisätään listalle.
-Sen jälkeen haku palaa takaisinpäin:
+Now node 6 has been processed, so it is added to the list.
+After this, the search returns back:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -154,8 +150,8 @@ Sen jälkeen haku palaa takaisinpäin:
 \end{tikzpicture}
 \end{center}
 
-Tämän jälkeen listan sisältönä on $[6,3,2,1]$.
-Sitten seuraava syvyyshaku alkaa solmusta 4:
+At this point, the list contains values $[6,3,2,1]$.
+The next search begins at node 4:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -178,9 +174,11 @@ Sitten seuraava syvyyshaku alkaa solmusta 4:
 \end{tikzpicture}
 \end{center}
 
-Tämän seurauksena listaksi tulee $[6,3,2,1,5,4]$.
-Kaikki solmut on käyty läpi, joten topologinen järjestys on valmis.
-Topologinen järjestys on lista käänteisenä eli $[4,5,1,2,3,6]$:
+Thus, the final list is $[6,3,2,1,5,4]$.
+We have processed all nodes, so a topological sort has
+been found.
+The topological sort is the reverse list
+$[4,5,1,2,3,6]$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -201,13 +199,14 @@ Topologinen järjestys on lista käänteisenä eli $[4,5,1,2,3,6]$:
 \end{tikzpicture}
 \end{center}
 
-Huomaa, että topologinen järjestys ei ole yksikäsitteinen,
-vaan verkolla voi olla useita topologisia järjestyksiä.
+Note that a topological sort is not unique,
+but there can be several topological sorts for a graph.
 
-\subsubsection{Esimerkki 2}
+\subsubsection{Example 2}
 
-Tarkastellaan sitten tilannetta, jossa topologista järjestystä
-ei voi muodostaa syklin takia. Näin on seuraavassa verkossa:
+Let's consider another example where we can't
+construct a topological sort because there is a
+cycle in the graph:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -227,7 +226,7 @@ ei voi muodostaa syklin takia. Näin on seuraavassa verkossa:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-Nyt syvyyshaun aikana tapahtuu näin:
+Now the search proceeds as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle,fill=gray!20] (1) at (1,5) {$1$};
@@ -247,9 +246,9 @@ Nyt syvyyshaun aikana tapahtuu näin:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-Syvyyshaku saapuu tilassa 1 olevaan solmuun 2,
-mikä tarkoittaa, että verkossa on sykli.
-Tässä tapauksessa sykli on $2 \rightarrow 3 \rightarrow 5 \rightarrow 2$.
+The search reaches node 2 whose state is 1
+which means the graph contains a cycle.
+In this case, the cycle is $2 \rightarrow 3 \rightarrow 5 \rightarrow 2$.
 
 \section{Dynaaminen ohjelmointi}
 
