@@ -1,20 +1,21 @@
 \chapter{Strongly connectivity}
 
-\index{vahvasti yhtenxinen verkko@vahvasti yhtenäinen verkko}
+\index{strongly connected graph}
 
-Suunnatussa verkossa yhtenäisyys ei takaa sitä,
-että kahden solmun välillä olisi olemassa polkua,
-koska kaarten suunnat rajoittavat liikkumista.
-Niinpä suunnattuja verkkoja varten on mielekästä
-määritellä uusi käsite,
-joka vaatii enemmän verkon yhtenäisyydeltä.
+In a directed graph, the directions of
+the edges restrict possible paths in the graph,
+so even if the graph is connected,
+this doesn't guarantee that there would be
+a path between any two nodes.
+Thus, it is meaningful to define a new concept
+for directed graphs that requires more than connectivity.
 
-Verkko on \key{vahvasti yhtenäinen},
-jos mistä tahansa solmusta on olemassa polku
-kaikkiin muihin solmuihin.
-Esimerkiksi seuraavassa kuvassa vasen
-verkko on vahvasti yhtenäinen,
-kun taas oikea verkko ei ole.
+A graph is \key{strongly connected}
+if there is a path from any node to all
+other nodes in the graph.
+For example, in the following picture,
+the left graph is strongly connected,
+while the right graph is not.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -40,21 +41,21 @@ kun taas oikea verkko ei ole.
 \end{tikzpicture}
 \end{center}
 
-Oikea verkko ei ole vahvasti yhtenäinen,
-koska esimerkiksi solmusta 2 ei ole
-polkua solmuun 1.
+The right graph is not strongly connected
+because, for example, there is no path
+from node 2 to node 1.
 
-\index{vahvasti yhtenxinen komponentti@vahvasti yhtenäinen komponentti}
-\index{komponenttiverkko@komponenttiverkko}
+\index{strongly connected component}
+\index{component graph}
 
-Verkon \key{vahvasti yhtenäiset komponentit}
-jakavat verkon solmut mahdollisimman
-suuriin vahvasti yhtenäisiin osiin.
-Verkon vahvasti yhtenäiset komponentit
-muodostavat syklittömän \key{komponenttiverkon},
-joka kuvaa alkuperäisen verkon syvärakennetta.
+The \key{strongly connected components}
+of a graph divide the graph into strongly connected
+subgraphs that are as large as possible.
+The strongly connected components form an
+acyclic \key{component graph} that represents
+the deep structure of the original graph.
 
-Esimerkiksi verkon
+For example, for the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -77,7 +78,7 @@ Esimerkiksi verkon
 \path[draw,thick,->] (6) -- (7);
 \end{tikzpicture}
 \end{center}
-vahvasti yhtenäiset komponentit ovat
+the strongly connected components are as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -105,7 +106,7 @@ vahvasti yhtenäiset komponentit ovat
 \draw [red,thick,dashed,line width=2pt] (-6.5,0.5) rectangle (-7.5,-0.5);
 \end{tikzpicture}
 \end{center}
-ja ne muodostavat seuraavan komponenttiverkon:
+The corresponding component graph is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (-3,1) {$B$};
@@ -120,40 +121,41 @@ ja ne muodostavat seuraavan komponenttiverkon:
 \path[draw,thick,->] (3) -- (4);
 \end{tikzpicture}
 \end{center}
-Komponentit ovat $A=\{1,2\}$,
-$B=\{3,6,7\}$, $C=\{4\}$ sekä $D=\{5\}$.
+The components are $A=\{1,2\}$,
+$B=\{3,6,7\}$, $C=\{4\}$ and $D=\{5\}$.
 
-Komponenttiverkko on syklitön, suunnattu verkko,
-jonka käsittely on alkuperäistä verkkoa
-helpompaa, koska siinä ei ole syklejä.
-Niinpä komponenttiverkolle voi muodostaa
-luvun 16 tapaan topologisen järjestyksen
-ja soveltaa sen jälkeen dynaamista ohjelmintia
-verkon käsittelyyn.
+A component graph is an acyclic, directed graph,
+so it is easier to process than the original
+graph because it doesn't contain cycles.
+Thus, as in Chapter 16, it is possible to 
+construct a topological sort for a component
+graph and also use dynamic programming algorithms.
 
-\section{Kosarajun algoritmi}
+\section{Kosaraju's algorithm}
 
-\index{Kosarajun algoritmi@Kosarajun algoritmi}
+\index{Kosaraju's algorithm}
 
-\key{Kosarajun algoritmi} on tehokas
-menetelmä verkon
-vahvasti yhtenäisten komponenttien etsimiseen.
-Se suorittaa verkkoon
-kaksi syvyyshakua, joista ensimmäinen
-kerää solmut listaan verkon rakenteen perusteella
-ja toinen muodostaa vahvasti yhtenäiset komponentit.
+\key{Kosaraju's algorithm} is an efficient
+method for finding the strongly connected components
+of a directed graph.
+It performs two depth-first searches:
+the first search constructs a list of nodes
+according to the structure of the graph,
+and the second search forms the strongly connected components.
 
-\subsubsection{Syvyyshaku 1}
+\subsubsection{Search 1}
 
-Algoritmin ensimmäinen vaihe muodostaa listan solmuista
-syvyyshaun käsittelyjärjestyksessä.
-Algoritmi käy solmut läpi yksi kerrallaan,
-ja jos solmua ei ole vielä käsitelty, algoritmi suorittaa
-solmusta alkaen syvyyshaun.
-Solmu lisätään listalle, kun syvyyshaku on 
-käsitellyt kaikki siitä lähtevät kaaret.
+The first phase of the algorithm constructs
+a list of nodes in the order in which a
+depth-first search processes them.
+The algorithm goes through the nodes,
+and begins a depth-first search at each 
+unprocessed node.
+Each node will be added to the list
+after it has been processed.
 
-Esimerkkiverkossa solmujen käsittelyjärjestys on:
+In the example graph the nodes are processed
+in the following order:
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -185,14 +187,15 @@ Esimerkkiverkossa solmujen käsittelyjärjestys on:
 \end{tikzpicture}
 \end{center}
 
-Solmun kohdalla oleva merkintä $x/y$ tarkoittaa, että solmun
-käsittely syvyyshaussa alkoi hetkellä $x$ ja päättyi hetkellä $y$.
-Kun solmut järjestetään käsittelyn päättymisajan
-mukaan, tuloksena on seuraava järjestys:
+The notation $x/y$ means that
+processing the node started at moment $x$
+and ended at moment $y$.
+When the nodes are sorted according to
+ending times, the result is the following list:
 
 \begin{tabular}{ll}
 \\
-solmu & päättymisaika \\
+node & ending time \\
 \hline
 4 & 5 \\
 5 & 6 \\
@@ -204,22 +207,23 @@ solmu & päättymisaika \\
 \\
 \end{tabular}
 
-Solmujen käsittelyjärjestys algoritmin seuraavassa vaiheessa
-tulee olemaan tämä järjestys käänteisenä eli $[3,7,6,1,2,5,4]$.
+In the second phase of the algorithm,
+the nodes will be processed
+in reverse order: $[3,7,6,1,2,5,4]$.
 
-\subsubsection{Syvyyshaku 2}
+\subsubsection{Search 2}
 
-Algoritmin toinen vaihe muodostaa verkon vahvasti
-yhtenäiset komponentit.
-Ennen toista syvyyshakua algoritmi muuttaa
-jokaisen kaaren suunnan käänteiseksi.
-Tämä varmistaa,
-että toisen syvyyshaun aikana löydetään
-joka kerta vahvasti yhtenäinen komponentti,
-johon ei kuulu ylimääräisiä solmuja.
+The second phase of the algorithm
+forms the strongly connected components
+of the graph.
+First, the algorithm reverses every
+edge in the graph.
+This ensures that during the second search,
+we will always find a strongly connected
+component without extra nodes.
 
-Esimerkkiverkko on käännettynä seuraava:
-
+The example graph becomes as follows
+after reversing the edges:
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -243,17 +247,16 @@ Esimerkkiverkko on käännettynä seuraava:
 \end{tikzpicture}
 \end{center}
 
-Tämän jälkeen algoritmi käy läpi
-solmut käänteisessä ensimmäisen syvyyshaun
-tuottamassa järjestyksessä.
-Jos solmu ei kuulu vielä komponenttiin,
-siitä alkaa uusi syvyyshaku.
-Solmun komponenttiin liitetään kaikki aiemmin
-käsittelemättömät solmut,
-joihin syvyyshaku pääsee solmusta.
+After this, the algorithm goes through the nodes
+in the order defined by the first search.
+If a node doesn't belong to a component,
+the algorithm creates a new component
+and begins a depth-first search
+where all new nodes found during the search
+are added to the new component.
 
-Esimerkkiverkossa muodostuu ensin komponentti
-solmusta 3 alkaen:
+In the example graph, the first component
+begins at node 3:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -283,13 +286,13 @@ solmusta 3 alkaen:
 \end{tikzpicture}
 \end{center}
 
-Huomaa, että kaarten kääntämisen ansiosta komponentti
-ei pääse ''vuotamaan'' muihin verkon osiin.
+Note that since we reversed all edges in the graph,
+the component doesn't ''leak'' to other parts in the graph.
 
 \begin{samepage}
-Sitten listalla ovat solmut 7 ja 6, mutta ne on jo liitetty
-komponenttiin.
-Seuraava uusi solmu on 1, josta muodostuu uusi komponentti:
+The next nodes in the list are nodes 7 and 6,
+but they already belong to a component.
+The next new component begins at node 1:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -320,8 +323,8 @@ Seuraava uusi solmu on 1, josta muodostuu uusi komponentti:
 \end{center}
 \end{samepage}
 
-Viimeisenä algoritmi käsittelee solmut 5 ja 4,
-jotka tuottavat loput vahvasti yhtenäiset komponentit:
+Finally, the algorithm processes nodes 5 and 5
+that create the remaining strongy connected components:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -351,31 +354,34 @@ jotka tuottavat loput vahvasti yhtenäiset komponentit:
 \end{tikzpicture}
 \end{center}
 
-Algoritmin aikavaativuus on $O(n+m)$,
-missä $n$ on solmujen määrä ja $m$ on kaarten määrä.
-Tämä johtuu siitä,
-että algoritmi suorittaa kaksi syvyyshakua ja
-kummankin haun aikavaativuus on $O(n+m)$.
+The time complexity of the algorithm is $O(n+m)$
+where $n$ is the number of nodes and $m$
+is the number of edges.
+The reason for this is that the algorithm
+performs two depth-first searches and
+each search takes $O(n+m)$ time.
 
-\section{2SAT-ongelma}
+\section{2SAT problem}
 
-\index{2SAT-ongelma}
+\index{2SAT problem}
 
-Vahvasti yhtenäisyys liittyy myös \key{2SAT-ongelman} ratkaisemiseen.
-Siinä annettuna on looginen lauseke muotoa
+Strongly connectivity is also linked with the
+\key{2SAT problem}.
+In this problem, we are given a logical formula
 \[
 (a_1 \lor b_1) \land (a_2 \lor b_2) \land \cdots \land (a_m \lor b_m),
 \]
-jossa jokainen $a_i$ ja $b_i$ on joko looginen muuttuja
+where each $a_i$ and $b_i$ is either a logical variable
 ($x_1,x_2,\ldots,x_n$)
-tai loogisen muuttujan negaatio ($\lnot x_1, \lnot x_2, \ldots, \lnot x_n$).
-Merkit ''$\land$'' ja ''$\lor$'' tarkoittavat
-loogisia operaatioita ''ja'' ja ''tai''.
-Tehtävänä on valita muuttujille arvot niin,
-että lauseke on tosi,
-tai todeta, että tämä ei ole mahdollista.
+or a negation of a logical variable
+($\lnot x_1, \lnot x_2, \ldots, \lnot x_n$).
+The symbols ''$\land$'' and ''$\lor$'' denote
+logical operators ''and'' and ''or''.
+Our task is to assign each variable a value
+so that the formula is true or state
+that it is not possible.
 
-Esimerkiksi lauseke
+For example, the formula
 \[
 L_1 = (x_2 \lor \lnot x_1) \land
       (\lnot x_1 \lor \lnot x_2) \land
@@ -383,34 +389,35 @@ L_1 = (x_2 \lor \lnot x_1) \land
       (\lnot x_2 \lor \lnot x_3) \land
       (x_1 \lor x_4)
 \]
-on tosi, kun $x_1$ ja $x_2$ ovat epätosia
-ja $x_3$ ja $x_4$ ovat tosia.
-Vastaavasti lauseke
+is true when $x_1$ and $x_2$ are false
+and $x_3$ and $x_4$ are true.
+However, the formula
 \[
 L_2 = (x_1 \lor x_2) \land
       (x_1 \lor \lnot x_2) \land
       (\lnot x_1 \lor x_3) \land
       (\lnot x_1 \lor \lnot x_3)
 \]
-on epätosi riippumatta muuttujien valinnasta.
-Tämän näkee siitä, että muuttujalle $x_1$
-ei ole mahdollista arvoa, joka ei tuottaisi ristiriitaa.
-Jos $x_1$ on epätosi, pitäisi päteä sekä $x_2$ että $\lnot x_2$,
-mikä on mahdotonta.
-Jos taas $x_1$ on tosi,
-pitäisi päteä sekä $x_3$ että $\lnot x_3$,
-mikä on myös mahdotonta.
+is always false.
+The reason for this is that we can't
+choose a value for variable $x_1$
+without creating a contradiction.
+If $x_1$ is false, both $x_2$ and $\lnot x_2$
+should hold which is impossible,
+and if $x_1$ is true, both $x_3$ and $\lnot x_3$
+should hold which is impossible as well.
 
-2SAT-ongelman saa muutettua verkoksi niin,
-että jokainen muuttuja $x_i$ ja negaatio $\lnot x_i$
-on yksi verkon solmuista
-ja muuttujien riippuvuudet ovat kaaria.
-Jokaisesta parista $(a_i \lor b_i)$ tulee kaksi
-kaarta: $\lnot a_i \to b_i$ sekä $\lnot b_i \to a_i$.
-Nämä tarkoittavat, että jos $a_i$ ei päde,
-niin $b_i$:n on pakko päteä, ja päinvastoin.
+The 2SAT problem can be represented as a graph
+where the nodes correspond to
+variables $x_i$ and negations $\lnot x_i$,
+and the edges determine the connections
+between the variables.
+Each pair $(a_i \lor b_i)$ generates two edges:
+$\lnot a_i \to b_i$ and $\lnot b_i \to a_i$.
+This means that if $a_i$ doesn't hold,
+$b_i$ must hold, and vice versa.
 
-Lausekkeen $L_1$ verkosta tulee nyt:
+The graph for formula $L_1$ is:
 \\
 \begin{center}
 \begin{tikzpicture}[scale=1.0,minimum size=2pt]
@@ -435,8 +442,7 @@ Lausekkeen $L_1$ verkosta tulee nyt:
 \path[draw,thick,->] (7) -- (5);
 \end{tikzpicture}
 \end{center}
-
-Lausekkeen $L_2$ verkosta taas tulee:
+And the graph for formula $L_2$ is:
 \\
 \begin{center}
 \begin{tikzpicture}[scale=1.0,minimum size=2pt]
@@ -458,40 +464,43 @@ Lausekkeen $L_2$ verkosta taas tulee:
 \end{tikzpicture}
 \end{center}
 
-Verkon rakenne kertoo, onko 2SAT-ongelmalla ratkaisua.
-Jos on jokin muuttuja $x_i$ niin,
-että $x_i$ ja $\lnot x_i$ ovat samassa
-vahvasti yhtenäisessä komponentissa,
-niin ratkaisua ei ole olemassa.
-Tällöin verkossa on polku sekä $x_i$:stä
-$\lnot x_i$:ään että $\lnot x_i$:stä $x_i$:ään,
-eli kumman tahansa arvon valitseminen
-muuttujalle $x_i$ pakottaisi myös valitsemaan
-vastakkaisen arvon, mikä on ristiriita.
-Jos taas verkossa ei ole tällaista
-solmua $x_i$, ratkaisu on olemassa.
+The structure of the graph indicates whether
+the corresponding 2SAT problem can be solved.
+If there is a variable $x_i$ such that
+both $x_i$ and $\lnot x_i$ belong to the
+same strongly connected component,
+then there are no solutions.
+In this case, the graph contains
+a path from $x_i$ to $\lnot x_i$,
+and also a path from $\lnot x_i$ to $x_i$,
+so both $x_i$ and $\lnot x_i$ should hold
+which is not possible.
+However, if the graph doesn't contain
+such a variable, then there is always a solution.
 
-Lausekkeen $L_1$ verkossa
-mitkään solmut $x_i$ ja $\lnot x_i$
-eivät ole samassa vahvasti yhtenäisessä komponentissa,
-mikä tarkoittaa, että ratkaisu on olemassa.
-Lausekkeen $L_2$ verkossa taas kaikki solmut
-ovat samassa vahvasti yhtenäisessä komponentissa,
-eli ratkaisua ei ole olemassa.
+In the graph of formula $L_1$
+no nodes $x_i$ and $\lnot x_i$
+belong to the same strongly connected component,
+so there is a solution.
+In the graph of formula $L_2$
+all nodes belong to the same strongly connected component,
+so there are no solutions.
 
-Jos ratkaisu on olemassa, muuttujien arvot saa selville
-käymällä komponenttiverkko läpi käänteisessä
-topologisessa järjestyksessä.
-Verkosta otetaan käsittelyyn ja poistetaan
-joka vaiheessa komponentti,
-josta ei lähde kaaria muihin jäljellä
-oleviin komponentteihin.
-Jos komponentin muuttujille ei ole vielä valittu arvoja,
-ne saavat komponentin mukaiset arvot.
-Jos taas arvot on jo valittu, niitä ei muuteta.
-Näin jatketaan, kunnes jokainen lausekkeen muuttuja on saanut arvon.
+If a solution exists, the values for the variables
+can be found by processing the nodes of the
+component graph in a reverse topological sort order.
+At each step, we process and remove a component 
+that doesn't contain edges that lead to the
+remaining components.
+If the variables in the component don't have values,
+their values will be determined
+according to the component,
+and if they already have values,
+they are not changed.
+The process continues until all variables
+have been assigned a value.
 
-Lausekkeen $L_1$ verkon komponenttiverkko on seuraava:
+The component graph for formula $L_1$ is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
 \node[draw, circle] (1) at (0,0) {$A$};
@@ -505,43 +514,37 @@ Lausekkeen $L_1$ verkon komponenttiverkko on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Komponentit ovat
+The components are
 $A = \{\lnot x_4\}$,
 $B = \{x_1, x_2, \lnot x_3\}$,
-$C = \{\lnot x_1, \lnot x_2, x_3\}$ sekä
+$C = \{\lnot x_1, \lnot x_2, x_3\}$ and
 $D = \{x_4\}$.
-Ratkaisun muodostuksessa
-käsitellään ensin komponentti $D$,
-josta $x_4$ saa arvon tosi.
-Sitten käsitellään komponentti $C$,
-josta $x_1$ ja $x_2$ tulevat epätodeksi
-ja $x_3$ tulee todeksi.
-Kaikki muuttujat ovat saaneet arvon,
-joten myöhemmin käsiteltävät
-komponentit $B$ ja $A$ eivät vaikuta enää ratkaisuun.
+When constructing the solution,
+we first process component $D$
+where $x_4$ becomes true.
+After this, we process component $C$
+where $x_1$ and $x_2$ become false
+and $x_3$ becomes true.
+All variables have been assigned a value,
+so the remaining components $A$ and $B$
+don't change the variables anymore.
 
-Huomaa, että tämän menetelmän toiminta
-perustuu verkon erityiseen rakenteeseen.
-Jos solmusta $x_i$ pääsee
-solmuun $x_j$,
-josta pääsee solmuun $\lnot x_j$,
-niin $x_i$ ei saa koskaan arvoa tosi.
-Tämä johtuu siitä, että
-solmusta $\lnot x_j$ täytyy
-päästä myös solmuun $\lnot x_i$,
-koska kaikki riippuvuudet
-ovat verkossa molempiin suuntiin.
-Niinpä sekä $x_i$ että $x_j$
-saavat varmasti arvokseen epätosi.
+Note that this method works because the
+structure of the graph is special.
+If there are paths from node $x_i$ to node $x_j$
+and from node $x_j$ to node $\lnot x_j$,
+then node $x_i$ never becomes true.
+The reason for this is that there is also
+a path from node $\lnot x_j$ to node $\lnot x_i$,
+and both $x_i$ and $x_j$ become false.
 
-\index{3SAT-ongelma}
+\index{3SAT problem}
 
-2SAT-ongelman vaikeampi versio on \key{3SAT-ongelma},
-jossa jokainen lausekkeen osa on muotoa
+A more difficult problem is the \key{3SAT problem}
+where each part of the formula is of the form
 $(a_i \lor b_i \lor c_i)$.
-Tämän ongelman ratkaisemiseen \textit{ei}
-tunneta tehokasta menetelmää,
-vaan kyseessä on NP-vaikea ongelma.
+No efficient algorithm for solving this problem
+is known, but it is a NP-hard problem.
 
 
 
