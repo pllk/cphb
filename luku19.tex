@@ -1,33 +1,30 @@
 \chapter{Paths and circuits}
 
-Tämä luku käsittelee kahdenlaisia polkuja verkossa:
+This chapter focuses on two types of paths in a graph:
 \begin{itemize}
-\item \key{Eulerin polku} on verkossa oleva
-polku, joka kulkee tasan kerran jokaista
-verkon kaarta pitkin.
-\item \key{Hamiltonin polku} on verkossa
-oleva polku, joka käy tasan kerran
-jokaisessa verkon solmussa.
+\item An \key{Eulerian path} is a path that
+goes through each edge exactly once.
+\item A \key{Hamiltonian path} is a path
+that visits each node exactly once.
 \end{itemize}
-Vaikka Eulerin ja Hamiltonin polut
-näyttävät päältä päin
-samantapaisilta käsitteiltä,
-niihin liittyy hyvin erilaisia laskennallisia ongelmia.
-Osoittautuu, että yksinkertainen verkon solmujen
-asteisiin liittyvä sääntö ratkaisee, onko verkossa
-Eulerin polkua, ja polun muodostamiseen on myös
-olemassa tehokas algoritmi.
-Sen sijaan Hamiltonin polun etsimiseen ei tunneta
-mitään tehokasta algoritmia, vaan kyseessä on
-NP-vaikea ongelma.
+While Eulerian and Hamiltonian paths look like
+similar concepts at first glance,
+the computational problems related to them
+are very different.
+It turns out that a simple rule based on node degrees
+determines if a graph contains an Eulerian path,
+and there is also an efficient algorithm for
+finding the path.
+On the contrary, finding a Hamiltonian path is a NP-hard
+problem and thus no efficient algorithm is known for solving the problem.
 
-\section{Eulerin polku}
+\section{Eulerian path}
 
-\index{Eulerin polku@Eulerin polku}
+\index{Eulerian path}
 
-\key{Eulerin polku} on verkossa oleva
-polku, joka kulkee tarkalleen kerran jokaista kaarta pitkin.
-Esimerkiksi verkossa
+An \key{Eulerian path} is a path
+that goes exactly once through each edge in the graph.
+For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -44,7 +41,7 @@ Esimerkiksi verkossa
 \path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-on Eulerin polku solmusta 2 solmuun 5:
+has an Eulerian path from node 2 to node 5:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -68,11 +65,11 @@ on Eulerin polku solmusta 2 solmuun 5:
 \path[draw=red,thick,->,line width=2pt] (3) -- node[font=\small,label={[red]south:6.}] {} (5);
 \end{tikzpicture}
 \end{center}
-\index{Eulerin kierros@Eulerin kierros}
-\key{Eulerin kierros}
-on puolestaan Eulerin polku,
-jonka alku- ja loppusolmu ovat samat.
-Esimerkiksi verkossa
+\index{Eulerian circuit}
+An \key{Eulerian circuit}
+is an Eulerian path that begins and ends
+at the same node.
+For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -89,7 +86,7 @@ Esimerkiksi verkossa
 \path[draw,thick,-] (2) -- (4);
 \end{tikzpicture}
 \end{center}
-on Eulerin kierros, jonka alku- ja loppusolmu on 1:
+has an Eulerian circuit that starts and ends at node 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -114,27 +111,27 @@ on Eulerin kierros, jonka alku- ja loppusolmu on 1:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Olemassaolo}
+\subsubsection{Existence}
 
-Osoittautuu, että Eulerin polun ja kierroksen olemassaolo
-riippuu verkon solmujen asteista.
-Solmun aste on sen naapurien määrä eli niiden solmujen määrä,
-jotka ovat yhteydessä solmuun kaarella.
+It turns out that the existence of Eulerian paths and circuits
+depends on the degrees of the nodes in the graph.
+The degree of a node is the number of its neighbours, i.e.,
+the number of nodes that are connected with a direct edge.
 
-Suuntaamattomassa verkossa on Eulerin polku,
-jos kaikki kaaret ovat samassa yhtenäisessä komponentissa ja
+An undirected graph has an Eulerian path if all the edges
+belong to the same connected component and
 \begin{itemize}
-\item jokaisen solmun aste on parillinen \textit{tai}
-\item tarkalleen kahden solmun aste on pariton ja kaikkien
-muiden solmujen aste on parillinen.
+\item the degree of each node is even \emph{or}
+\item the degree of exactly two nodes is odd,
+and the degree of all other nodes is even.
 \end{itemize}
 
-Ensimmäisessä tapauksessa Eulerin polku on samalla myös Eulerin kierros.
-Jälkimmäisessä tapauksessa Eulerin polun alku- ja loppusolmu ovat
-paritonasteiset solmut ja se ei ole Eulerin kierros.
+In the first case, each Eulerian path is also an Eulerian circuit.
+In the second case, the odd-degree nodes are the starting
+and ending nodes of an Eulerian path, and it is not an Eulerian circuit.
 
 \begin{samepage}
-Esimerkiksi verkossa
+For example, in the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -152,34 +149,37 @@ Esimerkiksi verkossa
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-solmujen 1, 3 ja 4 aste on 2 ja solmujen 2 ja 5 aste on 3.
-Tarkalleen kahden solmun aste on pariton,
-joten verkossa on Eulerin polku solmujen 2 ja 5 välillä,
-mutta verkossa ei ole Eulerin kierrosta.
+the degree of nodes 1, 3 and 4 is 2,
+and the degree of nodes 2 and 5 is 3.
+Exactly two nodes have an even degree,
+so there is an Eulerian path between nodes 2 and 5,
+but the graph doesn't contain an Eulerian circuit.
 
-Jos verkko on suunnattu, tilanne on hieman hankalampi.
-Silloin Eulerin polun ja kierroksen olemassaoloon
-vaikuttavat solmujen lähtö- ja tuloasteet.
-Solmun lähtöaste on solmusta lähtevien kaarten määrä,
-ja vastaavasti solmun tuloaste on solmuun tulevien kaarten määrä.
+In a directed graph, the situation is a bit more difficult.
+In this case we should focus on indegree and outdegrees
+of the nodes in the graph.
+The indegree of a node is the number of edges that
+end at the node,
+and correspondingly, the outdegree is the number of
+edges that begin at the node.
 
-Suunnatussa verkossa on Eulerin polku, jos
-kaikki kaaret ovat samassa vahvasti yhtenäisessä
-komponentissa ja
+A directed graph contains an Eulerian path
+if all the edges belong to the same strongly
+connected component and
 \begin{itemize}
-\item jokaisen solmun lähtö- ja tuloaste on sama \textit{tai}
-\item yhdessä solmussa lähtöaste on yhden suurempi kuin tuloaste,
-toisessa solmussa tuloaste on yhden suurempi kuin lähtöaste
-ja kaikissa muissa solmuissa lähtö- ja tuloaste on sama.
+\item each node has the same indegree and outdegree \emph{or}
+\item in one node, indegree is one larger than outdegree,
+in another node, outdegree is one larger than indegree,
+and all other nodes have the same indegree and outdegree.
 \end{itemize}
 
-Tilanne on vastaava kuin suuntaamattomassa verkossa:
-ensimmäisessä tapauksessa Eulerin polku on myös Eulerin kierros,
-ja toisessa tapauksessa verkossa on vain Eulerin polku,
-jonka lähtösolmussa lähtöaste on suurempi ja
-päätesolmussa tuloaste on suurempi.
+In the first case,
+each Eulerian path is also an Eulerian circuit,
+and in the second case, the graph only contains an Eulerian path
+that begins at the node whose outdegree is larger
+and ends at the node whose indegree is larger.
 
-Esimerkiksi verkossa
+For example, in the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -196,10 +196,11 @@ Esimerkiksi verkossa
 \path[draw,thick,->,>=latex] (5) -- (4);
 \end{tikzpicture}
 \end{center}
-solmuissa 1, 3 ja 4 sekä lähtöaste että tuloaste on 1.
-Solmussa 2 tuloaste on 1 ja lähtöaste on 2,
-kun taas solmussa 5 tulosate on 2 ja lähtöaste on 1.
-Niinpä verkossa on Eulerin polku solmusta 2 solmuun 5:
+nodes 1, 3 and 4 have both indegree 1 and outdegree 1,
+node 2 has indegree 1 and outdegree 2,
+and node 5 has indegree 2 and outdegree 1.
+Hence, the graph contains an Eulerian path
+from node 2 to node 5:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -224,45 +225,45 @@ Niinpä verkossa on Eulerin polku solmusta 2 solmuun 5:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Hierholzerin algoritmi}
+\subsubsection{Hierholzer's algorithm}
 
-\index{Hierholzerin algoritmi@Hierholzerin algoritmi}
+\index{Hierholzer's algorithm}
 
-\key{Hierholzerin algoritmi} muodostaa Eulerin kierroksen
-suuntaamattomassa verkossa.
-Algoritmi olettaa, että kaikki kaaret ovat samassa
-komponentissa ja jokaisen solmun aste on parillinen.
-Algoritmi on mahdollista toteuttaa niin, että sen
-aikavaativuus on $O(n+m)$.
+\key{Hierholzer's algorithm} constructs an Eulerian circuit
+in an undirected graph.
+The algorithm assumes that all edges belong to
+the same connected component,
+and the degree of each node is even.
+The algorithm can be implemented in $O(n+m)$ time.
 
-Hierholzerin algoritmi muodostaa ensin verkkoon jonkin kierroksen,
-johon kuuluu osa verkon kaarista.
-Sen jälkeen algoritmi alkaa laajentaa kierrosta
-lisäämällä sen osaksi uusia alikierroksia.
-Tämä jatkuu niin kauan, kunnes kaikki kaaret kuuluvat
-kierrokseen ja siitä on tullut Eulerin kierros.
+First, the algorithm constructs a circuit that contains
+some (not necessarily all) of the edges in the graph.
+After this, the algorithm extends the circuit
+step by step by adding subcircuits to it.
+This continues until all edges have been added
+and the Eulerian circuit is ready.
 
-Algoritmi laajentaa kierrosta valitsemalla jonkin
-kierrokseen kuuluvan solmun $x$,
-jonka kaikki kaaret eivät ole vielä mukana kierroksessa.
-Algoritmi muodostaa solmusta $x$ alkaen uuden polun
-kulkien vain sellaisia kaaria, jotka eivät ole
-mukana kierroksessa.
-Koska jokaisen solmun aste on parillinen,
-ennemmin tai myöhemmin polku palaa takaisin lähtösolmuun $x$.
+The algorithm extends the circuit by always choosing
+a node $x$ that belongs to the circuit but has
+some edges that are not included in the circuit.
+The algorith constructs a new path from node $x$
+that only contains edges that are not in the circuit.
+Since the degree of each node is even,
+sooner or later the path will return to node $x$
+which creates a subcircuit.
 
-Jos verkossa on kaksi paritonasteista solmua,
-Hierholzerin algoritmilla voi myös muodostaa
-Eulerin polun lisäämällä kaaren
-paritonasteisten solmujen välille.
-Tämän jälkeen verkosta voi etsiä ensin
-Eulerin kierroksen ja poistaa siitä sitten
-ylimääräisen kaaren, jolloin tuloksena on Eulerin polku.
+If the graph contains two odd-degree nodes,
+Hierholzer's algorithm can also be used for
+constructing an Eulerian path by adding an
+extra edge between the odd-degree nodes.
+After this, we can first construct an Eulerian circuit
+and then remove the extra edge,
+which produces an Eulerian path in the original graph.
 
-\subsubsection{Esimerkki}
+\subsubsection{Example}
 
 \begin{samepage}
-Tarkastellaan algoritmin toimintaa seuraavassa verkossa:
+Let's consider the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (3,5) {$1$};
@@ -288,9 +289,10 @@ Tarkastellaan algoritmin toimintaa seuraavassa verkossa:
 \end{samepage}
 
 \begin{samepage}
-Oletetaan, että algoritmi aloittaa
-ensimmäisen kierroksen solmusta 1.
-Siitä syntyy kierros $1 \rightarrow 2 \rightarrow 3 \rightarrow 1$:
+Assume that the algorithm first creates a circuit
+that begins at node 1.
+One possible circuit is
+$1 \rightarrow 2 \rightarrow 3 \rightarrow 1$:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (3,5) {$1$};
@@ -318,8 +320,8 @@ Siitä syntyy kierros $1 \rightarrow 2 \rightarrow 3 \rightarrow 1$:
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-
-Seuraavaksi algoritmi lisää mukaan kierroksen
+After this, the algorithm adds
+a subcircuit
 $2 \rightarrow 5 \rightarrow 6 \rightarrow 2$:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -350,8 +352,7 @@ $2 \rightarrow 5 \rightarrow 6 \rightarrow 2$:
 \path[draw=red,thick,->,line width=2pt] (3) -- node[font=\small,label={[red]east:6.}] {} (1);
 \end{tikzpicture}
 \end{center}
-
-Lopuksi algoritmi lisää mukaan kierroksen
+Finally, the algorithm adds a subcircuit
 $6 \rightarrow 3 \rightarrow 4 \rightarrow 7 \rightarrow 6$:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -386,17 +387,16 @@ $6 \rightarrow 3 \rightarrow 4 \rightarrow 7 \rightarrow 6$:
 \path[draw=red,thick,->,line width=2pt] (3) -- node[font=\small,label={[red]east:10.}] {} (1);
 \end{tikzpicture}
 \end{center}
+Now all edges are included in the circuit,
+so we have successfully constructed an Eulerian circuit.
 
-Nyt kaikki kaaret ovat kierroksessa,
-joten Eulerin kierros on valmis.
+\section{Hamiltonian path}
 
-\section{Hamiltonin polku}
+\index{Hamiltonian path}
 
-\index{Hamiltonin polku@Hamiltonin polku}
-\key{Hamiltonin polku}
-on verkossa oleva polku,
-joka kulkee tarkalleen kerran jokaisen solmun kautta.
-Esimerkiksi verkossa
+A \key{Hamiltonian path} is a path
+that visits each node in the graph exactly once.
+For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -413,7 +413,7 @@ Esimerkiksi verkossa
 \path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-on Hamiltonin polku solmusta 1 solmuun 3:
+contains a Hamiltonian path from node 1 to node 3:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -436,11 +436,12 @@ on Hamiltonin polku solmusta 1 solmuun 3:
 \end{tikzpicture}
 \end{center}
 
-\index{Hamiltonin kierros@Hamiltonin kierros}
-Jos Hamiltonin polun alku- ja loppusolmu on sama,
-kyseessä on \key{Hamiltonin kierros}.
-Äskeisessä verkossa on myös
-Hamiltonin kierros, jonka alku- ja loppusolmu on solmu 1:
+\index{Hamiltonian circuit}
+
+If a Hamiltonian path begins and ends at the same node,
+it is called a \key{Hamiltonian circuit}.
+The graph above also has an Hamiltonian circuit
+that begins and ends at node 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -464,89 +465,85 @@ Hamiltonin kierros, jonka alku- ja loppusolmu on solmu 1:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Olemassaolo}
+\subsubsection{Existence}
 
-Hamiltonin polun olemassaoloon ei tiedetä
-mitään verkon rakenteeseen liittyvää ehtoa,
-jonka voisi tarkistaa tehokkaasti.
-Joissakin erikoistapauksissa voidaan silti sanoa
-varmasti, että verkossa on Hamiltonin polku.
+No efficient way is known to check if a graph
+contains a Hamiltonian path.
+Still, in some special cases we can be certain
+that the graph contains a Hamiltonian path.
 
-Yksinkertainen havainto on, että jos verkko on täydellinen
-eli jokaisen solmun välillä on kaari,
-niin siinä on Hamiltonin polku.
-Myös vahvempia tuloksia on saatu aikaan:
+A simple observation is that if the graph is complete,
+i.e., there is an edge between all pairs of nodes,
+it also contains a Hamiltonian path.
+Also stronger results have been achieved:
 
 \begin{itemize}
 \item
-\index{Diracin lause@Diracin lause}
-\key{Diracin lause}:
-Jos jokaisen verkon solmun aste on $n/2$ tai suurempi,
-niin verkossa on Hamiltonin polku.
+\index{Dirac's theorem}
+\key{Dirac's theorem}:
+If the degree of each node is at least $n/2$,
+the graph contains a Hamiltonian path.
 \item
-\index{Oren lause@Oren lause}
-\key{Oren lause}:
-Jos jokaisen ei-vierekkäisen solmuparin asteiden summa
-on $n$ tai suurempi,
-niin verkossa on Hamiltonin polku.
+\index{Ore's theorem}
+\key{Ore's theorem}:
+If the sum of degrees of each non-adjacent pair of nodes
+is at least $n$,
+the graph contains a Hamiltonian path.
 \end{itemize}
 
-Yhteistä näissä ja muissa tuloksissa on,
-että ne takaavat Hamiltonin polun olemassaolon,
-jos verkossa on \textit{paljon} kaaria.
-Tämä on ymmärrettävää, koska mitä enemmän
-kaaria verkossa on, sitä enemmän mahdollisuuksia
-Hamiltonin polun muodostamiseen on olemassa.
+A common feature in these theorems and other results is
+that they guarantee that a Hamiltonian path exists
+if the graph has \emph{a lot} of edges.
+This makes sense because the more edges the graph has,
+the more possibilities we have to construct a Hamiltonian graph.
 
-\subsubsection{Muodostaminen}
+\subsubsection{Construction}
 
-Koska Hamiltonin polun olemassaoloa ei voi tarkastaa tehokkaasti,
-on selvää, että polkua ei voi myöskään muodostaa tehokkaasti,
-koska muuten polun olemassaolon voisi selvittää yrittämällä
-muodostaa sen.
+Since there is no efficient way to check if a Hamiltonian
+path exists, it is clear that there is also no method
+for constructing the path efficiently, because otherwise
+we could just try to construct the path and see
+whether it exists.
 
-Yksinkertaisin tapa etsiä Hamiltonin polkua on käyttää
-peruuttavaa hakua, joka käy läpi kaikki vaihtoehdot
-polun muodostamiseen.
-Tällaisen algoritmin aikavaativuus on ainakin luokkaa $O(n!)$,
-koska $n$ solmusta voidaan muodostaa $n!$ järjestystä,
-jossa ne voivat esiintyä polulla.
+A simple way to search for a Hamiltonian path is
+to use a backtracking algorithm that goes through all
+possibilities how to construct the path.
+The time complexity of such an algorithm is at least $O(n!)$,
+because there are $n!$ different ways to form a path
+from $n$ nodes.
 
-Tehokkaampi tapa perustuu dynaamiseen ohjelmointiin
-luvun 10.4 tapaan.
-Ideana on määritellä funktio $f(s,x)$,
-jossa $s$ on verkon solmujen osajoukko ja
-$x$ on yksi osajoukon solmuista.
-Funktio kertoo, onko olemassa Hamiltonin polkua,
-joka käy läpi joukon $s$ solmut päätyen solmuun $x$.
-Tällainen ratkaisu on mahdollista toteuttaa ajassa $O(2^n n^2)$.
+A more efficient solution is based on dynamic programming
+(see Chapter 10.4).
+The idea is to define a function $f(s,x)$,
+where $s$ is a subset of nodes, and $x$
+is one of the nodes in the subset.
+The function indicates whether there is a Hamiltonian path
+that visits the nodes in $s$ and ends at node $x$.
+It is possible to implement this solution in $O(2^n n^2)$ time.
 
-\section{De Bruijnin jono}
+\section{De Bruijn sequence}
 
-\index{de Bruijnin jono@de Bruijnin jono}
+\index{De Bruijn sequence}
 
-\key{De Bruijnin jono}
-on merkkijono, jonka osajonona on tarkalleen
-kerran jokainen $k$-merkkisen aakkoston
-$n$ merkin yhdistelmä.
-Tällaisen merkkijonon pituus on
-$k^n+n-1$ merkkiä.
-Esimerkiksi kun $k=2$ ja $n=3$,
-niin yksi mahdollinen de Bruijnin jono on
+A \key{De Bruijn sequence} is a string that contains
+every string of length $n$
+exactly once as a substring, for a fixed
+alphabet that consists of $k$ characters.
+The length of such a string is 
+$k^n+n-1$ characters.
+For example, when $n=3$ and $k=2$,
+an example of a De Bruijn sequence is
 \[0001011100.\]
-Tämän merkkijono osajonot ovat kaikki 
-kolmen bitin yhdistelmät
-000, 001, 010, 011, 100, 101, 110 ja 111.
+The substrings of this string are all
+combinations of three bits:
+000, 001, 010, 011, 100, 101, 110 and 111.
 
-Osoittautuu, että de Bruijnin jono
-vastaa Eulerin kierrosta sopivasti
-muodostetussa verkossa.
-Ideana on muodostaa verkko niin,
-että jokaisessa solmussa on $n-1$
-merkin yhdistelmä ja liikkuminen
-kaarta pitkin muodostaa uuden
-$n$ merkin yhdistelmän.
-Esimerkin tapauksessa verkosta tulee seuraava:
+It turns out that each De Bruijn sequence
+corresponds to an Eulerian circuit in a graph.
+The idea is to construct the graph so that
+each node contains a combination of $n-1$ characters
+and each edge adds one character to the string.
+The following graph corresponds to the example case:
 
 \begin{center}
 \begin{tikzpicture}
@@ -568,26 +565,27 @@ Esimerkin tapauksessa verkosta tulee seuraava:
 \end{tikzpicture}
 \end{center}
 
-Eulerin kierros tässä verkossa tuottaa merkkijonon,
-joka sisältää kaikki $n$ merkin yhdistelmät,
-kun mukaan otetaan aloitussolmun merkit sekä
-kussakin kaaressa olevat merkit.
-Alkusolmussa on $n-1$ merkkiä ja kaarissa
-on $k^n$ merkkiä, joten tuloksena on
-lyhin mahdollinen merkkijono.
+An Eulerian path in this graph produces a string
+that contains all strings of length $n$.
+The string contains the characters in the starting node,
+and all character in the edges.
+The starting node contains $n-1$ characters
+and there are $k^n$ characters in the edges,
+so the length of the string is $k^n+n-1$.
 
-\section{Ratsun kierros}
+\section{Knight's tour}
 
-\index{ratsun kierros@ratsun kierros}
+\index{knight's tour}
 
-\key{Ratsun kierros} on tapa liikuttaa ratsua
-shakin sääntöjen mukaisesti $n \times n$ -kokoisella
-shakkilaudalla niin,
-että ratsu käy tarkalleen kerran jokaisessa ruudussa.
-Ratsun kierros on \key{suljettu}, jos ratsu palaa lopuksi alkuruutuun,
-ja muussa tapauksessa kierros on \key{avoin}.
+A \key{knight's tour} is a sequence of moves
+of a knight on an $n \times n$ chessboard
+following the rules of chess where the knight
+visits each square exactly once.
+The tour is \key{closed} if the knight finally
+returns to the starting square and
+otherwise the tour is \key{open}.
 
-Esimerkiksi tapauksessa $5 \times 5$ yksi ratsun kierros on seuraava:
+For example, here's a knight's tour on a $5 \times 5$ board:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -620,31 +618,31 @@ Esimerkiksi tapauksessa $5 \times 5$ yksi ratsun kierros on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Ratsun kierros shakkilaudalla vastaa Hamiltonin polkua verkossa,
-jonka solmut ovat ruutuja ja kahden solmun välillä on kaari,
-jos ratsu pystyy siirtymään solmusta toiseen shakin sääntöjen mukaisesti.
+A knight's tour corresponds to a Hamiltonian path in a graph
+whose nodes represent the squares of the board,
+and two nodes are connected with an edge if a knight
+can move between the squares according to the rules of chess.
 
-Peruuttava haku on luonteva menetelmä ratsun kierroksen muodostamiseen.
-Hakua voi tehostaa erilaisilla \key{heuristiikoilla},
-jotka pyrkivät ohjaamaan ratsua niin, että kokonainen kierros
-tulee valmiiksi nopeasti.
+A natural way to solve the problem is to use backtracking.
+The search can be made more efficient by using
+\key{heuristics} that attempts to guide the knight so that
+a complete tour will be found quickly.
 
-\subsubsection{Warnsdorffin sääntö}
+\subsubsection{Warnsdorff's rule}
 
-\index{heuristiikka@heuristiikka}
-\index{Warnsdorffin sxxntz@Warnsdorffin sääntö}
+\index{heuristic}
+\index{Warnsdorff's rule}
 
-\key{Warnsdorffin sääntö} on yksinkertainen
-ja hyvä heuristiikka
-ratsun kierroksen etsimiseen.
-Sen avulla on mahdollista löytää nopeasti ratsun kierros
-suurestakin ruudukosta.
-Ideana on siirtää ratsua aina niin,
-että se päätyy ruutuun, josta on mahdollisimman \emph{vähän}
-mahdollisuuksia jatkaa kierrosta.
+\key{Warnsdorff's rule} is a simple and good heuristic
+for finding a knight's tour.
+Using the rule, it is possible to efficiently find a tour
+even on a large board.
+The idea is to always move the knight so that it ends up
+in a square where the number of possible moves is as
+\emph{small} as possible.
 
-Esimerkiksi seuraavassa tilanteessa on valittavana
-viisi ruutua, joihin ratsu voi siirtyä:
+For example, in the following case there are five
+possible squares where the knight can move:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (5,5);
@@ -657,8 +655,9 @@ viisi ruutua, joihin ratsu voi siirtyä:
 \node at (3.5,1.5) {$d$};
 \end{tikzpicture}
 \end{center}
-Tässä tapauksessa Warnsdorffin sääntö valitsee ruudun $a$,
-koska tämän valinnan jälkeen on vain yksi mahdollisuus
-jatkaa kierrosta. Muissa valinnoissa mahdollisuuksia olisi kolme.
+In this case, Warnsdorff's rule moves the knight to square $a$,
+because after this choice there is only a single possible move.
+The other choices would move the knight to squares where
+there are three moves available.
 
 
