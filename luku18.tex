@@ -1,31 +1,26 @@
 \chapter{Tree queries}
 
-\index{puukysely@puukysely}
+\index{tree query}
 
-Tässä luvussa tutustumme algoritmeihin,
-joiden avulla voi toteuttaa tehokkaasti kyselyitä
-juurelliseen puuhun.
-Kyselyt liittyvät puussa oleviin polkuihin
-ja alipuihin.
-Esimerkkejä kyselyistä ovat:
+This chapter discusses techniques for
+efficiently performing queries for a rooted tree.
+The queries are related to subtrees and paths
+in the tree.
+For example, possible queries are:
 
 \begin{itemize}
-\item mikä solmu on $k$ askelta ylempänä solmua $x$?
-\item mikä on solmun $x$ alipuun arvojen summa?
-\item mikä on solmujen $a$ ja $b$ välisen polun arvojen summa?
-\item mikä on solmujen $a$ ja $b$ alin yhteinen esivanhempi?
+\item what is the $k$th ancestor of node $x$?
+\item what is the sum of values in the subtree of node $x$?
+\item what is the sum of values in a path between nodes $a$ and $b$?
+\item what is the lowest common ancestor of nodes $a$ and $b$?
 \end{itemize}
 
-\section{Tehokas nouseminen}
+\section{Finding ancestors}
 
-Tehokas nouseminen puussa tarkoittaa,
-että voimme selvittää nopeasti,
-mihin solmuun päätyy kulkemalla
-$k$ askelta ylöspäin solmusta $x$ alkaen.
-Merkitään $f(x,k)$ solmua,
-joka on $k$ askelta ylempänä solmua $x$.
-Esimerkiksi seuraavassa puussa
-$f(2,1)=1$ ja $f(8,2)=4$.
+The $k$th ancestor of node $x$ in the tree is found
+when we ascend $k$ steps in the tree beginning at node $x$.
+Let $f(x,k)$ denote the $k$th ancestor of node $x$.
+For example, in the following tree, $f(2,1)=1$ and $f(8,2)=4$.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -50,19 +45,20 @@ $f(2,1)=1$ ja $f(8,2)=4$.
 \end{tikzpicture}
 \end{center}
 
-Suoraviivainen tapa laskea funktion $f(x,k)$
-arvo on kulkea puussa $k$ askelta ylöspäin
-solmusta $x$ alkaen.
-Tämän aikavaativuus on kuitenkin $O(n)$,
-koska on mahdollista, että puussa on
-ketju, jossa on $O(n)$ solmua.
+A straighforward way to calculate $f(x,k)$
+is to move $k$ steps upwards in the tree
+beginning from node $x$.
+However, the time complexity of this method
+is $O(n)$ because it is possible that the tree
+contains a chain of $O(n)$ nodes.
 
-Kuten luvussa 16.3, funktion $f(x,k)$
-arvo on mahdollista laskea tehokkaasti ajassa
-$O(\log k)$ sopivan esikäsittelyn avulla.
-Ideana on laskea etukäteen kaikki arvot
-$f(x,k)$, joissa $k=1,2,4,8,\ldots$ eli 2:n potenssi.
-Esimerkiksi yllä olevassa puussa muodostuu seuraava taulukko:
+As in Chapter 16.3, any value of $f(x,k)$
+can be efficiently calculated in $O(\log k)$
+after preprocessing.
+The idea is to precalculate all values $f(x,k)$
+where $k$ is a power of two.
+For example, the values for the tree above
+are as follows:
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
@@ -75,23 +71,23 @@ $\cdots$ \\
 \end{tabular}
 \end{center}
 
-Taulukossa arvo 0 tarkoittaa, että nousemalla $k$
-askelta päätyy puun ulkopuolelle juurisolmun yläpuolelle.
+The value $0$ means that the $k$th ancestor
+of a node doesn't exist.
 
-Esilaskenta vie aikaa $O(n \log n)$, koska jokaisesta
-solmusta voi nousta korkeintaan $n$ askelta ylöspäin.
-Tämän jälkeen minkä tahansa funktion $f(x,k)$ arvon saa
-laskettua ajassa $O(\log k)$ jakamalla nousun 2:n
-potenssin osiin.
+The preprocessing takes $O(n \log n)$ time
+because each node can have at most $n$ ancestors.
+After this, any value $f(x,k)$ can be calculated
+in $O(\log k)$ time by representing the value $k$
+as a sum where each term is a power of two.
 
-\section{Solmutaulukko}
+\section{Subtrees and paths}
 
-\index{solmutaulukko@solmutaulukko}
+\index{node array}
 
-\key{Solmutaulukko} sisältää juurellisen puun solmut siinä
-järjestyksessä kuin juuresta alkava syvyyshaku
-vierailee solmuissa.
-Esimerkiksi puussa
+A \key{node array} contains the nodes of a rooted tree
+in the order in which a depth-first search
+from the root node visits them.
+For example, in the tree
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -114,7 +110,7 @@ Esimerkiksi puussa
 \path[draw,thick,-] (4) -- (9);
 \end{tikzpicture}
 \end{center}
-syvyyshaku etenee
+a depth-first search proceeds as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -156,7 +152,7 @@ syvyyshaku etenee
 
 \end{tikzpicture}
 \end{center}
-ja solmutaulukoksi tulee:
+Hence, the corresponding node array is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (9,1);
@@ -184,13 +180,13 @@ ja solmutaulukoksi tulee:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Alipuiden käsittely}
+\subsubsection{Subtree queries}
 
-Solmutaulukossa jokaisen alipuun kaikki solmut ovat peräkkäin
-niin, että ensin on alipuun juurisolmu ja sitten
-kaikki muut alipuun solmut.
-Esimerkiksi äskeisessä taulukossa solmun $4$
-alipuuta vastaa seuraava taulukon osa:
+Each subtree of a tree corresponds to a subarray
+in the node array,
+where the first element is the root node.
+For example, the following subarray contains the
+nodes in the subtree of node $4$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (8,1);
@@ -218,19 +214,20 @@ alipuuta vastaa seuraava taulukon osa:
 \node at (8.5,1.4) {$9$};
 \end{tikzpicture}
 \end{center}
-Tämän ansiosta solmutaulukon avulla voi käsitellä tehokkaasti
-puun alipuihin liittyviä kyselyitä.
-Ratkaistaan esimerkkinä tehtävä,
-jossa kuhunkin puun solmuun liittyy
-arvo ja toteutettavana on seuraavat kyselyt:
+Using this fact, we can efficiently process queries
+that are related to subtrees of the tree.
+As an example, consider a problem where each node
+is assigned a value, and our task is to support
+the following queries:
 \begin{itemize}
-\item muuta solmun $x$ arvoa
-\item laske arvojen summa solmun $x$ alipuussa
+\item change the value of node $x$
+\item calculate the sum of values in the subtree of node $x$
 \end{itemize}
 
-Tarkastellaan seuraavaa puuta,
-jossa siniset luvut ovat solmujen arvoja.
-Esimerkiksi solmun $4$ alipuun arvojen summa on $3+4+3+1=11$.
+Let us consider the following tree where blue numbers
+are values of nodes.
+For example, the sum of values in the subtree of node $4$
+is $3+4+3+1=11$.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -265,9 +262,10 @@ Esimerkiksi solmun $4$ alipuun arvojen summa on $3+4+3+1=11$.
 \end{tikzpicture}
 \end{center}
 
-Ideana on luoda solmutaulukko, joka sisältää jokaisesta solmusta
-kolme tietoa: (1) solmun tunnus, (2) alipuun koko ja (3) solmun arvo.
-Esimerkiksi yllä olevasta puusta syntyy seuraava taulukko:
+The idea is to construct a node array that contains
+three values for each node: (1) identifier of the node,
+(2) size of the subtree, and (3) value of the node.
+For example, the array for the above tree is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -316,9 +314,11 @@ Esimerkiksi yllä olevasta puusta syntyy seuraava taulukko:
 \end{tikzpicture}
 \end{center}
 
-Tästä taulukosta alipuun solmujen arvojen summa selviää
-lukemalla ensin alipuun koko ja sitten sitä vastaavat solmut.
-Esimerkiksi solmun $4$ alipuun arvojen summa selviää näin:
+Using this array, we can calculate the sum of nodes
+in a subtree by first reading the size of the subtree
+and then the values of the corresponding nodes.
+For example, the values in the subtree of node $4$
+can be found as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -370,25 +370,26 @@ Esimerkiksi solmun $4$ alipuun arvojen summa selviää näin:
 \end{tikzpicture}
 \end{center}
 
-Viimeinen tarvittava askel on tallentaa solmujen arvot
-binääri-indeksi\-puuhun tai segmenttipuuhun.
-Tällöin sekä alipuun arvojen summan laskeminen
-että solmun arvon muuttaminen onnistuvat ajassa $O(\log n)$,
-eli pystymme vastaamaan kyselyihin tehokkaasti.
+The remaining step is to store the values of the
+nodes in a binary indexed tree or segment tree.
+After this, we can both calculate the sum
+of values and change a value in $O(\log n)$ time,
+so we can efficiently process the queries.
 
-\subsubsection{Polkujen käsittely}
+\subsubsection{Path queries}
 
-Solmutaulukon avulla voi myös käsitellä tehokkaasti
-polkuja, jotka kulkevat juuresta tiettyyn solmuun puussa.
-Ratkaistaan seuraavaksi tehtävä,
-jossa toteutettavana on seuraavat kyselyt:
+Using a node array, we can also efficiently
+process paths between the root node and any other
+node in the tree.
+Let us next consider a problem where our task
+is to support the following queries:
 \begin{itemize}
-\item muuta solmun $x$ arvoa
-\item laske arvojen summa juuresta solmuun $x$
+\item change the value of node $x$
+\item calculate the sum of values from the root to node $x$
 \end{itemize}
 
-Esimerkiksi seuraavassa puussa polulla solmusta 1
-solmuun 8 arvojen summa on $4+5+3=12$.
+For example, in the following tree, the sum of
+values from the root to node 8 is $4+5+3=12$.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -423,15 +424,18 @@ solmuun 8 arvojen summa on $4+5+3=12$.
 \end{tikzpicture}
 \end{center}
 
-Ideana on muodostaa samanlainen taulukko kuin
-alipuiden käsittelyssä mutta tallentaa
-solmujen arvot erikoisella tavalla:
-kun taulukon kohdassa $k$ olevan solmun arvo on $a$,
-kohdan $k$ arvoon lisätään $a$ ja kohdan $k+c$ arvosta
-vähennetään $a$, missä $c$ on alipuun koko.
+To solve this problem, we can use a similar
+technique as we used for subtree queries,
+but the values of the nodes are stored
+in a special way:
+if the value of a node at index $k$ 
+increases by $a$,
+the value at index $k$ increases by $a$
+and the value at index $k+c$ decreases by $a$,
+where $c$ is the size of the subtree.
 
 \begin{samepage}
-Esimerkiksi yllä olevaa puuta vastaa seuraava taulukko:
+For example, the following array corresponds to the above tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,1) grid (10,-2);
@@ -484,17 +488,19 @@ Esimerkiksi yllä olevaa puuta vastaa seuraava taulukko:
 \end{center}
 \end{samepage}
 
-Esimerkiksi solmun $3$ arvona on $-5$, koska
-se on solmujen $2$ ja $6$ alipuiden jälkeinen solmu,
-mistä tulee arvoa $-5-3$, ja sen oma arvo on $3$.
-Yhteensä solmun 3 arvo on siis $-5-3+3=-5$.
-Huomaa, että taulukossa on ylimääräinen kohta 10,
-johon on tallennettu vain juuren arvon vastaluku.
+For example, the value of node $3$ is $-5$,
+because it is the next node after the subtrees
+of nodes $2$ and $6$ and its own value is $3$.
+So the value decreases by $5+3$ and increases by $3$.
+Note that the array contains an extra index 10
+that only has the opposite number of the value
+of the root node.
 
-Nyt solmujen arvojen summa polulla juuresta alkaen
-selviää laskemalla kaikkien taulukon arvojen summa
-taulukon alusta solmuun asti.
-Esimerkiksi summa solmusta $1$ solmuun $8$ selviää näin:
+Using this array, the sum of values in a path
+from the root to node $x$ equals the sum
+of values in the array from the beginning to node $x$.
+For example, the sum from the root to node $8$
+can be calculated as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -548,31 +554,31 @@ Esimerkiksi summa solmusta $1$ solmuun $8$ selviää näin:
 \node at (9.5,1.4) {$10$};
 \end{tikzpicture}
 \end{center}
-
-Summaksi tulee
+The sum is
 \[4+5+3-5+2+5-2=12,\]
-mikä vastaa polun summaa $4+5+3=12$.
-Tämä laskentatapa toimii, koska jokaisen solmun arvo
-lisätään summaan, kun se tulee vastaan syvyyshaussa,
-ja vähennetään summasta, kun sen käsittely päättyy.
+that equals the sum $4+5+3=12$.
+This method works because the value of each node
+is added to the sum when the depth-first search
+visits it for the first time, and correspondingly,
+the value is removed from the sum when the subtree of the
+node has been processed.
 
-Alipuiden käsittelyä vastaavasti voimme tallentaa
-arvot binääri-indeksi\-puuhun tai segmenttipuuhun ja
-sekä polun summan laskeminen että arvon muuttaminen
-onnistuvat ajassa $O(\log n)$.
+Once again, we can store the values of the nodes
+in a binary indexed tree or a segment tree,
+so it is possible to both calculate the sum of values and
+change a value efficiently in $O(\log n)$ time.
 
-\section{Alin yhteinen esivanhempi}
+\section{Lowest common ancestor}
 
-\index{alin yhteinen esivanhempi@alin yhteinen esivanhempi}
+\index{lowest common ancestor}
 
-Kahden puun solmun
-\key{alin yhteinen esivanhempi}
-on mahdollisimman matalalla puussa oleva solmu,
-jonka alipuuhun kumpikin solmu kuuluu.
-Tyypillinen tehtävä on vastata tehokkaasti
-joukkoon kyselyitä, jossa selvitettävänä on
-kahden solmun alin yhteinen esivanhempi.
-Esimerkiksi puussa
+The \key{lowest common ancestor}
+of two nodes is a the lowest node in the tree
+whose subtree contains both the nodes.
+A typical problem is to efficiently process
+queries where the task is to find the lowest
+common ancestor of two nodes.
+For example, in the tree
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -592,25 +598,24 @@ Esimerkiksi puussa
 \path[draw,thick,-] (7) -- (8);
 \end{tikzpicture}
 \end{center}
-solmujen 5 ja 8 alin yhteinen esivanhempi on solmu 2
-ja solmujen 3 ja 4 alin yhteinen esivanhempi on solmu 1.
+the lowest common ancestor of nodes 5 and 8 is node 2,
+and the lowest common ancestor of nodes 3 and 4 is node 1.
 
-Tutustumme seuraavaksi kahteen tehokkaaseen menetelmään
-alimman yhteisen esivanhemman selvittämiseen.
+Next we will discuss two efficient techniques for
+finding the lowest common ancestor of two nodes.
 
-\subsubsection{Menetelmä 1}
+\subsubsection{Method 1}
 
-Yksi tapa ratkaista tehtävä on hyödyntää
-tehokasta nousemista puussa.
-Tällöin alimman yhteisen esivanhemman etsiminen
-muodostuu kahdesta vaiheesta.
-Ensin noustaan alemmasta solmusta samalle tasolle
-ylemmän solmun kanssa,
-sitten noustaan rinnakkain kohti
-alinta yhteistä esivanhempaa.
+One way to solve the problem is use the fact
+that we can efficiently find the $k$th
+ancestor of any node in the tree.
+Using this idea, we can first ensure that
+both nodes are at the same level in the tree,
+and then find the smallest value of $k$
+where the $k$th ancestor of both nodes is the same.
 
-Tarkastellaan esimerkkinä solmujen 5 ja 8
-alimman yhteisen esivanhemman etsimistä:
+As an example, let's find the lowest common
+ancestor of nodes $5$ and $8$ in the following tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -632,10 +637,10 @@ alimman yhteisen esivanhemman etsimistä:
 \end{tikzpicture}
 \end{center}
 
-Solmu 5 on tasolla 3, kun taas solmu 8 on tasolla 4.
-Niinpä nousemme ensin solmusta 8 yhden tason ylemmäs solmuun 6.
-Tämän jälkeen nousemme rinnakkain solmuista 5 ja 6
-lähtien yhden tason, jolloin päädymme solmuun 2:
+Node $5$ is at level $3$, while node $8$ is at level $4$.
+Thus, we first move one step upwards from node $8$ to node $6$.
+After this, it turns out that the parent of both node $5$
+and node $6$ is node $2$, so we have found the lowest common ancestor.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -661,16 +666,17 @@ lähtien yhden tason, jolloin päädymme solmuun 2:
 \end{tikzpicture}
 \end{center}
 
-Menetelmä vaatii $O(n \log n)$-aikaisen esikäsittelyn,
-jonka jälkeen minkä tahansa kahden solmun alin yhteinen
-esivanhempi selviää ajassa $O(\log n)$,
-koska kumpikin vaihe nousussa vie aikaa $O(\log n)$.
+Using this method, we can find the lowest common ancestor
+of any two nodes in $O(\log n)$ time after an $O(n \log n)$ time
+preprocessing, because both steps can be
+done in $O(\log n)$ time.
 
-\subsubsection{Menetelmä 2}
+\subsubsection{Method 2}
 
-Toinen tapa ratkaista tehtävä perustuu solmutaulukon
-käyttämiseen.
-Ideana on jälleen järjestää solmut syvyyshaun mukaan:
+Another way to solve the problem is based on
+a node array.
+Again, the idea is to traverse the nodes
+using a depth-first search:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -707,16 +713,17 @@ Ideana on jälleen järjestää solmut syvyyshaun mukaan:
 \end{tikzpicture}
 \end{center}
 
-Erona aiempaan solmu lisätään kuitenkin solmutaulukkoon
-mukaan \textit{aina}, kun syvyyshaku käy solmussa,
-eikä vain ensimmäisellä kerralla.
-Niinpä solmu esiintyy solmutaulukossa $k+1$ kertaa,
-missä $k$ on solmun lasten määrä,
-ja solmutaulukossa on yhteensä $2n-1$ solmua.
+However, we add each node to the node array \emph{always}
+when the depth-first search visits the node,
+and not only at the first visit.
+Thus, a node that has $k$ children appears $k+1$ times
+in the node array, and there are a total of $2n-1$
+nodes in the array.
 
-Tallennamme solmutaulukkoon kaksi tietoa:
-(1) solmun tunnus ja (2) solmun taso puussa.
-Esimerkkipuuta vastaavat taulukot ovat:
+We store two values in the array:
+(1) identifier of the node, and (2) the level of the 
+node in the tree.
+The following array corresponds to the above tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -777,11 +784,11 @@ Esimerkkipuuta vastaavat taulukot ovat:
 \end{tikzpicture}
 \end{center}
 
-Tämän taulukon avulla solmujen $a$ ja $b$ alin yhteinen esivanhempi
-selviää etsimällä taulukosta alimman tason solmu
-solmujen $a$ ja $b$ välissä.
-Esimerkiksi solmujen 5 ja 8 alin yhteinen esivanhempi
-löytyy seuraavasti:
+Using this array, we can find the lowest common ancestor
+of nodes $a$ and $b$ by locating the node with lowest level
+between nodes $a$ and $b$ in the array.
+For example, the lowest common ancestor of nodes $5$ and $8$
+can be found as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -845,36 +852,36 @@ löytyy seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Solmu 5 on taulukossa kohdassa 3,
-solmu 8 on taulukossa kohdassa 6
-ja alimman tason solmu välillä $3 \ldots 6$
-on kohdassa 4 oleva solmu 2,
-jonka taso on 2.
-Niinpä solmujen 5 ja 8 alin yhteinen esivanhempi
-on solmu 2.
+Node 5 is at index 3, node 8 is at index 6,
+and the node with lowest level between
+indices $3 \ldots 6$ is node 2 at index 4
+whose level is 2.
+Thus, the lowest common ancestor of
+nodes 5 and 8 is node 2.
 
-Alimman tason solmu välillä selviää
-ajassa $O(\log n)$, kun taulukon sisältö on
-tallennettu segmenttipuuhun.
-Myös aikavaativuus $O(1)$ on mahdollinen,
-koska taulukko on staattinen, mutta tälle on harvoin tarvetta.
-Kummassakin tapauksessa esikäsittely vie aikaa $O(n \log n)$.
+Using a segment tree, we can find the lowest
+common ancestor in $O(\log n)$ time.
+Since the array is static, the time complexity
+$O(1)$ is also possible, but this is rarely needed.
+In both cases, preprocessing takes $O(n \log n)$ time.
 
-\subsubsection{Solmujen etäisyydet}
+\subsubsection{Distances of nodes}
 
-Tarkastellaan lopuksi tehtävää,
-jossa kyselyissä tulee laskea tehokkaasti
-kahden solmun etäisyys eli solmujen välisen polun pituus puussa.
-Osoittautuu, että tämä tehtävä
-palautuu alimman yhteisen esivanhemman etsimiseen.
+Finally, let's consider a problem where
+each query asks to find the distance between
+two nodes in the tree, i.e., the length of the
+path between them.
+It turns out that this problem reduces to
+finding the lowest common ancestor.
 
-Valitaan ensin mikä tahansa
-solmu puun juureksi.
-Tämän jälkeen solmujen $a$ ja $b$
-etäisyys on $d(a)+d(b)-2 \cdot d(c)$,
-missä $c$ on solmujen alin yhteinen esivanhempi
-ja $d(s)$ on etäisyys puun juuresta solmuun $s$.
-Esimerkiksi puussa
+First, we choose an arbitrary node for the
+root of the tree.
+After this, the distance between nodes $a$ and $b$
+is $d(a)+d(b)-2 \cdot d(c)$,
+where $c$ is the lowest common ancestor,
+and $d(s)$ is the distance from the root node
+to node $s$.
+For example, in the tree
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -899,14 +906,13 @@ Esimerkiksi puussa
 \path[draw=red,thick,-,line width=2pt] (6) -- node[font=\small] {} (3);
 \end{tikzpicture}
 \end{center}
-solmujen 5 ja 8 alin yhteinen esivanhempi on 2.
-Polku solmusta 5 solmuun 8
-kulkee ensin ylöspäin solmusta 5
-solmuun 2 ja sitten alaspäin
-solmusta 2 solmuun 8.
-Solmujen etäisyydet juuresta ovat $d(5)=3$,
-$d(8)=4$ ja $d(2)=2$,
-joten solmujen 5 ja 8 etäisyys
-on $3+4-2\cdot2=3$.
+the lowest common ancestor of nodes 5 and 8 is node 2.
+A path from node 5 to node 8
+goes first upwards from node 5 to node 2,
+and then downwards from node 2 to node 8.
+The distances of the nodes from the root are
+$d(5)=3$, $d(8)=4$ and $d(2)=2$,
+so the distance between nodes 5 and 8 is
+$3+4-2\cdot2=3$.
 
 
