@@ -1,24 +1,26 @@
-\chapter{Network flows}
+\chapter{Flows and cuts}
 
-Annettuna on suunnattu, painotettu verkko,
-josta on valittu tietty alkusolmu ja loppusolmu.
-Tarkastelemme seuraavia ongelmia:
+In this chapter, we will focus on the following
+problems in a directed, weighted graph
+where a starting node and a ending node is given:
 
 \begin{itemize}
-\item \key{Maksimivirtauksen etsiminen}:
-Kuinka paljon virtausta on mahdollista kuljettaa
-verkon alkusolmusta loppusolmuun kaaria pitkin?
-\item \key{Minimileikkauksen etsiminen}:
-Mikä on yhteispainoltaan pienin joukko kaaria,
-joiden poistaminen erottaa alkusolmun loppusolmusta?
+\item \key{Finding a maximum flow}:
+What is the maximum amount of flow we can
+deliver
+from the starting node to the ending node?
+\item \key{Finding a minimum cut}:
+What is a minimum-weight set of edges
+that separates the starting node and the ending node?
 \end{itemize}
 
-Osoittautuu, että nämä ongelmat vastaavat toisiaan
-ja ne on mahdollista ratkaista samanaikaisesti
-toistensa avulla.
+It turns out that these problems correspond to
+each other, and we can solve them simultaneously
+using the same algorithm.
 
-Käytämme esimerkkinä seuraavaa verkkoa,
-jossa solmu 1 on alkusolmu ja solmu 6 on loppusolmu:
+As an example, we will use the following graph
+where node 1 is the starting node and node 6
+is the ending node:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -39,23 +41,24 @@ jossa solmu 1 on alkusolmu ja solmu 6 on loppusolmu:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Maksimivirtaus}
+\subsubsection{Maximum flow}
 
-\index{virtaus@virtaus}
-\index{maksimivirtaus@maksimivirtaus}
+\index{flow}
+\index{maximum flow}
 
-\key{Maksimivirtaus} on suurin
-mahdollinen verkossa kulkeva virtaus,
-joka lähtee liikkeelle alkusolmusta ja
-päätyy loppusolmuun.
-Kunkin kaaren paino on kapasiteetti,
-joka ilmaisee, kuinka paljon virtausta kaaren
-kautta voi kulkea.
-Kaikissa verkon solmuissa alku-
-ja loppusolmua lukuun ottamatta
-lähtevän ja tulevan virtauksen on oltava yhtä suuri.
+A \key{maximum flow} is a flow from the
+starting node to the ending node whose
+total amount is as large as possible.
+The weight of each edge is a capacity that
+determines the maximum amount of flow that
+can go through the edge.
+In all nodes, except for the starting node
+and the ending node,
+the amount of incoming and outgoing flow
+must be the same.
 
-Esimerkkiverkon maksimivirtaus on seuraava:
+A maximum flow for the example graph
+is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -76,35 +79,33 @@ Esimerkkiverkon maksimivirtaus on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Merkintä $v/k$ kaaressa tarkoittaa,
-että kaaressa kulkee virtausta $v$
-ja kaaren kapasiteetti on $k$.
-Jokaiselle kaarelle tulee päteä $v \le k$.
-Tässä verkossa
-maksimivirtauksen suuruus on 7, koska alkusolmusta
-lähtevä virtaus on $3+4=7$ ja loppusolmuun
-tuleva virtaus on $5+2=7$.
+The notation $v/k$ means
+that amount of the flow through the edge is $v$
+and the capacity of the edge is $k$.
+For each edge, it is required that $v \le k$.
+In this graph, the size of a maximum flow is 7
+because the outgoing flow from the starting node is $3+4=7$,
+and the incoming flow to the ending node is $5+2=7$.
 
-Huomaa, että jokaisessa välisolmussa tulevan ja
-lähtevän virtauksen määrä on yhtä suuri.
-Esimerkiksi solmuun 2 tulee virtausta $3+3=6$ yksikköä solmuista 1 ja 4
-ja siitä lähtee virtausta $6$ yksikköä solmuun 3.
+Note that in each intermediate node,
+the incoming flow and the outgoing flow are equally large.
+For example, in node 2, the incoming flow is $3+3=6$
+from nodes 1 and 4,
+and the outgoing flow is $6$ to node 3.
 
-\subsubsection{Minimileikkaus}
+\subsubsection{Minimum cut}
 
-\index{leikkaus@leikkaus}
-\index{minimileikkaus@minimileikkaus}
+\index{cut}
+\index{minimum cut}
 
-\key{Minimileikkaus} on yhteispainoltaan
-pienin mahdollinen joukko verkon kaaria,
-joiden poistaminen estää kulkemisen
-alkusolmusta loppusolmuun.
-Leikkauksen jälkeen alkuosaan kuuluvat
-solmut, joihin pääsee alkusolmusta,
-ja loppuosaan kuuluvat muut verkon solmut,
-mukaan lukien loppusolmu.
+A \key{minimum cut} is a set of edges
+whose removal separates the starting node from the ending node,
+and whose total weight is as small as possible.
+A cut divides the graph into two components,
+one containing the starting node and the other
+containing the ending node.
 
-Esimerkkiverkon minimileikkaus on seuraava:
+A minimum cut for the example graph is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -130,53 +131,50 @@ Esimerkkiverkon minimileikkaus on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Tässä leikkauksessa alkuosassa ovat solmut $\{1,2,4\}$
-ja loppuosassa ovat solmut $\{3,5,6\}$.
-Minimileikkauksen paino on 7,
-koska alkuosasta loppuosaan kulkevat
-kaaret $2 \rightarrow 3$ ja $4 \rightarrow 5$,
-joiden yhteispaino on $6+1=7$.
+In this cut, the first component contains nodes $\{1,2,4\}$,
+and the second component contains nodes $\{3,5,6\}$.
+The weight of the cut is 7,
+because it consists of edges
+$2 \rightarrow 3$ and $4 \rightarrow 5$,
+and the total weight of the edges is $6+1=7$.
 \\\\
-Ei ole sattumaa, että esimerkkiverkossa
-sekä maksimivirtauksen suuruus
-että minimileikkauksen paino on 7.
-Virtauslaskennan keskeinen tulos on,
-että verkon maksimivirtaus ja
-minimileikkaus
-ovat \textit{aina} yhtä suuret,
-eli käsitteet kuvaavat saman asian
-kahta eri puolta.
+It is not a coincidence that
+both the size of the maximum flow and 
+the weight of the minimum cut is 7
+in the example graph.
+It turns out that a maximum flow and
+a minimum cut are \emph{always} of equal size,
+so the concepts are two sides of the same coin.
 
-Seuraavaksi tutustumme Ford–Fulkersonin
-algoritmiin, jolla voi etsiä verkon
-maksimivirtauksen ja
-minimileikkauksen.
-Algoritmi auttaa myös ymmärtämään,
-\textit{miksi} maksimivirtaus ja
-minimileikkaus ovat yhtä suuret.
+Next we will discuss the Ford–Fulkerson
+algorithm that can be used for finding
+a maximum flow and a minimum cut in a graph.
+The algorithm also helps us to understand
+\emph{why} they are equally large.
 
-\section{Ford–Fulkersonin algoritmi}
+\section{Ford–Fulkerson algorithm}
 
-\index{Ford–Fulkersonin algoritmi}
+\index{Ford–Fulkerson algorithm}
 
-\key{Ford–Fulkersonin algoritmi} etsii verkon maksimivirtauksen.
-Algoritmi aloittaa tilanteesta,
-jossa virtaus on 0, ja alkaa sitten etsiä verkosta polkuja,
-jotka tuottavat siihen lisää virtausta.
-Kun mitään polkua ei enää pysty muodostamaan,
-maksimivirtaus on tullut valmiiksi.
+The \key{Ford–Fulkerson algorithm} finds
+a maximum flow in a graph.
+The algorithm begins with an empty flow,
+and at each step finds a path in the graph
+that generates more flow.
+Finally, when the algorithm can't extend the flow
+anymore, it terminates and a maximum flow has been found.
 
-Algoritmi käsittelee verkkoa muodossa,
-jossa jokaiselle kaarelle on vastakkaiseen
-suuntaan kulkeva pari.
-Kaaren paino kuvastaa, miten paljon
-lisää virtausta sen kautta pystyy vielä kulkemaan.
-Aluksi alkuperäisen verkon kaarilla on
-painona niiden kapasiteetti
-ja käänteisillä kaarilla on painona 0.
+The algorithm uses a special representation
+for the graph  where each original edge has a reverse
+edge in another direction.
+The weight of each edge indicates how much more flow
+we could route through it.
+Initially, the weight of each original edge
+equals the capacity of the edge,
+and the weight of each reverse edge is zero.
 
 \begin{samepage}
-Esimerkkiverkosta syntyy seuraava verkko:
+The new representation for the example graph is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -209,13 +207,13 @@ Esimerkkiverkosta syntyy seuraava verkko:
 
 \subsubsection{Algoritmin toiminta}
 
-Ford–Fulkersonin algoritmi etsii verkosta joka vaiheessa polun,
-joka alkaa alkusolmusta,
-päättyy loppusolmuun ja jossa jokaisen kaaren
-paino on positiivinen.
-Jos vaihtoehtoja on useita, mikä tahansa valinta kelpaa.
+The Ford–Fulkerson algorithm finds at each step
+a path from the starting node to the ending node
+where each edge has a positive weight.
+If there are more than one possible paths,
+we can choose any of them.
 
-Esimerkkiverkossa voimme valita vaikkapa seuraavan polun:
+In the example graph, we can choose, say, the following path:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -250,16 +248,17 @@ Esimerkkiverkossa voimme valita vaikkapa seuraavan polun:
 \end{tikzpicture}
 \end{center}
 
-Polun valinnan jälkeen virtaus lisääntyy $x$ yksikköä,
-jossa $x$ on pienin kaaren kapasiteetti polulla.
-Samalla jokaisen polulla olevan kaaren kapasiteetti
-vähenee $x$:llä ja jokaisen käänteisen kaaren kapasiteetti kasvaa $x$:llä.
+After choosing the path, the flow increases by $x$ units
+where $x$ is the smallest weight of an edge in the path.
+In addition, the weight of each edge in the path
+decreases by $x$, and the weight of each reverse edge
+increases by $x$.
 
-Yllä valitussa polussa
-kaarten kapasiteetit ovat 5, 6, 8 ja 2.
-Pienin kapasiteetti on 2,
-joten virtaus kasvaa 2:lla
-ja verkko muuttuu seuraavasti:
+In the above path, the weights of the
+edges are 5, 6, 8 and 2.
+The minimum weight is 2,
+so the flow increases by 2
+and the new graph is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -289,17 +288,17 @@ ja verkko muuttuu seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Muutoksessa on ideana, että virtauksen lisääminen
-vähentää polkuun kuuluvien kaarten kykyä välittää virtausta.
-Toisaalta virtausta on mahdollista peruuttaa myöhemmin
-käyttämällä käänteisiä kaaria, jos osoittautuu, että
-virtausta on järkevää reitittää verkossa toisella tavalla.
+The idea is that increasing the flow decreases the amount of
+flow that can go through the edges in the future.
+On the other hand, it is possible to adjust the
+amount of the flow later
+using the reverse edges if it turns out that
+we should route the flow in another way.
 
-Algoritmi kasvattaa virtausta
-niin kauan, kuin verkossa on olemassa polku
-alkusolmusta loppusolmuun positiivisia kaaria pitkin.
-Tässä tapauksessa
-voimme valita seuraavan polun vaikkapa näin:
+The algorithm increases the flow as long as
+there is a path from the starting node
+to the ending node through positive edges.
+In the current example, our next path can be as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -334,12 +333,13 @@ voimme valita seuraavan polun vaikkapa näin:
 \end{tikzpicture}
 \end{center}
 
-Tämän polun pienin kapasiteetti on 3,
-joten polku kasvattaa virtausta 3:lla
-ja kokonaisvirtaus polun käsittelyn jälkeen on 5.
+The minimum weight in this path is 3,
+so the path increases the flow by 3,
+and the total amount of the flow after
+processing the path is 5.
 
 \begin{samepage}
-Nyt verkko muuttuu seuraavasti:
+The new graph will be as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -370,11 +370,12 @@ Nyt verkko muuttuu seuraavasti:
 \end{center}
 \end{samepage}
 
-Maksimivirtaus tulee valmiiksi
-lisäämällä virtausta vielä polkujen $1 \rightarrow 2 \rightarrow 3 \rightarrow 6$ ja
-$1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$ avulla.
-Molemmat polut tuottavat 1 yksikön lisää virtausta,
-ja lopullinen verkko on seuraava:
+We still need two more steps before we have reached a maximum flow.
+For example, we can choose the paths
+$1 \rightarrow 2 \rightarrow 3 \rightarrow 6$ and
+$1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$.
+Both paths increase the flow by 1,
+and the final graph is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -404,68 +405,69 @@ ja lopullinen verkko on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Nyt virtausta ei pysty enää kasvattamaan,
-koska verkossa ei ole mitään polkua
-alkusolmusta loppusolmuun,
-jossa jokaisen kaaren paino olisi positiivinen.
-Niinpä algoritmi pysähtyy ja verkon maksimivirtaus on 7.
+It's not possible to increase the flow anymore,
+because there is no path from the starting node
+to the ending node with positive edge weights.
+Thus, the algorithm terminates and the maximum flow is 7.
 
-\subsubsection{Polun valinta}
+\subsubsection{Finding paths}
 
-Ford–Fulkersonin algoritmi ei ota kantaa siihen,
-millä tavoin virtausta kasvattava polku valitaan verkossa.
-Valintatavasta riippumatta algoritmi pysähtyy
-ja tuottaa maksimivirtauksen ennemmin tai myöhemmin,
-mutta polun valinnalla on vaikutusta algoritmin tehokkuuteen.
+The Ford–Fulkerson algorithm doesn't specify
+how the path that increases the flow should be chosen.
+In any case, the algorithm will stop sooner or later
+and produce a maximum flow.
+However, the efficiency of the algorithm depends on
+the way the paths are chosen.
 
-Yksinkertainen tapa on valita virtausta kasvattava
-polku syvyyshaulla.
-Tämä toimii usein hyvin, mutta pahin tapaus on,
-että jokainen polku
-kasvattaa virtausta vain 1:llä ja algoritmi toimii hitaasti.
-Onneksi tämän ilmiön pystyy estämään käyttämällä
-jompaakumpaa seuraavaa algoritmia:
+A simple way to find paths is to use depth-first search.
+Usually, this works well, but the worst case is that
+each path only increases the flow by 1, and the algorithm becomes slow.
+Fortunately, we can avoid this by using one of the following
+algorithms:
 
-\index{Edmonds–Karpin algoritmi}
+\index{Edmonds–Karp algorithm}
 
-\key{Edmonds–Karpin algoritmi} on
-Ford–Fulkersonin algoritmin toteutus,
-jossa virtausta kasvattava polku valitaan
-aina niin, että siinä on mahdollisimman vähän kaaria.
-Tämä onnistuu etsimällä polku syvyyshaun
-sijasta leveyshaulla.
-Osoittautuu, että tämä varmistaa virtauksen
-kasvamisen nopeasti ja
-maksimivirtauksen etsiminen vie aikaa $O(m^2 n)$.
+The \key{Edmonds–Karp algorithm}
+is an implementation of the
+Ford–Fulkerson algorithm where
+each path that increases the flow
+is chosen so that the number of edges
+in the path is minimum.
+This can be done by using breadth-first search
+instead of depth-first search.
+It turns out that this guarantees that
+flow increases quickly, and the time complexity
+of the algorithm is $O(m^2 n)$.
 
-\index{skaalaava algoritmi@skaalaava algoritmi}
+\index{scaling algorithm}
 
-\key{Skaalaava algoritmi}
-asettaa minimiarvon, joka on ensin alkusolmusta
-lähtevien kaarten kapasiteettien summa $c$.
-Joka vaiheessa verkosta etsitään
-syvyyshaulla polku, jonka jokaisen kaaren kapasiteetti
-on vähintään minimiarvo.
-Aina jos kelvollista polkua ei löydy,
-minimiarvo jaetaan 2:lla,
-kunnes lopuksi minimiarvo on 1.
-Algoritmin aikavaativuus on $O(m^2 \log c)$.
+The \key{scaling algorithm} uses depth-first
+search to find paths where the weight of each edge is
+at least a minimum value.
+Initially, the minimum value is $c$,
+the sum of capacities of the edges that
+begin at the starting edge.
+If the algorithm can't find a path,
+the minimum value is divided by 2,
+and finally it will be 1.
+The time complexity of the algorithm is $O(m^2 \log c)$.
 
-Käytännössä skaalaava algoritmi on mukavampi koodattava,
-koska siinä riittää etsiä polku syvyyshaulla.
-Molemmat algoritmit ovat yleensä aina riittävän
-nopeita ohjelmointikisoissa esiintyviin tehtäviin.
+In practice, the scaling algorithm is easier to code
+because we can use depth-first search to find paths.
+Both algorithms are efficient enough for problems
+that typically appear in programming contests.
 
-\subsubsection{Minimileikkaus}
+\subsubsection{Minimum cut}
 
-\index{minimileikkaus@minimileikkaus}
+\index{minimum cut}
 
-Osoittautuu, että kun Ford–Fulkersonin algoritmi on saanut valmiiksi
-maksimivirtauksen, se on tuottanut samalla minimileikkauksen.
-Olkoon $A$ niiden solmujen joukko,
-joihin verkossa pääsee
-alkusolmusta positiivisia kaaria pitkin.
-Esimerkkiverkossa $A$ sisältää solmut 1, 2 ja 4:
+It turns out that once the Ford–Fulkerson algorithm
+has found a maximum flow,
+it has also produced a minimum cut.
+Let $A$ be the set of nodes
+that can be reached from the starting node
+using positive edges.
+In the example graph, $A$ contains nodes 1, 2 and 4:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -495,25 +497,26 @@ Esimerkkiverkossa $A$ sisältää solmut 1, 2 ja 4:
 \end{tikzpicture}
 \end{center}
 
-Nyt minimileikkauksen muodostavat ne alkuperäisen verkon kaaret,
-jotka kulkevat joukosta $A$ joukon $A$ ulkopuolelle
-ja joiden kapasiteetti on täysin käytetty
-maksimivirtauksessa.
-Tässä verkossa kyseiset kaaret ovat $2 \rightarrow 3$
-ja $4 \rightarrow 5$, jotka tuottavat minimileikkauksen $6+1=7$.
+Now the minimum cut consists of the edges in the original graph
+that begin at a node in $A$ and end at a node outside $A$,
+and whose capacity is fully
+used in the maximum flow.
+In the above graph, such edges are
+$2 \rightarrow 3$ and $4 \rightarrow 5$,
+that correspond to the minimum cut $6+1=7$.
 
-Miksi sitten algoritmin tuottama virtaus ja leikkaus ovat
-varmasti maksimivirtaus ja minimileikkaus?
-Syynä tähän on, että verkossa ei voi olla virtausta,
-jonka suuruus ylittäisi yhdenkään
-verkossa olevan leikkauksen painoa.
-Niinpä kun verkossa oleva
-virtaus ja leikkaus ovat yhtä suuret,
-ne ovat varmasti maksimivirtaus ja minimileikkaus.
+Why is the flow produced by the algorithm maximum,
+and why is the cut minimum?
+The reason for this is that a graph never
+contains a flow whose size is larger
+than the weight of any cut in the graph.
+Hence, always when a flow and a cut are equally large,
+they are a maximum flow and a minimum cut.
 
-Tarkastellaan mitä tahansa verkon leikkausta,
-jossa alkusolmu kuuluu osaan $A$,
-loppusolmu kuuluu osaan $B$ ja osien välillä kulkee kaaria:
+Let's consider any cut in the graph
+where the starting node belongs to set $A$,
+the ending node belongs to set $B$
+and there are edges between the sets:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -537,17 +540,19 @@ loppusolmu kuuluu osaan $B$ ja osien välillä kulkee kaaria:
 \end{tikzpicture}
 \end{center}
 
-Leikkauksen paino on niiden kaarten painojen summa,
-jotka kulkevat osasta $A$ osaan $B$.
-Tämä on yläraja sille, kuinka suuri verkossa oleva virtaus voi olla,
-koska virtauksen täytyy edetä osasta $A$ osaan $B$.
-Niinpä maksimivirtaus on pienempi tai yhtä suuri kuin
-mikä tahansa verkon leikkaus.
+The weight of the cut is the sum of those edges
+that go from set $A$ to set $B$.
+This is an upper bound for the amount of flow
+in the graph, because the flow has to proceed
+from set $A$ to set $B$.
+Thus, a maximum flow is smaller than or equal to
+any cut in the graph.
 
-Toisaalta Ford–Fulkersonin algoritmi tuottaa virtauksen,
-joka on \emph{tarkalleen} yhtä suuri kuin verkossa oleva leikkaus.
-Niinpä tämän virtauksen on oltava maksimivirtaus ja
-vastaavasti leikkauksen on oltava minimileikkaus.
+On the other hand, the Ford–Fulkerson algorithm
+produces a flow that is \emph{exactly} as large
+as a cut in the graph.
+Thus, the flow has to be a maximum flow,
+and the cut has to be a minimum cut.
 
 \section{Rinnakkaiset polut}
 
