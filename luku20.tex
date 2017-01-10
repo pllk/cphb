@@ -554,15 +554,17 @@ as a cut in the graph.
 Thus, the flow has to be a maximum flow,
 and the cut has to be a minimum cut.
 
-\section{Rinnakkaiset polut}
+\section{Parallel paths}
 
-Ensimmäisenä virtauslaskennan sovelluksena tarkastelemme
-tehtävää, jossa tavoitteena on muodostaa mahdollisimman
-monta rinnakkaista polkua verkon alkusolmusta loppusolmuun.
-Vaatimuksena on, että jokainen verkon kaari esiintyy
-enintään yhdellä polulla.
+As a first application for flows,
+we consider a problem where the task is to
+form as many parallel paths as possible
+from the starting node of the graph
+to the ending node.
+It is required that no edge appears
+in more than one path.
 
-Esimerkiksi verkossa
+For example, in the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,2) {$1$};
@@ -582,10 +584,10 @@ Esimerkiksi verkossa
 \path[draw,thick,->] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-pystyy muodostamaan kaksi rinnakkaista polkua solmusta 1 solmuun 6.
-Tämä toteutuu valitsemalla polut
+we can form two parallel paths from node 1 to node 6.
+This can be done by choosing paths
 $1 \rightarrow 2 \rightarrow 4 \rightarrow 3 \rightarrow 6$
-ja $1 \rightarrow 4 \rightarrow 5 \rightarrow 6$:
+and $1 \rightarrow 4 \rightarrow 5 \rightarrow 6$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -616,20 +618,19 @@ ja $1 \rightarrow 4 \rightarrow 5 \rightarrow 6$:
 \end{tikzpicture}
 \end{center}
 
-Osoittautuu, että suurin rinnakkaisten polkujen määrä
-on yhtä suuri kuin maksimivirtaus verkossa,
-jossa jokaisen kaaren kapasiteetti on 1.
-Kun maksimivirtaus on muodostettu,
-rinnakkaiset polut voi löytää
-ahneesti etsimällä alkusolmusta loppusolmuun
-kulkevia polkuja.
+It turns out that the maximum number of parallel paths
+equals the maximum flow in the graph when the weight
+of each edge is 1.
+After the maximum flow has been constructed,
+the parallel paths can be found greedily by finding
+paths from the starting node to the ending node.
 
-Tarkastellaan sitten tehtävän muunnelmaa,
-jossa jokainen solmu (alku- ja loppusolmua lukuun ottamatta)
-saa esiintyä enintään yhdellä polulla.
-Tämän rajoituksen seurauksena äskeisessä verkossa
-voi muodostaa vain yhden polun,
-koska solmu 4 ei voi esiintyä monella polulla:
+Let's then consider a variation for the problem
+where each node (except for the starting and ending nodes)
+can appear in at most one path.
+After this restriction, we can construct only one path
+in the above graph, because node 4 can't appear
+in more than one path:
 
 \begin{center}
 \begin{tikzpicture}
@@ -656,14 +657,14 @@ koska solmu 4 ei voi esiintyä monella polulla:
 \end{tikzpicture}
 \end{center}
 
-Tavallinen keino rajoittaa solmun kautta kulkevaa
-virtausta on jakaa solmu tulosolmuksi ja lähtösolmuksi.
-Kaikki solmuun tulevat kaaret saapuvat tulosolmuun
-ja kaikki solmusta lähtevät kaaret poistuvat lähtösolmusta.
-Lisäksi tulosolmusta lähtösolmuun on kaari,
-jossa on haluttu kapasiteetti.
+A standard way to restrict the flow through a node
+is to divide the node into two parts.
+All incoming edges are connected to the first part,
+and all outgoing edges are connected to the second part.
+In addition, there is an edge from the first part
+to the second part.
 
-Tässä tapauksessa verkosta tulee seuraava:
+In the current example, the graph becomes as follows:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,2) {$1$};
@@ -697,7 +698,7 @@ Tässä tapauksessa verkosta tulee seuraava:
 \end{tikzpicture}
 \end{center}
 
-Tämän verkon maksimivirtaus on:
+The maximum flow for the graph is as follows:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,2) {$1$};
@@ -739,35 +740,35 @@ Tämän verkon maksimivirtaus on:
 \end{tikzpicture}
 \end{center}
 
-Tämä tarkoittaa, että verkossa on mahdollista muodostaa
-vain yksi polku alkusolmusta lähtösolmuun,
-kun sama solmu ei saa esiintyä monessa polussa.
+This means that it is possible to form exactly
+one path from the starting node to the ending node
+when a node can't appear in more than one path.
 
-\section{Maksimiparitus}
+\section{Maximum matching}
 
-\index{paritus@paritus}
-\index{maksimiparitus@maksimiparitus}
+\index{matching}
+\index{maximum matching}
 
-\key{Maksimiparitus} on suurin mahdollinen joukko
-verkon solmuista muodostettuja pareja,
-jolle pätee,
-että jokaisen parin välillä on kaari verkossa
-ja jokainen solmu kuuluu enintään yhteen pariin.
+A \key{maximum matching} is the largest possible
+set of pairs of nodes in a graph
+such that there is an edge between each pair of nodes,
+and each node belongs to at most one pair.
 
-Maksimiparituksen etsimiseen yleisessä
-verkossa on olemassa polynominen algoritmi,
-mutta se on hyvin monimutkainen.
-Tässä luvussa keskitymmekin tilanteeseen,
-jossa verkko on kaksijakoinen.
-Tällöin maksimiparituksen pystyy etsimään
-helposti virtauslaskennan avulla.
+There is a polynomial algorithm for finding
+a maximum matching in a general graph,
+but it is very complex.
+For this reason, we will restrict ourselves to the
+case where the graph is bipartite.
+In this case we can easily find the maximum matching
+using a maximum flow algorithm.
 
-\subsubsection{Maksimiparituksen etsiminen}
+\subsubsection{Finding a maximum matching}
 
-Kaksijakoinen verkko voidaan esittää niin,
-että se muodostuu vasemman ja oikean puolen
-solmuista ja kaikki verkon kaaret kulkevat puolten välillä.
-Tarkastellaan esimerkkinä seuraavaa verkkoa:
+A bipartite graph can be always presented so
+that it consists of left-side and right-side nodes,
+and all edges in the graph go between
+left and right sides.
+As an example, consider the following graph:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -789,7 +790,7 @@ Tarkastellaan esimerkkinä seuraavaa verkkoa:
 \end{tikzpicture}
 \end{center}
 
-Tässä verkossa maksimiparituksen koko on 3:
+In this graph, the size of a maximum matching is 3:
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -814,16 +815,16 @@ Tässä verkossa maksimiparituksen koko on 3:
 \end{tikzpicture}
 \end{center}
 
-Kaksijakoisen verkon maksimiparitus
-vastaa maksimivirtausta verkossa,
-johon on lisätty alkusolmu ja loppusolmu.
-Alkusolmusta on kaari jokaiseen vasemman
-puolen solmuun, ja vastaavasti loppusolmuun
-on kaari jokaisesta oikean puolen solmusta.
-Jokaisen kaaren kapasiteettina on 1.
+A maximum matching in a bipartite graph
+corresponds to a maximum flow in an extended graph
+that contains a starting node,
+an ending node and all the nodes of the original graph.
+There is an edge from the starting node to
+each left-side node, and an edge from 
+each right-side node to the ending node.
+The capacity of each edge is 1.
 
-Esimerkissä tuloksena on seuraava verkko:
-
+In the example graph, the result is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -856,37 +857,36 @@ Esimerkissä tuloksena on seuraava verkko:
 \end{tikzpicture}
 \end{center}
 
-Tämän verkon maksimivirtaus on yhtä suuri kuin
-alkuperäisen verkon maksimiparitus,
-koska virtaus muodostuu joukosta polkuja
-alkusolmusta loppusolmuun ja jokainen
-polku ottaa mukaan uuden kaaren paritukseen.
-Tässä tapauksessa maksimivirtaus on 3,
-joten maksimiparitus on myös 3.
+The size of a maximum flow in this graph
+equals the size of a maximum matching
+in the original graph,
+because each path from the starting node
+to the ending node adds one edge to the matching.
+In this graph, the maximum flow is 3,
+so the maximum matching is also 3.
 
-\subsubsection{Hallin lause}
+\subsubsection{Hall's theorem}
 
-\index{Hallin lause@Hallin lause}
-\index{txydellinen paritus@täydellinen paritus}
+\index{Hall's theorem}
+\index{perfect matching}
 
-\key{Hallin lause} antaa ehdon, milloin kaksijakoiseen
-verkkoon voidaan muodostaa paritus,
-joka sisältää kaikki toisen puolen solmut.
-Jos kummallakin puolella on yhtä monta solmua,
-Hallin lause kertoo, voidaanko muodostaa
-\key{täydellinen paritus},
-jossa kaikki solmut paritetaan keskenään.
+\key{Hall's theorem} describes when a bipartite graph
+has a matching that contains all nodes
+in one side of the graph.
+If both sides contain the same number of nodes,
+Hall's theorem tells us if it's possible to
+construct a \key{perfect matching} where
+all nodes are paired with each other.
 
-Oletetaan, että haluamme muodostaa parituksen,
-johon kuuluvat kaikki vasemman puolen solmut.
-Olkoon $X$ jokin joukko vasemman puolen solmuja
-ja $f(X)$ näiden solmujen naapurien joukko.
-Hallin lauseen mukaan paritus on mahdollinen,
-kun jokaiselle joukolle $X$
-pätee $|X| \le |f(X)|$.
+Assume that we want to construct a matching
+that contains all left-side nodes.
+Let $X$ be a set of left-side nodes,
+and let $f(X)$ be the set of their neighbors.
+According to Hall's theorem, a such matching exists
+exactly when for each $X$, the condition $|X| \le |f(X)|$ holds.
 
-Tarkastellaan Hallin lauseen merkitystä esimerkkiverkossa.
-Valitaan ensin $X=\{1,3\}$, jolloin $f(X)=\{5,6,8\}$:
+Let's study Hall's theorem in the example graph.
+First, let $X=\{1,3\}$ and $f(X)=\{5,6,8\}$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -908,8 +908,9 @@ Valitaan ensin $X=\{1,3\}$, jolloin $f(X)=\{5,6,8\}$:
 \end{tikzpicture}
 \end{center}
 
-Tämä täyttää Hallin lauseen ehdon, koska $|X|=2$ ja $|f(X)|=3$.
-Valitaan sitten $X=\{2,4\}$, jolloin $f(X)=\{7\}$:
+The condition of Hall's theorem holds, because
+$|X|=2$ and $|f(X)|=3$.
+Next, let $X=\{2,4\}$ and $f(X)=\{7\}$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -931,43 +932,44 @@ Valitaan sitten $X=\{2,4\}$, jolloin $f(X)=\{7\}$:
 \end{tikzpicture}
 \end{center}
 
-Tässä tapauksessa $|X|=2$ ja $|f(X)|=1$, joten Hallin lauseen ehto
-ei ole voimassa.
-Tämä tarkoittaa, että verkossa
-ei ole mahdollista muodostaa täydellistä paritusta,
-johon kuuluvat kaikki vasemman puolen solmut.
-Tämä on myös odotettu tulos, koska verkon maksimiparitus on 3 eikä 4.
+In this case, $|X|=2$ and $|f(X)|=1$,
+so the condition of Hall's theorem doesn't hold.
+This means that it's not possible to form
+a perfect matching in the graph.
+This result is not surprising, because we already
+knew that the maximum matching in the graph is 3 and not 4.
 
-Jos Hallin lauseen ehto ei päde, osajoukko $X$
-kertoo syyn sille, miksi paritusta ei voi muodostaa.
-Koska $X$ sisältää enemmän solmuja kuin $f(X)$,
-kaikille $X$:n solmuille ei riitä paria oikealta.
-Esimerkiksi yllä molemmat solmut 2 ja 4 tulisi
-yhdistää solmuun 7, mutta tämä ei ole mahdollista.
+If the condition of Hall's theorem doesn't hold,
+the set $X$ provides an explanation why we can't form a matching.
+Since $X$ contains more nodes than $f(X)$,
+there is no pair for all nodes in $X$.
+For example, in the above graph, both nodes 2 and 4
+should be connected to node 7 which is not possible.
 
-\subsubsection{Kőnigin lause}
+\subsubsection{Kőnig's theorem}
 
-\index{Kőnigin lause}
-\index{solmupeite@solmupeite}
-\index{pienin solmupeite@pienin solmupeite}
+\index{Kőnig's theorem}
+\index{node cover}
+\index{minimum node cover}
 
-\key{Kőnigin lause} tarjoaa tehokkaan
-tavan muodostaa kaksijakoiselle verkolle
-\key{pienin solmupeite} eli pienin sellainen
-solmujen joukko, että jokaisesta verkon kaaresta ainakin
-toinen päätesolmuista kuuluu joukkoon.
+\key{Kőnig's theorem} provides an efficient way
+to construct a \key{minimum node cover} for a
+bipartite graph.
+This is a minimum set of nodes such that
+each edge in the graph is connected to at least
+one node in the set.
 
-Yleisessä verkossa pienimmän solmupeitteen
-etsiminen on NP-vaikea ongelma.
-Sen sijaan kaksijakoisessa verkossa
-Kőnigin lauseen nojalla maksimiparitus ja
-pienin solmupeite ovat aina yhtä suuria,
-minkä ansiosta
-pienimmän solmupeitteen voi
-etsiä tehokkaasti virtauslaskennan avulla.
+In a general graph, finding a minimum node cover
+is a NP-hard problem.
+However, in a bipartite graph,
+the size of
+a maximum matching and a minimum node cover
+is always the same, according to Kőnig's theorem.
+Thus, we can efficiently find a minimum node cover
+using a maximum flow algorithm.
 
-Tarkastellaan taas seuraavaa verkkoa,
-jonka maksimiparituksen koko on 3:
+Let's consider the following graph
+with a maximum matching of size 3:
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -991,9 +993,9 @@ jonka maksimiparituksen koko on 3:
 \path[draw=red,thick,-,line width=2pt] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-Kőnigin lauseen ansiosta tiedämme nyt,
-että myös pienimmän solmupeitteen koko on 3.
-Solmupeite voidaan muodostaa seuraavasti:
+Using Kőnig's theorem, we know that the size
+of a minimum node cover is also 3.
+It can be constructed as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -1014,27 +1016,25 @@ Solmupeite voidaan muodostaa seuraavasti:
 \path[draw,thick,-] (4) -- (7);
 \end{tikzpicture}
 \end{center}
-Pienin solmupeite muodostuu aina niin,
-että jokaisesta maksimiparituksen kaaresta
-toinen kaaren päätesolmuista kuuluu peitteeseen.
+For each edge in the maximum matching,
+exactly one of its end nodes belongs to
+the minimum node cover.
 
-\index{riippumaton joukko@riippumaton joukko}
-\index{suurin riippumaton joukko@suurin riippumaton joukko}
+\index{independent set}
+\index{maximum independent set}
 
-Kun verkosta valitaan kaikki solmut,
-jotka \emph{eivät} kuulu pienimpään
-solmupeitteeseen, syntyy 
-\key{suurin riippumaton joukko}.
-Tämä on suurin mahdollinen joukko solmuja,
-jossa minkään kahden solmun
-välillä ei ole kaarta.
-Pienimmän solmupeitteen tavoin
-riippumattoman joukon muodostaminen on
-NP-vaikea ongelma yleisessä verkossa,
-mutta Kőnigin lauseen avulla
-ongelma on mahdollista ratkaista
-tehokkaasti kaksijakoisessa verkossa.
-Esimerkkiverkossa suurin riippumaton joukko on seuraava:
+The set of all nodes that do \emph{not}
+belong to a minimum node cover
+is a \key{maximum independent set}.
+This is the largest possible set of nodes
+where there is no edge between any two nodes
+in the graph.
+Once again, finding a maximum independent
+set in a general graph is a NP-hard problem,
+but in a bipartite graph we can use
+Kőnig's theorem to solve the problem efficiently.
+In the example graph, the maximum independent
+set is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
