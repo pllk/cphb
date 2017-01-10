@@ -1025,7 +1025,7 @@ the minimum node cover.
 
 The set of all nodes that do \emph{not}
 belong to a minimum node cover
-is a \key{maximum independent set}.
+forms a \key{maximum independent set}.
 This is the largest possible set of nodes
 where there is no edge between any two nodes
 in the graph.
@@ -1056,30 +1056,28 @@ set is as follows:
 \end{tikzpicture}
 \end{center}
 
-\section{Polkupeitteet}
+\section{Path covers}
 
-\index{polkupeite@polkupeite}
+\index{path cover}
 
-\key{Polkupeite} on joukko verkon polkuja,
-jotka on valittu niin, että jokainen verkon solmu kuuluu
-ainakin yhteen polkuun.
-Osoittautuu, että voimme muodostaa
-virtauslaskennan avulla
-pienimmän polkupeitteen suunnatussa,
-syklittömässä verkossa.
+A \key{path cover} is a set of paths in a graph
+that is chosen so that each node in the graph
+belongs to at least one path.
+It turns out that we can reduce the problem
+of finding a minimum path cover in a
+directed, acyclic graph into a maximum flow problem.
 
-Polkupeitteestä on kaksi muunnelmaa:
-\key{Solmuerillinen peite} on polkupeite,
-jossa jokainen verkon solmu esiintyy tasan yhdessä polussa.
-\key{Yleinen peite} taas on polkupeite, jossa sama solmu voi
-esiintyä useammassa polussa.
-Kummassakin tapauksessa pienin polkupeite löytyy
-samanlaisella idealla.
+There are two variations for the problem:
+In a \key{node-disjoint cover},
+every node appears in exactly one path,
+and in a \key{general cover},
+a node may appear in more than one path.
+In both cases, the minimum path cover can be
+found using a similar idea.
 
-\subsubsection{Solmuerillinen peite}
+\subsubsection{Node-disjoint cover}
 
-Tarkastellaan esimerkkinä seuraavaa verkkoa:
-
+As an example, consider the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {1};
@@ -1099,9 +1097,9 @@ Tarkastellaan esimerkkinä seuraavaa verkkoa:
 \end{tikzpicture}
 \end{center}
 
-Tässä tapauksessa pienin solmuerillinen polkupeite
-muodostuu kolmesta polusta.
-Voimme valita polut esimerkiksi seuraavasti:
+In this case, the minimum node-disjoint path cover
+consists of three paths.
+For example, we can choose the following paths:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -1120,18 +1118,19 @@ Voimme valita polut esimerkiksi seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Huomaa, että yksi poluista sisältää vain solmun 2,
-eli on sallittua, että polussa ei ole kaaria.
+Note that one of the paths only contains node 2,
+so it is possible that a path doesn't contain any edges.
 
-Polkupeitteen etsiminen voidaan tulkita paritusongelmana
-verkossa, jossa jokaista alkuperäisen verkon solmua
-vastaa kaksi solmua: vasen ja oikea solmu.
-Vasemmasta solmusta oikeaan solmuun on kaari,
-jos tällainen kaari esiintyy alkuperäisessä verkossa.
-Ideana on, että paritus määrittää, mitkä solmut
-ovat yhteydessä toisiinsa poluissa.
+Finding a path cover can be interpreted as finding
+a maximum matching in a graph where each node
+in the original graph is represented by two nodes:
+a left node and a right node.
+There is an edge from a left node to a right node,
+if there is such an edge in the original graph.
+The idea is that the matching determines which
+edges belong to paths in the original graph.
 
-Esimerkkiverkossa tilanne on seuraava:
+The matching in the example case is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -1185,24 +1184,25 @@ Esimerkkiverkossa tilanne on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Tässä tapauksessa maksimiparitukseen kuuluu neljä kaarta,
-jotka vastaavat alkuperäisen verkon kaaria
+In this case, the maximum matching consists of four edges
+that corresponds to edges
 $1 \rightarrow 5$, $3 \rightarrow 4$,
-$5 \rightarrow 6$ ja $6 \rightarrow 7$.
-Niinpä pienin solmuerillinen polkupeite syntyy muodostamalla
-polut kyseisten kaarten avulla.
+$5 \rightarrow 6$ and $6 \rightarrow 7$ in the original graph.
+Thus, a minimum node-disjoint path cover consists of paths
+that contain these edges.
 
-Pienimmän polkupeitteen koko on $n-c$, jossa $n$ on verkon
-solmujen määrä ja $c$ on maksimiparituksen kaarten määrä.
-Esimerkiksi yllä olevassa verkossa pienimmän
-polkupeitteen koko on $7-4=3$.
+The size of a minimum path cover is $n-c$ where
+$n$ is the number of nodes in the graph,
+and $c$ is the number of edges in the maximum matching.
+For example, in the above graph the size of the
+minimum path cover is $7-4=3$.
 
-\subsubsection{Yleinen peite}
+\subsubsection{General cover}
 
-Yleisessä polkupeitteessä sama solmu voi kuulua moneen polkuun,
-minkä ansiosta tarvittava polkujen määrä saattaa olla pienempi.
-Esimerkkiverkossa pienin yleinen polkupeite muodostuu
-kahdesta polusta seuraavasti:
+In a general path cover, a node can belong to more than one path
+which may decrease the number of paths needed.
+In the example graph, the minimum general path cover
+consists of two paths as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -1223,19 +1223,19 @@ kahdesta polusta seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Tässä verkossä yleisessä polkupeitteessä on 2 polkua,
-kun taas solmuerillisessä polkupeitteessä on 3 polkua.
-Erona on, että yleisessä polkupeitteessä solmua 6
-käytetään kahdessa polussa.
+In this graph, a minimum general path cover contains 2 paths,
+while a minimum node-disjoint path cover contains 3 paths.
+The difference is that in the general path cover,
+node 6 appears in two paths.
 
-Yleisen polkupeitteen voi löytää lähes samalla
-tavalla kuin solmuerillisen polkupeitteen.
-Riittää täydentää maksimiparituksen verkkoa niin,
-että siinä on kaari $a \rightarrow b$ aina silloin,
-kun alkuperäisessä verkossa solmusta $a$ pääsee
-solmuun $b$ (mahdollisesti usean kaaren kautta).
+A minimum general path cover can be found
+almost like a minimum node-disjoint path cover.
+It suffices to extend the matching graph
+so that there is an edge $a \rightarrow b$
+always when there is a path from node $a$ to node $b$
+in the original graph (possibly through several edges).
 
-Nyt esimerkkiverkossa on seuraava tilanne:
+The matching graph for the example case looks as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1a) at (0,6) {1};
@@ -1320,23 +1320,22 @@ Nyt esimerkkiverkossa on seuraava tilanne:
 \end{tikzpicture}
 \end{center}
 
+\subsubsection{Dilworth's theorem}
 
-\subsubsection{Dilworthin lause}
+\index{Dilworth's theorem}
+\index{antichain}
 
-\index{Dilworthin lause@Dilworthin lause}
-\index{antiketju@antiketju}
+\key{Dilworth's theorem} states that the size of
+a minimum general path cover in a directed, acyclic graph
+equals the maximum size of an \key{antichain}, i.e.,
+a set of nodes such that there is no path
+from any node to another node.
 
-\key{Dilworthin lauseen} mukaan suunnatun, syklittömän
-verkon pienin yleinen polkupeite
-on yhtä suuri kuin suurin verkossa oleva \key{antiketju}
-eli kokoelma solmuja,
-jossa minkään kahden solmun välillä ei ole polkua.
-
-Esimerkiksi äskeisessä verkossa pienin
-yleinen polkupeite sisältää kaksi polkua,
-joten verkon suurimmassa antiketjussa on kaksi solmua.
-Tällainen antiketju muodostuu esimerkiksi
-valitsemalla solmut 3 ja 7:
+For example, in the example graph, the minimum
+general path cover contains two paths,
+so the largest antichain contains two nodes.
+We can construct such an antichain
+by choosing nodes 3 and 7:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -1357,9 +1356,9 @@ valitsemalla solmut 3 ja 7:
 \end{tikzpicture}
 \end{center}
 
-Verkossa ei ole polkua solmusta 3 solmuun 7
-eikä polkua solmusta 7 solmuun 3,
-joten valinta on kelvollinen.
-Toisaalta jos verkosta valitaan mitkä tahansa
-kolme solmua, jostain solmusta toiseen on polku.
-
+There is no path from node 3 to node 7,
+and no path from node 7 to node 3,
+so nodes 3 and 7 form an antichain.
+On the other hand, if we choose any three
+nodes in the graph, there is certainly a
+path from one node to another node.
