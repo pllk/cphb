@@ -452,14 +452,14 @@ because if $m$ is a prime, then $\varphi(m)=m-1$.
 
 \index{modular inverse}
 
-The modular inverse of $x$ modulo $m$
+The inverse of $x$ modulo $m$
 is a number $x^{-1}$ such that
 \[ x x^{-1} \bmod m = 1. \]
 For example, if $x=6$ and $m=17$,
 then $x^{-1}=3$, because $6\cdot3 \bmod 17=1$.
 
-Using modular inverses, we can do divisions
-for remainders, because division by $x$
+Using modular inverses, we can divide numbers
+modulo $m$, because division by $x$
 corresponds to multiplication by $x^{-1}$.
 For example, to evaluate the value of $36/6 \bmod 17$,
 we can use the formula $2 \cdot 3 \bmod 17$,
@@ -469,7 +469,7 @@ However, a modular inverse doesn't always exist.
 For example, if $x=2$ and $m=4$, the equation
 \[ x x^{-1} \bmod m = 1. \]
 can't be solved, because all multiples of the number 2
-are even, and the remainder can never be 1.
+are even, and the remainder can never be 1 when $m=4$.
 It turns out that the number $x^{-1} \bmod m$ exists
 exactly when $x$ and $m$ are coprime.
 
@@ -518,54 +518,53 @@ unsigned int x = 123456789;
 cout << x*x << "\n"; // 2537071545
 \end{lstlisting}
 
-\section{Yhtälönratkaisu}
+\section{Solving equations}
 
-\index{Diofantoksen yhtxlz@Diofantoksen yhtälö}
+\index{Diophantine equation}
 
-\key{Diofantoksen yhtälö} on muotoa
+A \key{Diophantine equation} is of the form
 \[ ax + by = c, \]
-missä $a$, $b$ ja $c$ ovat vakioita
-ja tehtävänä on ratkaista muuttujat $x$ ja $y$.
-Jokaisen yhtälössä esiintyvän luvun tulee
-olla kokonaisluku.
-Esimerkiksi jos yhtälö on $5x+2y=11$, yksi ratkaisu
-on valita $x=3$ ja $y=-2$.
+where $a$, $b$ and $c$ are constants,
+and our tasks is to solve variables $x$ and $y$.
+Each number in the equation has to be an integer.
+For example, one solution for the equation
+$5x+2y=11$ is $x=3$ and $y=-2$.
 
-\index{Eukleideen algoritmi@Eukleideen algoritmi}
+\index{Euclid's algorithm}
 
-Diofantoksen yhtälön voi ratkaista
-tehokkaasti Eukleideen algoritmin avulla,
-koska Eukleideen algoritmia laajentamalla
-pystyy löytämään luvun $\textrm{syt}(a,b)$
-lisäksi luvut $x$ ja $y$,
-jotka toteuttavat yhtälön
+We can efficiently solve a Diophantine equation
+by using Euclid's algorithm.
+It turns out that we can extend Euclid's algorithm
+so that it will find numbers $x$ and $y$
+that satisfy the following equation:
 \[
-ax + by = \textrm{syt}(a,b).
+ax + by = \textrm{syt}(a,b)
 \]
 
-Diofantoksen yhtälön ratkaisu on olemassa, jos $c$ on
-jaollinen $\textrm{syt}(a,b)$:llä,
-ja muussa tapauksessa yhtälöllä ei ole ratkaisua.
+A Diophantine equation can be solved if
+$c$ is divisible by
+$\textrm{gcd}(a,b)$,
+and otherwise it can't be solved.
 
-\index{laajennettu Eukleideen algoritmi@laajennettu Eukleideen algoritmi}
+\index{extended Euclid's algorithm}
 
-\subsubsection*{Laajennettu Eukleideen algoritmi}
+\subsubsection*{Extended Euclid's algorithm}
 
-Etsitään esimerkkinä luvut $x$ ja $y$,
-jotka toteuttavat yhtälön
+As an example, let's find numbers $x$ and $y$
+that satisfy the following equation:
 \[
-39x + 15y = 12.
+39x + 15y = 12
 \]
-Yhtälöllä on ratkaisu, koska $\textrm{syt}(39,15)=3$
-ja $3 \mid 12$.
-Kun Eukleideen algoritmi laskee lukujen
-39 ja 15 suurimman
-yhteisen tekijän, syntyy ketju
+The equation can be solved, because
+$\textrm{syt}(39,15)=3$ and $3 \mid 12$.
+When Euclid's algorithm calculates the
+greatest common divisor of 39 and 15,
+it produces the following sequence of function calls:
 \[
-\textrm{syt}(39,15) = \textrm{syt}(15,9)
-= \textrm{syt}(9,6) = \textrm{syt}(6,3)
-= \textrm{syt}(3,0) = 3. \]
-Algoritmin aikana muodostuvat jakoyhtälöt ovat:
+\textrm{gcd}(39,15) = \textrm{gcd}(15,9)
+= \textrm{gcd}(9,6) = \textrm{gcd}(6,3)
+= \textrm{gcd}(3,0) = 3 \]
+This corresponds to the following equations:
 \[
 \begin{array}{lcl}
 39 - 2 \cdot 15 & = & 9 \\
@@ -573,29 +572,30 @@ Algoritmin aikana muodostuvat jakoyhtälöt ovat:
 9 - 1 \cdot 6 & = & 3 \\
 \end{array}
 \]
-Näiden yhtälöiden avulla saadaan
+Using these equations, we can derive
 \[
 39 \cdot 2 + 15 \cdot (-5) = 3
 \]
-ja kertomalla yhtälö 4:lla tuloksena on
+and by multiplying this by 4, the result is
 \[
 39 \cdot 8 + 15 \cdot (-20) = 12,
 \]
-joten alkuperäisen yhtälön ratkaisu on $x=8$ ja $y=-20$.
+so a solution for the original equation is
+$x=8$ and $y=-20$.
 
-Diofantoksen yhtälön ratkaisu ei ole yksikäsitteinen,
-vaan yhdestä ratkaisusta on mahdollista muodostaa
-äärettömästi muita ratkaisuja.
-Kun yhtälön ratkaisu on $(x,y)$,
-niin myös
-\[(x+\frac{kb}{\textrm{syt}(a,b)},y-\frac{ka}{\textrm{syt}(a,b)})\]
-on ratkaisu, missä $k$ on mikä tahansa kokonaisluku.
+A solution for a Diophantine equation is not unique,
+but we can form an infinite number of solutions
+if we know one solution.
+If the pair $(x,y)$ is a solution, then also the pair
+\[(x+\frac{kb}{\textrm{gcd}(a,b)},y-\frac{ka}{\textrm{gcd}(a,b)})\]
+is a solution where $k$ is any integer.
 
-\subsubsection{Kiinalainen jäännöslause}
+\subsubsection{Chinese remainder theorem}
 
-\index{kiinalainen jxxnnzslause@kiinalainen jäännöslause}
+\index{Chinese remainder theorem}
 
-\key{Kiinalainen jäännöslause} ratkaisee yhtälöryhmän muotoa
+The \key{Chinese remainder theorem} solves
+a group of equations of the form
 \[
 \begin{array}{lcl}
 x & = & a_1 \bmod m_1 \\
@@ -604,24 +604,22 @@ x & = & a_2 \bmod m_2 \\
 x & = & a_n \bmod m_n \\
 \end{array}
 \]
-missä kaikki parit luvuista $m_1,m_2,\ldots,m_n$
-ovat suhteellisia alkulukuja.
+where all pairs of $m_1,m_2,\ldots,m_n$ are coprime.
 
-Olkoon $x^{-1}_m$ luvun $x$ käänteisluku
-modulo $m$ ja
+Let $x^{-1}_m$ be the inverse of $x$ modulo $m$, and
 \[ X_k = \frac{m_1 m_2 \cdots m_n}{m_k}.\]
-Näitä merkintöjä käyttäen yhtälöryhmän ratkaisu on
+Using this notation, a solution for the equations is
 \[x = a_1 X_1 {X_1}^{-1}_{m_1} + a_2 X_2 {X_2}^{-1}_{m_2} + \cdots + a_n X_n {X_n}^{-1}_{m_n}.\]
-Tässä ratkaisussa jokaiselle luvulle $k=1,2,\ldots,n$
-pätee, että
+In this solution, it holds for each number
+$k=1,2,\ldots,n$ that
 \[a_k X_k {X_k}^{-1}_{m_k} \bmod m_k = a_k,\]
-sillä
+because
 \[X_k {X_k}^{-1}_{m_k} \bmod m_k = 1.\]
-Koska kaikki muut summan osat ovat jaollisia luvulla
-$m_k$, ne eivät vaikuta jakojäännökseen ja
-koko summan jakojäännös $m_k$:lla on $a_k$.
+Since all other terms in the sum are divisible by $m_k$,
+they have no effect on the remainder,
+and the remainder by $m_k$ for the whole sum is $a_k$.
 
-Esimerkiksi yhtälöryhmän
+For example, a solution for
 \[
 \begin{array}{lcl}
 x & = & 3 \bmod 5 \\
@@ -629,84 +627,84 @@ x & = & 4 \bmod 7 \\
 x & = & 2 \bmod 3 \\
 \end{array}
 \]
-ratkaisu on
+is
 \[ 3 \cdot 21 \cdot 1 + 4 \cdot 15 \cdot 1 + 2 \cdot 35 \cdot 2 = 263.\]
 
-Kun yksi ratkaisu $x$ on löytynyt,
-sen avulla voi muodostaa äärettömästi
-erilaisia ratkaisuja, koska kaikki luvut muotoa
+Once we have found a solution $x$,
+we can create an infinite number of other solutions,
+because all numbers of the form
 \[x+m_1 m_2 \cdots m_n\]
-ovat ratkaisuja.
+are solutions.
 
+\section{Other results}
 
-\section{Muita tuloksia}
+\subsubsection{Lagrange's theorem}
 
-\subsubsection{Lagrangen lause}
+\index{Lagrange's theorem}
 
-\index{Lagrangen lause@Lagrangen lause}
+\key{Lagrange's theorem} states that every positive integer
+can be represented as a sum of four squares, i.e.,
+$a^2+b^2+c^2+d^2$.
+For example, the number 123 can be represented
+as the sum $8^2+5^2+5^2+3^2$.
 
-\key{Lagrangen lauseen} mukaan jokainen positiivinen kokonaisluku voidaan
-esittää neljän neliöluvun summana eli muodossa $a^2+b^2+c^2+d^2$.
-Esimerkiksi luku 123 voidaan esittää muodossa $8^2+5^2+5^2+3^2$.
+\subsubsection{Zeckendorf's theorem}
 
-\subsubsection{Zeckendorfin lause}
+\index{Zeckendorf's theorem}
+\index{Fibonacci number}
 
-\index{Zeckendorfin lause@Zeckendorfin lause}
-\index{Fibonaccin luku@Fibonaccin luku}
+\key{Zeckendorf's theorem} states that every
+positive integer has a unique representation
+as a sum of Fibonacci numbers such that
+no two numbers are the same of successive
+Fibonacci numbers.
+For example, the number 74 can be represented
+as the sum $55+13+5+1$.
 
-\key{Zeckendorfin lauseen} mukaan
-jokaiselle positiiviselle kokonaisluvulle
-on olemassa yksikäsitteinen esitys
-Fibonaccin lukujen summana niin, että
-mitkään kaksi lukua eivät ole samat eivätkä peräkkäiset
-Fibonaccin luvut.
-Esimerkiksi luku 74 voidaan esittää muodossa
-$55+13+5+1$.
+\subsubsection{Pythagorean triples}
 
-\subsubsection{Pythagoraan kolmikot}
+\index{Pythagorean triple}
+\index{Euclid's formula}
 
-\index{Pythagoraan kolmikko@Pythagoraan kolmikko}
-\index{Eukleideen kaava@Eukleideen kaava}
+A \key{Pythagorean triple} is a triple $(a,b,c)$
+that satisfies the Pythagorean theorem
+$a^2+b^2=c^2$, which means that there is a right triangle
+with side lengths $a$, $b$ and $c$.
+For example, $(3,4,5)$ is a Pythagorean triple.
 
-\key{Pythagoraan kolmikko} on lukukolmikko $(a,b,c)$,
-joka toteuttaa Pythagoraan lauseen $a^2+b^2=c^2$
-eli $a$, $b$ ja $c$ voivat olla suorakulmaisen
-kolmion sivujen pituudet.
-Esimerkiksi $(3,4,5)$ on Pythagoraan kolmikko.
+If $(a,b,c)$ is a Pythagorean triple,
+all triples of the form $(ka,kb,kc)$
+are also Pythagorean triples where $k>1$.
+A Pythagorean triple is \key{primitive} if
+$a$, $b$ and $c$ are coprime,
+and all Pythagorean triples can be constructed
+from primitive triples using a multiplier $k$.
 
-Jos $(a,b,c)$ on Pythagoraan kolmikko,
-niin myös kaikki kolmikot muotoa $(ka,kb,kc)$
-ovat Pythagoraan kolmikoita,
-missä $k>1$.
-Pythagoraan kolmikko on \key{primitiivinen},
-jos $a$, $b$ ja $c$ ovat suhteellisia alkulukuja,
-ja primitiivisistä kolmikoista voi muodostaa
-kaikki muut kolmikot kertoimen $k$ avulla.
-
-\key{Eukleideen kaavan} mukaan jokainen primitiivinen
-Pythagoraan kolmikko on muotoa
+\key{Euclid's formula} can be used to produce
+all primitive Pythagorean triples.
+Each such triple is of the form
 \[(n^2-m^2,2nm,n^2+m^2),\]
-missä $0<m<n$, $n$ ja $m$ ovat suhteelliset
-alkuluvut ja ainakin toinen luvuista $n$ ja $m$ on parillinen.
-Esimerkiksi valitsemalla $m=1$ ja $n=2$ syntyy
-pienin mahdollinen Pythagoraan kolmikko
+where $0<m<n$, $n$ and $m$ are coprime
+and at least one of the numbers $n$ and $m$ is even.
+For example, when $m=1$ and $n=2$, the formula
+produces the smallest Pythagorean triple
 \[(2^2-1^2,2\cdot2\cdot1,2^2+1^2)=(3,4,5).\]
 
-\subsubsection{Wilsonin lause}
+\subsubsection{Wilson's theorem}
 
-\index{Wilsonin lause@Wilsonin lause}
+\index{Wilson's theorem}
 
-\key{Wilsonin lauseen} mukaan luku $n$ on alkuluku
-tarkalleen silloin, kun
+\key{Wilson's theorem} states that a number $n$
+is prime exactly when
 \[(n-1)! \bmod n = n-1.\]
-Esimerkiksi luku 11 on alkuluku, koska
+For example, the number 11 is prime, because
 \[10! \bmod 11 = 10,\]
-ja luku 12 ei ole alkuluku, koska
+and the number 12 is not prime, because
 \[11! \bmod 12 = 0 \neq 11.\]
 
-Wilsonin lauseen avulla voi siis tutkia, onko luku alkuluku.
-Tämä ei ole kuitenkaan käytännössä hyvä tapa,
-koska luvun $(n-1)!$ laskeminen on työlästä,
-jos $n$ on suuri luku.
+Hence, Wilson's theorem tells us whether a number
+is prime. However, in practice, the formula can't be
+used for large values of $n$, because it's difficult
+to calculate the number $(n-1)!$ if $n$ is large.
 
 
