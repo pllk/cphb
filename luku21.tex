@@ -1,19 +1,19 @@
 \chapter{Number theory}
 
-\index{lukuteoria@lukuteoria}
+\index{number theory}
 
-\key{Lukuteoria} on kokonaislukuja tutkiva
-matematiikan ala, jonka keskeinen
-käsite on lukujen jaollisuus.
-Lukuteoriassa on kiehtovaa, että monet kokonaislukuihin
-liittyvät kysymykset ovat hyvin vaikeita ratkaista,
-vaikka ne saattavat näyttää päältä päin yksinkertaisilta.
+\key{Number theory} is a branch of mathematics
+that studies integers.
+Number theory is a fascinating field,
+because many questions involving integers
+are very difficult to solve even if they
+seem simple at first glance.
 
-Tarkastellaan esimerkkinä seuraavaa yhtälöä:
+As an example, let's consider the following equation:
 \[x^3 + y^3 + z^3 = 33\]
-On helppoa löytää kolme reaalilukua $x$, $y$ ja $z$,
-jotka toteuttavat yhtälön. Voimme valita
-esimerkiksi
+It's easy to find three real numbers $x$, $y$ and $z$
+that satisfy the equation.
+For example, we can choose
 \[
 \begin{array}{lcl}
 x = 3, \\
@@ -21,152 +21,151 @@ y = \sqrt[3]{3}, \\
 z = \sqrt[3]{3}.\\
 \end{array}
 \]
-Sen sijaan kukaan ei tiedä, onko olemassa
-kolmea \emph{kokonaislukua} $x$, $y$ ja $z$,
-jotka toteuttaisivat yhtälön, vaan kyseessä
-on avoin lukuteorian ongelma.
+However, nobody knows if there are any three
+\emph{integers} $x$, $y$ and $z$
+that would satisfy the equation, but this
+is an open problem in number theory.
 
-Tässä luvussa tutustumme lukuteorian peruskäsitteisiin ja
--algoritmeihin.
-Lähdemme liikkeelle lukujen jaollisuudesta,
-johon liittyvät keskeiset algoritmit ovat
-alkuluvun tarkastaminen sekä luvun jakaminen tekijöihin.
+In this chapter, we will focus on basic concepts
+and algorithms in number theory.
+We will start by discussing divisibility of numbers
+and important algorithms for primality testing
+and factorization.
 
-\section{Alkuluvut ja tekijät}
+\section{Primes and factors}
 
-\index{jaollisuus@jaollisuus}
-\index{jakaja@jakaja}
-\index{tekijx@tekijä}
+\index{divisibility}
+\index{factor}
+\index{divisor}
 
-Luku $a$ on luvun $b$ \key{jakaja} eli \key{tekijä},
-jos $b$ on jaollinen $a$:lla.
-Jos $a$ on $b$:n jakaja,
-niin merkitään $a \mid b$,
-ja muuten merkitään $a \nmid b$.
-Esimerkiksi luvun 24 jakajat ovat 1, 2, 3, 4, 6, 8, 12 ja 24.
 
-\index{alkuluku@alkuluku}
-\index{alkutekijxhajotelma@alkutekijähajotelma}
+A number $a$ is a \key{factor} or \key{divisor} of a number $b$
+if $b$ is divisible by $a$.
+If $a$ is a factor of $b$,
+we write $a \mid b$, and otherwise we write $a \nmid b$.
+For example, the factors of the number 24 are
+1, 2, 3, 4, 6, 8, 12 and 24.
 
-Luku $n$ on \key{alkuluku}, jos sen ainoat 
-positiiviset jakajat ovat 1 ja $n$.
-Esimerkiksi luvut 7, 19 ja 41 ovat alkulukuja.
-Luku 35 taas ei ole alkuluku, koska se voidaan
-jakaa tekijöihin $5 \cdot 7 = 35$.
-Jokaiselle luvulle $n>1$ on olemassa yksikäsitteinen
-\key{alkutekijähajotelma}
+\index{prime}
+\index{prime decomposition}
+
+A number $n>1$ is a \key{prime}
+if its only positive factors are 1 and $n$.
+For example, the numbers 7, 19 and 41 are primes.
+The number 35 is not a prime because it can be
+divided into factors $5 \cdot 7 = 35$.
+For each number $n>1$, there is a unique
+\key{prime factorization}
 \[ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k},\]
-missä $p_1,p_2,\ldots,p_k$ ovat alkulukuja
-ja $\alpha_1,\alpha_2,\ldots,\alpha_k$ ovat positiivisia
-lukuja. Esimerkiksi luvun 84 alkutekijähajotelma on
+where $p_1,p_2,\ldots,p_k$ are primes and
+$\alpha_1,\alpha_2,\ldots,\alpha_k$ are positive numbers.
+For example, the prime factorization for the number 84 is
 \[84 = 2^2 \cdot 3^1 \cdot 7^1.\]
 
-Luvun $n$ \key{jakajien määrä} on
+The \key{number of factors} of a number $n$ is
 \[\tau(n)=\prod_{i=1}^k (\alpha_i+1),\]
-koska alkutekijän $p_i$ kohdalla on $\alpha_i+1$
-tapaa valita, montako kertaa alkutekijä
-esiintyy jakajassa.
-Esimerkiksi luvun 84 jakajien määrä
-on $\tau(84)=3 \cdot 2 \cdot 2 = 12$.
-Jakajat ovat
-1, 2, 3, 4, 6, 7, 12, 14, 21, 28, 42 ja 84.
+because for each prime $p_i$, there are
+$\alpha_i+1$ ways to choose how many times
+it appears in the factor.
+For example, the number of factors
+of the number 84 is
+$\tau(84)=3 \cdot 2 \cdot 2 = 12$.
+The factors are
+1, 2, 3, 4, 6, 7, 12, 14, 21, 28, 42 and 84.
 
-Luvun $n$ \key{jakajien summa} on
+The \key{sum of factors} of $n$ is
 \[\sigma(n)=\prod_{i=1}^k (1+p_i+\ldots+p_i^{\alpha_i}) = \prod_{i=1}^k \frac{p_i^{a_i+1}-1}{p_i-1},\]
-missä jälkimmäinen muoto perustuu geometriseen summaan.
-Esimerkiksi luvun 84 jakajien summa on
+where the latter form is based on the geometric sum formula.
+For example, the sum of factors of the number 84 is
 \[\sigma(84)=\frac{2^3-1}{2-1} \cdot \frac{3^2-1}{3-1} \cdot \frac{7^2-1}{7-1} = 7 \cdot 4 \cdot 8 = 224.\]
 
-Luvun $n$ \key{jakajien tulo} on
+The \key{product of factors} of $n$ is
 \[\mu(n)=n^{\tau(n)/2},\]
-koska jakajista voidaan muodostaa
-$\tau(n)/2$ paria, joiden jokaisen tulona on $n$.
-Esimerkiksi luvun 84 jakajista muodostuvat parit
-$1 \cdot 84$, $2 \cdot 42$, $3 \cdot 28$, jne.,
-ja jakajien tulo on $\mu(84)=84^6=351298031616$.
+because we can form $\tau(n)/2$ pairs from the factors,
+each with product $n$.
+For example, the factors of the number 84
+produce the pairs
+$1 \cdot 84$, $2 \cdot 42$, $3 \cdot 28$, etc.,
+and the product of the factors is $\mu(84)=84^6=351298031616$.
 
-%\index{tzydellinen luku@täydellinen luku}
-\index{txydellinen luku@täydellinen luku}
+\index{perfect number}
 
-Luku $n$ on \key{täydellinen}, jos $n=\sigma(n)-n$
-eli luku on yhtä suuri kuin summa sen jakajista
-välillä $1 \ldots n-1$.
-Esimerkiksi luku 28 on täydellinen, koska
-se muodostuu summana $1+2+4+7+14$.
+A number $n$ is \key{perfect} if $n=\sigma(n)-n$,
+i.e., the number equals the sum of its divisors
+between $1 \ldots n-1$.
+For example, the number 28 is perfect because
+it equals the sum $1+2+4+7+14$.
 
-\subsubsection{Alkulukujen määrä}
+\subsubsection{Number of primes}
 
-On helppoa osoittaa, että alkulukuja on äärettömästi.
-Jos nimittäin alkulukuja olisi äärellinen määrä,
-voisimme muodostaa joukon $P=\{p_1,p_2,\ldots,p_n\}$,
-joka sisältää kaikki alkuluvut.
-Esimerkiksi $p_1=2$, $p_2=3$, $p_3=5$, jne.
-Nyt kuitenkin voisimme muodostaa uuden alkuluvun
-\[p_1 p_2 \cdots p_n+1,\]
-joka on kaikkia $P$:n lukuja suurempi.
-Koska tätä lukua ei ole joukossa $P$,
-syntyy ristiriita ja alkulukujen määrän on
-pakko olla ääretön.
+It is easy to show that there is an infinite number
+of primes.
+If the number would be finite,
+we could construct a set $P=\{p_1,p_2,\ldots,p_n\}$
+that contains all the primes.
+For example, $p_1=2$, $p_2=3$, $p_3=5$, and so on.
+However, using this set, we could form a new prime
+\[p_1 p_2 \cdots p_n+1\]
+that is larger than all elements in $P$.
+This is a contradiction, and the number of the primes
+has to be infinite.
 
-\subsubsection{Alkulukujen tiheys}
+\subsubsection{Density of primes}
 
-Alkulukujen tiheys tarkoittaa, kuinka usein alkulukuja
-esiintyy muiden lukujen joukossa.
-Merkitään funktiolla $\pi(n)$, 
-montako alkulukua on välillä $1 \ldots n$.
-Esimerkiksi $\pi(10)=4$, koska välillä $1 \ldots 10$
-on alkuluvut 2, 3, 5 ja 7.
+The density of primes means how often there are primes
+among the numbers.
+Let $\pi(n)$ denote the number of primes between
+$1 \ldots n$. For example, $\pi(10)=4$ because
+there are 4 primes between $1 \ldots 10$: 2, 3, 5 and 7.
 
-On mahdollista osoittaa, että
+It's possible to show that
 \[\pi(n) \approx \frac{n}{\ln n},\]
-mikä tarkoittaa, että alkulukuja esiintyy
-varsin usein. Esimerkiksi alkulukujen määrä
-välillä $1 \ldots 10^6$ on $\pi(10^6)=78498$
-ja $10^6 / \ln 10^6 \approx 72382$.
+which means that primes appear quite often.
+For example, the number of primes between
+$1 \ldots 10^6$ is $\pi(10^6)=78498$,
+and $10^6 / \ln 10^6 \approx 72382$.
 
-\subsubsection{Konjektuureja}
+\subsubsection{Conjectures}
 
-Alkulukuihin liittyy useita \emph{konjektuureja}
-eli lauseita, joiden uskotaan olevan tosia mutta
-joita kukaan ei ole onnistunut todistamaan tähän mennessä.
-Kuuluisia konjektuureja ovat seuraavat:
+There are many \emph{conjectures} involving primes.
+Most people think that the conjectures are true,
+but nobody has been able to prove them.
+For example, the following conjectures are famous:
 
 \begin{itemize}
-\index{Goldbachin konjektuuri@Goldbachin konjektuuri}
-\item \key{Goldbachin konjektuuri}:
-Jokainen parillinen kokonaisluku $n>2$ voidaan esittää
-muodossa $n=a+b$ niin, että $a$ ja $b$
-ovat alkulukuja.
-\index{alkulukupari@alkulukupari}
-\item \key{Alkulukuparit}:
-On olemassa äärettömästi pareja muotoa $\{p,p+2\}$,
-joissa sekä $p$ että $p+2$ on alkuluku.
-\index{Legendren konjektuuri@Legendren konjektuuri}
-\item \key{Legendren konjektuuri}:
-Lukujen $n^2$ ja $(n+1)^2$ välillä on aina alkuluku,
-kun $n$ on mikä tahansa positiivinen kokonaisluku.
+\index{Goldbach's conjecture}
+\item \key{Goldbach's conjecture}:
+Each even integer $n>2$ can be represented as a
+sum $n=a+b$ so that both $a$ and $b$ are primes.
+\index{twin prime}
+\item \key{twin prime}:
+There is an infinite number of pairs
+of the form $\{p,p+2\}$,
+where both $p$ and $p+2$ are primes.
+\index{Legendre's conjecture}
+\item \key{Legendre's conjecture}:
+There is always a prime between numbers
+$n^2$ and $(n+1)^2$, where $n$ is any positive integer.
 \end{itemize}
 
-\subsubsection{Perusalgoritmit}
+\subsubsection{Basic algorithms}
 
-Jos luku $n$ ei ole alkuluku,
-niin sen voi esittää muodossa $a \cdot b$,
-missä $a \le \sqrt n$ tai $b \le \sqrt n$,
-minkä ansiosta sillä on varmasti
-tekijä välillä $2 \ldots \sqrt n$.
-Tämän havainnon avulla voi tarkastaa ajassa $O(\sqrt n)$,
-onko luku alkuluku,
-sekä myös selvittää ajassa $O(\sqrt n)$
-luvun alkutekijät.
+If a number $n$ is not prime,
+it can be represented as a product $a \cdot b$,
+where $a \le \sqrt n$ or $b \le \sqrt n$,
+so it certainly has a factor between $2 \ldots \sqrt n$.
+Using this observation, we can both test
+if a number is prime and find the prime factorization
+of a number in $O(\sqrt n)$ time.
 
-Seuraava funktio \texttt{alkuluku} tutkii,
-onko annettu luku $n$ alkuluku.
-Funktio koettaa jakaa lukua kaikilla luvuilla
-välillä $2 \ldots \sqrt n$, ja jos mikään
-luvuista ei jaa $n$:ää, niin $n$ on alkuluku.
+The following function \texttt{prime} checks
+if the given number $n$ is prime.
+The function tries to divide the number by
+all numbers between $2 \ldots \sqrt n$,
+and if none of them divides $n$, then $n$ is prime.
 
 \begin{lstlisting}
-bool alkuluku(int n) {
+bool prime(int n) {
     if (n < 2) return false;
     for (int x = 2; x*x <= n; x++) {
         if (n%x == 0) return false;
@@ -176,17 +175,17 @@ bool alkuluku(int n) {
 \end{lstlisting}
 
 \noindent
-Seuraava funktio \texttt{tekijat} muodostaa
-vektorin, joka sisältää luvun $n$
-alkutekijät.
-Funktio jakaa $n$:ää sen alkutekijöillä ja lisää
-niitä samaan aikaan vektoriin.
-Prosessi päättyy, kun jäljellä on luku $n$,
-jolla ei ole tekijää välillä $2 \ldots \sqrt n$.
-Jos $n>1$, se on alkuluku ja viimeinen tekijä.
+The following function \texttt{factors}
+constructs a vector that contains the prime
+factorization of $n$.
+The function divides $n$ by its prime factors,
+and adds them to the vector.
+The process ends when the remaining number $n$
+has no factors between $2 \ldots \sqrt n$.
+If $n>1$, it is prime and the last factor.
 
 \begin{lstlisting}
-vector<int> tekijat(int n) {
+vector<int> factors(int n) {
     vector<int> f;
     for (int x = 2; x*x <= n; x++) {
         while (n%x == 0) {
@@ -199,42 +198,36 @@ vector<int> tekijat(int n) {
 }
 \end{lstlisting}
 
-Huomaa, että funktio lisää jokaisen
-alkutekijän vektoriin
-niin monta kertaa, kuin kyseinen
-alkutekijä jakaa luvun.
-Esimerkiksi $24=2^3 \cdot 3$,
-joten funktio muodostaa vektorin $[2,2,2,3]$.
+Note that each prime factor appears in the vector
+as many times as it divides the number.
+For example, $24=2^3 \cdot 3$,
+so the result of the function is $[2,2,2,3]$.
 
-\subsubsection{Eratostheneen seula}
+\subsubsection{Sieve of Eratosthenes}
 
-\index{Eratostheneen seula@Eratostheneen seula}
+\index{sieve of Eratosthenes}
 
-\key{Eratostheneen seula} on esilaskenta-algoritmi,
-jonka suorituksen jälkeen mistä tahansa
-välin $2 \ldots n$ luvusta pystyy tarkastamaan
-nopeasti, onko se alkuluku,
-sekä etsimään yhden luvun alkutekijän,
-jos luku ei ole alkuluku.
+The \key{sieve of Eratosthenes} is a preprocessing
+algorithm that builds an array using which we
+can efficiently check if a given number between $2 \ldots n$
+is prime and find one prime factor of the number.
 
-Algoritmi luo taulukon $\texttt{a}$,
-jossa on käytössä indeksit $2,3,\ldots,n$.
-Taulukossa $\texttt{a}[k]=0$ tarkoittaa,
-että $k$ on alkuluku,
-ja $\texttt{a}[k] \neq 0$ tarkoittaa,
-että $k$ ei ole alkuluku.
-Jälkimmäisessä tapauksessa $\texttt{a}[k]$
-on yksi $k$:n alkutekijöistä.
+The algorithm builds an array $\texttt{a}$
+where indices $2,3,\ldots,n$ are used.
+The value $\texttt{a}[k]=0$ means
+that $k$ is prime,
+and the value $\texttt{a}[k] \neq 0$
+means that $k$ is not a prime but one
+of its prime factors is $\texttt{a}[k]$.
 
-Algoritmi käy läpi välin
-$2 \ldots n$ luvut yksi kerrallaan.
-Aina kun vastaan tulee uusi alkuluku $x$,
-niin algoritmi merkitsee taulukkoon, että $x$:n moninkerrat
-$2x,3x,4x,\ldots$ eivät ole alkulukuja,
-koska niillä on alkutekijä $x$.
+The algorithm iterates through the numbers
+$2 \ldots n$ one by one.
+Always when a new prime $x$ is found,
+the algorithm records that the multiples
+of $x$ ($2x,3x,4x,\ldots$) are not primes
+because the number $x$ divides them.
 
-Esimerkiksi jos $n=20$,
-taulukosta tulee:
+For example, if $n=20$, the array becomes:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -285,10 +278,10 @@ taulukosta tulee:
 \end{tikzpicture}
 \end{center}
 
-Seuraava koodi toteuttaa
-Eratostheneen seulan.
-Koodi olettaa, että jokainen taulukon \texttt{a}
-alkio on aluksi 0.
+The following code implements the sieve of
+Eratosthenes.
+The code assumes that each element in
+\texttt{a} is initially zero.
 
 \begin{lstlisting}
 for (int x = 2; x <= n; x++) {
@@ -299,80 +292,85 @@ for (int x = 2; x <= n; x++) {
 }
 \end{lstlisting}
 
-Algoritmin sisäsilmukka suoritetaan
-$n/x$ kertaa tietyllä $x$:n arvolla,
-joten yläraja algoritmin ajankäytölle
-on harmoninen summa
+The inner loop of the algorithm will be executed
+$n/x$ times for any $x$.
+Thus, an upper bound for the running time
+of the algorithm is the harmonic sum
 
-\index{harmoninen summa@harmoninen summa}
+\index{harmonic sum}
 
 \[\sum_{x=2}^n n/x = n/2 + n/3 + n/4 + \cdots + n/n = O(n \log n).\]
 
-Todellisuudessa algoritmi on vielä nopeampi,
-koska sisäsilmukka suoritetaan vain,
-jos luku $x$ on alkuluku.
-Voidaan osoittaa, että algoritmin aikavaativuus
-on vain $O(n \log \log n)$ eli hyvin lähellä vaativuutta $O(n)$.
+In fact, the algorithm is even more efficient
+because the inner loop will be executed only if
+the number $x$ is prime.
+It can be shown that the time complexity of the
+algorithm is only $O(n \log \log n)$ 
+that is very near to $O(n)$.
 
-\subsubsection{Eukleideen algoritmi}
+\subsubsection{Euclid's algorithm}
 
-\index{suurin yhteinen tekijx@suurin yhteinen tekijä}
-\index{pienin yhteinen moninkerta@pienin yhteinen moninkerta}
-\index{Eukleideen algoritmi@Eukleideen algoritmi}
+\index{greatest common divisor}
+\index{least common multiple}
+\index{Euclid's algorithm}
 
-Lukujen $a$ ja $b$ \key{suurin yhteinen tekijä} eli $\textrm{syt}(a,b)$
-on suurin luku, jolla sekä $a$ että $b$ on jaollinen.
-Lukujen $a$ ja $b$ \key{pienin yhteinen moninkerta} eli $\textrm{pym}(a,b)$
-on puolestaan pienin luku, joka on jaollinen sekä $a$:lla että $b$:llä.
-Esimerkiksi $\textrm{syt}(24,36)=12$ ja
-$\textrm{pym}(24,36)=72$.
+The \key{greatest common divisor} of
+numbers $a$ and $b$, $\gcd(a,b)$,
+is the greatest number that divides both $a$ and $b$,
+and the \key{least common multiple} of
+$a$ and $b$, $\textrm{lcm}(a,b)$,
+is the smallest number that is divisible by
+both $a$ and $b$.
+For example,
+$\gcd(24,36)=12$ and
+$\textrm{lcm}(24,36)=72$.
 
-Suurimman yhteisen tekijän ja pienimmän yhteisen
-moninkerran välillä on yhteys
-\[\textrm{pym}(a,b)=\frac{ab}{\textrm{syt}(a,b)}.\]
+The greatest common divisor and the least common multiple
+are connected as follows:
+\[\textrm{lcm}(a,b)=\frac{ab}{\textrm{gcd}(a,b)}\]
 
-\key{Eukleideen algoritmi} on tehokas tapa etsiä
-suurin yhteinen tekijä.
-Se laskee suurimman yhteisen tekijän kaavalla
+\key{Euclid's algorithm} provides an efficient way
+to find the greatest common divisor of two numbers.
+The algorithm is based on the formula
 \begin{equation*}
-    \textrm{syt}(a,b) = \begin{cases}
+    \textrm{gcd}(a,b) = \begin{cases}
                a        & b = 0\\
-               \textrm{syt}(b,a \bmod b) & b \neq 0\\
+               \textrm{gcd}(b,a \bmod b) & b \neq 0\\
            \end{cases}
 \end{equation*}
-Esimerkiksi
-\[\textrm{syt}(24,36) = \textrm{syt}(36,24)
-= \textrm{syt}(24,12) = \textrm{syt}(12,0)=12.\]
-Eukleideen algoritmin aikavaativuus
-on $O(\log n)$, kun $n=\min(a,b)$.
-Pahin tapaus algoritmille on, jos luvut ovat
-peräkkäiset Fibonaccin luvut.
-Silloin algoritmi käy läpi kaikki pienemmät
-peräkkäiset Fibonaccin luvut.
-Esimerkiksi
-\[\textrm{syt}(13,8)=\textrm{syt}(8,5)
-=\textrm{syt}(5,3)=\textrm{syt}(3,2)=\textrm{syt}(2,1)=\textrm{syt}(1,0)=1.\]
+For example,
+\[\textrm{gcd}(24,36) = \textrm{gcd}(36,24)
+= \textrm{gcd}(24,12) = \textrm{gcd}(12,0)=12.\]
+The time complexity of Euclid's algorithm
+is $O(\log n)$ where $n=\min(a,b)$.
+The worst case is when
+$a$ and $b$ are successive Fibonacci numbers.
+In this case, the algorithm goes through
+all smaller Fibonacci numbers.
+For example,
+\[\textrm{gcd}(13,8)=\textrm{gcd}(8,5)
+=\textrm{gcd}(5,3)=\textrm{gcd}(3,2)=\textrm{gcd}(2,1)=\textrm{gcd}(1,0)=1.\]
 
-\subsubsection{Eulerin totienttifunktio}
+\subsubsection{Euler's totient function}
 
-\index{suhteellinen alkuluku@suhteellinen alkuluku}
-\index{Eulerin totienttifunktio@Eulerin totienttifunktio}
+\index{coprime}
+\index{Euler's totient function}
 
-Luvut $a$ ja $b$ ovat suhteelliset alkuluvut,
-jos $\textrm{syt}(a,b)=1$.
-\key{Eulerin totienttifunktio} $\varphi(n)$
-laskee luvun $n$ suhteellisten alkulukujen
-määrän välillä $1 \ldots n$.
-Esimerkiksi $\varphi(12)=4$,
-koska luvut 1, 5, 7 ja 11 ovat suhteellisia
-alkulukuja luvun 12:n kanssa.
+Numbers $a$ and $b$ are coprime
+if $\textrm{gcd}(a,b)=1$.
+\key{Euler's totient function} $\varphi(n)$
+returns the number of coprime numbers to $n$
+between $1 \ldots n$.
+For example, $\varphi(12)=4$,
+because the numbers 1, 5, 7 and 11
+are coprime to the number 12.
 
-Totienttifunktion arvon $\varphi(n)$ pystyy laskemaan
-luvun $n$ alkutekijähajotelmasta kaavalla
+The value of $\varphi(n)$ can be calculated
+using the prime factorization of $n$
+by the formula
 \[ \varphi(n) = \prod_{i=1}^k p_i^{\alpha_i-1}(p_i-1). \]
-Esimerkiksi $\varphi(12)=2^1 \cdot (2-1) \cdot 3^0 \cdot (3-1)=4$.
-Huomaa myös, että $\varphi(n)=n-1$,
-jos $n$ on alkuluku.
+For example, $\varphi(12)=2^1 \cdot (2-1) \cdot 3^0 \cdot (3-1)=4$.
+Note that $\varphi(n)=n-1$ if $n$ is prime.
 
 \section{Modulolaskenta}
 
