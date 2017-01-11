@@ -372,21 +372,23 @@ by the formula
 For example, $\varphi(12)=2^1 \cdot (2-1) \cdot 3^0 \cdot (3-1)=4$.
 Note that $\varphi(n)=n-1$ if $n$ is prime.
 
-\section{Modulolaskenta}
+\section{Modular arithmetic}
 
-\index{modulolaskenta@modulolaskenta}
+\index{modular arithmetic}
 
-\key{Modulolaskennassa} lukualuetta rajoitetaan
-niin, että käytössä ovat vain
-kokonaisluvut $0,1,2,\ldots,m-1$,
-missä $m$ on vakio.
-Ideana on, että lukua $x$ vastaa luku $x \bmod m$
-eli luvun $x$ jakojäännös luvulla $m$.
-Esimerkiksi jos $m=17$, niin lukua $75$ vastaa luku
-$75 \bmod 17 = 7$.
+In \key{modular arithmetic},
+the set of available numbers is restricted so
+that only numbers $0,1,2,\ldots,m-1$ can be used
+where $m$ is a constant.
+Each number $x$ is
+represented by the number $x \bmod m$:
+the remainder after dividing $x$ by $m$.
+For example, if $m=17$, then $75$
+is represented by $75 \bmod 17 = 7$.
 
-Useissa laskutoimituksissa jakojäännöksen voi laskea
-ennen laskutoimitusta, minkä ansiosta saadaan seuraavat kaavat:
+Often we can take the remainder before doing a
+calculation.
+In particular, the following formulas can be used:
 \[
 \begin{array}{rcl}
 (x+y) \bmod m & = & (x \bmod m + y \bmod m) \bmod m \\
@@ -396,125 +398,119 @@ ennen laskutoimitusta, minkä ansiosta saadaan seuraavat kaavat:
 \end{array}
 \]
 
-\subsubsection{Tehokas potenssilasku}
+\subsubsection{Modular exponentiation}
 
-Modulolaskennassa tulee usein tarvetta laskea
-tehokkaasti potenssilasku $x^n$.
-Tämä onnistuu ajassa $O(\log n)$
-seuraavan rekursion avulla:
+
+Often there is need to efficiently calculate
+the remainder of $x^n$.
+This can be done in $O(\log n)$ time
+using the following recursion:
 \begin{equation*}
     x^n = \begin{cases}
                1        & n = 0\\
-               x^{n/2} \cdot x^{n/2} & \text{$n$ on parillinen}\\
-               x^{n-1} \cdot x & \text{$n$ on pariton}
+               x^{n/2} \cdot x^{n/2} & \text{$n$ is even}\\
+               x^{n-1} \cdot x & \text{$n$ is odd}
            \end{cases}
 \end{equation*}
 
-Oleellista on, että parillisen $n$:n
-tapauksessa luku $x^{n/2}$ lasketaan vain kerran.
-Tämän ansiosta potenssilaskun aikavaativuus on $O(\log n)$,
-koska $n$:n koko puolittuu aina silloin,
-kun $n$ on parillinen.
+It's important that in the case of an even $n$,
+the number $x^{n/2}$ is calculated only once.
+This guarantees that the time complexity of the
+algorithm is $O(\log n)$ because $n$ is always halved
+when it is even.
 
-Seuraava funktio laskee luvun $x^n \bmod m$:
+The following function calculates the number
+$x^n \bmod m$:
 
 \begin{lstlisting}
-int pot(int x, int n, int m) {
+int modpow(int x, int n, int m) {
     if (n == 0) return 1%m;
-    int u = pot(x,n/2,m);
+    int u = modpow(x,n/2,m);
     u = (u*u)%m;
     if (n%2 == 1) u = (u*x)%m;
     return u;
 }
 \end{lstlisting}
 
-\subsubsection{Fermat'n pieni lause ja Eulerin lause}
+\subsubsection{Fermat's theorem and Euler's theorem}
 
-\index{Fermat'n pieni lause}
-\index{Eulerin lause@Eulerin lause}
+\index{Fermat's theorem}
+\index{Euler's theorem}
 
-\key{Fermat'n pienen lauseen} mukaan
+\key{Fermat's theorem} states that
 \[x^{m-1} \bmod m = 1,\]
-kun $m$ on alkuluku ja $x$ ja $m$ ovat suhteelliset alkuluvut.
-Tällöin myös
+when $m$ is prime and $x$ and $m$ are coprime.
+This also yields
 \[x^k \bmod m = x^{k \bmod (m-1)} \bmod m.\]
-Yleisemmin \key{Eulerin lauseen} mukaan
+More generally, \key{Euler's theorem} states that
 \[x^{\varphi(m)} \bmod m = 1,\]
-kun $x$ ja $m$ ovat suhteelliset alkuluvut.
-Fermat'n pieni lause seuraa Eulerin lauseesta,
-koska jos $m$ on alkuluku, niin $\varphi(m)=m-1$.
+when $x$ and $m$ are coprime.
+Fermat's theorem follows from Euler's theorem,
+because if $m$ is a prime, then $\varphi(m)=m-1$.
 
-\subsubsection{Modulon käänteisluku}
+\subsubsection{Modular inverse}
 
-\index{modulon kxxnteisluku@modulon käänteisluku}
+\index{modular inverse}
 
-Luvun $x$ käänteisluku modulo $m$
-tarkoittaa sellaista lukua $x^{-1}$,
-että
+The modular inverse of $x$ modulo $m$
+is a number $x^{-1}$ such that
 \[ x x^{-1} \bmod m = 1. \]
-Esimerkiksi jos $x=6$ ja $m=17$,
-niin $x^{-1}=3$, koska $6\cdot3 \bmod 17=1$.
+For example, if $x=6$ and $m=17$,
+then $x^{-1}=3$, because $6\cdot3 \bmod 17=1$.
 
-Modulon käänteisluku mahdollistaa
-jakolaskun laskemisen modulossa,
-koska jakolasku luvulla $x$ vastaa
-kertolaskua luvulla $x^{-1}$.
-Esimerkiksi jos haluamme laskea
-jakolaskun $36/6 \bmod 17$,
-voimme muuttaa sen muotoon  $2 \cdot 3 \bmod 17$,
-koska $36 \bmod 17 = 2$ ja $6^{-1} \bmod 17 = 3$.
+Using modular inverses, we can do divisions
+for remainders, because division by $x$
+corresponds to multiplication by $x^{-1}$.
+For example, to evaluate the value of $36/6 \bmod 17$,
+we can use the formula $2 \cdot 3 \bmod 17$,
+because $36 \bmod 17 = 2$ and $6^{-1} \bmod 17 = 3$.
 
-Modulon käänteislukua ei
-kuitenkaan ole aina olemassa.
-Esimerkiksi jos $x=2$ ja $m=4$,
-yhtälölle
+However, a modular inverse doesn't always exist.
+For example, if $x=2$ and $m=4$, the equation
 \[ x x^{-1} \bmod m = 1. \]
-ei ole ratkaisua, koska kaikki luvun 2
-moninkerrat ovat parillisia eikä jakojäännös
-4:llä voi koskaan olla 1.
-Osoittautuu, että $x^{-1} \bmod m$
-on olemassa tarkalleen silloin,
-kun $x$ ja $m$ ovat suhteelliset alkuluvut.
+can't be solved, because all multiples of the number 2
+are even, and the remainder can never be 1.
+It turns out that the number $x^{-1} \bmod m$ exists
+exactly when $x$ and $m$ are coprime.
 
-Jos modulon käänteisluku on olemassa,
-sen saa laskettua kaavalla
+If a modular inverse exists, it can be
+calculated using the formula
 \[
 x^{-1} = x^{\varphi(m)-1}.
 \]
-Erityisesti jos $m$ on alkuluku, kaavasta tulee
+If $m$ is prime, the formula becomes
 \[
 x^{-1} = x^{m-2}.
 \]
-Esimerkiksi jos $x=6$ ja $m=17$, niin
+For example, if $x=6$ and $m=17$, then
 \[x^{-1}=6^{17-2} \bmod 17 = 3.\]
-Tämän kaavan ansiosta modulon käänteisluvun pystyy
-laskemaan nopeasti tehokkaan potenssilaskun avulla.
+Using this formula, we can calculate the modular inverse
+efficiently using the modular exponentation algorithm.
 
-Modulon käänteisluvun kaavan voi perustella Eulerin lauseen avulla.
-Ensinnäkin käänteisluvulle täytyy päteä
+The above formula can be derived using Euler's theorem.
+First, the modular inverse should satisfy the following equation:
 \[
 x x^{-1} \bmod m = 1.
 \]
-Toisaalta Eulerin lauseen mukaan
+On the other hand, according to Euler's theorem,
 \[
 x^{\varphi(m)} \bmod m =  xx^{\varphi(m)-1} \bmod m = 1,
 \]
-joten lukujen $x^{-1}$ ja $x^{\varphi(m)-1}$ on oltava samat.
+so the numbers $x^{-1}$ and $x^{\varphi(m)-1}$ are equal.
 
-\subsubsection{Modulot tietokoneessa}
+\subsubsection{Computer arithmetic}
 
-Tietokone käsittelee etumerkittömiä kokonaislukuja
-modulo $2^k$, missä $k$ on luvun bittien määrä.
-Usein näkyvä seuraus tästä on luvun arvon pyörähtäminen
-ympäri, jos luku kasvaa liian suureksi.
+In a computers, unsigned integers are represented modulo $2^k$
+where $k$ is the number of bits.
+A usual consequence of this is that a number wraps around
+if it becomes too large.
 
-Esimerkiksi C++:ssa \texttt{unsigned int} -tyyppinen
-arvo lasketaan modulo $2^{32}$.
-Seuraava koodi määrittelee muuttujan
-tyyppiä \texttt{unsigned int},
-joka saa arvon $123456789$.
-Sitten muuttujan arvo kerrotaan itsellään,
-jolloin tuloksena on luku 
+For example, in C++, numbers of type \texttt{unsigned int}
+are represented modulo $2^{32}$.
+The following code defines an \texttt{unsigned int}
+variable whose value is $123456789$.
+After this, the value will be multiplied by itself,
+and the result is
 $123456789^2 \bmod 2^{32} = 2537071545$.
 
 \begin{lstlisting}
