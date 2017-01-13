@@ -675,28 +675,28 @@ for $n-1$ numbers, because we can't replace
 the number $x$ with number $1$, and all other
 numbers should be changed.
 
-\section{Burnsiden lemma}
+\section{Burnside's lemma}
 
-\index{Burnsiden lemma@Burnsiden lemma}
+\index{Burnside's lemma}
 
-\key{Burnsiden lemma} laskee yhdistelmien määrän niin,
-että symmetrisistä yhdistelmistä lasketaan
-mukaan vain yksi edustaja.
-Burnsiden lemman mukaan yhdistelmien määrä on
+\key{Burnside's lemma} counts the number of
+combinations so that for each group of
+symmetric combinations, only one representative is counted.
+Burnside's lemma states that the number of
+combinations is
 \[\sum_{k=1}^n \frac{c(k)}{n},\]
-missä yhdistelmän asentoa voi muuttaa $n$ tavalla
-ja $c(k)$ on niiden yhdistelmien määrä,
-jotka pysyvät ennallaan, kun asentoa
-muutetaan tavalla $k$.
+where there are $n$ ways to change the
+position of a combination,
+and there are $c(k)$ combinations that
+remain unchanged when the $k$th way is applied.
 
-Lasketaan esimerkkinä, montako
-erilaista tapaa on
-muodostaa $n$ helmen helminauha,
-kun kunkin helmen värin tulee olla
-väliltä $1,2,\ldots,m$.
-Kaksi helminauhaa ovat symmetriset,
-jos ne voi saada näyttämään samalta pyörittämällä.
-Esimerkiksi helminauhan
+As an example, let's calculate the number of
+necklaces of $n$ pearls,
+where the color of each pearl is
+one of $1,2,\ldots,m$.
+Two necklaces are symmetric if they are
+similar after rotating them.
+For example, the necklace
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw[fill=white] (0,0) circle (1);
@@ -706,7 +706,7 @@ Esimerkiksi helminauhan
 \draw[fill=green] (-1,0) circle (0.3);
 \end{tikzpicture}
 \end{center}
-kanssa symmetriset helminauhat ovat seuraavat:
+has the following symmetric necklaces:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw[fill=white] (0,0) circle (1);
@@ -734,43 +734,47 @@ kanssa symmetriset helminauhat ovat seuraavat:
 \draw[fill=red] (12+-1,0) circle (0.3);
 \end{tikzpicture}
 \end{center}
-Tapoja muuttaa asentoa on $n$,
-koska helminauhaa voi pyörittää $0,1,\ldots,n-1$
-askelta myötäpäivään.
-Jos helminauhaa pyörittää 0 askelta,
-kaikki $m^n$ väritystä säilyvät ennallaan.
-Jos taas helminauhaa pyörittää 1 askeleen,
-vain $m$ yksiväristä helminauhaa säilyy ennallaan.
+There are $n$ ways to change the position
+of a necklace,
+because we can rotate it
+$0,1,\ldots,n-1$ steps clockwise.
+If the number of steps is 0,
+all $m^n$ necklaces remain the same,
+and if the number of steps is 1,
+only the $m$ necklaces where each
+pearl has the same color remain the same.
 
-Yleisemmin kun helminauhaa pyörittää $k$ askelta,
-ennallaan säilyvien yhdistelmien määrä on
-\[m^{\textrm{syt}(k,n)},\]
-missä $\textrm{syt}(k,n)$ on lukujen $k$ ja $n$
-suurin yhteinen tekijä.
-Tämä johtuu siitä, että $\textrm{syt}(k,n)$-kokoiset
-pätkät helmiä siirtyvät toistensa paikoille
-$k$ askelta eteenpäin.
-Niinpä helminauhojen määrä on
-Burnsiden lemman mukaan
+More generally, when the number of steps is $k$,
+a total of
+\[m^{\textrm{gcd}(k,n)},\]
+necklaces remain the same,
+where $\textrm{gcd}(k,n)$ is the greatest common
+divisor of $k$ and $n$.
+The reason for this is that sequences
+of pearls of size $\textrm{syt}(k,n)$
+will replace each other.
+Thus, according to Burnside's lemma,
+the number of necklaces is
 \[\sum_{i=0}^{n-1} \frac{m^{\textrm{syt}(i,n)}}{n}. \]
-Esimerkiksi kun helminauhan pituus on 4
-ja värejä on 3, helminauhoja on
+For example, the number of necklaces of length 4
+with 3 colors is
 \[\frac{3^4+3+3^2+3}{4} = 24. \]
 
-\section{Cayleyn kaava}
+\section{Cayley's formula}
 
-\index{Cayleyn kaava@Cayleyn kaava}
+\index{Cayley's formula}
 
-\key{Cayleyn kaavan} mukaan $n$ solmusta voi
-muodostaa $n^{n-2}$ numeroitua puuta.
-Puun solmut on numeroitu $1,2,\ldots,n$,
-ja kaksi puuta ovat erilaiset,
-jos niiden rakenne on erilainen
-tai niissä on eri numerointi.
+\key{Cayley's formula} states that
+there are $n^{n-2}$ labeled trees
+that contain $n$ nodes.
+The nodes are labeled $1,2,\ldots,n$,
+and two trees are different
+if either their structure or their
+labeling is different.
 
 \begin{samepage}
-\noindent
-Esimerkiksi kun $n=4$, numeroitujen puiden määrä on $4^{4-2}=16$:
+For example, when $n=4$, the number of labeled
+trees is $4^{4-2}=16$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -816,22 +820,22 @@ Esimerkiksi kun $n=4$, numeroitujen puiden määrä on $4^{4-2}=16$:
 \end{center}
 \end{samepage}
 
-Seuraavaksi näemme, miten Cayleyn kaavan
-voi perustella samastamalla numeroidut puut
-Prüfer-koodeihin.
+Next we will see how Cayley's formula can
+be derived using Prüfer codes.
 
-\subsubsection{Prüfer-koodi}
+\subsubsection{Prüfer code}
 
-\index{Prüfer-koodi}
+\index{Prüfer code}
 
-\key{Prüfer-koodi} on $n-2$ luvun jono,
-joka kuvaa numeroidun puun rakenteen.
-Koodi muodostuu poistamalla puusta
-joka askeleella lehden, jonka numero on pienin,
-ja lisäämällä lehden vieressä olevan solmun
-numeron koodiin.
+A \key{Prüfer code} is a sequence of
+$n-2$ numbers that describes a labeled tree.
+The code is calculated by removing $n-2$
+leaves from the tree.
+At each step, we remove the leaf whose number
+is the smallest, and simultaneously
+add the number of its only neighbor to the code.
 
-Esimerkiksi puun
+For example, the Prüfer code for
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (2,3) {$1$};
@@ -849,14 +853,13 @@ Esimerkiksi puun
 %\path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-Prüfer-koodi on $[4,4,2]$,
-koska puusta poistetaan ensin solmu 1,
-sitten solmu 3 ja lopuksi solmu 5.
+is $[4,4,2]$, because we first remove
+node 1, then node 3 and finally node 5.
 
-Jokaiselle puulle voidaan laskea
-Prüfer-koodi, minkä lisäksi
-Prüfer-koodista pystyy palauttamaan
-yksikäsitteisesti alkuperäisen puun.
-Niinpä numeroituja puita on yhtä monta
-kuin Prüfer-koodeja eli $n^{n-2}$.
+We can calculate a Prüfer code for any tree,
+and more importantly,
+the original tree can be constructed
+from the Prüfer code.
+Hence, the number of labeled trees equals
+the number of Prüfer codes that is $n^{n-2}$.
 
