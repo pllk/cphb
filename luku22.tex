@@ -177,16 +177,17 @@ above values:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Laatikot ja pallot}
+\subsubsection{Boxes and balls}
 
-''Laatikot ja pallot'' on usein hyödyllinen malli,
-jossa $n$ laatikkoon sijoitetaan $k$ palloa.
-Tarkastellaan seuraavaksi kolmea tapausta:
+''Boxes and models'' is a useful model,
+where we count the ways to
+place $k$ balls in $n$ boxes.
+Let's consider three cases:
 
-\textit{Tapaus 1}: Kuhunkin laatikkoon saa sijoittaa
-enintään yhden pallon.
-Esimerkiksi kun $n=5$ ja $k=2$,
-sijoitustapoja on 10:
+\textit{Case 1}: Each box can contain
+at most one ball.
+For example, when $n=5$ and $k=2$,
+there are 10 solutions:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -219,11 +220,12 @@ sijoitustapoja on 10:
 \end{tikzpicture}
 \end{center}
 
-Tässä tapauksessa vastauksen antaa suoraan binomikerroin ${n \choose k}$.
+In this case, the answer is directly the
+binomial coefficient ${n \choose k}$.
 
-\textit{Tapaus 2}: Samaan laatikkoon saa sijoittaa
-monta palloa.
-Esimerkiksi kun $n=5$ ja $k=2$, sijoitustapoja on 15:
+\textit{Case 2}: A box can contain multiple balls.
+For example, when $n=5$ and $k=2$,
+there are 15 solutions:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -261,27 +263,28 @@ Esimerkiksi kun $n=5$ ja $k=2$, sijoitustapoja on 15:
 \end{tikzpicture}
 \end{center}
 
-Prosessin voi kuvata merkkijonona, joka muodostuu
-merkeistä ''o'' ja ''$\rightarrow$''.
-Pallojen sijoittaminen alkaa
-vasemmanpuoleisimmasta laatikosta.
-Merkki ''o'' tarkoittaa, että pallo sijoitetaan
-nykyiseen laatikkoon, ja merkki
-''$\rightarrow$'' tarkoittaa, että siirrytään
-seuraavaan laatikkoon.
+This process can be represented as a string
+that consists of symbols
+''o'' and ''$\rightarrow$''.
+Initially, we are standing at the leftmost box.
+The symbol ''o'' means we place a ball
+in the current box, and the symbol
+''$\rightarrow$'' means that we move to
+the next box right.
 
-Nyt jokainen sijoitustapa on merkkijono, jossa
-on $k$ kertaa merkki ''o'' ja $n-1$ kertaa
-merkki ''$\rightarrow$''.
-Esimerkiksi sijoitustapaa
-ylhäällä oikealla
-vastaa merkkijono ''$\rightarrow$ $\rightarrow$ o $\rightarrow$ o $\rightarrow$''.
-Niinpä sijoitustapojen määrä on ${k+n-1 \choose k}$.
+Using this notation, each solution is a string
+that has $k$ times the symbol ''o'' and
+$n-1$ times the symbol ''$\rightarrow$''.
+For example, the upper-right solution
+corresponds to the string
+''$\rightarrow$ $\rightarrow$ o $\rightarrow$ o $\rightarrow$''.
+Thus, the number of solutions is
+${k+n-1 \choose k}$.
 
-\textit{Tapaus 3}: Kuhunkin laatikkoon saa sijoittaa
-enintään yhden pallon ja lisäksi missään kahdessa
-vierekkäisessä laatikossa ei saa olla palloa.
-Esimerkiksi kun $n=5$ ja $k=2$, sijoitustapoja on 6:
+\textit{Case 3}: Each box may contain at most one ball,
+and in addition, no two adjacent boxes may both contain a ball.
+For example, when $n=5$ and $k=2$,
+there are 6 solutions:
 
 
 \begin{center}
@@ -310,36 +313,45 @@ Esimerkiksi kun $n=5$ ja $k=2$, sijoitustapoja on 6:
 \end{tikzpicture}
 \end{center}
 
-Tässä tapauksessa voi ajatella, että alussa $k$ palloa
-ovat laatikoissaan ja joka välissä on yksi tyhjä laatikko.
-Tämän jälkeen jää valittavaksi $n-k-(k-1)=n-2k+1$ tyhjän laatikon paikat.
-Mahdollisia välejä on $k+1$, joten tapauksen 2 perusteella
-sijoitustapoja on ${n-2k+1+k+1-1 \choose n-2k+1} = {n-k+1 \choose n-2k+1}$.
+In this case, we can think that
+$k$ balls are initially placed in boxes.
+and between each such box there is an empty box.
+The remaining task is to choose the
+positions for
+$n-k-(k-1)=n-2k+1$ empty boxes.
+There are $k+1$ positions, so as in case 2,
+the number of solutions is
+${n-2k+1+k+1-1 \choose n-2k+1} = {n-k+1 \choose n-2k+1}$.
 
-\subsubsection{Multinomikerroin}
+\subsubsection{Multinomial coefficient}
 
-\index{multinomikerroin@multinomikerroin}
+\index{multinomial coefficient}
 
-Binomikertoimen yleistys on \key{multinomikerroin}
+A generalization for a binomial coefficient is
+a \key{multinomial coefficient}
 
 \[ {n \choose k_1,k_2,\ldots,k_m} = \frac{n!}{k_1! k_2! \cdots k_m!}, \]
 
-missä $k_1+k_2+\cdots+k_m=n$.
-Multinomikerroin ilmaisee, monellako tavalla $n$ alkiota voidaan jakaa osajoukkoihin,
-joiden koot ovat $k_1,k_2,\ldots,k_m$.
-Jos $m=2$, multinomikertoimen kaava vastaa binomikertoimen kaavaa.
+where $k_1+k_2+\cdots+k_m=n$.
+A multinomial coefficient i the number of ways
+we can divide $n$ elements into subsets
+whose sizes are $k_1,k_2,\ldots,k_m$.
+If $m=2$, the formula
+corresponds to the binomial coefficient formula.
 
-\section{Catalanin luvut}
+\section{Catalan numbers}
 
-\index{Catalanin luku@Catalanin luku}
+\index{Catalan number}
 
-\key{Catalanin luku} $C_n$ ilmaisee,
-montako tapaa on muodostaa kelvollinen sulkulauseke
-$n$ alkusulusta ja $n$ loppusulusta.
+A \key{Catalan number} $C_n$ is the
+number of valid
+parenthesis expressions that consist of
+$n$ left parentheses and $n$ right parentheses.
 
-Esimerkiksi $C_3=5$, koska 3 alkusulusta
-ja 3 loppusulusta on mahdollista muodostaa
-seuraavat kelvolliset sulkulausekkeet:
+For example, $C_3=5$, because using three
+left parentheses and three right parentheses,
+we can construct the following parenthesis
+expressions:
 
 \begin{itemize}[noitemsep]
 \item \texttt{()()()}
@@ -349,96 +361,101 @@ seuraavat kelvolliset sulkulausekkeet:
 \item \texttt{(()())}
 \end{itemize}
 
-\subsubsection{Sulkulausekkeet}
+\subsubsection{Parenthesis expressions}
 
-\index{sulkulauseke@sulkulauseke}
+\index{parenthesis expression}
 
-Mikä sitten tarkkaan ottaen on
-\textit{kelvollinen sulkulauseke}?
-Seuraavat säännöt kuvailevat täsmällisesti
-kaikki kelvolliset sulkulausekkeet:
+What is exactly a \emph{valid parenthesis expression}?
+The following rules precisely define all
+valid parenthesis expressions:
 
 \begin{itemize}
-\item Sulkulauseke \texttt{()} on kelvollinen.
-\item Jos sulkulauseke $A$ on kelvollinen,
-niin myös sulkulauseke \texttt{(}$A$\texttt{)}
-on kelvollinen.
-\item Jos sulkulausekkeet $A$ ja $B$ ovat kelvollisia,
-niin myös sulkulauseke $AB$ on kelvollinen.
+\item The expression \texttt{()} is valid.
+\item If a expression $A$ is valid,
+then also the expression
+\texttt{(}$A$\texttt{)} is valid.
+\item If expressions $A$ and $B$ are valid,
+then also the expression $AB$ is valid.
 \end{itemize}
 
-Toinen tapa luonnehtia kelvollista sulkulauseketta on,
-että jos valitaan mikä tahansa lausekkeen alkuosa,
-niin alkusulkuja on ainakin yhtä monta
-kuin loppusulkuja.
-Lisäksi koko lausekkeessa
-tulee olla tarkalleen yhtä monta
-alkusulkua ja loppusulkua.
+Another way to characterize valid 
+paranthesis expressions is that if
+we choose any prefix of the expression,
+it has to contain at least as many left
+parentheses as right parentheses.
+In addition, the complete expression has to
+contain an equal number of left and right
+parentheses.
 
-\subsubsection{Laskutapa 1}
+\subsubsection{Formula 1}
 
-Catalanin lukuja voi laskea rekursiivisesti kaavalla
+Catalan numbers can be calculated using the formula
 \[ C_n = \sum_{i=0}^{n-1} C_{i} C_{n-i-1}.\]
 
-Summa käy läpi tavat
-jakaa sulkulauseke kahteen osaan niin,
-että kumpikin osa on kelvollinen sulkulauseke
-ja alkuosa on mahdollisimman lyhyt mutta ei tyhjä.
-Kunkin vaihtoehdon kohdalla alkuosassa
-on $i+1$ sulkuparia ja lausekkeiden määrä
-saadaan kertomalla keskenään:
+The sum goes through the ways to divide the
+expression into two parts
+such that both parts are valid
+expressions and the first part is as short as possible
+but not empty.
+For any $i$, the first part contains $i+1$ pairs
+of parentheses, and the number of expressions
+is the product of the following values:
 
 \begin{itemize}
-\item $C_{i}$: tavat muodostaa sulkulauseke
-alkuosan sulkupareista ulointa sulkuparia lukuun ottamatta
-\item $C_{n-i-1}$: tavat muodostaa sulkulauseke
-loppuosan sulkupareista
+\item $C_{i}$: number of ways to construct an expression
+using the parentheses in the first part,
+not counting the outermost parentheses
+\item $C_{n-i-1}$: number of ways to construct an
+expression using the parentheses in the second part
 \end{itemize}
-Lisäksi pohjatapauksena on $C_0=1$, koska 0
-sulkuparista voi muodostaa
-tyhjän sulkulausekkeen.
+In addition, the base case is $C_0=1$,
+because we can construct an empty parenthesis
+expression using zero pairs of parentheses.
 
-\subsubsection{Laskutapa 2}
+\subsubsection{Formula 2}
 
-Catalanin lukuja voi laskea myös binomikertoimen avulla:
+Catalan numbers can also be calculated
+using binomial coefficients:
 \[ C_n = \frac{1}{n+1} {2n \choose n}\]
-Kaavan voi perustella seuraavasti:
+The formula can be explained as follows:
 
-Kun käytössä on $n$ alkusulkua ja $n$ loppusulkua,
-niistä voi muodostaa kaikkiaan ${2n \choose n}$
-sulkulauseketta.
-Lasketaan seuraavaksi, moniko tällainen
-sulkulauseke \textit{ei} ole kelvollinen.
+There are a total of ${2n \choose n}$ ways
+to construct a (not necessarily valid)
+parenthesis expression that contains $n$ left
+parentheses and $n$ right parentheses.
+Let's calculate the number of such
+expressions that are \emph{not} valid.
 
-Jos sulkulauseke ei ole kelvollinen,
-siinä on oltava alkuosa,
-jossa loppusulkuja on alkusulkuja enemmän.
-Muutetaan jokainen tällaisen alkuosan
-sulkumerkki käänteiseksi.
-Esimerkiksi lausekkeessa \texttt{())()(}
-alkuosa on \texttt{())} ja kääntämisen
-jälkeen lausekkeesta tulee \texttt{)((()(}.
+If a parenthesis expression is not valid,
+it has to contain a prefix where the
+number of right parentheses exceeds the
+number of left parentheses.
+The idea is to reverse each parenthesis
+that belongs to such a prefix.
+For example, the expression
+\texttt{())()(} contains a prefix \texttt{())},
+and after reversing the prefix,
+the expression becomes \texttt{)((()(}.
 
-Tuloksena olevassa lausekkeessa on $n+1$ alkusulkua
-ja $n-1$ loppusulkua. Tällaisia lausekkeita on
-kaikkiaan ${2n \choose n+1}$,
-joka on sama kuin ei-kelvollisten
-sulkulausekkeiden määrä.
-Niinpä kelvollisten
-sulkulausekkeiden määrä voidaan laskea kaavalla
+The resulting expression consists of $n+1$
+left parentheses and $n-1$ right parentheses.
+The number of such expressions is ${2n \choose n+1}$
+that equals the number of non-valid
+parenthesis expressions.
+Thus the number of valid parenthesis
+expressions can be calculated using the formula
 \[{2n \choose n}-{2n \choose n+1} = {2n \choose n} - \frac{n}{n+1} {2n \choose n} = \frac{1}{n+1} {2n \choose n}.\]
 
-\subsubsection{Puiden laskeminen}
+\subsubsection{Counting trees}
 
-Catalanin luvut kertovat myös juurellisten
-puiden lukumääriä:
+Catalan numbers are also related to rooted trees:
 
 \begin{itemize}
-\item $n$ solmun binääripuiden määrä on $C_n$
-\item $n$ solmun juurellisten puiden määrä on $C_{n-1}$
+\item there are $C_n$ binary trees of $n$ nodes
+\item there are $C_{n-1}$ rooted trees of $n$ nodes
 \end{itemize}
 \noindent
-Esimerkiksi tapauksessa $C_3=5$ binääripuut ovat
+For example, for $C_3=5$, the binary trees are
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -469,7 +486,7 @@ Esimerkiksi tapauksessa $C_3=5$ binääripuut ovat
 \draw[fill=white] (11.5+1.5,-2) circle (0.3);
 \end{tikzpicture}
 \end{center}
-ja yleiset puut ovat
+and the rooted trees are
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \path[draw,thick,-] (0,0) -- (-1,-1);
