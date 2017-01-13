@@ -527,21 +527,19 @@ and the rooted trees are
 \end{tikzpicture}
 \end{center}
 
+\section{Inclusion-exclusion}
 
-\section{Inkluusio-ekskluusio}
+\index{inclusion-exclusion}
 
-\index{inkluusio-ekskluusio}
-
-\key{Inkluusio-ekskluusio}
-on tekniikka, jonka avulla pystyy laskemaan
-joukkojen yhdisteen koon leikkausten
-kokojen perusteella ja päinvastoin.
-Yksinkertainen esimerkki periaatteesta on kaava
+\key{Inclusion-exclusion} is a technique
+that can be used for counting the size
+of a union of sets when the sizes of
+the intersections are known, and vice versa.
+A simple example of the technique is the formula
 \[ |A \cup B| = |A| + |B| - |A \cap B|,\]
-jossa $A$ ja $B$ ovat joukkoja ja $|X|$
-tarkoittaa joukon $X$ kokoa.
-Seuraava kuva havainnollistaa kaavaa,
-kun joukot ovat tason ympyröitä:
+where $A$ and $B$ are sets and $|X|$
+is the size of a set $X$.
+The formula can be illustrated as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -556,16 +554,20 @@ kun joukot ovat tason ympyröitä:
 \end{tikzpicture}
 \end{center}
 
-Tavoitteena on laskea, kuinka suuri on yhdiste $A \cup B$
-eli alue, joka on toisen tai kummankin ympyrän sisällä.
-Kuvan mukaisesti yhdisteen $A \cup B$ koko
-saadaan laskemalla ensin yhteen ympyröiden $A$ ja $B$ koot
-ja vähentämällä siitä sitten leikkauksen $A \cap B$ koko.
+In the above example, our goal is to calculate
+the size of the union $A \cup B$
+that corresponds to the area of the region
+that is inside at least one circle.
+The picture shows that we can calculate
+the area of $A \cup B$ by first summing the
+areas of $A$ and $B$, and then subtracting
+the area of $A \cap B$.
 
-Samaa ideaa voi soveltaa, kun joukkoja on enemmän.
-Kolmen joukon tapauksessa kaavasta tulee
+The same idea can be applied, when the number
+of sets is larger.
+When there are three sets, the formula becomes
 \[ |A \cup B \cup C| = |A| + |B| + |C| - |A \cap B|  - |A \cap C|  - |B \cap C| + |A \cap B \cap C| \]
-ja vastaava kuva on
+and the corresponding picture is
 
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -585,35 +587,37 @@ ja vastaava kuva on
 \end{tikzpicture}
 \end{center}
 
-Yleisessä tapauksessa yhdisteen $X_1 \cup X_2 \cup \cdots \cup X_n$
-koon saa laskettua käymällä läpi kaikki tavat muodostaa
-leikkaus joukoista $X_1,X_2,\ldots,X_n$.
-Parittoman määrän joukkoja sisältävät leikkaukset
-lasketaan mukaan positiivisina ja
-parillisen määrän negatiivisina.
+In the general case, the size of the 
+union $X_1 \cup X_2 \cup \cdots \cup X_n$
+can be calculated by going through all ways to
+construct an intersection for a collection of
+sets $X_1,X_2,\ldots,X_n$.
+If the intersection contains an odd number of sets,
+its size will be added to the answer,
+and otherwise subtracted from the answer.
 
-Huomaa, että vastaavat kaavat toimivat myös käänteisesti
-leikkauksen koon laskemiseen yhdisteiden kokojen perusteella.
-Esimerkiksi
+Note that similar formulas also work when counting
+the size of an intersection from the sizes of
+unions. For example,
 \[ |A \cap B| = |A| + |B| - |A \cup B|\]
-ja
+and
 \[ |A \cap B \cap C| = |A| + |B| + |C| - |A \cup B|  - |A \cup C|  - |B \cup C| + |A \cup B \cup C| .\]
 
-\subsubsection{Epäjärjestykset}
+\subsubsection{Derangements}
 
-\index{epxjxrjestys@epäjärjestys}
+\index{derangement}
 
-Lasketaan esimerkkinä,
-montako tapaa on muodostaa luvuista
-$(1,2,\ldots,n)$ \key{epäjärjestys}
-eli permutaatio,
-jossa mikään luku ei ole alkuperäisellä paikallaan.
-Esimerkiksi jos $n=3$, niin epäjärjestyksiä on kaksi: $(2,3,1)$ ja $(3,1,2)$.
+As an example, let's count the number of \key{derangements}
+of numbers $\{1,2,\ldots,n\}$, i.e., permutations
+where no element remains in its original place.
+For example, when $n=3$, there are
+two possible derangements: $(2,3,1)$ ja $(3,1,2)$.
 
-Yksi tapa lähestyä tehtävää on käyttää inkluusio-ekskluusiota.
-Olkoon joukko $X_k$ niiden permutaatioiden joukko,
-jossa kohdassa $k$ on luku $k$.
-Esimerkiksi jos $n=3$, niin joukot ovat seuraavat:
+One approach for the problem is to use
+inclusion-exclusion.
+Let $X_k$ be the set of permutations
+that contain the number $k$ at index $k$.
+For example, when $n=3$, the sets are as follows:
 \[
 \begin{array}{lcl}
 X_1 & = & \{(1,2,3),(1,3,2)\} \\
@@ -621,14 +625,14 @@ X_2 & = & \{(1,2,3),(3,2,1)\} \\
 X_3 & = & \{(1,2,3),(2,1,3)\} \\
 \end{array}
 \]
-Näitä joukkoja käyttäen epäjärjestysten määrä on
+Using these sets the number of derangements is
 \[ n! - |X_1 \cup X_2 \cup \cdots \cup X_n|, \]
-eli
-riittää laskea joukkojen yhdisteen koko.
-Tämä palautuu inkluusio-eks\-kluu\-sion avulla
-joukkojen leikkausten kokojen laskemiseen,
-mikä onnistuu tehokkaasti.
-Esimerkiksi kun $n=3$, joukon $|X_1 \cup X_2 \cup X_3|$ koko on
+so it suffices to calculate the size of the union.
+Using inclusion-exclusion, this reduces to
+calculating sizes of intersections which can be
+done efficiently.
+For example, when $n=3$, the size of
+$|X_1 \cup X_2 \cup X_3|$ is
 \[
 \begin{array}{lcl}
  & & |X_1| + |X_2| + |X_3| - |X_1 \cap X_2|  - |X_1 \cap X_3|  - |X_2 \cap X_3| + |X_1 \cap X_2 \cap X_3| \\
@@ -636,12 +640,13 @@ Esimerkiksi kun $n=3$, joukon $|X_1 \cup X_2 \cup X_3|$ koko on
  & = & 4, \\
 \end{array}
 \]
-joten ratkaisujen määrä on $3!-4=2$.
+so the number of solutions is $3!-4=2$.
 
-Osoittautuu, että tehtävän voi ratkaista myös toisella
-tavalla käyttämättä inkluusio-ekskluusiota.
-Merkitään $f(n)$:llä jonon $(1,2,\ldots,n)$ epäjärjestysten määrää,
-jolloin seuraava rekursio pätee:
+It turns out that there is also another way for
+solving the problem without inclusion-exclusion.
+Let $f(n)$ denote the number of derangements
+for $\{1,2,\ldots,n\}$. We can use the following
+recursive formula:
 
 \begin{equation*}
     f(n) = \begin{cases}
@@ -651,18 +656,24 @@ jolloin seuraava rekursio pätee:
            \end{cases}
 \end{equation*}
 
-Kaavan voi perustella käymällä läpi tapaukset,
-miten luku 1 muuttuu epäjärjestyksessä.
-On $n-1$ tapaa valita jokin luku $x$ luvun 1 tilalle.
-Jokaisessa tällaisessa valinnassa on kaksi vaihtoehtoa:
+The formula can be derived by going through
+the possibilities how the number 1 changes
+in the derangement.
+There are $n-1$ ways to choose a number $x$
+that will replace the number 1.
+In each such choice, there are two options:
 
-\textit{Vaihtoehto 1:} Luvun $x$ tilalle valitaan luku 1.
-Tällöin jää $n-2$ lukua, joille tulee muodostaa epäjärjestys.
+\textit{Option 1:} We also replace the number $x$
+by the number 1.
+After this, the remaining task is to construct
+a derangement for $n-2$ numbers.
 
-\textit{Vaihtoehto 2:} Luvun $x$ tilalle ei valita lukua 1.
-Tällöin jää $n-1$ lukua, joille tulee muodostaa epäjärjestys,
-koska luvun $x$ tilalle ei saa valita lukua 1
-ja kaikki muut luvut tulee saattaa epäjärjestykseen.
+\textit{Option 2:} We replace the number $x$
+by some other number than 1.
+Now we should construct a derangement
+for $n-1$ numbers, because we can't replace
+the number $x$ with number $1$, and all other
+numbers should be changed.
 
 \section{Burnsiden lemma}
 
