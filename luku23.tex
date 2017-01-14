@@ -607,19 +607,17 @@ X^n \cdot
 \]
 \end{samepage}
 
-\section{Verkot ja matriisit}
+\section{Graphs and matrices}
 
-\subsubsection{Polkujen määrä}
+\subsubsection{Counting paths}
 
-Matriisipotenssilla
-on mielenkiintoinen vaikutus
-verkon vierusmatriisin sisältöön.
-Kun $V$ on painottoman verkon vierusmatriisi,
-niin $V^n$ kertoo,
-montako $n$ kaaren pituista polkua
-eri solmuista on toisiinsa.
+The powers of an adjacency matrix of a graph
+have an interesting property.
+When $V$ is an adjacency matrix of an unweighted graph,
+the matrix $V^n$ contains the numbers of paths of
+$n$ edges between the nodes in the graph.
 
-Esimerkiksi verkon
+For example, for the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -639,7 +637,7 @@ Esimerkiksi verkon
 \path[draw,thick,->,>=latex] (6) -- (5);
 \end{tikzpicture}
 \end{center}
-vierusmatriisi on
+the adjacency matrix is
 \[
 V= \begin{bmatrix}
   0 & 0 & 0 & 1 & 0 & 0 \\
@@ -650,7 +648,7 @@ V= \begin{bmatrix}
   0 & 0 & 1 & 0 & 1 & 0 \\
  \end{bmatrix}.
 \]
-Nyt esimerkiksi matriisi
+Now, for example, the matrix
 \[
 V^4= \begin{bmatrix}
   0 & 0 & 1 & 1 & 1 & 0 \\
@@ -661,26 +659,26 @@ V^4= \begin{bmatrix}
   0 & 0 & 1 & 1 & 1 & 0 \\
  \end{bmatrix}
 \]
-kertoo, montako 4 kaaren pituista polkua
-solmuista on toisiinsa.
-Esimerkiksi $V^4[2,5]=2$,
-koska solmusta 2 solmuun 5 on olemassa
-4 kaaren pituiset polut
+contains the numbers of paths of 4 edges
+between the nodes.
+For example, $V^4[2,5]=2$,
+because there are two paths of 4 edges
+from node 2 to node 5:
 $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$
-ja 
+and 
 $2 \rightarrow 6 \rightarrow 3 \rightarrow 2 \rightarrow 5$.
 
-\subsubsection{Lyhimmät polut}
+\subsubsection{Shortest paths}
 
-Samantapaisella idealla voi laskea painotetussa verkossa
-kullekin solmuparille,
-kuinka pitkä on lyhin $n$ kaaren pituinen polku solmujen välillä.
-Tämä vaatii matriisitulon määritelmän muuttamista
-niin, että siinä ei lasketa polkujen yhteismäärää
-vaan minimoidaan polun pituutta.
+Using a similar idea in a weighted graph,
+we can calculate for each pair of nodes the shortest
+path between them that contains exactly $n$ edges.
+To calculate this, we have to define matrix multiplication
+in another way, so that we don't calculate the number
+of paths but minimize the length of a path.
 
 \begin{samepage}
-Tarkastellaan esimerkkinä seuraavaa verkkoa:
+As an example, consider the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -702,10 +700,10 @@ Tarkastellaan esimerkkinä seuraavaa verkkoa:
 \end{center}
 \end{samepage}
 
-Muodostetaan verkosta vierusmatriisi, jossa arvo
-$\infty$ tarkoittaa, että kaarta ei ole,
-ja muut arvot ovat kaarten pituuksia.
-Matriisista tulee
+Let's construct an adjacency matrix where
+$\infty$ means that an edge doesn't exist,
+and other values correspond to edge weights.
+The matrix is
 \[
 V= \begin{bmatrix}
   \infty & \infty & \infty & 4 & \infty & \infty \\
@@ -717,18 +715,20 @@ V= \begin{bmatrix}
  \end{bmatrix}.
 \]
 
-Nyt voimme laskea matriisitulon kaavan
+Instead of the formula
 \[
 AB[i,j] = \sum_{k=1}^n A[i,k] \cdot B[k,j]
 \]
-sijasta kaavalla
+we now use the formula
 \[
 AB[i,j] = \min_{k=1}^n A[i,k] + B[k,j],
 \]
-eli summa muuttuu minimiksi ja tulo summaksi.
-Tämän seurauksena matriisipotenssi
-selvittää lyhimmät polkujen pituudet solmujen
-välillä. Esimerkiksi
+for matrix multiplication, so we calculate
+a minimum instead of a sum,
+and a sum of elements instead of a product.
+After this modification,
+matrix powers can be used for calculating
+shortest paths in the graph:
 
 \[
 V^4= \begin{bmatrix}
@@ -740,19 +740,20 @@ V^4= \begin{bmatrix}
   \infty & \infty & 12 & 13 & 11 & \infty \\
  \end{bmatrix}
 \]
-eli esimerkiksi lyhin 4 kaaren pituinen polku
-solmusta 2 solmuun 5 on pituudeltaan 8.
-Tämä polku on $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$.
+For example, the shortest path of 4 edges
+from node 2 to node 5 has length 8.
+This path is
+$2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$.
 
-\subsubsection{Kirchhoffin lause}
+\subsubsection{Kirchhoff's theorem}
 
-\index{Kirchhoffin lause@Kirchhoffin lause}
-\index{virittxvx puu@virittävä puu}
+\index{Kirchhoff's theorem}
+\index{spanning tree}
 
-\key{Kirchhoffin lause} laskee
-verkon virittävän puiden määrän
-verkosta muodostetun matriisin determinantin avulla.
-Esimerkiksi verkolla
+\key{Kirchhoff's theorem} provides us a way
+to calculate the number of spanning trees
+in a graph as a determinant of a special matrix.
+For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -766,7 +767,7 @@ Esimerkiksi verkolla
 \path[draw,thick,-] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-on kolme virittävää puuta:
+has three spanning trees:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1a) at (1,3) {$1$};
@@ -800,12 +801,12 @@ on kolme virittävää puuta:
 %\path[draw,thick,-] (1c) -- (4c);
 \end{tikzpicture}
 \end{center}
-\index{Laplacen matriisi@Laplacen matriisi}
-Muodostetaan verkosta \key{Laplacen matriisi} $L$,
-jossa $L[i,i]$ on solmun $i$ aste ja
-$L[i,j]=-1$, jos solmujen $i$ ja $j$ välillä on kaari,
-ja muuten $L[i,j]=0$.
-Tässä tapauksessa matriisista tulee
+\index{Laplacean matrix}
+We construct a \key{Laplacean matrix} $L$,
+where $L[i,i]$ is the degree of node $i$
+and $L[i,j]=-1$ if there is an edge between
+nodes $i$ and $j$, and otherwise $L[i,j]=0$.
+In this graph, the matrix is as follows:
 
 \[
 L= \begin{bmatrix}
@@ -813,14 +814,14 @@ L= \begin{bmatrix}
   -1 & 1 & 0 & 0 \\
   -1 & 0 & 2 & -1 \\
   -1 & 0 & -1 & 2 \\
- \end{bmatrix}.
+ \end{bmatrix}
 \]
 
-Nyt virittävien puiden määrä on determinantti
-matriisista, joka saadaan poistamasta matriisista $L$
-jokin rivi ja jokin sarake.
-Esimerkiksi jos poistamme ylimmän rivin ja
-vasemman sarakkeen, tuloksena on
+The number of spanning trees is the same as
+the determinant of a matrix that is obtained
+when we remove any row and any column from $L$.
+For example, if we remove the first row
+and column, the result is
 
 \[ \det(
 \begin{bmatrix}
@@ -829,12 +830,12 @@ vasemman sarakkeen, tuloksena on
   0 & -1 & 2 \\
  \end{bmatrix}
 ) =3.\]
-Determinantista tulee aina sama riippumatta siitä,
-mikä rivi ja sarake matriisista $L$ poistetaan.
+The determinant is always the same,
+regardless of which row and column we remove from $L$.
 
-Huomaa, että Kirchhoffin lauseen erikoistapauksena on
-luvun 22.5 Cayleyn kaava, koska
-täydellisessä $n$ solmun verkossa
+Note that a special case of Kirchhoff's theorem
+is Cayley's formula in Chapter 22.5,
+because in a complete graph of $n$ nodes
 
 \[ \det(
 \begin{bmatrix}
