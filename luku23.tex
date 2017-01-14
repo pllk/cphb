@@ -1,11 +1,10 @@
 \chapter{Matrices}
 
-\index{matriisi@matriisi}
+\index{matrix}
 
-\key{Matriisi} on kaksiulotteista taulukkoa
-vastaava matemaattinen käsite,
-jolle on määritelty laskutoimituksia.
-Esimerkiksi
+A \key{matrix} is a mathematical concept
+that corresponds to a two-dimensional array
+in programming. For example,
 \[
 A = 
  \begin{bmatrix}
@@ -14,19 +13,19 @@ A =
   9 & 5 & 4 & 18 \\
  \end{bmatrix}
 \]
-on matriisi, jossa on 3 riviä ja 4 saraketta
-eli se on kokoa $3 \times 4$.
-Viittaamme matriisin alkioihin
-merkinnällä $[i,j]$,
-jossa $i$ on rivi ja $j$ on sarake.
-Esimerkiksi yllä olevassa matriisissa
-$A[2,3]=8$ ja $A[3,1]=9$.
+is a matrix of size $3 \times 4$, i.e.,
+it has 3 rows and 4 columns.
+The notation $[i,j]$ refers to
+the element in row $i$ and column $j$
+in a matrix.
+For example, in the above matrix,
+$A[2,3]=8$ and $A[3,1]=9$.
 
-\index{vektori@vektori}
+\index{vector}
 
-Matriisin erikoistapaus on \key{vektori},
-joka on kokoa $n \times 1$ oleva yksiulotteinen matriisi.
-Esimerkiksi
+A special case of a matrix is a \key{vector}
+that is a one-dimensional matrix of size $n \times 1$.
+For example,
 \[
 V =
 \begin{bmatrix}
@@ -35,13 +34,13 @@ V =
 5 \\
 \end{bmatrix}
 \]
-on vektori, jossa on 3 alkiota.
+is a vector that contains three elements.
 
-\index{transpoosi@transpoosi}
+\index{transpose}
 
-Matriisin $A$ \key{transpoosi} $A^T$ syntyy,
-kun matriisin rivit ja sarakkeet vaihdetaan
-keskenään eli $A^T[i,j]=A[j,i]$:
+The \key{transpose} $A^T$ of a matrix $A$
+is obtained when the rows and columns in $A$
+are swapped, i.e., $A^T[i,j]=A[j,i]$:
 \[
 A^T = 
  \begin{bmatrix}
@@ -52,11 +51,12 @@ A^T =
  \end{bmatrix}
 \]
 
-\index{nelizmatriisi@neliömatriisi}
+\index{square matrix}
 
-Matriisi on \key{neliömatriisi}, jos sen
-korkeus ja leveys ovat samat.
-Esimerkiksi seuraava matriisi on neliömatriisi:
+A matrix is a \key{square matrix} if it
+has the same number of rows and columns.
+For example, the following matrix is a
+square matrix:
 
 \[
 S = 
@@ -67,17 +67,15 @@ S =
  \end{bmatrix}
 \]
 
-\section{Laskutoimitukset}
+\section{Operations}
 
-Matriisien $A$ ja $B$ summa $A+B$ on määritelty,
-jos matriisit ovat yhtä suuret.
-Tuloksena oleva matriisi on
-samaa kokoa kuin
-matriisit $A$ ja $B$ ja sen jokainen
-alkio on vastaavissa kohdissa
-olevien alkioiden summa.
+The sum $A+B$ of matrices $A$ and $B$
+is defined if the matrices are of the same size.
+The result is a matrix where each element
+is the sum of the corresponding elements
+in matrices $A$ and $B$.
 
-Esimerkiksi
+For example,
 \[
  \begin{bmatrix}
   6 & 1 & 4 \\
@@ -100,10 +98,10 @@ Esimerkiksi
  \end{bmatrix}.
 \]
 
-Matriisin $A$ kertominen luvulla $x$ tarkoittaa,
-että jokainen matriisin alkio kerrotaan luvulla $x$.
+Multiplying a matrix $A$ by a value $x$ means
+that we multiply each element in $A$ by $x$.
 
-Esimerkiksi
+For example,
 \[
  2 \cdot \begin{bmatrix}
   6 & 1 & 4 \\
@@ -121,26 +119,23 @@ Esimerkiksi
  \end{bmatrix}.
 \]
 
-\subsubsection{Matriisitulo}
+\subsubsection{Matrix multiplication}
 
-\index{matriisitulo@matriisitulo}
+\index{matrix multiplication}
 
-Matriisien $A$ ja $B$ tulo $AB$ on määritelty,
-jos matriisi $A$ on kokoa $a \times n$
-ja matriisi $B$ on kokoa $n \times b$
-eli matriisin $A$ leveys on sama kuin matriisin
-$B$ korkeus.
-Tuloksena oleva matriisi
-on kokoa $a \times b$
-ja sen alkiot lasketaan kaavalla
+The product $AB$ of matrices $A$ and $B$
+is defined if $A$ is of size $a \times n$
+and $B$ is of size $n \times b$, i.e.,
+the width of $A$ equals the height of $B$.
+The result is a matrix of size $a \times b$
+whose elements are calculated using the formula
 \[
 AB[i,j] = \sum_{k=1}^n A[i,k] \cdot B[k,j].
 \]
 
-Kaavan tulkintana on, että kukin $AB$:n alkio
-saadaan summana, joka muodostuu $A$:n ja
-$B$:n alkioparien tuloista seuraavan
-kuvan mukaisesti:
+The idea is that each element in $AB$
+is a sum of products of elements in $A$ and $B$
+according to the following picture:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -158,7 +153,7 @@ kuvan mukaisesti:
 \end{tikzpicture}
 \end{center}
 
-Esimerkiksi
+For example,
 
 \[
  \begin{bmatrix}
@@ -185,18 +180,18 @@ Esimerkiksi
  \end{bmatrix}.
 \]
 
-Matriisitulo ei ole vaihdannainen,
-eli ei ole voimassa $A \cdot B = B \cdot A$.
-Kuitenkin matriisitulo
-on liitännäinen, eli on voimassa $A \cdot (B \cdot C)=(A \cdot B) \cdot C$.
+Matrix multiplication is not commutative,
+so $AB = BA$ doesn't hold.
+However, it is associative,
+so $A(BC)=(AB)C$ holds.
 
-\index{ykkzsmatriisi@ykkösmatriisi}
+\index{identity matrix}
 
-\key{Ykkösmatriisi} on neliömatriisi,
-jonka lävistäjän jokainen alkio on 1
-ja jokainen muu alkio on 0.
-Esimerkiksi $3 \times 3$ -yksikkömatriisi on
-seuraavanlainen:
+An \key{identity matrix} is a square matrix
+where each element on the diagonal is 1,
+and all other elements are 0.
+For example, the $3 \times 3$ identity matrix
+is as follows:
 \[
  I = \begin{bmatrix}
   1 & 0 & 0 \\
@@ -206,8 +201,8 @@ seuraavanlainen:
 \]
 
 \begin{samepage}
-Ykkösmatriisilla kertominen säilyttää matriisin
-ennallaan. Esimerkiksi
+Multiplying a matrix by an identity matrix
+doesn't change it. For example,
 \[
  \begin{bmatrix}
   1 & 0 & 0 \\
@@ -245,24 +240,26 @@ ennallaan. Esimerkiksi
 \]
 \end{samepage}
 
-Kahden $n \times n$ kokoisen matriisin tulon
-laskeminen vie aikaa $O(n^3)$
-käyttäen suoraviivaista algoritmia.
-Myös nopeampia algoritmeja on olemassa:
-tällä hetkellä nopein tunnettu algoritmi
-vie aikaa $O(n^{2{,}37})$.
-Tällaiset algoritmit eivät kuitenkaan
-ole tarpeen kisakoodauksessa.
+Using a straightforward algorithm,
+we can calculate the product of
+two $n \times n$ matrices
+in $O(n^3)$ time.
+There are also more efficient algorithms
+for matrix multiplication:
+at the moment, the best known time complexity
+is $O(n^{2.37})$.
+However, such special algorithms are not needed
+in competitive programming.
 
-\subsubsection{Matriisipotenssi}
+\subsubsection{Matrix power}
 
-\index{matriisipotenssi@matriisipotenssi}
+\index{matrix power}
 
-Matriisin $A$ potenssi $A^k$ on
-määritelty, jos $A$ on neliömatriisi.
-Määritelmä nojautuu kertolaskuun:
-\[ A^k = \underbrace{A \cdot A \cdot A \cdots A}_{\textrm{$k$ kertaa}} \]
-Esimerkiksi
+The power $A^k$ of a matrix $A$ is defined
+if $A$ is a square matrix.
+The definition is based on matrix multiplication:
+\[ A^k = \underbrace{A \cdot A \cdot A \cdots A}_{\textrm{$k$ times}} \]
+For example,
 
 \[
  \begin{bmatrix}
@@ -286,7 +283,7 @@ Esimerkiksi
   33 & 114 \\
  \end{bmatrix}.
 \]
-Lisäksi $A^0$ tuottaa ykkösmatriisin. Esimerkiksi
+In addition, $A^0$ is an identity matrix. For example,
 \[
  \begin{bmatrix}
   2 & 5 \\
@@ -298,9 +295,9 @@ Lisäksi $A^0$ tuottaa ykkösmatriisin. Esimerkiksi
  \end{bmatrix}.
 \]
 
-Matriisin $A^k$ voi laskea tehokkaasti ajassa
-$O(n^3 \log k)$ soveltamalla luvun 21.2
-tehokasta potenssilaskua. Esimerkiksi
+The matrix $A^k$ can be efficiently calculated
+in $O(n^3 \log k)$ time using the
+algorithm in Chapter 21.2. For example,
 \[
  \begin{bmatrix}
   2 & 5 \\
@@ -316,31 +313,29 @@ tehokasta potenssilaskua. Esimerkiksi
  \end{bmatrix}^4.
 \]
 
+\subsubsection{Determinant}
 
-\subsubsection{Determinantti}
+\index{determinant}
 
-\index{determinantti@determinantti}
-
-Matriisin $A$ \key{determinantti} $\det(A)$
-on määritelty, jos $A$ on neliömatriisi.
-Jos $A$ on kokoa $1 \times 1$,
-niin $\det(A)=A[1,1]$.
-Suuremmalle matriisille determinaatti lasketaan rekursiivisesti
-kaavalla \index{kofaktori@kofaktori}
+The \key{determinant} $\det(A)$ of a matrix $A$
+is defined if $A$ is a square matrix.
+If $A$ is of size $1 \times 1$,
+then $\det(A)=A[1,1]$.
+The determinant of a larger matrix is
+calculated recursively using the formula \index{cofactor}
 \[\det(A)=\sum_{j=1}^n A[1,j] C[1,j],\]
-missä $C[i,j]$ on matriisin $A$ \key{kofaktori}
-kohdassa $[i,j]$.
-Kofaktori lasketaan puolestaan kaavalla
+where $C[i,j]$ is the \key{cofactor} of $A$
+at $[i,j]$.
+The cofactor is calculated using the formula
 \[C[i,j] = (-1)^{i+j} \det(M[i,j]),\]
-missä $M[i,j]$ on matriisi $A$, josta on poistettu
-rivi $i$ ja sarake $j$.
-Kofaktorissa olevan kertoimen $(-1)^{i+j}$ ansiosta
-joka toinen determinantti
-lisätään summaan positiivisena
-ja joka toinen negatiivisena.
+where $M[i,j]$ is a copy of matrix $A$
+where row $i$ and column $j$ are removed.
+Because of the multiplier $(-1)^{i+j}$ in the cofactor,
+every other determinant is positive
+and negative.
 
 \begin{samepage}
-Esimerkiksi
+For example,
 \[
 \det(
  \begin{bmatrix}
@@ -351,7 +346,7 @@ Esimerkiksi
 \]
 \end{samepage}
 
-ja
+and
 
 \[
 \det(
@@ -384,19 +379,19 @@ ja
 ) = 81.
 \]
 
-\index{kxxnteismatriisi@käänteismatriisi}
+\index{inverse matrix}
 
-Determinantti kertoo, onko matriisille
-$A$ olemassa \key{käänteismatriisia}
-$A^{-1}$, jolle pätee $A \cdot A^{-1} = I$,
-missä $I$ on ykkösmatriisi.
-Osoittautuu, että $A^{-1}$ on olemassa
-tarkalleen silloin, kun $\det(A) \neq 0$,
-ja sen voi laskea kaavalla
+The determinant indicates if matrix $A$
+has an \key{inverse matrix}
+$A^{-1}$ for which $A \cdot A^{-1} = I$,
+where $I$ is an identity matrix.
+It turns out that $A^{-1}$ exists
+exactly when $\det(A) \neq 0$,
+and it can be calculated using the formula
 
 \[A^{-1}[i,j] = \frac{C[j,i]}{det(A)}.\]
 
-Esimerkiksi
+For example,
 
 \[
 \underbrace{
