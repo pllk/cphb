@@ -420,35 +420,32 @@ For example,
 }_{I}.
 \]
 
-\section{Lineaariset rekursioyhtälöt}
+\section{Linear recurrences}
 
-\index{rekursioyhtxlz@rekursioyhtälö}
-\index{lineaarinen rekursioyhtxlz@lineaarinen rekursioyhtälö}
+\index{linear recurrence}
 
-\key{Lineaarinen rekursioyhtälö}
-voidaan esittää funktiona $f(n)$,
-jolle on annettu alkuarvot
-$f(0),f(1),\ldots,f(k-1)$
-ja jonka suuremmat arvot
-parametrista $k$ lähtien lasketaan
-rekursiivisesti kaavalla
+A \key{linear recurrence}
+can be represented as a function $f(n)$
+with initial values
+$f(0),f(1),\ldots,f(k-1)$,
+whose values for $k$ and larger parameters
+are calculated recursively using a formula
 \[f(n) = c_1 f(n-1) + c_2 f(n-2) + \ldots + c_k f (n-k),\]
-missä $c_1,c_2,\ldots,c_k$ ovat vakiokertoimia.
+where $c_1,c_2,\ldots,c_k$ are constant multipliers.
 
-Funktion arvon $f(n)$ voi laskea dynaamisella
-ohjelmoinnilla ajassa $O(kn)$
-laskemalla kaikki arvot $f(0),f(1),\ldots,f(n)$ järjestyksessä.
-Tätä ratkaisua voi kuitenkin tehostaa merkittävästi
-matriisien avulla, kun $k$ on pieni.
-Seuraavaksi näemme, miten arvon $f(n)$
-voi laskea ajassa $O(k^3 \log n)$.
+We can use dynamic programming to calculate
+any value $f(n)$ in $O(kn)$ time by calculating
+all values $f(0),f(1),\ldots,f(n)$ one after another.
+However, if $k$ is small, it is possible to calculate
+$f(n)$ much more efficiently in $O(k^3 \log n)$
+time using matrix operations.
 
-\subsubsection{Fibonaccin luvut}
+\subsubsection{Fibonacci numbers}
 
-\index{Fibonaccin luku@Fibonaccin luku}
+\index{Fibonacci number}
 
-Yksinkertainen esimerkki lineaarisesta rekursioyhtälöstä
-on Fibonaccin luvut määrittelevä funktio:
+A simple example of a linear recurrence is the
+function that calculates Fibonacci numbers:
 \[
 \begin{array}{lcl}
 f(0) & = & 0 \\
@@ -456,12 +453,13 @@ f(1) & = & 1 \\
 f(n) & = & f(n-1)+f(n-2) \\
 \end{array}
 \]
-Tässä tapauksessa $k=2$ ja $c_1=c_2=1$.
+In this case, $k=2$ and $c_1=c_2=1$.
 
 \begin{samepage}
-Ideana on esittää Fibonaccin lukujen laskukaava
-$2 \times 2$ -kokoisena neliömatriisina
-$X$, jolle pätee
+The idea is to represent the formula for
+calculating Fibonacci numbers as a
+square matrix $X$ of size $2 \times 2$
+for which the following holds:
 \[ X \cdot
  \begin{bmatrix}
   f(i) \\
@@ -471,13 +469,13 @@ $X$, jolle pätee
  \begin{bmatrix}
   f(i+1) \\
   f(i+2) \\
- \end{bmatrix},
+ \end{bmatrix}
  \]
-eli $X$:lle annetaan
-''syötteenä'' arvot $f(i)$ ja $f(i+1)$,
-ja $X$ muodostaa niistä
-arvot $f(i+1)$ ja $f(i+2)$.
-Osoittautuu, että tällainen matriisi on
+Thus, values $f(i)$ and $f(i+1)$ are given as
+''input'' for $X$,
+and $X$ constructs values $f(i+1)$ and $f(i+2)$
+from them.
+It turns out that such a matrix is
 
 \[ X = 
  \begin{bmatrix}
@@ -487,7 +485,7 @@ Osoittautuu, että tällainen matriisi on
 \]
 \end{samepage}
 \noindent
-Esimerkiksi
+For example,
 \[
  \begin{bmatrix}
   0 & 1 \\
@@ -519,8 +517,7 @@ Esimerkiksi
   f(7) \\
  \end{bmatrix}.
 \]
-Tämän ansiosta arvon $f(n)$ sisältävän matriisin saa laskettua
-kaavalla
+Thus, we can calculate $f(n)$ using the formula
 \[
  \begin{bmatrix}
   f(n) \\
@@ -543,17 +540,17 @@ X^n \cdot
   1 \\
  \end{bmatrix}.
 \]
-Potenssilasku $X^n$ on mahdollista laskea ajassa
-$O(k^3 \log n)$,
-joten myös funktion arvon $f(n)$
-saa laskettua ajassa $O(k^3 \log n)$.
+The power $X^n$ on can be calculated in
+$O(k^3 \log n)$ time,
+so the value $f(n)$ can also be calculated
+in $O(k^3 \log n)$ time.
 
-\subsubsection{Yleinen tapaus}
+\subsubsection{General case}
 
-Tarkastellaan sitten yleistä tapausta,
-missä $f(n)$ on mikä tahansa lineaarinen
-rekursioyhtälö. Nyt tavoitteena on etsiä
-matriisi $X$, jolle pätee
+Let's now consider a general case where
+$f(n)$ is any linear recurrence.
+Again, our goal is to construct a matrix $X$
+for which
 
 \[ X \cdot
  \begin{bmatrix}
@@ -570,7 +567,7 @@ matriisi $X$, jolle pätee
   f(i+k) \\
  \end{bmatrix}.
 \]
-Tällainen matriisi on
+Such a matrix is
 \[
 X =
  \begin{bmatrix}
@@ -582,17 +579,16 @@ X =
   c_k & c_{k-1} & c_{k-2} & c_{k-3} & \cdots & c_1 \\
  \end{bmatrix}.
 \]
-Matriisin $k-1$ ensimmäisen rivin jokainen alkio on 0,
-paitsi yksi alkio on 1.
-Nämä rivit kopioivat
-arvon $f(i+1)$ arvon $f(i)$ tilalle,
-arvon $f(i+2)$ arvon $f(i+1)$ tilalle jne.
-Viimeinen rivi sisältää rekursiokaavan kertoimet,
-joiden avulla muodostuu uusi arvo $f(i+k)$.
+In the first $k-1$ rows, each element is 0
+except that one element is 1.
+These rows replace $f(i)$ with $f(i+1)$,
+$f(i+1)$ with $f(i+2)$, etc.
+The last row contains the multipliers in the recurrence,
+and it calculates the new value $f(i+k)$.
 
 \begin{samepage}
-Nyt arvon $f(n)$ pystyy laskemaan ajassa $O(k^3 \log n)$
-kaavalla
+Now, $f(n)$ can be calculated in
+$O(k^3 \log n)$ time using the formula
 \[
  \begin{bmatrix}
   f(n) \\
