@@ -364,45 +364,46 @@ and this state is a winning state, because
 it contains exactly one heap that has more than one stick,
 so the nim sum is not 0.
 
-\section{Sprague–Grundyn lause}
+\section{Sprague–Grundy theorem}
 
-\index{Sprague–Grundyn lause}
+\index{Sprague–Grundy theorem}
 
-\key{Sprague–Grundyn lause} yleistää nim-pelin strategian
-kaikkiin peleihin, jotka täyttävät
-seuraavat vaatimukset:
+The \key{Sprague–Grundy theorem} generalizes the
+strategy used in nim for all games that fulfil
+the following requirements:
 
 \begin{itemize}[noitemsep]
-\item Pelissä on kaksi pelaajaa, jotka tekevät vuorotellen siirtoja.
-\item Peli muodostuu tiloista ja mahdolliset siirrot tilasta
-eivät riipu siitä, kumpi pelaaja on vuorossa.
-\item Peli päättyy, kun toinen pelaaja ei voi tehdä siirtoa.
-\item Peli päättyy varmasti ennemmin tai myöhemmin.
-\item Pelaajien saatavilla on kaikki tieto tiloista
-ja siirroista, eikä pelissä ole satunnaisuutta.
+\item There are two players who move alternatively.
+\item The game consists of states, and the possible moves
+in a state don't depend on whose turn it is.
+\item The game ends when a player can't make a move.
+\item The game surely ends sooner or later.
+\item The players have complete information about
+states and moves, and there is no randomness in the game.
 \end{itemize}
-Ideana on laskea kullekin pelin tilalle Grundy-luku,
-joka vastaa tikkujen määrää nim-pelin kasassa.
-Kun kaikkien tilojen Grundy-luvut ovat tiedossa,
-peliä voi pelata aivan kuin se olisi nim-peli.
+The idea is to calculate for each game state
+a Grundy number that corresponds to the number of
+sticks in a nim heap.
+When we know the Grundy numbers for all states,
+we can play the game like a nim game.
 
-\subsubsection{Grundy-luku}
+\subsubsection{Grundy number}
 
-\index{Grundy-luku}
-\index{mex-funktio}
+\index{Grundy number}
+\index{mex function}
 
-Pelin tilan \key{Grundy-luku} määritellään rekursiivisesti
-kaavalla
+The \key{Grundy number} for a game state is
 \[\textrm{mex}(\{g_1,g_2,\ldots,g_n\}),\]
-jossa $g_1,g_2,\ldots,g_n$ ovat niiden tilojen
-Grundy-luvut, joihin tilasta pääsee yhdellä siirrolla,
-ja funktio mex antaa pienimmän ei-negatiivisen
-luvun, jota ei esiinny joukossa.
-Esimerkiksi $\textrm{mex}(\{0,1,3\})=2$.
-Jos tilasta ei voi tehdä mitään siirtoa,
-sen Grundy-luku on 0, koska $\textrm{mex}(\emptyset)=0$.
+where $g_1,g_2,\ldots,g_n$ are Grundy numbers for
+states to which we can move from the current state,
+and the mex function returns the smallest
+nonnegative number that is not in the set.
+For example, $\textrm{mex}(\{0,1,3\})=2$.
+If there are no possible moves in a state,
+its Grundy number is 0, because
+$\textrm{mex}(\emptyset)=0$.
 
-Esimerkiksi tilaverkossa
+For example, in the state graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {\phantom{0}};
@@ -422,7 +423,7 @@ Esimerkiksi tilaverkossa
 \path[draw,thick,->,>=latex] (6) -- (2);
 \end{tikzpicture}
 \end{center}
-Grundy-luvut ovat seuraavat:
+the Grundy numbers are as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {0};
@@ -442,31 +443,33 @@ Grundy-luvut ovat seuraavat:
 \path[draw,thick,->,>=latex] (6) -- (2);
 \end{tikzpicture}
 \end{center}
-Jos tila on häviötila, sen Grundy-luku on 0.
-Jos taas tila on voittotila, sen Grundy-luku
-on jokin positiivinen luku.
+The Grundy number of a losing state is 0,
+and the Grundy number of a winning state is
+a positive number.
 
-Grundy-luvun hyötynä on,
-että se vastaa tikkujen määrää nim-kasassa.
-Jos Grundy-luku on 0, niin tilasta pääsee vain tiloihin,
-joiden Grundy-luku ei ole 0.
-Jos taas Grundy-luku on $x>0$, niin tilasta pääsee tiloihin,
-joiden Grundy-luvut kattavat välin $0,1,\ldots,x-1$.
+The Grundy number corresponds to a number of sticks
+in a nim heap.
+If the Grundy number is 0, we can only move to
+states whose Grundy numbers are positive,
+and if the Grundy number is $x>0$, we can move
+to states whose Grundy numbers incluce all numbers
+$0,1,\ldots,x-1$.
 
 ~\\
 \noindent
-Tarkastellaan esimerkkinä peliä,
-jossa pelaajat siirtävät vuorotellen
-pelihahmoa sokkelossa.
-Jokainen sokkelon ruutu on lattiaa tai seinää.
-Kullakin siirrolla hahmon tulee liikkua jokin
-määrä askeleita vasemmalle tai jokin
-määrä askeleita ylöspäin.
-Pelin voittaja on se, joka tekee viimeisen siirron.
+As an example, let's consider a game where
+the players move a figure in a maze.
+Each square in the maze is either floor or wall.
+On each turn, the player has to move
+the figure some number
+of steps either left or up.
+The winner of the game is the player who
+makes the last move.
 
 \begin{samepage}
-Esimerkiksi seuraavassa on pelin mahdollinen aloitustilanne,
-jossa @ on pelihahmo ja * merkitsee ruutua, johon hahmo voi siirtyä.
+The following picture shows a possible initial state
+of the game, where @ denotes the figure and *
+denotes a square where it can move.
 
 \begin{center}
 \begin{tikzpicture}[scale=.65]
@@ -492,9 +495,10 @@ jossa @ on pelihahmo ja * merkitsee ruutua, johon hahmo voi siirtyä.
 \end{center}
 \end{samepage}
 
-Sokkelopelin tiloja ovat kaikki sokkelon
-lattiaruudut. Tässä tapauksessa
-tilojen Grundy-luvut ovat seuraavat:
+The states of the game are all floor squares
+in the maze.
+In this case, the Grundy numbers
+are as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=.65]
@@ -540,43 +544,44 @@ tilojen Grundy-luvut ovat seuraavat:
 \end{tikzpicture}
 \end{center}
 
-Tämän seurauksena sokkelopelin
-tila käyttäytyy
-samalla tavalla kuin nim-pelin kasa.
-Esimerkiksi oikean alakulman ruudun
-Grundy-luku on 2,
-joten kyseessä on voittotila.
-Voittoon johtava siirto on joko liikkua neljä
-askelta vasemmalle tai kaksi askelta ylöspäin.
+Thus, a state in the maze game
+corresponds to a heap in the nim game.
+For example, the Grundy number for
+the lower-right square is 2,
+so it is a winning state.
+We can reach a losing state and
+win the game by moving
+either four steps left or
+two steps up.
 
-Huomaa, että toisin kuin alkuperäisessä nim-pelissä,
-tilasta saattaa päästä toiseen tilaan,
-jonka Grundy-luku on suurempi.
-Vastustaja voi kuitenkin aina peruuttaa
-tällaisen siirron niin,
-että Grundy-luku palautuu samaksi.
+Note that unlike in the original nim game,
+it may be possible to move to a state whose
+Grundy number is larger than the Grundy number
+of the current state.
+However, the opponent can always choose a move
+that cancels such a move, so it is not possible
+to escape from a losing state.
 
-\subsubsection{Alipelit}
+\subsubsection{Subgames}
 
-Oletetaan seuraavaksi, että peli muodostuu
-alipeleistä ja jokaisella vuorolla
-pelaaja valitsee jonkin alipeleistä ja
-tekee siirron siinä.
-Peli päättyy, kun missään alipelissä ei
-pysty tekemään siirtoa.
+Next we will assume that the game consists
+of subgames, and on each turn, the player
+first chooses a subgame and then a move in the subgame.
+The game ends when it's not possible to make any move
+in any subgame.
 
-Nyt pelin tilan Grundy-luku on alipelien
-Grundy-lukujen nim-summa.
-Peliä pystyy pelaamaan nim-pelin
-tapaan selvittämällä kaikkien alipelien Grundy-luvut
-ja laskemalla niiden nim-summa.
+In this case, the Grundy number of a game
+is the nim sum of the Grundy numbers of the subgames.
+The game can be played like a nim game by calculating
+all Grundy numbers for subgames, and then their nim sum.
 
 ~\\
 \noindent
-Tarkastellaan esimerkkinä kolmen sokkelon peliä.
-Tässä pelissä pelaaja valitsee joka siirrolla
-yhden sokkeloista ja siirtää siinä olevaa hahmoa.
-Pelin aloitustilanne voi olla seuraavanlainen:
+As an example, let's consider a game that consists
+of three mazes.
+In thsi game, on each turn the player chooses one
+of the mazes and then moves the figure in the maze.
+Assume that the initial state of the game is as follows:
 
 \begin{center}
 \begin{tabular}{ccc}
@@ -620,7 +625,7 @@ Pelin aloitustilanne voi olla seuraavanlainen:
 \end{tabular}
 \end{center}
 
-Sokkeloiden ruutujen Grundy-luvut ovat:
+The Grundy numbers for the mazes are as follows:
 
 \begin{center}
 \begin{tabular}{ccc}
@@ -746,47 +751,49 @@ Sokkeloiden ruutujen Grundy-luvut ovat:
 \end{tabular}
 \end{center}
 
-Aloitustilanteessa Grundy-lukujen nim-summa on
-$2 \oplus 3 \oplus 3 = 2$, joten
-aloittaja pystyy voittamaan pelin.
-Voittoon johtava siirto on liikkua vasemmassa sokkelossa
-2 askelta ylöspäin, jolloin nim-summaksi
-tulee $0 \oplus 3 \oplus 3 = 0$.
+In the initial state, the nim sum of the Grundy numbers
+is $2 \oplus 3 \oplus 3 = 2$, so
+the first player can win the game.
+An optimal move is to move two steps up
+in the left maze, which produces the nim sum
+$0 \oplus 3 \oplus 3 = 0$.
 
-\subsubsection{Jakautuminen}
+\subsubsection{Grundy's game}
 
-Joskus siirto pelissä jakaa pelin alipeleihin,
-jotka ovat toisistaan riippumattomia.
-Tällöin pelin Grundy-luku on
+Sometimes a move in the game divides the game
+into subgames that are independent of each other.
+In this case, the Grundy number of the game is
 
 \[\textrm{mex}(\{g_1, g_2, \ldots, g_n \}),\]
-missä $n$ on siirtojen määrä ja
+where $n$ is the number of possible moves and
 \[g_k = a_{k,1} \oplus a_{k,2} \oplus \ldots \oplus a_{k,m},\]
-missä siirron $k$ tuottamien alipelien
-Grundy-luvut ovat $a_{k,1},a_{k,2},\ldots,a_{k,m}$.
+where move $k$ generates subgames with
+Grundy numbers $a_{k,1},a_{k,2},\ldots,a_{k,m}$.
 
-\index{Grundyn peli@Grundyn peli}
+\index{Grundy's game}
 
-Esimerkki tällaisesta pelistä on \key{Grundyn peli}.
-Pelin alkutilanteessa on yksittäinen kasa, jossa on $n$ tikkua.
-Joka vuorolla pelaaja valitsee jonkin kasan
-ja jakaa sen kahdeksi epätyhjäksi kasaksi
-niin, että kasoissa on eri määrä tikkuja.
-Pelin voittaja on se, joka tekee viimeisen jaon.
+An example of such a game is \key{Grundy's game}.
+Initially, there is a single heap that contains $n$ sticks.
+On each turn, the player chooses a heap and divides
+it into two nonempty heaps such that the numbers of
+sticks in the heaps are different.
+The player who makes the last move wins the game.
 
-Merkitään $f(n)$ Grundy-lukua kasalle,
-jossa on $n$ tikkua.
-Grundy-luku muodostuu käymällä läpi tavat
-jakaa kasa kahdeksi kasaksi.
-Esimerkiksi tapauksessa $n=8$ mahdolliset jakotavat
-ovat $1+7$, $2+6$ ja $3+5$, joten
+Let $f(n)$ be the Grundy number of a heap
+that contains $n$ sticks.
+The Grundy number can be calculated by going
+through all ways to divide the heap into
+two heaps.
+For example, when $n=8$, the possibilities
+are $1+7$, $2+6$ ja $3+5$, so
 \[f(8)=\textrm{mex}(\{f(1) \oplus f(7), f(2) \oplus f(6), f(3) \oplus f(5)\}).\]
 
-Tässä pelissä luvun $f(n)$ laskeminen vaatii lukujen
-$f(1),\ldots,f(n-1)$ laskemista.
-Pohjatapauksina $f(1)=f(2)=0$, koska 1 ja 2 tikun
-kasaa ei ole mahdollista jakaa mitenkään.
-Ensimmäiset Grundy-luvut ovat:
+In this game, the value $f(n)$ is based on values
+$f(1),\ldots,f(n-1)$.
+The base cases are $f(1)=f(2)=0$,
+because it is not possible to divide heaps
+of 1 and 2 sticks.
+The first Grundy numbers are:
 \[
 \begin{array}{lcl}
 f(1) & = & 0 \\
@@ -799,8 +806,8 @@ f(7) & = & 0 \\
 f(8) & = & 2 \\
 \end{array}
 \]
-Tapauksen $n=8$ Grundy-luku on 2, joten peli on mahdollista
-voittaa.
-Voittosiirto on muodostaa kasat $1+7$,
-koska $f(1) \oplus f(7) = 0$.
+The Grundy number for $n=8$ is 2,
+so it's possible to win the game.
+The winning move is to create heaps
+$1+7$, because $f(1) \oplus f(7) = 0$.
 
