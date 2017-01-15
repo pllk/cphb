@@ -484,115 +484,114 @@ By calculating matrix powers efficiently,
 we can calculate in $O(n^3 \log m)$ time
 the distribution after $m$ steps.
 
-\section{Satunnaisalgoritmit}
+\section{Randomized algorithms}
 
-\index{satunnaisalgoritmi@satunnaisalgoritmi}
+\index{randomized algorithm}
 
-Joskus tehtävässä voi hyödyntää satunnaisuutta,
-vaikka tehtävä ei itsessään liittyisi todennäköisyyteen.
-\key{Satunnaisalgoritmi} on algoritmi, jonka toiminta
-perustuu satunnaisuuteen.
+Sometimes we can use randomness for solving a problem,
+even if the problem is not related to random events.
+A \key{randomized algorithm} is an algorithm that
+is based on randomness.
 
-\index{Monte Carlo -algoritmi}
+\index{Monte Carlo algorithm}
 
-\key{Monte Carlo -algoritmi} on satunnaisalgoritmi,
-joka saattaa tuottaa joskus väärän tuloksen.
-Jotta algoritmi olisi käyttökelpoinen,
-väärän vastauksen todennäköisyyden tulee olla pieni.
+A \key{Monte Carlo algorithm} is a randomized algorithm
+that may sometimes give a wrong answer.
+For such an algorithm to be useful,
+the probability of a wrong answer should be small.
 
-\index{Las Vegas -algoritmi}
+\index{Las Vegas algorithm}
 
-\key{Las Vegas -algoritmi} on satunnaisalgoritmi,
-joka tuottaa aina oikean tuloksen mutta jonka
-suoritusaika vaihtelee satunnaisesti.
-Tavoitteena on, että algoritmi toimisi nopeasti
-suurella todennäköisyydellä.
+A \key{Las Vegas algorithm} is a randomized algorithm
+that always gives the correct answer,
+but its running time varies randomly.
+The goal is to design an algorithm that is
+efficient with high probability.
 
-Tutustumme seuraavaksi kolmeen esimerkkitehtävään,
-jotka voi ratkaista satunnaisuuden avulla.
+Next we will go through three example problems that
+can be solved using randomness.
 
-\subsubsection{Järjestystunnusluku}
+\subsubsection{Order statistics}
 
-\index{järjestystunnusluku}
+\index{order statistic}
 
-Taulukon $k$. \key{järjestystunnusluku}
-on kohdassa $k$ oleva alkio,
-kun alkiot järjestetään
-pienimmästä suurimpaan.
-On helppoa laskea mikä tahansa
-järjestystunnusluku ajassa $O(n \log n)$
-järjestämällä taulukko,
-mutta onko oikeastaan tarpeen järjestää koko taulukkoa?
+The $kth$ \key{order statistic} of an array
+is the element at index $k$ after sorting
+the array in increasing order.
+It's easy to calculate any order statistic
+in $O(n \log n)$ time by sorting the array,
+but is it really needed to sort the whole array
+to just find one element?
 
-Osoittautuu, että järjestystunnusluvun
-voi etsiä satunnaisalgoritmilla ilman taulukon
-järjestämistä.
-Algoritmi on Las Vegas -tyyppinen:
-sen aikavaativuus on yleensä $O(n)$,
-mutta pahimmassa tapauksessa $O(n^2)$.
+It turns out that we can find order statistics
+using a randomized algorithm without sorting the array.
+The algorithm is an Las Vegas algorithm:
+its running time is usually $O(n)$,
+but $O(n^2)$ in the worst case.
 
-Algoritmi valitsee taulukosta satunnaisen alkion $x$
-ja siirtää $x$:ää pienemmät alkiot
-taulukon vasempaan osaan ja loput alkiot
-taulukon oikeaan osaan.
-Tämä vie aikaa $O(n)$, kun taulukossa on $n$ alkiota.
-Oletetaan, että vasemmassa osassa on $a$
-alkiota ja oikeassa osassa on $b$ alkiota.
-Nyt jos $a=k-1$, alkio $x$ on haluttu alkio.
-Jos $a>k-1$, etsitään rekursiivisesti
-vasemmasta osasta, mikä on kohdassa $k$ oleva alkio.
-Jos taas $a<k-1$, etsitään rekursiivisesti
-oikeasta osasta, mikä on kohdassa $k-a-1$ oleva alkio.
-Haku jatkuu vastaavalla tavalla rekursiivisesti,
-kunnes haluttu alkio on löytynyt.
+The algorithm chooses a random element $x$
+in the array, and moves elements smaller than $x$
+to the left part of the array,
+and the other elements to the right part of the array.
+This takes $O(n)$ time when there are $n$ elements.
+Assume that the left part contains $a$ elements
+and the right part contains $b$ elements.
+If $a=k-1$, element $x$ is the $k$th order statistic.
+Otherwise, if $a>k-1$, we recursively find the $k$th order
+statistic for the left part,
+and if $a<k-1$, we recursively find the $r$th order
+statistic for the right part where $r=k-a-1$.
+The search continues like this, until the element
+has been found.
 
-Kun alkiot $x$ valitaan satunnaisesti,
-taulukon koko suunnilleen puolittuu
-joka vaiheessa, joten kohdassa $k$ olevan
-alkion etsiminen vie aikaa
+When each element $x$ is randomly chosen,
+the size of the array about halves at each step,
+so the time complexity for
+finding the $k$th order statistic is about
 \[n+n/2+n/4+n/8+\cdots=O(n).\]
 
-Algoritmin pahin tapaus on silti $O(n^2)$,
-koska on mahdollista,
-että $x$ valitaan sattumalta aina niin,
-että se on taulukon pienin alkio.
-Silloin taulukko pienenee joka vaiheessa
-vain yhden alkion verran.
-Tämän todennäköisyys on kuitenkin erittäin pieni,
-eikä näin tapahdu käytännössä.
+The worst case for the algorithm is still $O(n^2)$,
+because it is possible that $x$ is always chosen
+in such a way that it's the smallest or largest
+element in the array.
+In this case, the size of the array decreases
+only by one at each step.
+However, the probability for this is so small
+that this never happens in practice.
 
-\subsubsection{Matriisitulon tarkastaminen}
+\subsubsection{Verifying matrix multiplication}
 
-\index{matriisitulo@matriisitulo}
+\index{matrix multiplication}
 
-Seuraava tehtävämme on \emph{tarkastaa},
-päteekö matriisitulo $AB=C$, kun $A$, $B$ ja $C$
-ovat $n \times n$ -kokoisia matriiseja.
-Tehtävän voi ratkaista laskemalla matriisitulon
-$AB$ (perusalgoritmilla ajassa $O(n^3)$), mutta voisi toivoa,
-että ratkaisun tarkastaminen olisi helpompaa
-kuin sen laskeminen alusta alkaen uudestaan.
+Our next problem is to \emph{verify}
+if $AB=C$ holds when $A$, $B$ and $C$
+are matrices of size $n \times n$.
+Of course, we can solve the problem
+by calculating the product $AB$ again
+(in $O(n^3)$ time using the basic algorithm),
+but one could hope that verifying the
+answer would by easier than to calculate it again.
 
-Osoittautuu, että tehtävän voi ratkaista
-Monte Carlo -algoritmilla,
-jonka aikavaativuus on vain $O(n^2)$.
-Idea on yksinkertainen: valitaan satunnainen
-$n \times 1$ -matriisi $X$ ja lasketaan
-matriisit $ABX$ ja $CX$.
-Jos $ABX=CX$, ilmoitetaan, että $AB=C$,
-ja muuten ilmoitetaan, että $AB \neq C$.
+It turns out that we can solve the problem
+using a Monte Carlo algorithm whose
+time complexity is only $O(n^2)$.
+The idea is simple: we choose a random vector
+$X$ of $n$ elements, and calculate the matrices
+$ABX$ and $CX$. If $ABX=CX$, we report that $AB=C$,
+and otherwise we report that $AB \neq C$.
 
-Algoritmin aikavaativuus on $O(n^2)$,
-koska matriisien $ABX$ ja $CX$ laskeminen
-vie aikaa $O(n^2)$.
-Matriisin $ABX$ tapauksessa laskennan
-voi suorittaa osissa $A(BX)$, jolloin riittää
-kertoa kahdesti $n \times n$- ja $n \times 1$-kokoiset
-matriisit.
+The time complexity of the algorithm is
+$O(n^2)$, because we can calculate the matrices
+$ABX$ and $CX$ in $O(n^2)$ time.
+We can calculate the matrix $ABX$ efficiently
+using the representation $A(BX)$, so only two
+multiplications of $n \times n$ and $n \times 1$
+size matrices are needed.
 
-Algoritmin heikkoutena on, että on pieni mahdollisuus,
-että algoritmi erehtyy, kun se ilmoittaa, että $AB=C$.
-Esimerkiksi 
+The weakness in the algorithm is
+that there is a small chance that the algorithm
+makes a mistake when it reports that $AB=C$.
+For example, 
 \[
  \begin{bmatrix}
   2 & 4 \\
@@ -604,7 +603,7 @@ Esimerkiksi
   7 & 4 \\
  \end{bmatrix},
 \]
-mutta
+but
 \[
  \begin{bmatrix}
   2 & 4 \\
@@ -624,21 +623,22 @@ mutta
   3 \\
  \end{bmatrix}.
 \]
-Käytännössä erehtymisen todennäköisyys on kuitenkin
-pieni ja todennäköisyyttä voi pienentää lisää
-tekemällä tarkastuksen usealla
-satunnaisella matriisilla $X$ ennen vastauksen
-$AB=C$ ilmoittamista.
+However, in practice, the probability that the
+algorithm makes a mistake is small,
+and we can decrease the probability by
+verifying the result using multiple random vectors $X$
+before reporting the answer $AB=C$.
 
-\subsubsection{Verkon värittäminen}
+\subsubsection{Graph coloring}
 
-\index{vxritys@väritys}
+\index{coloring}
 
-Annettuna on verkko, jossa on $n$ solmua ja $m$ kaarta.
-Tehtävänä on etsiä tapa värittää verkon solmut kahdella värillä
-niin, että ainakin $m/2$ kaaressa
-päätesolmut ovat eri väriset.
-Esimerkiksi verkossa
+Given a graph that contains $n$ nodes and $m$ edges,
+our task is to find a way to color the nodes
+of the graph using two colors so that
+for at least $m/2$ edges, the end nodes 
+have different colors.
+For example, in the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -656,7 +656,7 @@ Esimerkiksi verkossa
 \path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-yksi kelvollinen väritys on seuraava:
+a valid coloring is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle, fill=blue!40] (1) at (1,3) {$1$};
@@ -674,20 +674,21 @@ yksi kelvollinen väritys on seuraava:
 \path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-Yllä olevassa verkossa on 7 kaarta ja niistä 5:ssä
-päätesolmut ovat eri väriset,
-joten väritys on kelvollinen.
+The above graph contains 7 edges, and for 5 of them,
+the end nodes have different colors,
+so the coloring is valid.
 
-Tehtävä on mahdollista ratkaista Las Vegas -algoritmilla
-muodostamalla satunnaisia värityksiä niin kauan,
-kunnes syntyy kelvollinen väritys.
-Satunnaisessa värityksessä jokaisen solmun väri on
-valittu toisistaan riippumatta niin,
-että kummankin värin todennäköisyys on $1/2$.
+The problem can be solved using a Las Vegas algorithm
+that generates random colorings until a valid coloring
+has been found.
+In a random coloring, the color of each node is
+independently chosen so that the probability of
+both colors is $1/2$.
 
-Satunnaisessa värityksessä todennäköisyys, että yksittäisen kaaren päätesolmut
-ovat eri väriset on $1/2$. Niinpä odotusarvo, monessako kaaressa
-päätesolmut ovat eri väriset, on $1/2 \cdot m = m/2$.
-Koska satunnainen väritys on odotusarvoisesti kelvollinen,
-jokin kelvollinen väritys löytyy käytännössä nopeasti.
+In a random coloring, the probability that the end nodes
+of a single edge have different colors is $1/2$.
+Hence, the expected number of edges whose end nodes
+have different colors is $1/2 \cdot m = m/2$.
+Since it is excepted that a random coloring is valid,
+we'll find a valid coloring quickly in practice.
 
