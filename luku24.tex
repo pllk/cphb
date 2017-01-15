@@ -1,211 +1,208 @@
 \chapter{Probability}
 
-\index{todennxkzisyys@todennäköisyys}
+\index{probability}
 
-\key{Todennäköisyys} on luku väliltä $0 \ldots 1$,
-joka kuvaa sitä, miten todennäköinen jokin
-tapahtuma on.
-Varman tapahtuman todennäköisyys on 1,
-ja mahdottoman tapahtuman todennäköisyys on 0.
+A \key{probability} is a number between $0 \ldots 1$
+that indicates how probable an event is.
+If an event is certain to happen,
+its probability is 1,
+and if an event is impossible,
+its probability is 0.
 
-Tyypillinen esimerkki todennäköisyydestä
-on nopan heitto, jossa tuloksena
-on silmäluku väliltä $1,2,\ldots,6$.
-Yleensä oletetaan, että kunkin silmäluvun
-todennäköisyys on $1/6$
-eli kaikki tulokset ovat yhtä todennäköisiä.
+A typical example is throwing a dice,
+where the result is an integer between
+$1,2,\ldots,6$.
+Usually it is assumed that the probability
+for each result is $1/6$,
+so all results have the same probability.
 
-Tapahtuman todennäköisyyttä merkitään $P(\cdots)$,
-jossa kolmen pisteen tilalla on tapahtuman kuvaus.
-Esimerkiksi nopan heitossa
-$P(\textrm{''silmäluku on 4''})=1/6$,
-$P(\textrm{''silmäluku ei ole 6''})=5/6$
-ja $P(\textrm{''silmäluku on parillinen''})=1/2$.
+The probability of an event is denoted $P(\cdots)$
+where the three dots are
+a description of the event.
+For example, when throwing a dice,
+$P(\textrm{''the result is 4''})=1/6$,
+$P(\textrm{''the result is not 6''})=5/6$
+and $P(\textrm{''the result is even''})=1/2$.
 
-\section{Laskutavat}
+\section{Calculation}
 
-Todennäköisyyden laskemiseen on kaksi
-tavallista laskutapaa:
-kombinatorinen laskeminen ja prosessin simulointi.
-Lasketaan esimerkkinä, mikä on todennäköisyys sille,
-että kun sekoitetusta korttipakasta nostetaan
-kolme ylintä korttia, jokaisen kortin arvo on sama
-(esimerkiksi ristikasi, herttakasi ja patakasi).
+There are two standard ways to calculate
+probabilities: combinatorial counting
+and simulating a process.
+As an example, let's calculate the probability
+of drawing three cards with the same value
+from a shuffled deck of cards
+(for example, eight of spades,
+eight of clubs and eight of diamonds).
 
-\subsubsection*{Laskutapa 1}
+\subsubsection*{Method 1}
 
-Kombinatorisessa laskutavassa
-todennäköisyyden kaava on
+We can calculate the probability using
+the formula
 
-\[\frac{\textrm{halutut tapaukset}}{\textrm{kaikki tapaukset}}.\]
+\[\frac{\textrm{desired cases}}{\textrm{all cases}}.\]
 
-Tässä tehtävässä halutut tapaukset ovat niitä,
-joissa jokaisen kolmen kortin arvo on sama.
-Tällaisia tapauksia on $13 {4 \choose 3}$,
-koska on 13 vaihtoehtoa, mikä on kortin arvo,
-ja ${4 \choose 3}$ tapaa valita 3 maata 4 mahdollisesta.
+In this problem, the desired cases are those
+in which the value of each card is the same.
+There are $13 {4 \choose 3}$ such cases,
+because there are $13$ possibilities for the
+value of the cards and ${4 \choose 3}$ ways to
+choose $3$ suits from $4$ possible suits.
 
-Kaikkien tapausten määrä on ${52 \choose 3}$,
-koska 52 kortista valitaan 3 korttia.
-Niinpä tapahtuman todennäköisyys on
+The number of all cases is ${52 \choose 3}$,
+because we choose 3 cards from 52 cards.
+Thus, the probability of the event is
 
 \[\frac{13 {4 \choose 3}}{{52 \choose 3}} = \frac{1}{425}.\]
 
-\subsubsection*{Laskutapa 2}
+\subsubsection*{Method 2}
 
-Toinen tapa laskea todennäköisyys on simuloida prosessia,
-jossa tapahtuma syntyy.
-Tässä tapauksessa pakasta nostetaan kolme korttia,
-joten prosessissa on kolme vaihetta.
-Vaatimuksena on, että prosessin jokainen vaihe onnistuu.
+Another way to calculate the probability is
+to simulate the process that generates the event.
+In this case, we draw three cards, so the process
+consists of three steps.
+We require that each step in the process is successful.
 
-Ensimmäisen kortin nosto onnistuu varmasti,
-koska mikä tahansa kortti kelpaa.
-Tämän jälkeen kahden seuraavan kortin
-arvon tulee olla sama.
-Toisen kortin nostossa kortteja on jäljellä 51
-ja niistä 3 kelpaa, joten todennäköisyys on $3/51$.
-Vastaavasti kolmannen kortin nostossa
-todennäköisyys on $2/50$.
+Drawing the first card certainly succeeds,
+because any card will do.
+After this, the value of the cards has been fixed.
+The second step succeeds with probability $3/51$,
+because there are 51 cards left and 3 of them
+have the same value as the first card.
+Finally, the third step succeeds with probability $2/50$.
 
-Todennäköisyys koko prosessin onnistumiselle on
+The probability that the entire process succeeds is
 
 \[1 \cdot \frac{3}{51} \cdot \frac{2}{50} = \frac{1}{425}.\]
 
-\section{Tapahtumat}
+\section{Events}
 
-Todennäköisyyden tapahtuma
-voidaan esittää joukkona
+An event in probability can be represented as a set
 \[A \subset X,\]
-missä $X$ sisältää kaikki mahdolliset alkeistapaukset
-ja $A$ on jokin alkeistapausten osajoukko.
-Esimerkiksi nopanheitossa alkeistapaukset ovat
+where $X$ contains all possible outcomes,
+and $A$ is a subset of outcomes.
+For example, when drawing a dice, the outcomes are
 \[X = \{x_1,x_2,x_3,x_4,x_5,x_6\},\]
-missä $x_k$ tarkoittaa silmälukua $k$.
-Nyt esimerkiksi tapahtumaa ''silmäluku on parillinen''
-vastaa joukko
+where $x_k$ means the result $k$.
+Now, for example, the event ''the result is even''
+corresponds to the set
 \[A = \{x_2,x_4,x_6\}.\]
 
-Jokaista alkeistapausta $x$
-vastaa todennäköisyys $p(x)$.
-Tämän ansiosta joukkoa $A$ vastaavan tapahtuman
-todennäköisyys $P(A)$ voidaan
-laskea alkeistapausten todennäköisyyksien
-summana kaavalla
+Each outcome $x$ is assigned a probability $p(x)$.
+Furthermore, the probability $P(A)$ of an event
+that corresponds to a set $A$ can be calcuted as a sum
+of probabilities of outcomes using the formula
 \[P(A) = \sum_{x \in A} p(x).\]
-Esimerkiksi nopanheitossa $p(x)=1/6$
-jokaiselle alkeistapaukselle $x$, joten
-tapahtuman ''silmäluku on parillinen''
-todennäköisyys on
+For example, when throwing a dice,
+$p(x)=1/6$ for each outcome $x$,
+so the probability for the event
+''the result is even'' is
 \[p(x_2)+p(x_4)+p(x_6)=1/2.\]
 
-Alkeistapahtumat tulee aina valita niin,
-että kaikkien alkeistapausten
-todennäköisyyksien summa on 1 eli $P(X)=1$.
+The total probability of the outcomes in $X$ must
+be 1, i.e., $P(X)=1$.
 
-Koska todennäköisyyden tapahtumat ovat joukkoja,
-niihin voi soveltaa jouk\-ko-opin operaatioita:
+Since the events in probability are sets,
+we can manipulate them using standard set operations:
 
 \begin{itemize}
-\item \key{Komplementti} $\bar A$ tarkoittaa
-tapahtumaa ''$A$ ei tapahdu''. 
-Esimerkiksi nopanheitossa tapahtuman
-$A=\{x_2,x_4,x_6\}$ komplementti on
+\item The \key{complement} $\bar A$ means
+''$A$ doesn't happen''.
+For example, when throwing a dice, 
+the complement of $A=\{x_2,x_4,x_6\}$ is
 $\bar A = \{x_1,x_3,x_5\}$.
-\item \key{Yhdiste} $A \cup B$ tarkoittaa
-tapahtumaa ''$A$ tai $B$ tapahtuu''.
-Esimerkiksi tapahtumien $A=\{x_2,x_5\}$
-ja $B=\{x_4,x_5,x_6\}$ yhdiste on
+\item The \key{union} $A \cup B$ means
+''$A$ or $B$ happen''.
+For example, the union of
+$A=\{x_2,x_5\}$
+and $B=\{x_4,x_5,x_6\}$ is
 $A \cup B = \{x_2,x_4,x_5,x_6\}$.
-\item \key{Leikkaus} $A \cap B$ tarkoittaa
-tapahtumaa ''$A$ ja $B$ tapahtuvat''.
-Esimerkiksi tapahtumien $A=\{x_2,x_5\}$
-ja $B=\{x_4,x_5,x_6\}$ leikkaus on
+\item The \key{intersection} $A \cap B$ means
+''$A$ and $B$ happen''.
+For example, the intersection of
+$A=\{x_2,x_5\}$ and $B=\{x_4,x_5,x_6\}$ is
 $A \cap B = \{x_5\}$.
 \end{itemize}
 
-\subsubsection{Komplementti}
+\subsubsection{Complement}
 
-Komplementin $\bar A$
-todennäköisyys lasketaan kaavalla
+The probability of the complement
+$\bar A$ is calculated using the formula
 \[P(\bar A)=1-P(A).\]
 
-Joskus tehtävän ratkaisu on kätevää
-laskea komplementin kautta
-miettimällä tilannetta käänteisesti.
-Esimerkiksi todennäköisyys saada
-silmäluku 6 ainakin kerran,
-kun noppaa heitetään kymmenen kertaa, on
+Sometimes, we can solve a problem easily
+using complements by solving an opposite problem.
+For example, the probability of getting
+at least one six when throwing a dice ten times is
 \[1-(5/6)^{10}.\]
 
-Tässä $5/6$ on todennäköisyys,
-että yksittäisen heiton silmäluku ei ole 6,
-ja $(5/6)^{10}$ on todennäköisyys, että yksikään
-silmäluku ei ole 6 kymmenessä heitossa.
-Tämän komplementti tuottaa halutun tuloksen.
+Here $5/6$ is the probability that the result
+of a single throw is not six, and
+$(5/6)^{10}$ is the probability that none of
+the ten throws is a six.
+The complement of this is the answer for the problem.
 
-\subsubsection{Yhdiste}
+\subsubsection{Union}
 
-Yhdisteen $A \cup B$ todennäköisyys lasketaan kaavalla 
+The probability of the union $A \cup B$
+is calculated using the formula
 \[P(A \cup B)=P(A)+P(B)-P(A \cap B).\]
-Esimerkiksi nopanheitossa tapahtumien
-\[A=\textrm{''silmäluku on parillinen''}\]
-ja
-\[B=\textrm{''silmäluku on alle 4''}\]
-yhdisteen
-\[A \cup B=\textrm{''silmäluku on parillinen tai alle 4''}\]
-todennäköisyys on
+For example, when throwing a dice,
+the union of events
+\[A=\textrm{''the result is even''}\]
+and
+\[B=\textrm{''the result is less than 4''}\]
+is
+\[A \cup B=\textrm{''the result is even or less than 4''},\]
+and its probability is
 \[P(A \cup B) = P(A)+P(B)-P(A \cap B)=1/2+1/2-1/6=5/6.\]
 
-Jos tapahtumat $A$ ja $B$ ovat \key{erilliset} eli $A \cap B$ on tyhjä,
-yhdisteen $A \cup B$ todennäköisyys on yksinkertaisesti
+If the events $A$ and $B$ are \key{disjoint}, i.e.,
+$A \cap B$ is empty,
+the probability of the event $A \cup B$ is simply
 
 \[P(A \cup B)=P(A)+P(B).\]
 
-\subsubsection{Ehdollinen todennäköisyys}
+\subsubsection{Conditional probability}
 
-\index{ehdollinen todennxkzisyys@ehdollinen todennäköisyys}
+\index{conditional probability}
 
-\key{Ehdollinen todennäköisyys}
+The \key{conditional probability}
 \[P(A | B) = \frac{P(A \cap B)}{P(B)}\]
-on tapahtuman $A$ todennäköisyys
-olettaen, että tapahtuma $B$ tapahtuu.
-Tällöin todennäköisyyden laskennassa otetaan
-huomioon vain ne alkeistapaukset,
-jotka kuuluvat joukkoon $B$.
+is the probability of an event $A$
+assuming that an event happens.
+In this case, when calculating the
+probability of $A$, we only consider the outcomes
+that also belong to $B$.
 
-Äskeisen esimerkin joukkoja käyttäen
+Using the sets in the previous example,
 \[P(A | B)= 1/3,\]
-koska joukon $B$ alkeistapaukset ovat
-$\{x_1,x_2,x_3\}$ ja niistä yhdessä
-silmäluku on parillinen.
-Tämä on todennäköisyys saada parillinen silmäluku,
-jos tiedetään, että silmäluku on välillä 1--3.
+Because the outcomes in $B$ are
+$\{x_1,x_2,x_3\}$, and one of them is even.
+This is the probability of an even result
+if we know that the result is between $1 \ldots 3$.
 
-\subsubsection{Leikkaus}
+\subsubsection{Intersection}
 
-\index{riippumattomuus@riippumattomuus}
+\index{independence}
 
-Ehdollisen todennäköisyyden avulla
-leikkauksen $A \cap B$ todennäköisyys
-voidaan laskea kaavalla
+Using conditional probability,
+the probability of the intersection
+$A \cap B$ can be calculated using the formula
 \[P(A \cap B)=P(A)P(B|A).\]
-Tapahtumat $A$ ja $B$ ovat \key{riippumattomat}, jos
-\[P(A|B)=P(A) \hspace{10px}\textrm{ja}\hspace{10px} P(B|A)=P(B),\]
-jolloin $B$:n tapahtuminen ei vaikuta $A$:n
-todennäköisyyteen ja päinvastoin.
-Tässä tapauksessa leikkauksen
-todennäköisyys on
+Events $A$ and $B$ are \key{independent} if
+\[P(A|B)=P(A) \hspace{10px}\textrm{and}\hspace{10px} P(B|A)=P(B),\]
+which means that the fact that $B$ happens doesn't
+change the probability of $A$, and vice versa.
+In this case, the probability of the intersection is
 \[P(A \cap B)=P(A)P(B).\]
-Esimerkiksi pelikortin nostamisessa
-tapahtumat
-\[A = \textrm{''kortin maa on risti''}\]
-ja
-\[B = \textrm{''kortin arvo on 4''}\]
-ovat riippumattomat.
-Niinpä tapahtuman
-\[A \cap B = \textrm{''kortti on ristinelonen''}\]
-todennäköisyys on
+For example, when drawing a card from a deck, the events
+\[A = \textrm{''the suit is clubs''}\]
+and
+\[B = \textrm{''the value is four''}\]
+are independent. Hence the event
+\[A \cap B = \textrm{''the card is the four of clubs''}\]
+happens with probability
 \[P(A \cap B)=P(A)P(B)=1/4 \cdot 1/13 = 1/52.\]
 
 \section{Satunnaismuuttuja}
