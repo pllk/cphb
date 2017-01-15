@@ -1,92 +1,101 @@
 \chapter{Game theory}
 
-Tässä luvussa keskitymme kahden pelaajan peleihin,
-joissa molemmat pelaajat tekevät
-samanlaisia siirtoja eikä pelissä ole satunnaisuutta.
-Tavoitteemme on etsiä strategia, jota käyttäen
-pelaaja pystyy voittamaan pelin toisen pelaajan
-toimista riippumatta, jos tämä on mahdollista.
+In this chapter, we will focus on games where
+two players make alternate moves and that 
+do not contain random elements.
+Our goal is to find a strategy that we can
+follow to win the game
+no matter what the opponent does,
+if such a strategy exists.
 
-Osoittautuu, että kaikki tällaiset pelit ovat
-pohjimmiltaan samanlaisia ja niiden analyysi on
-mahdollista \key{nim-teorian} avulla.
-Perehdymme aluksi yksinkertaisiin tikkupeleihin,
-joissa pelaajat poistavat tikkuja kasoista,
-ja yleistämme sitten näiden pelien teorian kaikkiin peleihin.
+It turns out that there is a general strategy
+for all such games,
+and we can analyze the games using the \key{nim theory}.
+First, we analyze simple games where
+players remove sticks from heaps,
+and after this, we generalize the strategy
+for those games to all other games.
 
-\section{Pelin tilat}
+\section{Game states}
 
-Tarkastellaan peliä, jossa kasassa on $n$ tikkua.
-Pelaajat $A$ ja $B$ siirtävät vuorotellen ja
-pelaaja $A$ aloittaa.
-Jokaisella siirrolla pelaajan tulee poistaa
-1, 2 tai 3 tikkua kasasta.
-Pelin voittaa se pelaaja, joka poistaa viimeisen tikun.
+Let's consider a game where there is initially
+a heap of $n$ sticks.
+Players $A$ and $B$ move alternatively,
+and player $A$ begins.
+On each move, the player has to remove
+1, 2 or 3 sticks from the heap.
+The player who removes the last stick wins.
 
-Esimerkiksi jos $n=10$, peli saattaa edetä seuraavasti:
+For example, if $n=10$, the game may proceed as follows:
 \begin{enumerate}[noitemsep]
-\item Pelaaja $A$ poistaa 2 tikkua (jäljellä 8 tikkua).
-\item Pelaaja $B$ poistaa 3 tikkua (jäljellä 5 tikkua).
-\item Pelaaja $A$ poistaa 1 tikun (jäljellä 4 tikkua).
-\item Pelaaja $B$ poistaa 2 tikkua (jäljellä 2 tikkua).
-\item Pelaaja $A$ poistaa 2 tikkua ja voittaa.
+\item Player $A$ removes 2 sticks (8 sticks left).
+\item Player $B$ removes 3 sticks (5 sticks left).
+\item Player $A$ removes 1 stick (4 sticks left).
+\item Player $B$ removes 2 sticks (2 sticks left).
+\item Player $A$ removes 2 sticks and wins.
 \end{enumerate}
-Tämä peli muodostuu tiloista $0,1,2,\ldots,n$,
-missä tilan numero vastaa sitä, montako tikkua
-kasassa on jäljellä.
-Tietyssä tilassa olevan pelaajan valittavana on,
-montako tikkua hän poistaa kasasta.
+This game consists of states $0,1,2,\ldots,n$,
+where the number of the state corresponds to
+the number of sticks left.
+The player must always choose how many sticks
+they will remove from the heap.
 
-\subsubsection{Voittotila ja häviötila}
+\subsubsection{Winning and losing states}
 
-\index{voittotila@voittotila}
-\index{hxviztila@häviötila}
+\index{winning state}
+\index{losing state}
 
-\key{Voittotila} on tila, jossa oleva pelaaja voittaa
-pelin varmasti, jos hän pelaa optimaalisesti.
-Vastaavasti \key{häviötila} on tila,
-jossa oleva pelaaja häviää varmasti, jos vastustaja
-pelaa optimaalisesti.
-Osoittautuu, että pelin tilat on mahdollista luokitella
-niin, että jokainen tila on joko voittotila tai häviötila.
+A \key{winning state} is a state where
+the player wins the game if they
+play optimally.
+Correspondingly, a \key{losing state} is a state
+where the player loses if the
+opponent plays optimally.
+It turns out that we can classify all states
+in a game so that each state is either
+a winning state or a losing state.
 
-Yllä olevassa pelissä tila 0 on selkeästi häviötila,
-koska siinä oleva pelaaja häviää pelin suoraan.
-Tilat 1, 2 ja 3 taas ovat voittotiloja,
-koska niissä oleva pelaaja voi poistaa
-1, 2 tai 3 tikkua ja voittaa pelin.
-Vastaavasti tila 4 on häviötila, koska mikä tahansa
-siirto johtaa toisen pelaajan voittoon.
+In the above game, state 0 is clearly a
+losing state, because the player can't make
+any moves.
+States 1, 2 and 3 are winning states,
+because we can remove 1, 2 or 3 sticks
+and win the game.
+State 4, in turn, is a losing state,
+because any move leads to a state that
+is a winning state for the opponent.
 
-Yleisemmin voidaan havaita, että jos tilasta on
-jokin häviötilaan johtava siirto, niin tila on voittotila,
-ja muussa tapauksessa tila on häviötila.
-Tämän ansiosta voidaan luokitella kaikki pelin tilat
-alkaen varmoista häviötiloista, joista ei ole siirtoja
-mihinkään muihin tiloihin.
+More generally, if there is a move that leads
+from the current state to a losing state,
+the current state is a winning state,
+and otherwise it is a losing state.
+Using this observation, we can classify all states
+in a game beginning from losing states where
+there are no possible moves.
 
-Seuraavassa on pelin tilojen $0 \ldots 15$ luokittelu
-($V$ tarkoittaa voittotilaa ja $H$ tarkoittaa häviötilaa):
+The states $0 \ldots 15$ of the above game
+can be classified as follows
+($W$ means winning state, and $L$ means losing state):
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (16,1);
 
-\node at (0.5,0.5) {$H$};
-\node at (1.5,0.5) {$V$};
-\node at (2.5,0.5) {$V$};
-\node at (3.5,0.5) {$V$};
-\node at (4.5,0.5) {$H$};
-\node at (5.5,0.5) {$V$};
-\node at (6.5,0.5) {$V$};
-\node at (7.5,0.5) {$V$};
-\node at (8.5,0.5) {$H$};
-\node at (9.5,0.5) {$V$};
-\node at (10.5,0.5) {$V$};
-\node at (11.5,0.5) {$V$};
-\node at (12.5,0.5) {$H$};
-\node at (13.5,0.5) {$V$};
-\node at (14.5,0.5) {$V$};
-\node at (15.5,0.5) {$V$};
+\node at (0.5,0.5) {$L$};
+\node at (1.5,0.5) {$W$};
+\node at (2.5,0.5) {$W$};
+\node at (3.5,0.5) {$W$};
+\node at (4.5,0.5) {$L$};
+\node at (5.5,0.5) {$W$};
+\node at (6.5,0.5) {$W$};
+\node at (7.5,0.5) {$W$};
+\node at (8.5,0.5) {$L$};
+\node at (9.5,0.5) {$W$};
+\node at (10.5,0.5) {$W$};
+\node at (11.5,0.5) {$W$};
+\node at (12.5,0.5) {$L$};
+\node at (13.5,0.5) {$W$};
+\node at (14.5,0.5) {$W$};
+\node at (15.5,0.5) {$W$};
 
 \footnotesize
 \node at (0.5,1.4) {$0$};
@@ -108,32 +117,37 @@ Seuraavassa on pelin tilojen $0 \ldots 15$ luokittelu
 \end{tikzpicture}
 \end{center}
 
-Tämän pelin analyysi on yksinkertainen:
-tila $k$ on häviötila, jos $k$ on jaollinen 4:llä,
-ja muuten tila $k$ on voittotila.
-Optimaalinen tapa pelata peliä on
-valita aina sellainen siirto, että vastustajalle
-jää 4:llä jaollinen määrä tikkuja,
-kunnes lopulta tikut loppuvat ja vastustaja on hävinnyt.
+It's easy to analyze this game:
+a state $k$ is a losing state if $k$ is
+divisible by 4, and otherwise it
+is winning state.
+An optimal way to play the game is
+to always choose a move after which
+the number of sticks in the heap
+is divisible by 4.
+Finally, there are no sticks left and
+the opponent has lost.
 
-Tämä pelitapa edellyttää luonnollisesti sitä,
-että tikkujen määrä omalla siirrolla \emph{ei} ole
-4:llä jaollinen. Jos näin kuitenkin on, mitään ei ole
-tehtävissä vaan vastustaja voittaa
-pelin varmasti, jos hän pelaa optimaalisesti.
+Of course, this strategy requires that
+the number of sticks is \emph{not} divisible by 4
+when it is our move.
+If it is, there is nothing we can do,
+but the opponent will win the game if
+they play optimally.
 
-\subsubsection{Tilaverkko}
+\subsubsection{State graph}
 
-Tarkastellaan sitten toisenlaista tikkupeliä,
-jossa tilassa $k$ saa poistaa minkä tahansa
-määrän tikkuja $x$, kunhan $k$ on jaollinen $x$:llä
-ja $x$ on pienempi kuin $k$.
-Esimerkiksi tilassa 8 on sallittua poistaa
-1, 2 tai 4 tikkua, mutta tilassa 7
-ainoa mahdollinen siirto on poistaa 1 tikku.
+Let's now consider another stick game,
+where in state $k$, it is allowed to remove
+any number $x$ of sticks such that $x$
+is smaller than $x$ and divides $x$.
+For example, in state 8 we may remove
+1, 2 or 4 sticks, but in state 7 the only
+allowed move is to remove 1 stick.
 
-Seuraava kuva esittää pelin tilat $1 \ldots 9$ \key{tilaverkkona}, jossa solmut ovat pelin tiloja
-ja kaaret kuvaavat mahdollisia siirtoja tilojen välillä:
+The following picture shows the states
+$1 \ldots 9$ of the game as a \key{state graph},
+where nodes are states and edges are moves between them:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -164,23 +178,25 @@ ja kaaret kuvaavat mahdollisia siirtoja tilojen välillä:
 \end{tikzpicture}
 \end{center}
 
-Tämä peli päättyy aina tilaan 1, joka on häviötila,
-koska siinä ei voi tehdä mitään siirtoja.
-Pelin tilojen $1 \ldots 9$ luokittelu on seuraava:
+The final state in this game is always state 1,
+which is a losing state, because there are no
+valid moves.
+The classification of states $1 \ldots 9$
+is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (1,0) grid (10,1);
 
-\node at (1.5,0.5) {$H$};
-\node at (2.5,0.5) {$V$};
-\node at (3.5,0.5) {$H$};
-\node at (4.5,0.5) {$V$};
-\node at (5.5,0.5) {$H$};
-\node at (6.5,0.5) {$V$};
-\node at (7.5,0.5) {$H$};
-\node at (8.5,0.5) {$V$};
-\node at (9.5,0.5) {$H$};
+\node at (1.5,0.5) {$L$};
+\node at (2.5,0.5) {$W$};
+\node at (3.5,0.5) {$L$};
+\node at (4.5,0.5) {$W$};
+\node at (5.5,0.5) {$L$};
+\node at (6.5,0.5) {$W$};
+\node at (7.5,0.5) {$L$};
+\node at (8.5,0.5) {$W$};
+\node at (9.5,0.5) {$L$};
 
 \footnotesize
 \node at (1.5,1.4) {$1$};
@@ -195,84 +211,89 @@ Pelin tilojen $1 \ldots 9$ luokittelu on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Yllättävää kyllä, tässä pelissä kaikki
-parilliset tilat ovat voittotiloja ja
-kaikki parittomat tilat ovat häviötiloja.
+Surprisingly enough, in this game,
+all even-numbered states are winning states,
+and all odd-numbered states are losing states.
 
-\section{Nim-peli}
+\section{Nim game}
 
-\index{nim-peli}
+\index{nim game}
 
-\key{Nim-peli} on yksinkertainen peli,
-joka on tärkeässä asemassa peliteoriassa,
-koska monia pelejä voi pelata samalla
-strategialla kuin nim-peliä.
-Tutustumme aluksi nim-peliin ja yleistämme
-strategian sitten muihin peleihin.
+The \key{nim game} is a simple game that
+has an important role in game theory,
+because many games can be played using
+the same strategy.
+First, we focus on nim,
+and then we generalize the strategy
+to other games.
 
-Nim-pelissä on $n$ kasaa tikkuja,
-joista kussakin on tietty määrä tikkuja.
-Pelaajat poistavat kasoista tikkuja vuorotellen.
-Joka vuorolla pelaaja valitsee yhden kasan,
-jossa on vielä tikkuja,
-ja poistaa siitä minkä tahansa määrän tikkuja.
-Pelin voittaa se, joka poistaa viimeisen tikun.
+There are $n$ heaps in nim,
+and each heap contains some number of sticks.
+The players move alternatively,
+and on each turn, the player chooses
+a heap that still contains sticks
+and removes any number of sticks from it.
+The winner is the player who removes the last stick.
 
-Nim-pelin tila on muotoa $[x_1,x_2,\ldots,x_n]$,
-jossa $x_k$ on tikkujen määrä kasassa $k$.
-Esimerkiksi $[10,12,5]$ tarkoittaa peliä,
-jossa on kolme kasaa ja tikkujen määrät ovat 10, 12 ja 5.
-Tila $[0,0,\ldots,0]$ on häviötila,
-koska siitä ei voi poistaa mitään tikkua,
-ja peli päättyy aina tähän tilaan.
+The states in nim are of the form
+$[x_1,x_2,\ldots,x_n]$,
+where $x_k$ denotes the number of sticks in heap $k$.
+For example, $[10,12,5]$ is a game where
+there are three heaps with 10, 12 and 5 sticks.
+The state $[0,0,\ldots,0]$ is a losing state,
+because it's not possible to remove any sticks,
+and this is always the final state.
 
-\subsubsection{Analyysi}
-\index{nim-summa}
-Osoittautuu, että nim-pelin tilan luonteen
-kertoo \key{nim-summa} $x_1 \oplus x_2 \oplus \cdots \oplus x_n$,
-missä $\oplus$ tarkoittaa xor-operaatiota.
-Jos nim-summa on 0, tila on häviötila,
-ja muussa tapauksessa tila on voittotila.
-Esimerkiksi tilan $[10,12,5]$ nim-summa on
-$10 \oplus 12 \oplus 5 = 3$, joten tila on voittotila.
+\subsubsection{Analysis}
+\index{nim sum}
 
-Mutta miten nim-summa liittyy nim-peliin?
-Tämä selviää tutkimalla, miten nim-summa muuttuu,
-kun nim-pelin tila muuttuu.
+It turns out that we can easily find out
+the type of any nim state by calculating
+a \key{nim sum} $x_1 \oplus x_2 \oplus \cdots \oplus x_n$,
+where $\oplus$ is the xor operation.
+The states with nim sum 0 are losing states,
+and all other states are winning states.
+For example, the nim sum for
+$[10,12,5]$ is $10 \oplus 12 \oplus 5 = 3$,
+so the state is a winning state.
 
-~\\
-\noindent
-\textit{Häviötilat:}
-Pelin päätöstila $[0,0,\ldots,0]$ on häviötila,
-ja sen nim-summa on 0, kuten kuuluukin.
-Muissa häviötiloissa mikä tahansa siirto johtaa
-voittotilaan, koska yksi luvuista $x_k$ muuttuu
-ja samalla pelin nim-summa muuttuu
-eli siirron jälkeen nim-summasta tulee jokin muu kuin 0.
+But how is the nim sum related to the nim game?
+We can explain this by studying how the nim
+sum changes when the nim state changes.
 
 ~\\
 \noindent
-\textit{Voittotilat:}
-Voittotilasta pääsee häviötilaan muuttamalla
-jonkin kasan $k$ tikkujen määräksi $x_k \oplus s$,
-missä $s$ on pelin nim-summa.
-Vaatimuksena on, että $x_k \oplus s < x_k$,
-koska kasasta voi vain poistaa tikkuja.
-Sopiva kasa $x_k$ on sellainen,
-jossa on ykkösbitti samassa kohdassa kuin
-$s$:n vasemmanpuoleisin ykkösbitti.
+\textit{Losing states:}
+The final state $[0,0,\ldots,0]$ is a losing state,
+and its nim sum is 0, as expected.
+In other losing states, any move leads to
+a winning state, because when a single value $x_k$ changes,
+the nim sum also changes, so the nim sum
+is different from 0 after the move.
 
 ~\\
 \noindent
-Tarkastellaan esimerkkinä tilaa $[10,2,5]$.
-Tämä tila on voittotila,
-koska sen nim-summa on 3.
-Täytyy siis olla olemassa siirto,
-jolla tilasta pääsee häviötilaan.
-Selvitetään se seuraavaksi.
+\textit{Winning states:}
+We can move to a losing state if
+there is any heap $k$ for which $x_k \oplus s < x_k$.
+In this case, we can remove sticks from
+heap $k$ so that it will contain $x_k \oplus s$ sticks,
+which will lead to a losing state.
+There is always such a heap, where $x_k$
+has a one bit in position of the leftmost
+one bit in $s$.
+
+~\\
+\noindent
+As an example, let's consider the state $[10,2,5]$.
+This state is a winning state,
+because its nim sum is 3.
+Thus, there has to be a move which
+leads to a losing state.
+Next we will find out such a move.
 
 \begin{samepage}
-Pelin nim-summa muodostuu seuraavasti:
+The nim sum of the state is as follows:
 
 \begin{center}
 \begin{tabular}{r|r}
@@ -285,11 +306,10 @@ Pelin nim-summa muodostuu seuraavasti:
 \end{center}
 \end{samepage}
 
-Tässä tapauksessa
-10 tikun kasa on ainoa,
-jonka bittiesityksessä on ykkösbitti
-samassa kohdassa kuin 
-nim-summan vasemmanpuoleisin ykkösbitti:
+In this case, the heap with 10 sticks
+is the only heap that has a one bit
+in the position of the leftmost
+one bit in the nim sum:
 
 \begin{center}
 \begin{tabular}{r|r}
@@ -301,12 +321,11 @@ nim-summan vasemmanpuoleisin ykkösbitti:
 \end{tabular}
 \end{center}
 
-Kasan uudeksi sisällöksi täytyy saada
-$10 \oplus 3 = 9$ tikkua,
-mikä onnistuu poistamalla 1 tikku
-10 tikun kasasta.
-Tämän seurauksena tilaksi tulee $[9,12,5]$,
-joka on häviötila, kuten pitääkin:
+The new size of the heap has to be
+$10 \oplus 3 = 9$,
+so we will remove just one stick.
+After this, the state will be $[9,12,5]$,
+which is a losing state:
 
 \begin{center}
 \begin{tabular}{r|r}
@@ -318,31 +337,32 @@ joka on häviötila, kuten pitääkin:
 \end{tabular}
 \end{center}
 
-\subsubsection{Misääripeli}
+\subsubsection{Misère game}
 
-\index{misxxripeli@misääripeli}
+\index{misère game}
 
-\key{Misääripelissä} nim-pelin tavoite on käänteinen,
-eli pelin häviää se, joka poistaa viimeisen tikun.
-Osoittautuu, että misääripeliä pystyy pelaamaan lähes samalla
-strategialla kuin tavallista nim-peliä.
+In a \key{misère game}, the goal is opposite,
+so the player who removes the last stick
+loses the game.
+It turns out that a misère nim game can be
+optimally played almost like the standard nim game.
 
-Ideana on pelata misääripeliä aluksi kuin tavallista
-nim-peliä, mutta muuttaa strategiaa pelin
-lopussa. Käänne tapahtuu silloin, kun seuraavan
-siirron seurauksena kaikissa pelin kasoissa olisi 0 tai 1 tikkua.
+The idea is to first play the misère game
+like a standard game, but change the strategy
+at the end of the game.
+The new strategy will be used when after the next move,
+each heap would contain at most one stick.
 
-Tavallisessa nim-pelissä tulisi nyt tehdä siirto,
-jonka jälkeen 1-tikkuisia kasoja on parillinen määrä.
-Misääripelissä tulee kuitenkin tehdä siirto,
-jonka jälkeen 1-tikkuisia kasoja on pariton määrä.
+In the standard game, we should choose a move
+after which there is an even number of heaps with one stick.
+However, in the misère game, we choose a move so that
+there is an odd number of heaps with one stick.
 
-Tämä strategia toimii, koska käännekohta tulee aina
-vastaan jossakin vaiheessa peliä,
-ja kyseinen tila on voittotila,
-koska siinä on tarkalleen yksi kasa,
-jossa on yli 1 tikkua,
-joten nim-summa ei ole 0.
+This strategy works because the state where the
+strategy changes always appears in a game,
+and this state is a winning state, because
+it contains exactly one heap that has more than one stick,
+so the nim sum is not 0.
 
 \section{Sprague–Grundyn lause}
 
