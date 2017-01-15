@@ -205,7 +205,7 @@ are independent. Hence the event
 happens with probability
 \[P(A \cap B)=P(A)P(B)=1/4 \cdot 1/13 = 1/52.\]
 
-\section{Random variable}
+\section{Random variables}
 
 \index{random variable}
 
@@ -366,32 +366,29 @@ is exactly 4 is $(5/6)^3 1/6$.
 The expected value for $X$ in a geometric distribution is
 \[E[X]=\frac{1}{p}.\]
 
-\section{Markovin ketju}
+\section{Markov chains}
 
-\index{Markovin ketju@Markovin ketju}
+\index{Markov chain}
 
-\key{Markovin ketju} on satunnaisprosessi,
-joka muodostuu tiloista ja niiden välisistä siirtymistä.
-Jokaisesta tilasta tiedetään, millä todennäköisyydellä
-siitä siirrytään toisiin tiloihin.
-Markovin ketju voidaan esittää verkkona,
-jonka solmut ovat tiloja
-ja kaaret niiden välisiä siirtymiä.
+A \key{Markov chain} is a random process
+that consists of states and transitions between them.
+For each state, we know the probabilities
+for moving to other states.
+A Markov chain can be represented as a graph
+whose nodes are states and edges are transitions.
 
-Tarkastellaan esimerkkinä tehtävää,
-jossa olet alussa $n$-kerroksisen
-rakennuksen kerroksessa 1.
-Joka askeleella liikut satunnaisesti
-kerroksen ylöspäin tai alaspäin,
-paitsi kerroksesta 1 liikut aina ylöspäin
-ja kerroksesta $n$ aina alaspäin.
-Mikä on todennäköisyys, että olet $m$
-askeleen jälkeen kerroksessa $k$?
+As an example, let's consider a problem
+where we are in floor 1 in a $n$ floor building.
+At each step, we randomly walk either one floor
+up or one floor down, except that we always
+walk one floor up from floor 1 and one floor down
+from floor $n$.
+What is the probability that we are in floor $m$
+after $k$ steps?
 
-Tehtävässä kukin rakennuksen kerros
-on yksi tiloista, ja kerrosten välillä liikutaan
-satunnaisesti.
-Esimerkiksi jos $n=5$, verkosta tulee:
+In this problem, each floor of the building
+corresponds to a state in a Markov chain.
+For example, if $n=5$, the graph is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -415,29 +412,32 @@ Esimerkiksi jos $n=5$, verkosta tulee:
 \end{tikzpicture}
 \end{center}
 
-Markovin ketjun tilajakauma on vektori
-$[p_1,p_2,\ldots,p_n]$, missä $p_k$ tarkoittaa
-todennäköisyyttä olla tällä hetkellä tilassa $k$.
-Todennäköisyyksille pätee aina $p_1+p_2+\cdots+p_n=1$.
+The probability distribution
+of a Markov chain is a vector
+$[p_1,p_2,\ldots,p_n]$, where $p_k$ is the
+probability that the current state is $k$.
+The formula $p_1+p_2+\cdots+p_n=1$ always holds.
 
-Esimerkissä jakauma on ensin $[1,0,0,0,0]$,
-koska on varmaa, että kulku alkaa kerroksesta 1.
-Seuraava jakauma on $[0,1,0,0,0]$,
-koska kerroksesta 1 pääsee vain kerrokseen 2.
-Tämän jälkeen on mahdollisuus mennä joko ylöspäin
-tai alaspäin, joten seuraava jakauma on $[1/2,0,1/2,0,0]$, jne.
+In the example, the initial distribution is
+$[1,0,0,0,0]$, because we always begin at floor 1.
+The next distribution is $[0,1,0,0,0]$,
+because we can only move from floor 1 to floor 2.
+After this, we can either move one floor up
+or one floor down, so the next distribution is
+$[1/2,0,1/2,0,0]$, etc.
 
-Tehokas tapa simuloida kulkua Markovin ketjussa
-on käyttää dynaamista ohjelmointia.
-Ideana on pitää yllä tilajakaumaa
-ja käydä joka vuorolla läpi kaikki tilat
-ja jokaisesta tilasta kaikki mahdollisuudet jatkaa eteenpäin.
-Tätä menetelmää käyttäen $m$ askeleen simulointi
-vie aikaa $O(n^2 m)$.
+An efficient way to simulate the walk in
+a Markov chain is to use dynaimc programming.
+The idea is to maintain the probability distribution
+and at each step go through all possibilities
+how we can move.
+Using this method, we can simulate $m$ steps
+in $O(n^2 m)$ time.
 
-Markovin ketjun tilasiirtymät voi esittää myös matriisina,
-jonka avulla voi päivittää tilajakaumaa askeleen eteenpäin.
-Tässä tapauksessa matriisi on
+The transitions of a Markov chain can also be
+represented as a matrix that updates the
+probability distribution.
+In this case, the matrix is
 
 \[ 
  \begin{bmatrix}
@@ -449,10 +449,11 @@ Tässä tapauksessa matriisi on
  \end{bmatrix}.
 \]
 
-Tällaisella matriisilla voi kertoa tilajakaumaa esittävän
-vektorin, jolloin saadaan tilajakauma yhtä askelta myöhemmin.
-Esimerkiksi jakaumasta $[1,0,0,0,0]$ pääsee jakaumaan
-$[0,1,0,0,0]$ seuraavasti:
+When we multiply a probability distribution by this matrix,
+we get the new distribution after moving one step.
+For example, we can move from the distribution
+$[1,0,0,0,0]$ to the distribution
+$[0,1,0,0,0]$ as follows:
 
 \[ 
  \begin{bmatrix}
@@ -479,10 +480,9 @@ $[0,1,0,0,0]$ seuraavasti:
  \end{bmatrix}.
 \]
 
-Matriisiin voi soveltaa edelleen tehokasta
-matriisipotenssia, jonka avulla voi laskea
-ajassa $O(n^3 \log m)$,
-mikä on jakauma $m$ askeleen jälkeen.
+By calculating matrix powers efficiently,
+we can calculate in $O(n^3 \log m)$ time
+the distribution after $m$ steps.
 
 \section{Satunnaisalgoritmit}
 
