@@ -392,7 +392,7 @@ using different parameters.
 It is very unlikely that a collision would occur
 in all hash values at the same time.
 For example, two hash values with parameter
-$B \approx 10^9$ corresponds to one hash
+$B \approx 10^9$ correspond to one hash
 value with parameter $B \approx 10^{18}$,
 which makes the probability of a collision very small.
 
@@ -401,40 +401,39 @@ which is convenient, because operations with 32 and 64
 bit integers are calculated modulo $2^{32}$ and $2^{64}$.
 However, this is not a good choice, because it is possible
 to construct inputs that always generate collisions when
-remainders of the form $2^x$ are used\footnote{
-J. Pachocki ja Jakub Radoszweski:
+constants of the form $2^x$ are used\footnote{
+J. Pachocki and Jakub Radoszweski:
 ''Where to use and how not to use polynomial string hashing''.
 \textit{Olympiads in Informatics}, 2013.
 }.
 
-\section{Z-algoritmi}
+\section{Z-algorithm}
 
-\index{Z-algoritmi}
-\index{Z-taulukko}
+\index{Z-algorithm}
+\index{Z-array}
 
-\key{Z-algoritmi} muodostaa merkkijonosta \key{Z-taulukon},
-joka kertoo kullekin merkkijonon kohdalle,
-mikä on pisin kyseisestä kohdasta alkava osajono,
-joka on myös merkkijonon alkuosa.
-Z-algoritmin avulla voi ratkaista tehokkaasti
-monia merkkijonotehtäviä.
+The \key{Z-algorithm} generates a \key{Z-array}
+for the string, that contains for each index $k$
+in the string the length of the longest substring
+that begins at index $k$ and is a prefix of the string.
+Many string problems can be efficiently solved
+using the Z-algorithm.
 
-Z-algoritmi ja merkkijonohajautus ovat usein
-vaihtoehtoisia tekniikoita, ja on makuasia,
-kumpaa algoritmia käyttää.
-Toisin kuin hajautus, Z-algoritmi toimii
-varmasti oikein eikä siinä ole törmäysten riskiä.
-Toisaalta Z-algoritmi on vaikeampi toteuttaa eikä
-se sovellu kaikkeen samaan kuin hajautus.
+It is often a matter of taste whether to use
+the Z-algorithm or string hashing.
+Unlike hashing, the Z-algorithm always works
+and there is no risk for collisions.
+On the other hand, the Z-algorithm is more difficult
+to implement and some problems can only be solved
+using hashing.
 
-\subsubsection*{Algoritmin toiminta}
+\subsubsection*{Description}
 
-Z-algoritmi muodostaa merkkijonolle Z-taulukon,
-jonka jokaisessa kohdassa lukee,
-kuinka pitkälle kohdasta
-alkava osajono vastaa merkkijonon alkuosaa.
-Esimerkiksi Z-taulukko
-merkkijonolle \texttt{ACBACDACBACBACDA} on seuraava:
+The Z-algorithm constructs a Z-array that
+indicates for each position the length of the
+longest substring that is also a prefix of the string.
+For example, the Z-array for the string
+\texttt{ACBACDACBACBACDA} is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -495,52 +494,45 @@ merkkijonolle \texttt{ACBACDACBACBACDA} on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Esimerkiksi kohdassa 7 on arvo 5,
-koska siitä alkava 5-merkkinen osajono
-\texttt{ACBAC} on merkkijonon alkuosa,
-mutta 6-merkkinen osajono \texttt{ACBACB}
-ei ole enää merkkijonon alkuosa.
+For example, the position 7 contains the value 5,
+because the substring \texttt{ACBAC} of length 5
+is a prefix of the string,
+but the substring \texttt{ACBACB} of length 6
+is not a prefix of the string.
 
-Z-algoritmi käy läpi merkkijonon
-vasemmalta oikealle ja laskee
-jokaisessa kohdassa,
-kuinka pitkälle kyseisestä kohdasta alkava
-osajono täsmää merkkijonon alkuun.
-Algoritmi laskee yhteisen
-alkuosan pituuden vertaamalla
-merkkijonon alkua ja osajonon alkua toisiinsa.
+The Z-algorithm scans the string from the left
+to the right, and calculates for each position
+the length of the longest substring that
+is a prefix of the string.
+The algorithm compares the first characters
+of the string
+and the active substring with each other to
+find the length of the common prefix.
 
-Suoraviivaisesti toteutettuna
-tällaisen algoritmin aikavaativuus olisi $O(n^2)$,
-koska yhteiset alkuosat voivat olla pitkiä.
-Z-algoritmissa on kuitenkin yksi tärkeä
-optimointi, jonka ansiosta algoritmin
-aikavaativuus on vain $O(n)$.
+A straightforward implementation would yield
+an algorithm with time complexity $O(n^2)$
+because the common prefixes may be long.
+However, the Z-algorithm has one important
+optimization which ensures that the time complexity
+is only $O(n)$.
+The idea is to maintain a range $[x,y]$ such that
+the substring from $x$ to $y$ is a prefix of
+the string and $y$ is as large as possible.
+Since the Z-array already contains information
+about the characters in the range $[x,y]$,
+it is not needed to process them again later in the algorithm.
 
-Ideana on pitää muistissa väliä $[x,y]$,
-joka on aiemmin laskettu merkkijonon
-alkuun täsmäävä väli, jossa $y$ on 
-mahdollisimman suuri.
-Tällä välillä olevia
-merkkejä ei tarvitse koskaan
-verrata uudestaan
-merkkijonon alkuun, vaan niitä koskevan
-tiedon saa suoraan Z-taulukon lasketusta osasta.
+The time complexity of the Z-algorithm is $O(n)$,
+because the algorithm always compares substrings
+character by character only from index $y+1$.
+If the characters match, the value of $y$ increases,
+and it is not needed to inspect the character again,
+but the information in the Z-array can be used.
 
-Z-algoritmin aikavaativuus on $O(n)$,
-koska algoritmi aloittaa merkki kerrallaan
-vertailemisen vasta kohdasta $y+1$.
-Jos merkit täsmäävät, kohta $y$
-siirtyy eteenpäin
-eikä algoritmin tarvitse enää
-koskaan vertailla tätä kohtaa,
-vaan algoritmi pystyy hyödyntämään
-Z-taulukon alussa olevaa tietoa.
+\subsubsection*{Example}
 
-\subsubsection*{Esimerkki}
-
-Katsotaan nyt, miten Z-algoritmi muodostaa
-seuraavan Z-taulukon:
+Let's construct the following Z-array using
+the Z-algorithm:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -601,10 +593,9 @@ seuraavan Z-taulukon:
 \end{tikzpicture}
 \end{center}
 
-Ensimmäinen mielenkiintoinen kohta tulee,
-kun yhteisen alkuosan pituus on 5.
-Silloin algoritmi laittaa muistiin
-välin $[7,11]$ seuraavasti:
+The first interesting position is 7 where the
+length of the common prefix is 5.
+The corresponding range in the string is $[7,11]$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -672,18 +663,14 @@ välin $[7,11]$ seuraavasti:
 \end{tikzpicture}
 \end{center}
 
-Välin $[7,11]$ hyötynä on, että algoritmi
-voi sen avulla laskea seuraavat
-Z-taulukon arvot nopeammin.
-Koska välin $[7,11]$ merkit ovat samat
-kuin merkkijonon alussa,
-myös Z-taulukon arvoissa on vastaavuutta.
-
-Ensinnäkin kohdissa 8 ja 9
-tulee olla samat arvot kuin
-kohdissa 2 ja 3,
-koska väli $[7,11]$
-vastaa väliä $[1,5]$:
+The benefit in the range $[7,11]$ is that the
+algorithm can calculate the subsequent values
+for the Z-array more efficiently.
+Since the ranges $[1,5]$ and $[7,11]$ contain
+the same characters, also the Z-array will
+contain similar values.
+First, the values at indices 8 and 9
+correspond to the values at indices 2 and 3:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -755,13 +742,13 @@ vastaa väliä $[1,5]$:
 \end{tikzpicture}
 \end{center}
 
-Seuraavaksi kohdasta 4 saa tietoa kohdan
-10 arvon laskemiseksi.
-Koska kohdassa 4 on arvo 2,
-tämä tarkoittaa, että osajono
-täsmää kohtaan $y=11$ asti,
-mutta sen jälkeen on tutkimatonta
-aluetta merkkijonossa.
+After this, the value for index 10 can be
+calculated using the value at index 4.
+The value at index 4 is 2,
+so the first two characters
+in the substring match the beginning of the string.
+However, the characters after index $y=11$ have
+not been inspected yet.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -830,13 +817,13 @@ aluetta merkkijonossa.
 \end{tikzpicture}
 \end{center}
 
-Nyt algoritmi alkaa vertailla merkkejä
-kohdasta $y+1=12$ alkaen merkki kerrallaan.
-Algoritmi ei voi hyödyntää valmiina
-Z-taulukossa olevaa tietoa, koska se ei ole vielä aiemmin
-tutkinut merkkijonoa näin pitkälle.
-Tuloksena osajonon pituudeksi tulee 7
-ja väli $[x,y]$ päivittyy vastaavasti:
+The algorithm compares the substring
+beginning at index $y+1=12$ character by character.
+The previous values in the Z-array cannot be used,
+because this is the first time the characters
+after index 11 are inspected.
+It turns out that the length of the common
+prefix is 7, and the range $[x,y]$ will be updated:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -905,11 +892,10 @@ ja väli $[x,y]$ päivittyy vastaavasti:
 \end{tikzpicture}
 \end{center}
 
-Tämän jälkeen kaikkien seuraavien Z-taulukon
-arvojen laskemisessa pystyy hyödyntämään
-jälleen välin $[x,y]$ antamaa tietoa
-ja algoritmi saa Z-taulukon loppuun tulevat
-arvot suoraan Z-taulukon alusta:
+After this, all subsequent values in the Z-array
+can be calculated using the information in
+the range $[x,y]$. All the remaining values can be
+directly retrieved from the beginning of the Z-array:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -976,37 +962,33 @@ arvot suoraan Z-taulukon alusta:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Z-taulukon käyttäminen}
+\subsubsection{Using the Z-array}
 
-Ratkaistaan esimerkkinä tehtävä,
-jossa laskettavana on,
-montako kertaa merkkijono $p$
-esiintyy osajonona merkkijonossa $s$.
-Ratkaisimme tehtävän aiemmin tehokkaasti
-merkkijonohajautuksen avulla,
-ja nyt Z-algoritmi tarjoaa siihen
-vaihtoehtoisen lähestymistavan.
+As an example, let's solve a problem
+where our task is to calculate
+the number of times a string $p$
+occurs as a substring in a string $s$.
+Previously, we solved this problem
+using string hashing, but the Z-algorithm
+provides another way to solve the problem.
 
-Usein esiintyvä idea Z-algoritmin yhteydessä
-on muodostaa merkkijono,
-jonka osana on useita välimerkeillä
-erotettuja merkkijonoja.
-Tässä tehtävässä sopiva merkkijono on
+A usual idea when using the Z-algorithm
+is to construct a string that consists of
+several strings separated by special characters.
+In this problem, we can construct a string
 $p$\texttt{\#}$s$,
-jossa merkkijonojen $p$ ja $s$ välissä on
-erikoismerkki \texttt{\#},
-jota ei esiinny merkkijonoissa.
-Nyt merkkijonoa $p$\texttt{\#}$s$
-vastaava Z-taulukko kertoo,
-missä kohdissa merkkijonoa $p$
-esiintyy merkkijono $s$.
-Tällaiset kohdat ovat tarkalleen ne
-Z-taulukon kohdat, joissa on
-merkkijonon $p$ pituus.
+where $p$ and $s$ are separated by a special
+character \texttt{\#} that doesn't occur
+in the strings.
+After this, the Z-array for the string
+$p$\texttt{\#}$s$ indicates the positions
+where $p$ occurs in $s$.
+Such positions are those positions in the Z-array
+that contain the value $p$.
 
 \begin{samepage}
-Esimerkiksi jos $s=$\texttt{HATTIVATTI} ja $p=$\texttt{ATT},
-niin Z-taulukosta tulee:
+For example, if $s=$\texttt{HATTIVATTI} and $p=$\texttt{ATT},
+the Z-array is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1060,11 +1042,11 @@ niin Z-taulukosta tulee:
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-Taulukon kohdissa 6 ja 11 on luku 3,
-mikä tarkoittaa, että \texttt{ATT}
-esiintyy vastaavissa kohdissa merkkijonossa
-\texttt{HATTIVATTI}.
+The positions 6 and 11 contain the value 3,
+which means that the substring \texttt{ATT}
+occurs in the corresponding positions
+in the string \texttt{HATTIVATTI}.
 
-Tuloksena olevan algoritmin aikavaativuus on
-$O(n)$, koska riittää muodostaa Z-taulukko
-ja käydä se läpi.
+The time complexity of the resulting algorithm
+is $O(n)$, because it suffices to construct and
+go through the Z-array.
