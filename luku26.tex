@@ -147,11 +147,11 @@ starting at the root node and following the
 chain of characters that appear in the string.
 If needed, new nodes will be added to the trie.
 
-Trie can be used for searching both strings
+Tries can be used for searching both strings
 and prefixes of strings.
-In addition, we can keep track of the number
-of strings that have each prefix,
-that can be useful in some applications.
+In addition, it is possible to calculate numbers
+of strings that correspond to each prefix,
+which can be useful in some applications.
 
 A trie can be stored as an array
 \begin{lstlisting}
@@ -165,203 +165,198 @@ $1,2,3,\ldots$ so that the number of the root is 1,
 and $\texttt{t}[s][c]$ is the next node in chain
 from node $s$ using character $c$.
 
-\section{Merkkijonohajautus}
+\section{String hashing}
 
-\index{hajautus@hajautus}
-\index{merkkijonohajautus@merkkijonohajautus}
+\index{hashing}
+\index{string hashing}
 
-\key{Merkkijonohajautus}
-on tekniikka, jonka avulla voi esikäsittelyn
-jälkeen tarkastaa tehokkaasti, ovatko
-kaksi merkkijonon osajonoa samat.
-Ideana on verrata toisiinsa
-osajonojen hajautusarvoja,
-mikä on tehokkaampaa kuin osajonojen
-vertaaminen merkki kerrallaan.
+\key{String hashing} is a technique that
+allows us to efficiently check whether two
+substrings in a string are equal.
+The idea is to compare hash values of the
+substrings instead of their individual characters.
 
-\subsubsection*{Hajautusarvon laskeminen}
+\subsubsection*{Calculating hash values}
 
-\index{hajautusarvo@hajautusarvo}
-\index{polynominen hajautus@polynominen hajautus}
+\index{hash value}
+\index{polynomial hashing}
 
-Merkkijonon \key{hajautusarvo}
-on luku, joka lasketaan merkkijonon merkeistä
-etukäteen valitulla tavalla.
-Jos kaksi merkkijonoa ovat samat,
-myös niiden hajautusarvot ovat samat,
-minkä ansiosta merkkijonoja voi vertailla
-niiden hajautusarvojen kautta.
+A \key{hash value} of a string is
+a number that is calculated from the characters
+of the string.
+If two strings are the same,
+their hash values are also the same,
+which makes it possible to compare strings
+based on their hash values.
 
-Tavallinen tapa toteuttaa merkkijonohajautus
-on käyttää polynomista hajautusta.
-Siinä hajautusarvo lasketaan kaavalla
+A usual way to implement string hashing
+is to use polynomial hashing, which means
+that the hash value is calculated using the formula
 \[(c[1] A^{n-1} + c[2] A^{n-2} + \cdots + c[n] A^0) \bmod B  ,\]
-missä merkkijonon merkkien koodit ovat
-$c[1],c[2],\ldots,c[n]$ ja $A$ ja $B$ ovat etukäteen
-valitut vakiot.
+where $c[1],c[2],\ldots,c[n]$
+are the codes of the characters in the string,
+and $A$ and $B$ are pre-chosen constants.
 
-Esimerkiksi merkkijonon \texttt{KISSA} merkkien koodit ovat:
+For example, the codes of the characters
+in the string \texttt{ALLEY} are:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (5,2);
 
-\node at (0.5, 1.5) {\texttt{K}};
-\node at (1.5, 1.5) {\texttt{I}};
-\node at (2.5, 1.5) {\texttt{S}};
-\node at (3.5, 1.5) {\texttt{S}};
-\node at (4.5, 1.5) {\texttt{A}};
+\node at (0.5, 1.5) {\texttt{A}};
+\node at (1.5, 1.5) {\texttt{L}};
+\node at (2.5, 1.5) {\texttt{L}};
+\node at (3.5, 1.5) {\texttt{E}};
+\node at (4.5, 1.5) {\texttt{Y}};
 
-\node at (0.5, 0.5) {75};
-\node at (1.5, 0.5) {73};
-\node at (2.5, 0.5) {83};
-\node at (3.5, 0.5) {83};
-\node at (4.5, 0.5) {65};
+\node at (0.5, 0.5) {65};
+\node at (1.5, 0.5) {76};
+\node at (2.5, 0.5) {76};
+\node at (3.5, 0.5) {69};
+\node at (4.5, 0.5) {89};
 
 \end{tikzpicture}
 \end{center}
 
-Jos $A=3$ ja $B=97$, merkkijonon \texttt{KISSA} hajautusarvoksi tulee
+If $A=3$ and $B=97$, the hash value
+for the string \texttt{ALLEY} is
 
-\[(75 \cdot 3^4 + 73 \cdot 3^3 + 83 \cdot 3^2 + 83 \cdot 3^1 + 65 \cdot 3^0) \bmod 97 = 59.\]
+\[(65 \cdot 3^4 + 76 \cdot 3^3 + 76 \cdot 3^2 + 69 \cdot 3^1 + 89 \cdot 3^0) \bmod 97 = 52.\]
 
-\subsubsection*{Esikäsittely}
+\subsubsection*{Preprocessing}
 
-Merkkijonohajautuksen esikäsittely
-muodostaa tietoa, jonka avulla 
-voi laskea tehokkaasti merkkijonon
-osajonojen hajautusarvoja.
-Osoittautuu, että polynomisessa hajautuksessa
-$O(n)$-aikaisen esikäsittelyn jälkeen voi laskea
-minkä tahansa osajonon hajautusarvon
-ajassa $O(1)$.
+To efficiently calculate hash values of substrings,
+we need to preprocess the string.
+It turns out that using polynomial hashing,
+we can calculate the hash value of any substring
+in $O(1)$ time after an $O(n)$ time preprocessing.
 
-Ideana on muodostaa taulukko $h$,
-jossa $h[k]$ on hajautusarvo merkkijonon
-alkuosalle kohtaan $k$ asti.
-Taulukon voi muodostaa rekursiolla seuraavasti:
+The idea is to construct an array $h$ such that
+$h[k]$ contains the hash value for the prefix
+of the string that ends at index $k$.
+The array values can be recursively calculated as follows:
 \[
 \begin{array}{lcl}
 h[0] & = & 0 \\
 h[k] & = & (h[k-1] A + c[k]) \bmod B \\
 \end{array}
 \]
-Lisäksi muodostetaan taulukko $p$,
-jossa $p[k]=A^k \bmod B$:
+In addition, we construct an array $p$
+where $p[k]=A^k \bmod B$:
 \[
 \begin{array}{lcl}
 p[0] & = & 1 \\
 p[k] & = & (p[k-1] A) \bmod B. \\
 \end{array}
 \]
-Näiden taulukoiden muodostaminen vie aikaa $O(n)$.
-Tämän jälkeen hajautusarvo merkkijonon osajonolle,
-joka alkaa kohdasta $a$ ja päättyy kohtaan $b$,
-voidaan laskea $O(1)$-ajassa kaavalla
+Constructing these arrays takes $O(n)$ time.
+After this, the hash value for a substring
+of the string
+that begins at index $a$ and ends at index $b$
+can be calculated in $O(1)$ time using the formula
 \[(h[b]-h[a-1] p[b-a+1]) \bmod B.\]
 
-\subsubsection*{Hajautuksen käyttö}
+\subsubsection*{Using hash values}
 
-Hajautusarvot tarjoavat nopean tavan merkkijonojen
-vertailemiseen.
-Ideana on vertailla merkkijonojen koko sisällön
-sijasta niiden hajautusarvoja.
-Jos hajautusarvot ovat samat,
-myös merkkijonot ovat \textit{todennäköisesti} samat,
-ja jos taas hajautusarvot eivät ole samat,
-merkkijonot eivät \textit{varmasti} ole samat.
+We can efficiently compare strings using hash values.
+Instead of comparing the real contents of the strings,
+the idea is to compare their hash values.
+If the hash values are equal,
+the strings are \emph{probably} equal,
+and if the hash values are different,
+the strings are \emph{certainly} different.
 
-Hajautuksen avulla voi usein tehostaa
-raa'an voiman algoritmia niin, että siitä tulee tehokas.
-Tarkastellaan esimerkkinä
-raa'an voiman algoritmia, joka laskee,
-montako kertaa merkkijono $p$
-esiintyy osajonona merkkijonossa $s$.
-Algoritmi käy läpi kaikki kohdat,
-joissa $p$ voi esiintyä,
-ja vertailee merkkijonoja merkki merkiltä.
-Tällaisen algoritmin aikavaativuus on $O(n^2)$.
+Using hashing, we can often make a brute force
+algorithm efficient.
+As an example, let's consider a brute force
+algorithm that calculates how many times
+a string $p$ occurs as a substring in
+a string $s$.
+The algorithm goes through all locations
+where $p$ can occur, and compares the strings
+character by character.
+The time complexity of such an algorithm is $O(n^2)$.
 
-Voimme kuitenkin tehostaa algoritmia hajautuksen avulla,
-koska algoritmissa vertaillaan merkkijonojen osajonoja.
-Hajautusta käyttäen kukin vertailu vie aikaa vain $O(1)$,
-koska vertailua ei tehdä merkki merkiltä
-vaan suoraan hajautusarvon perusteella.
-Tuloksena on algoritmi, jonka aikavaativuus on $O(n)$,
-joka on paras mahdollinen aikavaativuus tehtävään.
+However, we can make the algorithm more efficient
+using hashing, because the algorithm compares
+substrings of strings.
+Using hashing, each comparison only takes $O(1)$ time,
+because only hash values of the strings are compared.
+This results in an algorithm with time complexity $O(n)$,
+which is the best possible time complexity for this problem.
 
-Yhdistämällä hajautus ja \emph{binäärihaku} on mahdollista
-myös selvittää logaritmisessa ajassa,
-kumpi kahdesta osajonosta on suurempi
-aakkosjärjestyksessä.
-Tämä onnistuu tutkimalla ensin binäärihaulla,
-kuinka pitkä on merkkijonojen yhteinen alkuosa,
-minkä jälkeen yhteisen alkuosan jälkeinen merkki
-kertoo, kumpi merkkijono on suurempi.
+By combining hashing and \emph{binary search},
+it is also possible to check the lexicographic order of
+two strings in logarithmic time.
+This can be done by finding out the length
+of the common prefix of the strings using binary search.
+Once we know the common prefix,
+the next character after the prefix
+indicates the order of the strings.
 
-\subsubsection*{Törmäykset ja parametrit}
+\subsubsection*{Collisions and parameters}
 
-\index{tzzmxys@törmäys}
+\index{collision}
 
-Ilmeinen riski hajautusarvojen vertailussa
-on \key{törmäys}, joka tarkoittaa, että kahdessa merkkijonossa on
-eri sisältö mutta niiden hajautusarvot ovat samat.
-Tällöin hajautusarvojen perusteella merkkijonot
-näyttävät samalta, vaikka todellisuudessa ne eivät ole samat,
-ja algoritmi voi toimia väärin.
+An evident risk in comparing hash values is
+\key{collision}, which means that two strings have
+different contents but equal hash values.
+In this case, based on the hash values it seems that
+the strings are equal, but in reality they aren't,
+and the algorithm may give incorrect results.
 
-Törmäyksen riski on aina olemassa,
-koska erilaisia merkkijonoja on enemmän kuin
-erilaisia hajautusarvoja.
-Riskin saa kuitenkin pieneksi valitsemalla
-hajautuksen vakiot $A$ ja $B$ huolellisesti.
-Vakioiden valinnassa on kaksi tavoitetta:
-hajautusarvojen tulisi
-jakautua tasaisesti merkkijonoille
-ja
-erilaisten hajautusarvojen määrän tulisi
-olla riittävän suuri.
+Collisions are always possible,
+because the number of different strings is larger
+than the number of different hash values.
+However, the probability of a collision is small
+if the constants $A$ and $B$ are carefully chosen.
+There are two goals: the hash values should be
+evenly distributed for the strings,
+and the number of different hash values should
+be large enough.
 
-Hyvä ratkaisu on valita vakioiksi suuria
-satunnaislukuja. Tavallinen tapa on valita vakiot
-läheltä lukua $10^9$, esimerkiksi
+A good solution is to use large random numbers
+as constants.
+A usual way is to choose constants that are
+near $10^9$, for example
 \[
 \begin{array}{lcl}
 A & = & 911382323 \\
 B & = & 972663749 \\
 \end{array}
 \]
-Tällainen valinta takaa sen,
-että hajautusarvot jakautuvat
-riittävän tasaisesti välille $0 \ldots B-1$.
-Suuruusluokan $10^9$ etuna on,
-että \texttt{long long} -tyyppi riittää
-hajautusarvojen käsittelyyn koodissa,
-koska tulot $AB$ ja $BB$ mahtuvat \texttt{long long} -tyyppiin.
-Mutta onko $10^9$ riittävä määrä hajautusarvoja?
+This choice ensures that the hash values
+are distributed evenly enough in the range $0 \ldots B-1$.
+The benefit in $10^9$ is that
+the \texttt{long long} type can be used
+for calculating the hash values,
+because the products $AB$ and $BB$ fit in \texttt{long long}.
+But is it enough to have $10^9$ different hash values?
 
-Tarkastellaan nyt kolmea hajautuksen käyttötapaa:
+Let's consider three scenarios where hashing can be used:
 
-\textit{Tapaus 1:} Merkkijonoja $x$ ja $y$ verrataan toisiinsa.
-Törmäyksen todennäköisyys on $1/B$ olettaen,
-että kaikki hajautusarvot esiintyvät yhtä usein.
+\textit{Scenario 1:} Strings $x$ and $y$ are compared with
+each other.
+The probability of a collision is $1/B$ assuming that
+all hash values are equally probable.
 
-\textit{Tapaus 2:} Merkkijonoa $x$ verrataan merkkijonoihin
+\textit{Tapaus 2:} A string $x$ is compared with strings
 $y_1,y_2,\ldots,y_n$.
-Yhden tai useamman törmäyksen todennäköisyys on
+The probability for one or more collisions is
 
 \[1-(1-1/B)^n.\]
 
-\textit{Tapaus 3:} Merkkijonoja $x_1,x_2,\ldots,x_n$
-verrataan kaikkia keskenään.
-Yhden tai useamman törmäyksen todennäköisyys on
+\textit{Tapaus 3:} Strings $x_1,x_2,\ldots,x_n$
+are compared with each other.
+The probability for one or more collisions is
 \[ 1 - \frac{B \cdot (B-1) \cdot (B-2) \cdots (B-n+1)}{B^n}.\]
 
-Seuraava taulukko sisältää törmäyksen todennäköisyydet,
-kun vakion $B$ arvo vaihtelee ja $n=10^6$:
+The following table shows the collision probabilities
+when the value of $B$ varies and $n=10^6$:
 
 \begin{center}
 \begin{tabular}{rrrr}
-vakio $B$ & tapaus 1 & tapaus 2 & tapaus 3 \\
+constant $B$ & scenario 1 & scenario 2 & scenario 3 \\
 \hline
 $10^3$ & $0.001000$ & $1.000000$ & $1.000000$ \\
 $10^6$ & $0.000001$ & $0.632121$ & $1.000000$ \\
@@ -372,44 +367,41 @@ $10^{18}$ & $0.000000$ & $0.000000$ & $0.000001$ \\
 \end{tabular}
 \end{center}
 
-Taulukosta näkee, että tapauksessa 1
-törmäyksen riski on olematon
-valinnalla $B \approx 10^9$.
-Tapauksessa 2 riski on olemassa, mutta se on silti edelleen vähäinen.
-Tapauksessa 3 tilanne on kuitenkin täysin toinen:
-törmäys tapahtuu käytännössä varmasti
-vielä valinnalla $B \approx 10^9$.
+The table shows that in scenario 1,
+the probability of a collision is negligible
+when $B \approx 10^9$.
+In scenario 2, a collision is possible but the
+probability is still quite small.
+However, in scenario 3 the situation is very different:
+a collision will almost always happen when
+$B \approx 10^9$.
 
-\index{syntymxpxivxparadoksi@syntymäpäiväparadoksi}
+\index{birthday paradox}
 
-Tapauksen 3 ilmiö tunnetaan nimellä
-\key{syntymäpäiväparadoksi}:
-jos huoneessa on $n$ henkilöä, on suuri
-todennäköisyys, että jollain kahdella
-henkilöllä on sama syntymäpäivä, vaikka
-$n$ olisi melko pieni.
-Vastaavasti hajautuksessa kun kaikkia
-hajautusarvoja verrataan keskenään,
-käy helposti niin, että jotkin
-kaksi ovat sattumalta samoja.
+The phenomenon in scenario 3 is known as the
+\key{birthday paradox}: if there are $n$ people
+in a room, the probability that some two people
+have the same birthday is large even if $n$ is quite small.
+In hashing, correspondingly, when all hash values are compared
+with each other, the probability that some two
+hash values are the same is large.
 
-Hyvä tapa pienentää törmäyksen riskiä on laskea
-\emph{useita} hajautusarvoja eri parametreilla
-ja verrata niitä kaikkia.
-On hyvin pieni todennäköisyys,
-että törmäys tapahtuisi samaan aikaan
-kaikissa hajautusarvoissa.
-Esimerkiksi kaksi hajautusarvoa parametrilla
-$B \approx 10^9$ vastaa yhtä hajautusarvoa
-parametrilla $B \approx 10^{18}$,
-mikä takaa hyvän suojan törmäyksiltä.
+A good way to make the probability of a collision
+smaller is to calculate \emph{multiple} hash values
+using different parameters.
+It is very unlikely that a collision would occur
+in all hash values at the same time.
+For example, two hash values with parameter
+$B \approx 10^9$ corresponds to one hash
+value with parameter $B \approx 10^{18}$,
+which makes the probability of a collision very small.
 
-Jotkut käyttävät hajautuksessa vakioita $B=2^{32}$ tai $B=2^{64}$,
-jolloin modulo $B$ tulee laskettua
-automaattisesti, kun muuttujan arvo pyörähtää ympäri.
-Tämä ei ole kuitenkaan hyvä valinta,
-koska muotoa $2^x$ olevaa moduloa vastaan
-pystyy tekemään testisyötteen, joka aiheuttaa varmasti törmäyksen\footnote{
+Some people use constants $B=2^{32}$ and $B=2^{64}$,
+which is convenient, because operations with 32 and 64
+bit integers are calculated modulo $2^{32}$ and $2^{64}$.
+However, this is not a good choice, because it is possible
+to construct inputs that always generate collisions when
+remainders of the form $2^x$ are used\footnote{
 J. Pachocki ja Jakub Radoszweski:
 ''Where to use and how not to use polynomial string hashing''.
 \textit{Olympiads in Informatics}, 2013.
