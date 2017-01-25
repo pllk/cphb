@@ -1,37 +1,37 @@
 \chapter{Square root algorithms}
 
-\index{nelizjuurialgoritmi@neliöjuurialgoritmi}
+\index{square root algorithm}
 
-\key{Neliöjuurialgoritmi} on algoritmi,
-jonka aikavaativuudessa esiintyy neliöjuuri.
-Neliöjuurta voi ajatella ''köyhän miehen logaritmina'':
-aikavaativuus $O(\sqrt n)$ on parempi kuin $O(n)$
-mutta huonompi kuin $O(\log n)$.
-Toisaalta neliöjuurialgoritmit toimivat
-käytännössä hyvin ja niiden vakiokertoimet ovat pieniä.
+A \key{square root algorithm} is an algorithm
+that has a square root in its time complexity.
+A square root can be seen as a ''poor man's logarithm'':
+the complexity $O(\sqrt n)$ is better than $O(n)$
+but worse than $O(\log n)$.
+Still, many square root algorithms are fast in practice
+and have small constant factors.
 
-Tarkastellaan esimerkkinä tuttua ongelmaa,
-jossa toteutettavana on summakysely taulukkoon.
-Halutut operaatiot ovat:
+As an example, let's consider the problem of
+handling sum queries in an array.
+The required operations are:
 
 \begin{itemize}
-\item muuta kohdassa $x$ olevaa lukua
-\item laske välin $[a,b]$ lukujen summa
+\item change the value at index $x$
+\item calculate the sum in the range $[a,b]$
 \end{itemize}
 
-Olemme aiemmin ratkaisseet tehtävän
-binääri-indeksipuun ja segmenttipuun avulla,
-jolloin kummankin operaation aikavaativuus on $O(\log n)$.
-Nyt ratkaisemme tehtävän toisella
-tavalla neliöjuurirakennetta käyttäen,
-jolloin summan laskenta vie aikaa $O(\sqrt n)$
-ja luvun muuttaminen vie aikaa $O(1)$.
+We have previously solved the problem using
+a binary indexed tree and a segment tree,
+that support both operations in $O(\log n)$ time.
+However, now we will solve the problem
+in another way using a square root structure
+so that we can calculate sums in $O(\sqrt n)$ time
+and modify values in $O(1)$ time.
 
-Ideana on jakaa taulukko $\sqrt n$-kokoisiin
-väleihin niin, että jokaiseen väliin
-tallennetaan lukujen summa välillä.
-Seuraavassa on esimerkki taulukosta ja
-sitä vastaavista $\sqrt n$-väleistä:
+The idea is to divide the array into segments
+of size $\sqrt n$ so that each segment contains
+the sum of values inside the segment.
+The following example shows an array and the
+corresponding segments:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -67,9 +67,9 @@ sitä vastaavista $\sqrt n$-väleistä:
 \end{tikzpicture}
 \end{center}
 
-Kun taulukon luku muuttuu,
-tämän yhteydessä täytyy laskea uusi summa
-vastaavalle $\sqrt n$-välille:
+When a value in the array changes,
+we have to calculate the sum in the corresponding
+segment again:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -107,9 +107,9 @@ vastaavalle $\sqrt n$-välille:
 \end{tikzpicture}
 \end{center}
 
-Välin summan laskeminen taas tapahtuu muodostamalla
-summa reunoissa olevista yksittäisistä luvuista
-sekä keskellä olevista $\sqrt n$-väleistä:
+Any sum in the array can be calculated as a combination
+of single values in the array and the sums of the
+segments between them:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -152,207 +152,213 @@ sekä keskellä olevista $\sqrt n$-väleistä:
 \end{tikzpicture}
 \end{center}
 
-Luvun muuttamisen aikavaativuus on
-$O(1)$, koska riittää muuttaa yhden $\sqrt n$-välin summaa.
-Välin summa taas lasketaan kolmessa osassa:
+We can change a value in $O(1)$ time,
+because we only have to change the sum of a single segment.
+A sum in a range consists of three parts:
 
 \begin{itemize}
-\item vasemmassa reunassa on $O(\sqrt n)$ yksittäistä lukua
-\item keskellä on $O(\sqrt n)$ peräkkäistä $\sqrt n$-väliä
-\item oikeassa reunassa on $O(\sqrt n)$ yksittäistä lukua
+\item first, there are $O(\sqrt n)$ single values
+\item then, there are $O(\sqrt n)$ consecutive segments
+\item finally, there are $O(\sqrt n)$ single values
 \end{itemize}
 
-Jokaisen osan summan laskeminen vie aikaa $O(\sqrt n)$,
-joten summan laskemisen aikavaativuus on yhteensä $O(\sqrt n)$.
+Calculating each sum takes $O(\sqrt n)$ time,
+so the total complexity for calculating the sum
+of values in any range is $O(\sqrt n)$.
 
-Neliöjuurialgoritmeissa parametri $\sqrt n$
-johtuu siitä, että se saattaa kaksi asiaa tasapainoon:
-esimerkiksi $n$ alkion taulukko jakautuu
-$\sqrt n$ osaan, joista jokaisessa on $\sqrt n$ alkiota.
-Käytännössä algoritmeissa
-ei ole kuitenkaan pakko käyttää
-tarkalleen parametria $\sqrt n$,
-vaan voi olla parempi valita toiseksi
-parametriksi $k$ ja toiseksi $n/k$,
-missä $k$ on pienempi tai suurempi kuin $\sqrt n$.
+The reason why we use the parameter $\sqrt n$ is that
+it balances two things:
+for example, an array of $n$ elements is divided
+into $\sqrt n$ segments, each of which contains
+$\sqrt n$ elements.
+In practice, it is not needed to use exactly
+the parameter $\sqrt n$ in algorithms, but it may be better to
+use parameters $k$ and $n/k$ where $k$ is
+larger or smaller than $\sqrt n$.
 
-Paras parametri selviää usein kokeilemalla
-ja riippuu tehtävästä ja syötteestä.
-Esimerkiksi jos taulukkoa käsittelevä algoritmi
-käy usein läpi välit mutta harvoin välin sisällä
-olevia alkioita, taulukko voi olla järkevää
-jakaa $k < \sqrt n$ väliin,
-joista jokaisella on $n/k > \sqrt n$ alkiota.
+The best parameter depends on the problem
+and input.
+For example, if an algorithm often goes through
+segments but rarely iterates the elements inside
+the segments, it may be good to divide the array into
+$k < \sqrt n$ segments, each of which contains $n/k > \sqrt n$
+elements.
 
-\section{Eräkäsittely}
+\section{Batch processing}
 
-\index{erxkxsittely@eräkäsittely}
+\index{batch processing}
 
-\key{Eräkäsittelyssä} algoritmin suorittamat
-operaatiot jaetaan eriin,
-jotka käsitellään omina kokonaisuuksina.
-Erien välissä tehdään yksittäinen työläs toimenpide,
-joka auttaa tulevien operaatioiden käsittelyä.
+In \key{batch processing}, the operations in the
+algorithm are divided into batches,
+and each batch will be processed separately.
+Between the batches some precalculation is done
+to process the future operations more efficiently.
 
-Neliöjuurialgoritmi syntyy, kun $n$ operaatiota
-jaetaan $O(\sqrt n)$-kokoisiin eriin,
-jolloin sekä eriä että operaatioita kunkin erän
-sisällä on $O(\sqrt n)$.
-Tämä tasapainottaa sitä, miten usein erien välinen
-työläs toimenpide tapahtuu sekä miten paljon työtä
-erän sisällä täytyy tehdä.
+In a square root algorithm, $n$ operations are
+divided into batches of size $O(\sqrt n)$,
+and the number of both batches and operations in each
+batch is $O(\sqrt n)$.
+This balances the precalculation time between
+the batches and the time needed for processing
+the batches.
 
-Tarkastellaan esimerkkinä tehtävää, jossa
-ruudukossa on $k \times k$ ruutua,
-jotka ovat aluksi valkoisia.
-Tehtävänä on suorittaa ruudukkoon
-$n$ operaatiota,
-joista jokainen on jompikumpi seuraavista:
+As an example, let's consider a problem
+where a grid of size $k \times k$
+initially consists of white squares.
+Our task is to perform $n$ operations,
+each of which is one of the following:
 \begin{itemize}
 \item
-väritä ruutu $(y,x)$ mustaksi
+paint square $(y,x)$ black
 \item
-etsi ruudusta $(y,x)$ lähin
-musta ruutu, kun
-ruutujen $(y_1,x_1)$ ja $(y_2,x_2)$
-etäisyys on $|y_1-y_2|+|x_1-x_2|$
+find the nearest black square to
+square $(y,x)$ where the distance
+between squares $(y_1,x_1)$ and $(y_2,x_2)$
+is $|y_1-y_2|+|x_1-x_2|$
 \end{itemize}
 
-Ratkaisuna on jakaa operaatiot $O(\sqrt n)$ erään,
-joista jokaisessa on $O(\sqrt n)$ operaatiota.
-Kunkin erän alussa jokaiseen ruudukon ruutuun
-lasketaan pienin etäisyys mustaan ruutuun.
-Tämä onnistuu ajassa $O(k^2)$ leveyshaun avulla.
+The solution is to divide the operations into
+$O(\sqrt n)$ batches, each of which consists
+of $O(\sqrt n)$ operations.
+At the beginning of each batch,
+we calculate for each square in the grid
+the smallest distance to a black square.
+This can be done in $O(k^2)$ time using breadth-first search.
 
-Kunkin erän käsittelyssä pidetään yllä listaa ruuduista,
-jotka on muutettu mustaksi tässä erässä.
-Nyt etäisyys ruudusta lähimpään mustaan ruutuun
-on joko erän alussa laskettu etäisyys tai sitten
-etäisyys johonkin listassa olevaan tämän erän aikana mustaksi
-muutettuun ruutuun.
+When processing a batch, we maintain a list of squares
+that have been painted black in the current batch.
+Now, the distance from a square to the nearest black
+square is either the precalculated distance or the distance
+to a square that has been painted black in the current batch.
 
-Algoritmi vie aikaa $O((k^2+n) \sqrt n)$,
-koska erien välissä tehdään $O(\sqrt n)$ kertaa
-$O(k^2)$-aikainen läpikäynti, ja
-erissä käsitellään yhteensä $O(n)$ solmua,
-joista jokaisen kohdalla käydään läpi
-$O(\sqrt n)$ solmua listasta.
+The algorithm works in
+$O((k^2+n) \sqrt n)$ time.
+First, between the batches,
+there are $O(\sqrt n)$ searches that each take
+$O(k^2)$ time.
+Second, the total number of processed
+squares is $O(n)$, and at each square,
+we go through a list of $O(\sqrt n)$ squares
+in a batch.
 
-Jos algoritmi tekisi leveyshaun jokaiselle operaatiolle,
-aikavaativuus olisi $O(k^2 n)$.
-Jos taas algoritmi kävisi kaikki muutetut ruudut läpi
-jokaisen operaation kohdalla,
-aikavaativuus olisi $O(n^2)$.
-Neliöjuurialgoritmi yhdistää nämä aikavaativuudet
-ja muuttaa kertoimen $n$ kertoimeksi $\sqrt n$.
+If the algorithm would perform a breadth-first search
+at each operation, the complexity would be
+$O(k^2 n)$.
+And if the algorithm would go through all painted
+squares at each operation,
+the complexity would be $O(n^2)$.
+The square root algorithm combines these complexities,
+and turns the factor $n$ into $\sqrt n$.
 
-\section{Tapauskäsittely}
+\section{Case processing}
 
-\index{tapauskxsittely@tapauskäsittely}
+\index{case processing}
 
-\key{Tapauskäsittelyssä} algoritmissa on useita
-toimintatapoja, jotka aktivoituvat syötteen
-ominaisuuksista riippuen.
-Tyypillisesti yksi algoritmin osa on tehokas
-pienellä parametrilla
-ja toinen osa on tehokas suurella parametrilla,
-ja sopiva jakokohta kulkee suunnilleen arvon $\sqrt n$ kohdalla.
+In \key{case processing}, an algorithm has
+specialized subalgorithms for different cases that
+may appear during the algorithm.
+Typically, one part is efficient for
+small parameters, and another part is efficient
+for large parameters, and the turning point is
+about $\sqrt n$.
 
-Tarkastellaan esimerkkinä tehtävää, jossa
-puussa on $n$ solmua, joista jokaisella on tietty väri.
-Tavoitteena on etsiä puusta kaksi solmua,
-jotka ovat samanvärisiä ja mahdollisimman
-kaukana toisistaan.
+As an example, let's consider a problem where
+we are given a tree that contains $n$ nodes,
+each with some color. Our task is to find two nodes
+that have the same color and the distance
+between them is as large as possible.
 
-Tehtävän voi ratkaista
-käymällä läpi värit yksi kerrallaan ja
-etsimällä kullekin värille kaksi solmua, jotka ovat
-mahdollisimman kaukana toisistaan.
-Tietyllä värillä algoritmin toiminta riippuu siitä,
-montako kyseisen väristä solmua puussa on.
-Oletetaan nyt, että käsittelyssä on väri $x$
-ja puussa on $c$ solmua, joiden väri on $x$.
-Tapaukset ovat seuraavat:
+The problem can be solved by going through all
+colors one after another, and for each color,
+finding two nodes of that color whose distance is
+maximum.
+For a fixed color, a subalgorithm will be used
+that depends on the number of nodes of that color.
+Let's assume that the current color is $x$
+and there are $c$ nodes whose color is $x$.
+There are two cases:
 
-\subsubsection*{Tapaus 1: $c \le \sqrt n$}
+\subsubsection*{Case 1: $c \le \sqrt n$}
 
-Jos $x$-värisiä solmuja on vähän,
-käydään läpi kaikki $x$-väristen solmujen parit
-ja valitaan pari, jonka etäisyys on suurin.
-Jokaisesta solmusta täytyy
-laskea etäisyys $O(\sqrt n)$ muuhun solmuun (ks. luku 18.3),
-joten kaikkien tapaukseen 1 osuvien solmujen
-käsittely vie aikaa yhteensä $O(n \sqrt n)$.
+If the number of nodes is small,
+we go through all pairs of nodes whose
+color is $x$ and select the pair that
+has the maximum distance.
+For each node, we have calculate the distance
+to $O(\sqrt n)$ other nodes (see 18.3),
+so the total time needed for processing all
+nodes in case 1 is $O(n \sqrt n)$.
 
-\subsubsection*{Tapaus 2: $c > \sqrt n$}
+\subsubsection*{Case 2: $c > \sqrt n$}
 
-Jos $x$-värisiä solmuja on paljon,
-käydään koko puu läpi ja
-lasketaan suurin etäisyys kahden
-$x$-värisen solmun välillä.
-Läpikäynnin aikavaativuus on $O(n)$,
-ja tapaus 2 aktivoituu korkeintaan $O(\sqrt n)$
-värille, joten tapauksen 2 solmut 
-tuottavat aikavaativuuden $O(n \sqrt n)$.\\\\
+If the number of nodes is large,
+we traverse through the whole tree
+and calculate the maximum distance between
+two nodes with color $x$.
+The time complexity of the tree traversal is $O(n)$,
+and this will be done at most $O(\sqrt n)$ times,
+so the total time needed for case 2 is
+$O(n \sqrt n)$.\\\\
 \noindent
-Algoritmin kokonaisaikavaativuus on $O(n \sqrt n)$,
-koska sekä tapaus 1 että tapaus 2 vievät aikaa
-yhteensä $O(n \sqrt n)$.
+The time complexity of the algorithm is $O(n \sqrt n)$,
+because both case 1 and case 2 take $O(n \sqrt n)$ time.
 
-\section{Mo'n algoritmi}
+\section{Mo's algorithm}
 
-\index{Mo'n algoritmi}
+\index{Mo's algorithm}
 
-\key{Mo'n algoritmi} soveltuu tehtäviin,
-joissa taulukkoon tehdään välikyselyitä ja
-taulukon sisältö kaikissa kyselyissä on sama.
-Algoritmi järjestää
-kyselyt uudestaan niin,
-että niiden käsittely on tehokasta.
+\key{Mo's algorithm} can be used in many problems
+where we are asked to process range queries in 
+a \emph{static} array.
+The algorithm handles the queries in a special order
+so that it is efficient to process them.
 
-Algoritmi pitää yllä taulukon väliä,
-jolle on laskettu kyselyn vastaus.
-Kyselystä toiseen siirryttäessä algoritmi
-muuttaa väliä askel kerrallaan niin,
-että vastaus uuteen kyselyyn saadaan laskettua.
-Algoritmin aikavaativuus on $O(n \sqrt n f(n))$,
-kun kyselyitä on $n$ ja 
-yksi välin muutosaskel vie aikaa $f(n)$.
+The algorithm maintains a range in the array,
+and the answer for a query for that range.
+When moving from a range to another range,
+the algorithm modifies the range step by step
+so that the answer for the next range can be
+calculated.
+The time complexity of the algorithm is
+$O(n \sqrt n f(n))$ when there are $n$ queries
+and each step takes $f(n)$ time.
 
-Algoritmin toiminta perustuu järjestykseen,
-jossa kyselyt käsitellään.
-Kun kyselyjen välit ovat muotoa $[a,b]$,
-algoritmi järjestää ne ensisijaisesti arvon
-$\lfloor a/\sqrt n \rfloor$ mukaan ja toissijaisesti arvon $b$ mukaan.
-Algoritmi suorittaa siis peräkkäin kaikki kyselyt,
-joiden alkukohta on tietyllä $\sqrt n$-välillä.
+The algorithm processes the queries in a special
+order which makes the algorithm efficient.
+When the queries correspond to ranges of the form $[a,b]$,
+they are primarily sorted according to
+the value $\lfloor a/\sqrt n \rfloor$,
+and secondarily according to the value $b$.
+Hence, all queries whose starting index
+is in a fixed segment 
+are processed after each other.
 
-Osoittautuu, että tämän järjestyksen ansiosta
-algoritmi tekee yhteensä vain $O(n \sqrt n)$ muutosaskelta.
-Tämä johtuu siitä, että välin vasen reuna liikkuu
-$n$ kertaa $O(\sqrt n)$ askelta,
-kun taas välin oikea reuna liikkuu $\sqrt n$
-kertaa $O(n)$ askelta. Molemmat reunat liikkuvat
-siis yhteensä $O(n \sqrt n)$ askelta.
+It turns out that using this order, the algorithm
+only performs $O(n \sqrt n)$ steps.
+The reason for this is that the left border of
+the range moves $n$ times $O(\sqrt n)$ steps,
+and the right border of the range moves
+$\sqrt n$ times $O(n)$ steps. Thus, both the
+borders move a total of $O(n \sqrt n)$ steps.
 
-\subsubsection*{Esimerkki}
+\subsubsection*{Example}
 
-Tarkastellaan esimerkkinä tehtävää,
-jossa annettuna on joukko välejä taulukossa
-ja  tehtävänä on selvittää kullekin välille,
-montako eri lukua taulukossa on kyseisellä välillä.
+As an example, let's consider a problem
+where we are given a set of ranges in an array,
+and our task is to calculate for each range
+the number of distinct elements in the range.
 
-Mo'n algoritmissa kyselyt järjestetään aina samalla
-tavalla, ja tehtävästä riippuva osa on,
-miten kyselyn vastausta pidetään yllä.
-Tässä tehtävässä luonteva tapa on
-pitää muistissa kyselyn vastausta sekä
-taulukkoa \texttt{c}, jossa $\texttt{c}[x]$
-on alkion $x$ lukumäärä aktiivisella välillä.
+In Mo's algorithm, the queries are always sorted
+in the same way, but it depends on the problem
+how the answer for queries is maintained.
+In this problem, we can maintain an array 
+\texttt{c} where $\texttt{c}[x]$
+indicates how many times an element $x$
+occurs in the active range.
 
-Kyselystä toiseen siirryttäessä taulukon aktiivinen
-väli muuttuu. Esimerkiksi jos nykyinen kysely koskee väliä
-
+When we move from a query to another query,
+the active range changes.
+For example, if the current range is
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -368,7 +374,7 @@ väli muuttuu. Esimerkiksi jos nykyinen kysely koskee väliä
 \node at (8.5, 0.5) {4};
 \end{tikzpicture}
 \end{center}
-ja seuraava kysely koskee väliä
+and the next range is
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (7,1);
@@ -384,22 +390,25 @@ ja seuraava kysely koskee väliä
 \node at (8.5, 0.5) {4};
 \end{tikzpicture}
 \end{center}
-niin tapahtuu kolme muutosaskelta:
-välin vasen reuna siirtyy askeleen oikealle
-ja välin oikea reuna siirtyy kaksi askelta oikealle.
+there will be three steps:
+the left border moves one step to the left,
+and the right border moves two steps to the right.
 
-Jokaisen muutosaskeleen jälkeen täytyy
-päivittää taulukkoa \texttt{c}.
-Jos väliin tulee alkio $x$,
-arvo $\texttt{c}[x]$ kasvaa 1:llä,
-ja jos välistä poistuu alkio $x$,
-arvo $\texttt{c}[x]$ vähenee 1:llä.
-Jos lisäyksen jälkeen $\texttt{c}[x]=1$,
-kyselyn vastaus kasvaa 1:llä,
-ja jos poiston jälkeen $\texttt{c}[x]=0$,
-kyselyn vastaus vähenee 1:llä.
+After each step, we should update the
+array \texttt{c}.
+If an element $x$ is added to the range,
+the value
+$\texttt{c}[x]$ increases by one,
+and if a value $x$ is removed from the range,
+the value $\texttt{c}[x]$ decreases by one.
+If after an insertion
+$\texttt{c}[x]=1$,
+the answer for the query increases by one,
+and if after a removel $\texttt{c}[x]=0$,
+the answer for the query decreases by one.
 
-Tässä tapauksessa muutosaskeleen aikavaativuus on $O(1)$,
-joten algoritmin kokonaisaikavaativuus on $O(n \sqrt n)$.
+In this problem, the time needed to perform
+each step is $O(1)$, so the total time complexity
+of the algorithm is $O(n \sqrt n)$.
 
 
