@@ -27,9 +27,9 @@ in another way using a square root structure
 so that we can calculate sums in $O(\sqrt n)$ time
 and modify values in $O(1)$ time.
 
-The idea is to divide the array into segments
-of size $\sqrt n$ so that each segment contains
-the sum of values inside the segment.
+The idea is to divide the array into blocks
+of size $\sqrt n$ so that each block contains
+the sum of elements inside the block.
 The following example shows an array and the
 corresponding segments:
 
@@ -68,8 +68,8 @@ corresponding segments:
 \end{center}
 
 When a value in the array changes,
-we have to calculate the sum in the corresponding
-segment again:
+we have to calculate the sum of the corresponding
+block again:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -109,7 +109,7 @@ segment again:
 
 Any sum in the array can be calculated as a combination
 of single values in the array and the sums of the
-segments between them:
+blocks between them:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -153,12 +153,12 @@ segments between them:
 \end{center}
 
 We can change a value in $O(1)$ time,
-because we only have to change the sum of a single segment.
+because we only have to change the sum of a single block.
 A sum in a range consists of three parts:
 
 \begin{itemize}
 \item first, there are $O(\sqrt n)$ single values
-\item then, there are $O(\sqrt n)$ consecutive segments
+\item then, there are $O(\sqrt n)$ consecutive blocks
 \item finally, there are $O(\sqrt n)$ single values
 \end{itemize}
 
@@ -169,7 +169,7 @@ of values in any range is $O(\sqrt n)$.
 The reason why we use the parameter $\sqrt n$ is that
 it balances two things:
 for example, an array of $n$ elements is divided
-into $\sqrt n$ segments, each of which contains
+into $\sqrt n$ blocks, each of which contains
 $\sqrt n$ elements.
 In practice, it is not needed to use exactly
 the parameter $\sqrt n$ in algorithms, but it may be better to
@@ -179,16 +179,16 @@ larger or smaller than $\sqrt n$.
 The best parameter depends on the problem
 and input.
 For example, if an algorithm often goes through
-segments but rarely iterates the elements inside
-the segments, it may be good to divide the array into
-$k < \sqrt n$ segments, each of which contains $n/k > \sqrt n$
+blocks but rarely iterates elements inside
+blocks, it may be good to divide the array into
+$k < \sqrt n$ blocks, each of which contains $n/k > \sqrt n$
 elements.
 
 \section{Batch processing}
 
 \index{batch processing}
 
-In \key{batch processing}, the operations in the
+In \key{batch processing}, the operations of an
 algorithm are divided into batches,
 and each batch will be processed separately.
 Between the batches some precalculation is done
@@ -308,57 +308,58 @@ because both case 1 and case 2 take $O(n \sqrt n)$ time.
 \index{Mo's algorithm}
 
 \key{Mo's algorithm} can be used in many problems
-where we are asked to process range queries in 
+that require processing range queries in 
 a \emph{static} array.
-The algorithm handles the queries in a special order
-so that it is efficient to process them.
+Before processing the queries, the algorithm
+sorts them in a special order which guarantees
+that the algorithm runs efficiently.
 
-The algorithm maintains a range in the array,
-and the answer for a query for that range.
-When moving from a range to another range,
-the algorithm modifies the range step by step
-so that the answer for the next range can be
-calculated.
+At each moment in the algorithm, there is an active
+subarray and the algorithm maintains the answer
+for a query to that subarray.
+The algorithm processes the given queries one by one,
+and always changes the active subarray
+by inserting and removing elements
+so that it corresponds to the current query.
 The time complexity of the algorithm is
 $O(n \sqrt n f(n))$ when there are $n$ queries
-and each step takes $f(n)$ time.
+and each insertion and removal of an element
+takes $O(f(n))$ time.
 
-The algorithm processes the queries in a special
-order which makes the algorithm efficient.
-When the queries correspond to ranges of the form $[a,b]$,
-they are primarily sorted according to
-the value $\lfloor a/\sqrt n \rfloor$,
-and secondarily according to the value $b$.
-Hence, all queries whose starting index
-is in a fixed segment 
-are processed after each other.
-
+The essential trick in Mo's algorithm is that
+the queries are processed in a special order,
+which makes the algorithm efficient.
+The array is divided into blocks of $k=O(\sqrt n)$
+elements, and the queries are sorted primarily by
+the index of the block that contains the first element
+of the query, and secondarily by the index of the
+last element of the query.
 It turns out that using this order, the algorithm
-only performs $O(n \sqrt n)$ steps.
-The reason for this is that the left border of
-the range moves $n$ times $O(\sqrt n)$ steps,
-and the right border of the range moves
+only performs $O(n \sqrt n)$ operations,
+because the left border of the subarray moves
+$n$ times $O(\sqrt n)$ steps,
+and the right border of the subarray moves
 $\sqrt n$ times $O(n)$ steps. Thus, both the
 borders move a total of $O(n \sqrt n)$ steps.
 
 \subsubsection*{Example}
 
 As an example, let's consider a problem
-where we are given a set of ranges in an array,
-and our task is to calculate for each range
-the number of distinct elements in the range.
+where we are given a set of subarrays in an array,
+and our task is to calculate for each subarray
+the number of distinct elements in the subarray.
 
 In Mo's algorithm, the queries are always sorted
-in the same way, but it depends on the problem
-how the answer for queries is maintained.
+in the same way, but the way the answer for the query
+is maintained depends on the problem.
 In this problem, we can maintain an array 
 \texttt{c} where $\texttt{c}[x]$
 indicates how many times an element $x$
-occurs in the active range.
+occurs in the active subarray.
 
 When we move from a query to another query,
-the active range changes.
-For example, if the current range is
+the active subarray changes.
+For example, if the current subarray is
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -374,7 +375,7 @@ For example, if the current range is
 \node at (8.5, 0.5) {4};
 \end{tikzpicture}
 \end{center}
-and the next range is
+and the next subarray is
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (7,1);
@@ -394,21 +395,19 @@ there will be three steps:
 the left border moves one step to the left,
 and the right border moves two steps to the right.
 
-After each step, we should update the
+After each step, we update the
 array \texttt{c}.
-If an element $x$ is added to the range,
+If an element $x$ is added to the subarray,
 the value
 $\texttt{c}[x]$ increases by one,
-and if a value $x$ is removed from the range,
+and if an element $x$ is removed from the subarray,
 the value $\texttt{c}[x]$ decreases by one.
 If after an insertion
 $\texttt{c}[x]=1$,
 the answer for the query increases by one,
-and if after a removel $\texttt{c}[x]=0$,
+and if after a removal $\texttt{c}[x]=0$,
 the answer for the query decreases by one.
 
 In this problem, the time needed to perform
 each step is $O(1)$, so the total time complexity
 of the algorithm is $O(n \sqrt n)$.
-
-
