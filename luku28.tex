@@ -1,29 +1,22 @@
 \chapter{Segment trees revisited}
 
-\index{segmenttipuu@segmenttipuu}
+\index{segment tree}
 
-Segmenttipuu on tehokas tietorakenne,
-joka mahdollistaa monenlaisten
-kyselyiden toteuttamisen tehokkaasti.
-Tähän mennessä olemme käyttäneet
-kuitenkin segmenttipuuta melko rajoittuneesti.
-Nyt on aika tutustua pintaa syvemmältä
-segmenttipuun mahdollisuuksiin.
+A segment tree is a versatile data structure
+that can be used in many different situations.
+However, there are many topics related to segment trees
+that we haven't touched yet.
+Now it's time to learn some more advanced variations
+of segment trees and see their full potential.
 
-Tähän mennessä olemme kulkeneet segmenttipuuta
-\textit{alhaalta ylöspäin} lehdistä juureen.
-Vaihtoehtoinen tapa toteuttaa puun käsittely
-on kulkea \textit{ylhäältä alaspäin} juuresta lehtiin.
-Tämä kulkusuunta on usein kätevä silloin,
-kun kyseessä on perustilannetta
-monimutkaisempi segmenttipuu.
-
-Esimerkiksi välin $[a,b]$ summan laskeminen
-segmenttipuussa tapahtuu alhaalta ylöspäin 
-tuttuun tapaan näin (luku 9.3):
+So far, we have implemented the operations
+of a segment tree by walking \emph{from the bottom to the top},
+from the leaves to the root.
+For example, we have calculated the sum of a range $[a,b]$
+as follows (Chapter 9.3):
 
 \begin{lstlisting}
-int summa(int a, int b) {
+int sum(int a, int b) {
     a += N; b += N;
     int s = 0;
     while (a <= b) {
@@ -34,51 +27,48 @@ int summa(int a, int b) {
     return s;
 }
 \end{lstlisting}
-Ylhäältä alaspäin toteutettuna funktiosta tulee:
+However, in more advanced segment trees,
+it's beneficial to implement the operations
+in another way, \emph{from the top to the bottom},
+from the root to the leaves.
+Using this approach, the function becomes as follows:
 
 \begin{lstlisting}
-int summa(int a, int b, int k, int x, int y) {
+int sum(int a, int b, int k, int x, int y) {
     if (b < x || a > y) return 0;
     if (a == x && b == y) return p[k];
     int d = (y-x+1)/2;
-    return summa(a, min(x+d-1,b), 2*k, x, x+d-1) +
-           summa(max(x+d,a), b, 2*k+1, x+d, y);
+    return sum(a, min(x+d-1,b), 2*k, x, x+d-1) +
+           sum(max(x+d,a), b, 2*k+1, x+d, y);
 }
 \end{lstlisting}
-Nyt välin $[a,b]$ summan saa laskettua
-kutsumalla funktiota näin:
+Now we can calulate the sum of the range $[a,b]$
+as follows:
 
 \begin{lstlisting}
-int s = summa(a, b, 1, 0, N-1);
+int s = sum(a, b, 1, 0, N-1);
 \end{lstlisting}
+The parameter $k$ is the current position
+in array \texttt{p}.
+Initially $k$ equals 1, because we begin
+at the root of the segment tree.
+The range $[x,y]$ corresponds to $k$,
+and is initially $[0,N-1]$.
+If $[a,b]$ is outside $[x,y]$,
+the sum of the range is 0,
+and if $[a,b]$ equals $[x,y]$,
+the sum can be found in array \texttt{p}.
+If $[a,b]$ is completely or partially inside $[x,y]$,
+the search continues recursively to the
+left and right half of $[x,y]$.
+The size of both halves is $d=\frac{1}{2}(y-x+1)$;
+the left half is $[x,x+d-1]$
+and the right half is $[x+d,y]$.
 
-Parametri $k$ ilmaisee kohdan
-taulukossa \texttt{p}.
-Aluksi $k$:n arvona on 1,
-koska summan laskeminen alkaa
-segmenttipuun juuresta.
-
-Väli $[x,y]$ on parametria $k$ vastaava väli,
-aluksi koko kyselyalue eli $[0,N-1]$.
-Jos väli $[a,b]$ on välin $[x,y]$
-ulkopuolella, välin summa on 0.
-Jos taas välit $[a,b]$ ja $[x,y]$
-ovat samat, summan saa taulukosta \texttt{p}.
-
-Jos väli $[a,b]$ on kokonaan tai osittain välin $[x,y]$
-sisällä, haku jatkuu rekursiivisesti
-välin $[x,y]$ vasemmasta ja oikeasta puoliskosta.
-Kummankin puoliskon koko on $d=\frac{1}{2}(y-x+1)$,
-joten vasen puolisko kattaa välin $[x,x+d-1]$
-ja oikea puolisko kattaa välin $[x+d,y]$.
-
-Seuraava kuva näyttää,
-kuinka haku etenee puussa,
-kun lasketaan puun alle
-merkityn välin summa.
-Harmaat solmut ovat kohtia,
-joissa rekursio päättyy ja välin
-summan saa taulukosta \texttt{p}.
+The following picture shows how the search proceeds
+when calculating the sum of the marked elements.
+The gray nodes indicate nodes where the recursion
+stops and the sum of the range can be found in array \texttt{p}.
 \\
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -169,59 +159,61 @@ summan saa taulukosta \texttt{p}.
 \draw [decoration={brace}, decorate, line width=0.5mm] (14,-0.25) -- (5,-0.25);
 \end{tikzpicture}
 \end{center}
-Myös tässä toteutuksessa kyselyn aikavaativuus on $O(\log n)$,
-koska haun aikana käsiteltävien solmujen määrä on $O(\log n)$.
+Also in this implementation,
+the time complexity of a range query is $O(\log n)$,
+because the total number of processed nodes is $O(\log n)$.
 
-\section{Laiska eteneminen}
+\section{Lazy propagation}
 
-\index{laiska eteneminen@laiska eteneminen}
-\index{laiska segmenttipuu@laiska segmenttipuu}
+\index{lazy propagation}
+\index{lazy segment tree}
 
-\key{Laiska eteneminen}
-mahdollistaa segmenttipuun,
-jossa voi sekä muuttaa väliä että kysyä tietoa väliltä
-ajassa $O(\log n)$.
-Ideana on suorittaa muutokset ja kyselyt ylhäältä
-alaspäin ja toteuttaa muutokset laiskasti niin,
-että ne välitetään puussa alaspäin vain silloin,
-kun se on välttämätöntä.
+Using \key{lazy propagation}, we can construct
+a segment tree that supports both range updates
+and range queries in $O(\log n)$ time.
+The idea is to perform the updates and queries
+from the top to the bottom, and process the updates
+\emph{lazily} so that they are propagated
+down the tree only when it is necessary.
 
-Laiskassa segmenttipuussa solmuihin liittyy
-kahdenlaista tietoa.
-Kuten tavallisessa segmenttipuussa,
-jokaisessa solmussa on sitä vastaavan välin
-summa tai muu haluttu tieto.
-Tämän lisäksi solmussa voi olla laiskaan etenemiseen
-liittyvää tietoa, jota ei ole vielä välitetty
-solmusta alaspäin.
+In a lazy segment tree, nodes contain two types of
+information.
+Like in a normal segment tree,
+each node contains the sum or some other value
+of the corresponding subarray.
+In addition, the node may contain information
+related to lazy updates, which has not been
+propagated yet to its children.
 
-Välin muutostapa voi olla joko
-\textit{lisäys} tai \textit{asetus}.
-Lisäyksessä välin jokaiseen alkioon lisätään
-tietty arvo, ja asetuksessa välin
-jokainen alkio saa tietyn arvon.
-Kummankin operaation toteutus on melko samanlainen,
-ja puu voi myös sallia samaan aikaan
-molemmat muutostavat.
+There are two possible types for range updates:
+\emph{addition} and \emph{insertion}.
+In addition, each element in the range is
+increased by some value,
+and in insertion, each element in the range
+is assigned some value.
+Both operations can be implemented using
+similar ideas, and it's possible to construct
+a tree that supports both the operations
+simultaneously.
 
-\subsubsection{Laiska segmenttipuu}
+\subsubsection{Lazy segment tree}
 
-Tarkastellaan esimerkkinä tilannetta,
-jossa segmenttipuun
-tulee toteuttaa seuraavat operaatiot:
+Let's consider an example where our goal is to
+construct a segment tree that supports the following operations:
+
 \begin{itemize}
-\item lisää jokaisen välin $[a,b]$ alkioon arvo $u$
-\item laske välin $[a,b]$ alkioiden summa
+\item increase each element in $[a,b]$ by $u$
+\item calculate the sum of elements in $[a,b]$
 \end{itemize}
-Toteutamme puun, jonka jokaisessa
-solmussa on kaksi arvoa $s/z$:
-välin lukujen summa $s$,
-kuten tavallisessa segmenttipuussa, sekä
-laiska muutos $z$,
-joka tarkoittaa,
-että kaikkiin välin lukuihin tulee lisätä $z$.
-Seuraavassa puussa jokaisessa solmussa $z=0$
-eli mitään muutoksia ei ole kesken.
+We will construct a tree where each node
+contains two values $s/z$:
+$s$ denotes the sum of elements in the range,
+like in a standard segment tree,
+and $z$ denotes a lazy update,
+which means that all elements in the range
+should be increased by $z$.
+In the following tree, $z=0$ for all nodes,
+so there are no lazy updates.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (16,1);
@@ -294,19 +286,19 @@ eli mitään muutoksia ei ole kesken.
 \end{tikzpicture}
 \end{center}
 
-Kun välin $[a,b]$ solmuja kasvatetaan $u$:lla,
-alkaa kulku puun juuresta lehtiä kohti.
-Kulun aikana tapahtuu kahdenlaisia muutoksia puun solmuihin:
+When a range $[a,b]$ is increased by $u$,
+we walk from the root towards the leaves
+and modify the nodes in the tree as follows:
+If the range $[x,y]$ of a node is
+completely inside the range $[a,b]$,
+we increase the $z$ value of the node by $u$ and stop.
+However, if $[x,y]$ only partially belongs to $[a,b]$,
+we increase the $s$ value of the node by $hu$,
+where $h$ is the size of the intersection of $[a,b]$
+and $[x,y]$, and continue our walk recursively in the tree.
 
-Jos solmun väli $[x,y]$ kuuluu kokonaan
-muutettavalle välille $[a,b]$,
-solmun $z$-arvo kasvaa $u$:llä ja kulku pysähtyy.
-Jos taas väli $[x,y]$ kuuluu osittain välille $[a,b]$,
-solmun $s$-arvo kasvaa $hu$:llä,
-missä $h$ on välien $[a,b]$ ja $[x,y]$ yhteisen osan pituus,
-ja kulku jatkuu rekursiivisesti alaspäin.
-
-Kasvatetaan esimerkiksi puun alle merkittyä väliä 2:lla:
+For example, the following picture shows the tree after
+increasing the elements in the range marked at the bottom by 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=gray!50] (5,0) rectangle (6,1);
@@ -395,23 +387,24 @@ Kasvatetaan esimerkiksi puun alle merkittyä väliä 2:lla:
 \end{tikzpicture}
 \end{center}
 
-Välin $[a,b]$ summan laskenta tapahtuu myös
-kulkuna puun juuresta lehtiä kohti.
-Jos solmun väli $[x,y]$ kuuluu kokonaan väliin $[a,b]$,
-kyselyn summaan lisätään solmun $s$-arvo
-sekä mahdollinen $z$-arvon tuottama lisäys.
-Muussa tapauksessa kulku jatkuu rekursiivisesti alaspäin solmun lapsiin.
+We also calculate the sum in a range $[a,b]$
+by walking in the tree from the root towards the leaves.
+If the range $[x,y]$ of a node completely belongs
+to $[a,b]$, we add the $s$ value of the node to the sum.
+Otherwise, we continue the search recursively
+downwards in the tree.
 
-Aina ennen solmun käsittelyä siinä mahdollisesti
-oleva laiska muutos välitetään tasoa alemmas.
-Tämä tapahtuu sekä välin muutoskyselyssä
-että summakyselyssä.
-Ideana on, että laiska muutos etenee alaspäin
-vain silloin, kun tämä on välttämätöntä,
-jotta puun käsittely on tehokasta.
+Always before processing a node,
+the value of the lazy update is propagated
+to the children of the node.
+This happens both in a range update
+and a range query.
+The idea is that the lazy update will be propagated
+downwards only when it is necessary,
+so that the operations are always efficient.
 
-Seuraava kuva näyttää, kuinka äskeinen puu muuttuu,
-kun siitä lasketaan puun alle merkityn välin summa:
+The following picture shows how the tree changes
+when we calculate the sum in the marked range:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (16,1);
@@ -495,52 +488,54 @@ kun siitä lasketaan puun alle merkityn välin summa:
 \draw[color=blue,thick] (8,1.5) rectangle (12,5.5);
 \end{tikzpicture}
 \end{center}
-Tämän kyselyn seurauksena laiska muutos eteni alaspäin
-laatikolla ympäröidyssä puun osassa.
-Laiskaa muutosta täytyi viedä alaspäin, koska kyselyn
-kohteena oleva väli osui osittain laiskan muutoksen välille.
+The result of this query was that a lazy update was
+propagated downwards in the nodes that are inside the rectangle.
+It was necessary to propagate the lazy update,
+because some of the updated elements were inside the range.
 
-Huomaa, että joskus puussa olevia laiskoja muutoksia täytyy yhdistää.
-Näin tapahtuu silloin, kun solmussa on valmiina laiska muutos
-ja siihen tulee ylhäältä toinen laiska muutos.
-Tässä tapauksessa yhdistäminen on helppoa,
-koska muutokset $z_1$ ja $z_2$ aiheuttavat yhdessä muutoksen $z_1+z_2$.
+Note that sometimes it's necessary to combine lazy updates.
+This happens when a node already has a lazy update,
+and another lazy update will be added to it.
+In the above tree, it's easy to combine lazy updates
+because updates $z_1$ and $z_2$ combined equal to update $z_1+z_2$.
 
-\subsubsection{Polynomimuutos}
+\subsubsection{Polynomial update}
 
-Laiskaa segmenttipuuta voi yleistää niin,
-että väliä muuttaa polynomi
+A lazy update can be generalized so that it's
+allowed to update a range by a polynomial
 \[p(u) = t_k u^k + t_{k-1} u^{k-1} + \cdots + t_0.\]
 
-Ideana on, että välin ensimmäisen kohdan
-muutos on $p(0)$, toisen kohdan muutos on $p(1)$ jne.,
-eli välin $[a,b]$ kohdan $i$ muutos on $p(i-a)$.
-Esimerkiksi polynomin $p(u)=u+1$ lisäys välille
-$[a,b]$ tarkoittaa, että kohta $a$ kasvaa 1:llä,
-kohta $a+1$ kasvaa 2:lla, kohta $a+2$ kasvaa 3:lla jne.
+Here, the update for the first element in the range is $p(0)$,
+for the second element $p(1)$, etc., so the update
+at index $i$ in range $[a,b]$ is $p(i-a)$.
+For example, adding a polynomial $p(u)=u+1$
+to range $[a,b]$ means that the element at index $a$
+increases by 1, the element at index $a+1$
+increases by 2, etc.
 
-Polynomimuutoksen voi toteuttaa niin,
-että jokaisessa solmussa on $k+2$ arvoa,
-missä $k$ on polynomin asteluku.
-Arvo $s$ kertoo solmua vastaavan välin summan kuten ennenkin,
-ja arvot $z_0,z_1,\ldots,z_k$ ovat polynomin kertoimet,
-joka ilmaisee väliin kohdistuvan laiskan muutoksen.
+A polynomial update can be supported by
+storing $k+2$ values to each node where $k$
+equals the degree of the polynomial.
+The value $s$ is the sum of the elements in the range,
+and values $z_0,z_1,\ldots,z_k$ are the coefficients
+of a polynomial that corresponds to a lazy update.
 
-Nyt välin $[x,y]$ summa on
+Now, the sum of $[x,y]$ is
 \[s+\sum_{u=0}^{y-x} z_k u^k + z_{k-1} u^{k-1} + \cdots + z_0,\]
-jonka saa laskettua tehokkaasti osissa summakaavoilla.
-Esimerkiksi termin $z_0$ summaksi tulee
-$(y-x+1)z_0$ ja termin $z_1 u$ summaksi tulee
+that can be efficiently calculated using sum formulas
+For example, the value $z_0$ corresponds to the sum
+$(y-x+1)z_0$, and the value $z_1 u$ corresponds to the sum
 \[z_1(0+1+\cdots+y-x) = z_1 \frac{(y-x)(y-x+1)}{2} .\]
 
-Kun muutos etenee alaspäin puussa,
-polynomin $p(u)$ indeksointi muuttuu,
-koska jokaisella välillä $[x,y]$
-polynomin arvot tulevat kohdista $x=0,1,\ldots,y-x$.
-Tämä ei kuitenkaan tuota ongelmia,
-koska $p'(u)=p(u+h)$ on aina
-samanasteinen polynomi kuin $p(u)$.
-Esimerkiksi jos $p(u)=t_2 u^2+t_1 u-t_0$, niin
+When propagating an update in the tree,
+the indices of the polynomial $p(u)$ change,
+because in each range $[x,y]$,
+the values are
+calculated for $x=0,1,\ldots,y-x$.
+However, this is not a problem, because
+$p'(u)=p(u+h)$ is a polynomial
+of equal degree as $p(u)$.
+For example, if $p(u)=t_2 u^2+t_1 u-t_0$, then
 \[p'(u)=t_2(u+h)^2+t_1(u+h)-t_0=t_2 u^2 + (2ht_2+t_1)u+t_2h^2+t_1h-t_0.\]
 
 \section{Dynaaminen toteutus}
