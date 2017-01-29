@@ -538,19 +538,21 @@ of equal degree as $p(u)$.
 For example, if $p(u)=t_2 u^2+t_1 u-t_0$, then
 \[p'(u)=t_2(u+h)^2+t_1(u+h)-t_0=t_2 u^2 + (2ht_2+t_1)u+t_2h^2+t_1h-t_0.\]
 
-\section{Dynaaminen toteutus}
+\section{Dynamic trees}
 
-\index{dynaaminen segmenttipuu@dynaaminen segmenttipuu}
+\index{dynamic segment tree}
 
-Tavallinen segmenttipuu on staattinen,
-eli jokaiselle solmulle on paikka taulukossa
-ja puu vie kiinteän määrän muistia.
-Tämä toteutus kuitenkin tuhlaa muistia,
-jos suurin osa puun solmuista on tyhjiä.
-\key{Dynaaminen segmenttipuu} varaa muistia vain
-niille solmuille, joita todella tarvitaan.
+A regular segment tree is static,
+which means that each node has a fixed position
+in the array and storing the tree requires
+a fixed amount of memory.
+However, if most nodes are empty, such an
+implementation wastes memory.
+In a \key{dynamic segment tree},
+memory is reserved only for nodes that
+are actually needed.
 
-Solmut on kätevää tallentaa tietueina tähän tapaan:
+The nodes can be represented as structs as follows:
 
 \begin{lstlisting}
 struct node {
@@ -560,42 +562,39 @@ struct node {
     node(int x, int a, int b) : s(s), x(x), y(y) {}
 };
 \end{lstlisting}
-Tässä $s$ on solmussa oleva arvo,
-$[x,y]$ on solmua vastaava väli
-ja $l$ ja $r$ osoittavat
-solmun vasempaan ja oikeaan alipuuhun.
+Here $s$ is the value of the node,
+$[x,y]$ is the corresponding range,
+and $l$ and $r$ point to the left
+and right subtree.
 
-Tämän jälkeen solmuja voi käsitellä seuraavasti:
+After this, nodes can be manipulated as follows:
 
 \begin{lstlisting}
-// uuden solmun luonti
+// create new node
 node *u = new node(0, 0, 15);
-// kentän muuttaminen
+// change value
 u->s = 5;
 \end{lstlisting}
 
-\subsubsection{Harva segmenttipuu}
+\subsubsection{Sparse segment tree}
 
-\index{harva segmenttipuu@harva segmenttipuu}
+\index{sparse segment tree}
 
-Dynaaminen segmenttipuu on hyödyllinen,
-jos puun indeksialue $[0,N-1]$ on \textit{harva}
-eli $N$ on suuri mutta vain
-pieni osa indekseistä on käytössä.
-Siinä missä tavallinen segmenttipuu 
-vie muistia $O(N)$,
-dynaaminen segmenttipuu vie muistia
-vain $O(n \log N)$, missä $n$ on
-käytössä olevien indeksien määrä.
+A dynamic segment tree is useful if
+the range $[0,N-1]$ covered by the tree is \emph{sparse},
+which means that $N$ is large but only a
+small portion of the indices are used.
+While a regular segment tree uses $O(n)$ memory,
+a dynamic segment tree only uses $O(n \log N)$ memory,
+where $n$ is the number of indices used.
 
-\key{Harva segmenttipuu} aluksi tyhjä
-ja sen ainoa solmu on $[0,N-1]$.
-Kun puu muuttuu, siihen lisätään
-solmuja dynaamisesti sitä mukaa kuin niitä tarvitaan
-uusien indeksien vuoksi.
-Esimerkiksi jos $N=16$ ja indeksejä
-3 ja 10 on muutettu,
-puu sisältää seuraavat solmut:
+A \key{sparse segment tree} is initially empty
+and its only node is $[0,N-1]$.
+When the tree changes, new nodes are added dynamically
+always when they are needed because of new indices.
+For example, if $N=16$, and the elements
+in indices 3 and 10 have been changes,
+the tree contains the following nodes:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \scriptsize
@@ -621,43 +620,45 @@ puu sisältää seuraavat solmut:
 \end{tikzpicture}
 \end{center}
 
-Reitti puun juuresta lehteen sisältää
-$O(\log N)$ solmua,
-joten jokainen muutos puuhun lisää
-enintään $O(\log N)$ uutta solmua puuhun.
-Niinpä $n$ muutoksen jälkeen puussa
-on enintään $O(n \log N)$ solmua.
+Any path from the root to a leaf contains
+$O(\log N)$ nodes,
+so each change adds at most $O(\log n)$
+new nodes to the tree.
+Thus, after $n$ changes, the tree contains
+at most $O(n \log N)$ nodes.
 
-Huomaa, että jos kaikki tarvittavat indeksit
-ovat tiedossa
-algoritmin alussa, dynaamisen segmenttipuun
-sijasta voi käyttää tavallista segmenttipuuta
-ja indeksien pakkausta (luku 9.4).
-Tämä ei ole kuitenkaan mahdollista,
-jos indeksit syntyvät vasta algoritmin aikana.
+Note that if all indices of the elements
+are known at the beginning of the algorithm,
+a dynamic segment tree is not needed,
+but we can use a regular segment tree with
+index compression (Chapter 9.4).
+However, this is not possible if the indices
+are generated during the algorithm.
 
-\subsubsection{Persistentti segmenttipuu}
+\subsubsection{Persistent segment tree}
 
-\index{persistentti segmenttipuu@persistentti segmenttipuu}
-\index{muutoshistoria@muutoshistoria}
+\index{persistent segment tree}
+\index{version history}
 
-Dynaamisen toteutuksen avulla on myös
-mahdollista luoda \key{persistentti segmenttipuu},
-joka säilyttää puun muutoshistorian.
-Tällöin muistissa on jokainen
-segmenttipuun vaihe, joka on esiintynyt
-algoritmin suorituksen aikana.
+Using a dynamic implementation,
+it is also possible to create a
+\key{persistent segment tree} that stores
+the \key{version history} of the tree.
+In such an implementation, we can
+efficiently access
+all versions of the tree that have been
+existed during the algorithm.
 
-Muutoshistorian hyötynä on,
-että kaikkia vanhoja puita voi käsitellä
-segmenttipuun tapaan,
-koska niiden rakenne on edelleen olemassa.
-Vanhoista puista voi myös johtaa uusia
-puita, joita voi muokata edelleen.
+When the version history is available,
+we can access all versions of the tree
+like a regular segment tree, because their
+structure is stored.
+We can also derive new trees from the history
+and further manipulate them.
 
-Tarkastellaan esimerkiksi seuraavaa muutossarjaa,
-jossa punaiset solmut muuttuvat päivityksessä
-ja muut solmut säilyvät ennallaan:
+Consider the following sequence of updates,
+where red nodes change in an update
+and other nodes remain the same:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -703,18 +704,18 @@ ja muut solmut säilyvät ennallaan:
 \path[draw,thick,->] (3c) -- (6c);
 \path[draw,thick,->] (3c) -- (7c);
 
-\node at (3,-3) {vaihe 1};
-\node at (3+5,-3) {vaihe 2};
-\node at (3+10,-3) {vaihe 3};
+\node at (3,-3) {step 1};
+\node at (3+5,-3) {step 2};
+\node at (3+10,-3) {step 3};
 \end{tikzpicture}
 \end{center}
-Jokaisen muutoksen jälkeen suurin osa puun
-solmuista säilyy ennallaan,
-joten muistia säästävä tapa tallentaa muutoshistoria
-on käyttää mahdollisimman paljon hyväksi
-puun vanhoja osia muutoksissa.
-Tässä tapauksessa muutoshistorian voi
-tallentaa seuraavasti:
+After each update, most nodes in the tree
+remain the same,
+so an efficient way to store the version history
+is to represent each tree in the history as a combination
+of new nodes and subtrees of previous trees.
+In this case, the version history can be
+stored as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
 \path[use as bounding box] (0, 1) rectangle (16, -3.5);
@@ -755,36 +756,35 @@ tallentaa seuraavasti:
 
 \path[draw,thick,->] (3c) -- (7c);
 
-\node at (3,-3) {vaihe 1};
-\node at (3+5,-3) {vaihe 2};
-\node at (3+10,-3) {vaihe 3};
+\node at (3,-3) {step 1};
+\node at (3+5,-3) {step 2};
+\node at (3+10,-3) {step 3};
 \end{tikzpicture}
 \end{center}
 
-Nyt muistissa on jokaisesta puun vaiheesta
-puun juuri, jonka avulla pystyy selvittämään
-koko puun rakenteen kyseisellä hetkellä.
-Jokainen muutos tuo vain $O(\log N)$ uutta solmua puuhun,
-kun puun indeksialue on $[0,N-1]$,
-joten koko muutoshistorian pitäminen muistissa on mahdollista.
+The structure of each version of the tree in the history can be
+reconstructed by following the pointers from the root.
+Each update only adds $O(\log N)$ new nodes to the tree
+when the indices are $[0,N-1]$,
+so it is possible to store the full version history
+of the tree.
 
-\section{Tietorakenteet}
+\section{Data structures}
 
-Segmenttipuun solmussa voi olla
-yksittäisen arvon
-sijasta myös jokin tietorakenne,
-joka pitää yllä tietoa solmua vastaavasta välistä.
-Tällöin segmenttipuun operaatiot vievät aikaa
-$O(f(n) \log n)$, missä $f(n)$ on
-yksittäisen solmun tietorakenteen
-käsittelyyn kuluva aika.
+Insted of a single value, a node in a segment tree
+can also contain a data structure that maintains information
+about the corresponding range.
+In this case, the operations of the tree take
+$O(f(n) \log n)$ time, where $f(n)$ is
+the time needed for retrieving or updating the
+information in a single node.
 
-Tarkastellaan esimerkkinä segmenttipuuta,
-jonka avulla voi laskea, montako kertaa
-luku $x$ esiintyy taulukon välillä $[a,b]$.
-Esimerkiksi seuraavassa taulukossa
-luku 1 esiintyy kolme kertaa
-merkityllä välillä:
+As an example, consider a segment tree that
+supports queries of the form
+''how many times does element $x$ appear
+in range $[a,b]$?''
+For example, element 1 appears three times
+in the following subarray:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -802,16 +802,17 @@ merkityllä välillä:
 \end{tikzpicture}
 \end{center}
 
-Ideana on toteuttaa segmenttipuu, jonka
-jokaisessa solmussa on tietorakenne,
-josta voi kysyä,
-montako kertaa luku $x$ esiintyy solmun välillä.
-Tällaisen segmenttipuun avulla
-vastaus kyselyyn syntyy laskemalla yhteen
-esiintymismäärät väleiltä, joista $[a,b]$ muodostuu.
+The idea is to construct a segment tree
+where each node has a data structure
+that can return the number of any element $x$
+in the range.
+Using such a segment tree,
+the answer for a query can be calculated
+by combining the results from the nodes
+that belong to the range.
 
-Esimerkiksi yllä olevasta taulukosta syntyy
-seuraava segmenttipuu:
+For example, the following segment tree
+corresponds to the above array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 
@@ -955,35 +956,32 @@ seuraava segmenttipuu:
 \end{tikzpicture}
 \end{center}
 
+Each node in the tree should contain
+an appropriate data structure, for example a
+\texttt{map} structure.
+In this case, the time needed for accessing
+a node is $O(\log n)$, so the total time complexity
+of a query is $O(\log^2 n)$.
 
-Sopiva tietorakenne segmenttipuun toteuttamiseen on
-hakemistorakenne, joka pitää kirjaa välillä esiintyvien
-lukujen määrästä.
-Esimerkiksi \texttt{map}-ra\-ken\-net\-ta käyttäen
-yhden solmun käsittely vie aikaa $O(\log n)$,
-minkä seurauksena kyselyn aikavaativuus on $O(\log^2 n)$.
+Data structures in nodes increase the memory usage
+of the tree.
+In this example, $O(n \log n)$ memory is needed,
+because the tree consists of $O(\log n)$ levels,
+and the map structures contain a total
+of $O(n)$ values at each level.
 
-Solmuissa olevat tietorakenteet kasvattavat
-segmenttipuun muistinkäyttöä.
-Tässä tapauksessa
-segmenttipuu vie tilaa $O(n \log n)$,
-koska siinä on $O(\log n)$ tasoa, joista
-jokaisella hakemistorakenteet sisältävät $O(n)$ lukua.
+\section{Two-dimensionality}
 
-\section{Kaksiulotteisuus}
+\index{two-dimensional segment tree}
 
-\index{kaksiulotteinen segmenttipuu@kaksiulotteinen segmenttipuu}
+A \key{two-dimensional segment tree} supports
+queries about rectangles in a two-dimensional array.
+Such a segment tree can be implemented as
+nested segmenet trees: a big tree corresponds to the
+rows in the array, and each node contains a small tree
+that corresponds to a column.
 
-\key{Kaksiulotteinen segmenttipuu} mahdollistaa
-kaksiulotteisen taulukon
-suorakulmaisia alueita koskevat kyselyt.
-Tällaisen segmenttipuun voi toteuttaa
-sisäkkäisinä segmenttipuina:
-suuri puu vastaa taulukon rivejä
-ja sen kussakin solmussa on pieni puu,
-joka vastaa taulukon sarakkeita.
-
-Esimerkiksi taulukon
+For example, in the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,4);
@@ -1009,7 +1007,8 @@ Esimerkiksi taulukon
 \node[anchor=center] at (3.5, 3.5) {6};
 \end{tikzpicture}
 \end{center}
-alueiden summia voi laskea seuraavasta segmenttipuusta:
+sums of rectangles can be calculated
+from the following segment tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.4]
 \footnotesize
@@ -1155,16 +1154,12 @@ alueiden summia voi laskea seuraavasta segmenttipuusta:
 \end{tikzpicture}
 \end{center}
 
-Kaksiulotteisen
-segmenttipuun operaatiot vievät aikaa
-$O(\log^2 n)$,
-koska suuressa puussa ja kussakin
-pienessä puussa on $O(\log n)$ tasoa.
-Segmenttipuu vie muistia $O(n^2)$,
-koska jokainen pieni puu
-vie muistia $O(n)$.
+The operations in a two-dimensional segment tree
+take $O(\log^2 n)$ time, because the big tree
+and each small tree contain $O(\log n)$ levels.
+The tree uses $O(n^2)$ memory, because each
+small tree uses $O(n)$ memory.
 
-Vastaavalla tavalla voi luoda myös segmenttipuita,
-joissa on vielä enemmän ulottuvuuksia,
-mutta tälle on harvoin tarvetta.
-
+Using a similar idea, it is also possible to create
+segment trees with more dimensions,
+but this is rarely needed.
