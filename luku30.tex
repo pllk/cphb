@@ -1,33 +1,31 @@
-\chapter{Sweep line}
+\chapter{Sweep line algorithms}
 
-\index{pyyhkxisyviiva@pyyhkäisyviiva}
+\index{sweep line}
 
-\key{Pyyhkäisyviiva} on tason halki kulkeva viiva,
-jonka avulla voi ratkaista useita geometrisia tehtäviä.
-Ideana on esittää tehtävä joukkona tapahtumia,
-jotka vastaavat tason pisteitä.
-Kun pyyhkäisyviiva törmää pisteeseen,
-tapahtuma käsitellään ja tehtävän ratkaisu edistyy.
+Many geometric problems can be solved using
+\key{sweep line} algorithms.
+The idea in such algorithms is to represent
+the problem as a set of events that correspond
+to points in the plane.
+The events are processed in a sorted order
+according to their x or y coordinate.
 
-Tarkastellaan esimerkkinä tekniikan
-käyttämisestä tehtävää,
-jossa yrityksessä on töissä $n$ henkilöä
-ja jokaisesta henkilöstä tiedetään,
-milloin hän tuli töihin ja lähti töistä
-tiettynä päivänä.
-Tehtävänä on laskea,
-mikä on suurin määrä henkilöitä,
-jotka olivat samaan aikaan töissä.
+As an example, let us consider a problem
+where there is a company that has $n$ employees,
+and we know for each employee arrival and
+leaving times on a certain day.
+Our task is to calculate the maximum number of
+employees that were in the office at the same time.
 
-Tehtävän voi ratkaista mallintamalla tilanteen
-niin, että jokaista henkilöä vastaa kaksi tapahtumaa:
-tuloaika töihin ja lähtöaika töistä.
-Pyyhkäisyviiva käy läpi tapahtumat aikajärjestyksessä
-ja pitää kirjaa, montako henkilöä oli töissä milloinkin.
-Esimerkiksi tilannetta
+The problem can be solved by modelling the situation
+so that each employee is assigned two events that
+corresponds to the arrival and leaving times.
+After sorting the events, we can go trough them
+and keep track of the number of people in the office.
+For example, the table
 \begin{center}
 \begin{tabular}{ccc}
-henkilö & tuloaika & lähtöaika \\
+person & arrival time & leaving time \\
 \hline
 Uolevi & 10 & 15 \\
 Maija & 6 & 12 \\
@@ -35,7 +33,7 @@ Kaaleppi & 14 & 16 \\
 Liisa & 5 & 13 \\
 \end{tabular}
 \end{center}
-vastaavat seuraavat tapahtumat:
+generates the following events:
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \draw (0,0) rectangle (17,-6.5);
@@ -59,15 +57,16 @@ vastaavat seuraavat tapahtumat:
 \node at (2,-5.5) {Liisa};
 \end{tikzpicture}
 \end{center}
-Pyyhkäisyviiva käy läpi tapahtumat vasemmalta oikealle
-ja pitää yllä laskuria.
-Aina kun henkilö tulee töihin, laskurin arvo
-kasvaa yhdellä, ja kun henkilö lähtee töistä,
-laskurin arvo vähenee yhdellä.
-Tehtävän ratkaisu on suurin laskuri arvo
-pyyhkäisyviivan kulun aikana.
+We go through the events from left to right
+and maintain a counter.
+Always when a person arrives, we increase
+the value of the counter by one,
+and when a person leaves,
+we decrease the value by one.
+The answer for the problem is the maximum
+value of the counter during the algorithm.
 
-Pyyhkäisyviiva kulkee seuraavasti tason halki:
+In the example, the events are processed as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \path[draw,thick,->] (0.5,0.5) -- (16.5,0.5);
@@ -119,26 +118,24 @@ Pyyhkäisyviiva kulkee seuraavasti tason halki:
 \node at (13,-8) {$1$};
 \end{tikzpicture}
 \end{center}
-Kuvan alareunan merkinnät $+$ ja $-$
-tarkoittavat, että laskurin arvo kasvaa
-ja vähenee yhdellä.
-Niiden alapuolella on laskurin uusi arvo.
-Laskurin suurin arvo 3 on voimassa 
-Uolevi tulohetken ja Maijan lähtöhetken välillä.
+The symbols $+$ and $-$ indicate whether the
+value of the counter increases of decreases,
+and the value of the counter is shown below.
+The maximum value of the counter is 3
+between Uolevi's arrival and Maija's leaving.
 
-Ratkaisun aikavaativuus on $O(n \log n)$,
-koska tapahtumien järjestäminen vie aikaa $O(n \log n)$
-ja pyyhkäisyviivan läpikäynti vie aikaa $O(n)$.
+The running time of the solution is $O(n \log n)$,
+because sorting the events takes $O(n \log n)$ time
+and the rest of the algorithm takes $O(n)$ time.
 
-\section{Janojen leikkauspisteet}
+\section{Intersection points}
 
-\index{leikkauspiste@leikkauspiste}
+\index{intersection point}
 
-Annettuna on $n$ janaa, joista jokainen
-on vaaka- tai pystysuuntainen.
-Tehtävänä on laskea tehokkaasti, monessako pisteessä
-kaksi janaa leikkaavat toisensa.
-Esimerkiksi tilanteessa
+Given a set of $n$ line segments, each of them being either
+horizontal or vertical, the problem is to efficiently
+calculate the total number of intersection points.
+For example, when the line segments are
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 \path[draw,thick,-] (0,2) -- (5,2);
@@ -148,7 +145,7 @@ Esimerkiksi tilanteessa
 \path[draw,thick,-] (8,2) -- (8,5);
 \end{tikzpicture}
 \end{center}
-leikkauspisteitä on kolme:
+there are three intersection points:
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 \path[draw,thick,-] (0,2) -- (5,2);
@@ -164,21 +161,20 @@ leikkauspisteitä on kolme:
 \end{tikzpicture}
 \end{center}
 
+It is easy to solve the problem in $O(n^2)$ time,
+because we can go through all possible pairs of segments
+and check if they intersect.
+However, we can solve the problem more efficiently
+in $O(n \log n)$ time using a sweep line algorithm.
 
-Tehtävä on helppoa ratkaista ajassa $O(n^2)$,
-koska riittää käydä läpi kaikki mahdolliset janaparit
-ja tarkistaa, moniko leikkaa toisiaan.
-Seuraavaksi ratkaisemme tehtävän
-ajassa $O(n \log n)$ pyyhkäisyviivan avulla.
-
-Ideana on luoda janoista kolmenlaisia tapahtumia:
+The idea is to generate two types of events:
 \begin{enumerate}[noitemsep]
-\item[(1)] vaakajana alkaa
-\item[(2)] vaakajana päättyy
-\item[(3)] pystyjana
+\item[(1)] horizontal segment begins
+\item[(2)] horizontal segment ends
+\item[(3)] vertical segment
 \end{enumerate}
 
-Esimerkkitilannetta vastaava pistejoukko on seuraava:
+The following events correspond to the example:
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \path[draw,dashed] (0,2) -- (5,2);
@@ -199,37 +195,35 @@ Esimerkkitilannetta vastaava pistejoukko on seuraava:
 \end{tikzpicture}
 \end{center}
 
-Algoritmi käy läpi pisteet vasemmalta oikealle
-ja pitää yllä tietorakennetta y-koordinaateista,
-joissa on tällä hetkellä aktiivinen vaakajana.
-Tapahtuman 1 kohdalla vaakajanan y-koordinaatti
-lisätään joukkoon ja tapahtuman 2 kohdalla
-vaakajanan y-koordinaatti poistetaan joukosta.
+We go through the events from left to right
+and use a data structure that maintains a set of
+y coordinates where there is an active horizontal segment.
+At event 1, we add the y coordinate of the segment
+to the set, and at event 2, we remove the
+y coordinate from the set.
 
-Algoritmi laskee janojen leikkauspisteet
-tapahtumien 3 kohdalla.
-Kun pystyjana kulkee y-koordinaattien
-$y_1 \ldots y_2$ välillä,
-algoritmi laskee tietorakenteesta,
-monessako vaakajanassa on y-koordinaatti
-välillä $y_1 \ldots y_2$ ja kasvattaa
-leikkauspisteiden määrää tällä arvolla.
+Intersection points are calculated at event 3.
+When there is a vertical segment between points
+$y_1$ and $y_2$, we count the number of active
+horizontal segments whose y coordinate is between
+$y_1$ and $y_2$, and at this number to the total
+number of intersection points.
 
-Sopiva tietorakenne vaakajanojen y-koordinaattien
-tallentamiseen on bi\-nää\-ri-indeksipuu tai segmenttipuu,
-johon on tarvittaessa yhdistetty indeksien pakkaus.
-Tällöin jokaisen pisteen käsittely
-vie aikaa $O(\log n)$, joten algoritmin
-kokonaisaikavaativuus on $O(n \log n)$.
+An appropriate data structure for storing
+y coordinates of horizontal segments is either
+a binary-indexed tree or a segment tree,
+possibly with index compression.
+Using such structures, processing each event
+takes $O(\log n)$ time, so the total running
+time of the algorithm is $O(n \log n)$.
 
-\section{Lähin pistepari}
+\section{Nearest points}
 
-\index{lzhin pistepari@lähin pistepari}
+\index{nearest points}
 
-Seuraava tehtävämme on etsiä $n$ pisteen
-joukosta kaksi pistettä, jotka ovat
-mahdollisimman lähellä toisiaan.
-Esimerkiksi tilanteessa
+Given a set of $n$ points, our next problem is
+to find two points whose distance is minimum.
+For example, if the points are
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0)--(12,0)--(12,4)--(0,4)--(0,0);
@@ -251,7 +245,7 @@ Esimerkiksi tilanteessa
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-lähin pistepari on seuraava:
+we should find the following points:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0)--(12,0)--(12,4)--(0,4)--(0,0);
@@ -274,32 +268,30 @@ lähin pistepari on seuraava:
 \end{center}
 \end{samepage}
 
-Tämäkin tehtävä ratkeaa
-$O(n \log n)$-ajassa pyyhkäisyviivan avulla.
-Algoritmi käy pisteet läpi vasemmalta oikealle
-ja pitää yllä arvoa $d$,
-joka on pienin kahden
-pisteen etäisyys.
-Kunkin pisteen kohdalla algoritmi
-etsii lähimmän toisen pisteen vasemmalta.
-Jos etäisyys tähän pisteeseen on alle $d$,
-tämä on uusi pienin kahden pisteen etäisyys
-ja algoritmi päivittää $d$:n arvon.
+This problem can be also solved in $O(n \log n)$ time
+using a sweep line algorithm.
+We go through the points from left to right
+and maintain a value $d$: the minimum distance
+between two points so far.
+At each point, we find the nearest point to the left.
+If the distance is less than $d$, it is the
+new minimum distance and we update
+the value of $d$.
 
-Jos käsiteltävä piste on $(x,y)$
-ja jokin vasemmalla oleva piste on
-alle $d$:n etäisyydellä,
-sen x-koordinaatin
-tulee olla välillä $[x-d,x]$
-ja y-koordinaatin tulee olla välillä $[y-d,y+d]$.
-Algoritmin riittää siis tarkistaa
-ainoastaan pisteet, jotka osuvat tälle välille,
-mikä tehostaa hakua merkittävästi.
+If the current point is $(x,y)$
+and there is a point to the left
+within a distance of less than $d$,
+the x coordinate of such a point must
+be between $[x-d,x]$ and the y coordinate
+must be between $[y-d,y+d]$.
+Thus, it suffices to only consider points
+that are located in those ranges,
+which makes the algorithm efficient.
 
-Esimerkiksi seuraavassa kuvassa
-katkoviiva-alue sisältää pisteet,
-jotka voivat olla alle $d$:n etäisyydellä
-tummennetusta pisteestä.
+For example, in the following picture the
+region marked with dashed lines contains
+the points that can be within a distance of $d$
+from the active point:
 \\
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -332,34 +324,31 @@ tummennetusta pisteestä.
 \end{tikzpicture}
 \end{center}
 
-Algoritmin tehokkuus perustuu siihen,
-että $d$:n rajoittamalla alueella
-on aina vain $O(1)$ pistettä.
-Nämä pisteet pystyy käymään läpi
-$O(\log n)$-aikaisesti
-pitämällä algoritmin aikana yllä joukkoa pisteistä,
-joiden x-koordinaatti on välillä $[x-d,x]$
-ja jotka on järjestetty y-koordinaatin mukaan.
+The efficiency of the algorithm is based on the fact
+that the region limited by $d$ always contains
+only $O(1)$ points.
+We can go through those points in $O(\log n)$ time
+by maintaining a set of points whose x coordinate
+is between $[x-d,x]$ and that are sorted according
+to the y coordinate.
 
-Algoritmin aikavaativuus on $O(n \log n)$,
-koska se käy läpi $n$ pistettä
-ja etsii jokaiselle lähimmän
-edeltävän pisteen ajassa $O(\log n)$.
+The time complexity of the algorithm is $O(n \log n)$,
+because it goes through $n$ points and
+finds for each point the nearest point to the left
+in $O(\log n)$ time.
 
-\section{Konveksi peite}
+\section{Convex hull}
 
-\key{Konveksi peite}
-on pienin konveksi monikulmio,
-joka ympäröi kaikki pistejoukon pisteet.
-Konveksius tarkoittaa,
-että minkä tahansa kahden kärkipisteen välinen jana
-kulkee monikulmion sisällä.
-Hyvä mielikuva asiasta on,
-että pistejoukko ympäröidään tiukasti
-viritetyllä narulla.
+The \key{convex hull} is the smallest convex polygon
+that contains all points in a given set.
+Convexity means that a line segment between
+any two vertices of the polygon is completely
+inside the polygon.
+A good intuitive definition is that we surround
+the points using a tight rope.
 
 \begin{samepage}
-Esimerkiksi pistejoukon
+For example, for the points
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) circle [radius=0.1];
@@ -379,7 +368,7 @@ Esimerkiksi pistejoukon
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-konveksi peite on seuraava:
+the convex hull is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0)--(4,-1)--(7,1)--(6,3)--(2,4)--(0,2)--(0,0);
@@ -401,34 +390,30 @@ konveksi peite on seuraava:
 \end{tikzpicture}
 \end{center}
 
-\index{Andrew'n algoritmi}
+\index{Andrew's algorithm}
 
-Tehokas ja helposti toteutettava menetelmä
-konveksin peitteen muodostamiseen
-on \key{Andrew'n algoritmi},
-jonka aikavaativuus on $O(n \log n)$.
-Algoritmi muodostaa konveksin peitteen kahdessa
-osassa: ensin peitteen yläosan ja sitten peitteen alaosan.
-Kummankin osan muodostaminen tapahtuu samalla tavalla,
-minkä vuoksi voimme keskittyä yläosan muodostamiseen.
+A good way to construct the convex hull
+is \key{Andrew's algorithm}
+that works in $O(n \log n)$ time.
+The algorithm constructs the convex hull
+in two steps:
+first the upper hull and then the lower hull.
+Both steps are similar, so we can focus on
+constructing the upper hull.
 
-Algoritmi järjestää ensin pisteet ensisijaisesti x-koordinaatin
-ja toissijaisesti y-koordinaatin mukaan.
-Tämän jälkeen se käy pisteet läpi järjestyksessä
-ja lisää aina uuden pisteen osaksi peitettä.
-Aina pisteen lisäämisen jälkeen algoritmi tarkastaa
-ristitulon avulla,
-muodostavatko kolme viimeistä pistettä peitteessä
-vasemmalle kääntyvän osan.
-Jos näin on,
-algoritmi poistaa näistä keskimmäisen pisteen.
-Tämän jälkeen algoritmi tarkastaa uudestaan
-kolme viimeistä pistettä ja poistaa taas tarvittaessa
-keskimmäisen pisteen.
-Sama jatkuu, kunnes kolme viimeistä pistettä
-eivät muodosta vasemmalle kääntyvää osaa.
+We sort the points primarily according to
+x coordinates and secondarily according to y coordinates.
+After this, we go through the points and always
+add the new point to the hull.
+After adding a point we check using cross products
+whether the tree last point in the hull turn left.
+If this holds, we remove the middle point from the hull.
+After this we keep checking again the three last points
+and removing points, until the three last points
+don't turn left.
 
-Seuraava kuvasarja esittää Andrew'n algoritmin toimintaa:
+The following pictures show how
+Andrew's algorithm works:
 \\
 \begin{tabular}{ccccccc}
 \\
