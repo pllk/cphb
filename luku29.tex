@@ -1,17 +1,17 @@
 \chapter{Geometry}
 
-\index{geometria@geometria}
+\index{geometry}
 
-Geometrian tehtävissä on usein haasteena keksiä,
-mistä suunnasta ongelmaa kannattaa lähestyä,
-jotta ratkaisun saa koodattua mukavasti ja
-erikoistapauksia tulee mahdollisimman vähän.
+In geometric problems, a usual challenge is
+to realize how to approach the problem so that
+the solution can be conveniently implemented
+and the number of special cases is small.
 
-Tarkastellaan esimerkkinä tehtävää,
-jossa annettuna on nelikulmion kulmapisteet
-ja tehtävänä on laskea sen pinta-ala.
-Esimerkiksi syötteenä voi olla
-seuraavanlainen nelikulmio:
+As an example, consider a problem where
+we are given the vertices of a quadrilateral
+(a polygon that has four vertices),
+and our task is to calculate its area.
+For example, a possible input for the problem is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
@@ -23,9 +23,9 @@ seuraavanlainen nelikulmio:
 \draw[thick] (6,2) -- (5,6) -- (2,5) -- (1,1) -- (6,2);
 \end{tikzpicture}
 \end{center}
-Yksi tapa lähestyä tehtävää on jakaa nelikulmio
-kahdeksi kolmioksi vetämällä jakoviiva kahden
-vastakkaisen kulmapisteen välille:
+One way to approach the problem is to divide
+the quadrilateral into two triangles by a straight
+line between two opposite vertices:
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -38,21 +38,23 @@ vastakkaisen kulmapisteen välille:
 \draw[dashed,thick] (2,5) -- (6,2);
 \end{tikzpicture}
 \end{center}
-Tämän jälkeen riittää laskea yhteen kolmioiden
-pinta-alat. Kolmion pinta-alan voi laskea
-esimerkiksi \key{Heronin kaavalla}
+After this, it suffices to sum the areas
+of the triangles.
+The area of a triangle can be calculated,
+for example, using \key{Heron's formula}
 \[ \sqrt{s (s-a) (s-b) (s-c)},\]
-kun kolmion sivujen pituudet ovat
-$a$, $b$ ja $c$ ja $s=(a+b+c)/2$.
-\index{Heronin kaava@Heronin kaava}
+where $a$, $b$ and $c$ are the lengths
+of the triangle's sides and
+$s=(a+b+c)/2$.
+\index{Heron's formula}
 
-Tämä on mahdollinen tapa ratkaista tehtävä,
-mutta siinä on ongelma:
-miten löytää kelvollinen tapa vetää jakoviiva?
-Osoittautuu, että
-mitkä tahansa vastakkaiset pisteet eivät kelpaa.
-Esimerkiksi seuraavassa nelikulmiossa
-jakoviiva menee nelikulmion ulkopuolelle:
+This is a possible way to solve the problem,
+but there is one pitfall:
+how to divide the quadrilateral into triangles?
+It turns out that sometimes we can't pick
+arbitrary opposite vertices.
+For example, in the following quadrilateral,
+the division line is outside the quadrilateral:
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -65,7 +67,7 @@ jakoviiva menee nelikulmion ulkopuolelle:
 \draw[dashed,thick] (2,5) -- (6,2);
 \end{tikzpicture}
 \end{center}
-Toinen tapa vetää jakoviiva on kuitenkin toimiva:
+However, another way to draw the line works:
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -78,39 +80,38 @@ Toinen tapa vetää jakoviiva on kuitenkin toimiva:
 \draw[dashed,thick] (3,2) -- (1,1);
 \end{tikzpicture}
 \end{center}
-Ihmiselle on selvää, kumpi jakoviiva jakaa nelikulmion
-kahdeksi kolmioksi, mutta tietokoneen kannalta
-tilanne on hankala.
-
-Osoittautuu, että tehtävän ratkaisuun on olemassa
-paljon helpommin toteutettava tapa,
-jossa ei tarvitse miettiä erikoistapauksia.
-Nelikulmion pinta-alan laskemiseen
-on nimittäin yleinen kaava
+For a human, it is clear which of the lines is the correct
+choice, but for a computer the situation is difficult.
+                           
+However, it turns out that we can solve the problem using
+another method which is much easier to implement
+and doesn't contain any special cases.
+There is a general formula
 \[x_1y_2-x_2y_1+x_2y_3-x_3y_2+x_3y_4-x_4y_3+x_4y_1-x_1y_4,\]
-kun kulmapisteet ovat
+that calculates the area of a quadrilateral
+whose vertices are
 $(x_1,y_1)$,
 $(x_2,y_2)$,
-$(x_3,y_3)$ ja
+$(x_3,y_3)$ and
 $(x_4,y_4)$.
-Tämä kaava on helppo laskea, siinä ei ole erikoistapauksia
-ja osoittautuu, että kaava on mahdollista yleistää
-\textit{kaikille} monikulmioille.
+This formula is easy to calculate, there are no special
+cases, and it turns out that we can generalize the formula
+for \emph{all} polygons.
 
-\section{Kompleksiluvut}
+\section{Complex numbers}
 
-\index{kompleksiluku@kompleksiluku}
-\index{piste@piste}
-\index{vektori@vektori}
+\index{complex number}
+\index{point}
+\index{vector}
 
-\key{Kompleksiluku} on luku muotoa $x+y i$, missä $i = \sqrt{-1}$
-on \key{imaginääriyksikkö}.
-Kompleksiluvun luonteva geometrinen tulkinta on,
-että se esittää kaksiulotteisen tason pistettä $(x,y)$
-tai vektoria origosta pisteeseen $(x,y)$.
+A \key{complex number} is a number of the form $x+y i$,
+where $i = \sqrt{-1}$ is the \key{imaginary unit}.
+A geometric interpretation for a complex number is
+that it represents a two-dimensional point $(x,y)$
+or a vector from the origin to point $(x,y)$.
 
-Esimerkiksi luku $4+2i$ tarkoittaa seuraavaa
-pistettä ja vektoria:
+For example, $4+2i$ corresponds to the
+following point and vector:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
@@ -127,17 +128,16 @@ pistettä ja vektoria:
 
 \index{complex@\texttt{complex}}
 
-C++:ssa on kompleksilukujen käsittelyyn luokka \texttt{complex},
-josta on hyötyä geometriassa.
-Luokan avulla voi esittää pisteen tai vektorin
-kompleksilukuna, ja luokassa on valmiita
-geometriaan soveltuvia työkaluja.
+The complex number class \texttt{complex} in C++ is
+useful when solving geometry problems.
+Using the class, we can store points and vectors
+as complex numbers, and the class also contains tools
+that are useful in geometry.
 
-Seuraavassa koodissa \texttt{C} on koordinaatin tyyppi
-ja \texttt{P} on pisteen tai vektorin tyyppi.
-Lisäksi koodi määrittelee
-lyhennysmerkinnät \texttt{X} ja \texttt{Y},
-joiden avulla pystyy viittaamaan x- ja y-koordinaatteihin.
+In the following code, \texttt{C} is the type of
+a coordinate, and \texttt{P} is the type of a point or vector.
+In addition, the code defines shortcuts \texttt{X} and \texttt{Y}
+that can be used to refer to x and y coordinates.
 
 \begin{lstlisting}
 typedef long long C;
@@ -146,16 +146,16 @@ typedef complex<C> P;
 #define Y imag()
 \end{lstlisting}
 
-Esimerkiksi seuraava koodi määrittelee pisteen $p=(4,2)$
-ja ilmoittaa sen x- ja y-koordinaatin:
+For example, the following code defines a point $p=(4,2)$
+and prints its x and y coordinates:
 
 \begin{lstlisting}
 P p = {4,2};
 cout << p.X << " " << p.Y << "\n"; // 4 2
 \end{lstlisting}
 
-Seuraava koodi määrittelee vektorit $v=(3,1)$
-ja $u=(2,2)$ ja laskee sitten niiden summan $s=v+u$:
+The following code defines vectors $v=(3,1)$ and $u=(2,2)$,
+and after that calculates the sum $s=v+u$.
 
 \begin{lstlisting}
 P v = {3,1};
@@ -164,59 +164,57 @@ P s = v+u;
 cout << s.X << " " << s.Y << "\n"; // 5 3
 \end{lstlisting}
 
-Sopiva koordinaatin tyyppi \texttt{C} on tilanteesta
-riippuen \texttt{long long} (kokonaisluku)
-tai \texttt{long double} (liukuluku).
-Kokonaislukuja kannattaa käyttää aina kun mahdollista,
-koska silloin laskenta on tarkkaa.
+The appropriate type for \texttt{C} is
+\texttt{long long} (integer) or \texttt{long double}
+(real number), depending on the situation.
+It is a good idea to use integers whenever possible,
+because the integer calculations are exact.
 
-Jos koordinaatit ovat liukulukuja,
-niiden vertailussa täytyy ottaa huomioon epätarkkuus.
-Turvallinen tapa tarkistaa,
-ovatko liukuluvut $a$ ja $b$ samat
-on käyttää vertailua $|a-b|<\epsilon$, jossa $\epsilon$
-on pieni luku (esimerkiksi $\epsilon=10^{-9}$).
+If coordinates are real numbers,
+precision error should be taken into account
+when comparing them.
+A safe way to check if numbers $a$ and $b$ are equal
+is the comparison $|a-b|<\epsilon$,
+where $\epsilon$ is a small number (for example, $\epsilon=10^{-9}$).
 
-\subsubsection*{Funktioita}
+\subsubsection*{Functions}
 
-Seuraavissa esimerkeissä koordinaatin tyyppinä on
+In the following examples, the coordinate type is
 \texttt{long double}.
 
-Funktio \texttt{abs(v)} laskee vektorin $v=(x,y)$
-pituuden $|v|$ kaavalla $\sqrt{x^2+y^2}$.
-Sillä voi laskea myös pisteiden $(x_1,y_1)$
-ja $(x_2,y_2)$ etäisyyden,
-koska pisteiden etäisyys
-on sama kuin vektorin $(x_2-x_1,y_2-y_1)$ pituus.
-Joskus hyödyllinen on myös funktio \texttt{norm(v)},
-joka laskee vektorin $v=(x,y)$ pituuden neliön $|v|^2$.
+The function \texttt{abs(v)} calculates the length
+$|v|$ of a vector $v=(x,y)$
+using the formula $\sqrt{x^2+y^2}$.
+The function can also be used for
+calculating the distance between points
+$(x_1,y_1)$ and $(x_2,y_2)$,
+because that distance equals the length
+of the vector $(x_2-x_1,y_2-y_1)$.
 
-Seuraava koodi laskee
-pisteiden $(4,2)$ ja $(3,-1)$ etäisyyden:
+The following code calculates the distance
+of points $(4,2)$ and $(3,-1)$:
 \begin{lstlisting}
 P a = {4,2};
 P b = {3,-1};
 cout << abs(b-a) << "\n"; // 3.60555
 \end{lstlisting}
 
-Funktio \texttt{arg(v)} laskee vektorin $v=(x,y)$
-kulman radiaaneina suhteessa x-akseliin.
-Radiaaneina ilmoitettu kulma $r$ vastaa asteina
-kulmaa $180  r/\pi$ astetta.
-Jos vektori osoittaa suoraan oikealle,
-sen kulma on 0.
-Kulma kasvaa vastapäivään ja vähenee myötäpäivään
-liikuttaessa.
+The function \texttt{arg(v)} calculates the
+angle of a vector $v=(x,y)$ with respect to the x axel.
+The function gives the angle in radians,
+where $r$ radians equals $180 r/\pi$ degrees.
+The angle of a vector that points to the right is 0,
+and the angle decreases clockwise and increases
+counterclockwise.
 
-Funktio \texttt{polar(s,a)} muodostaa vektorin,
-jonka pituus on $s$ ja joka osoittaa kulmaan $a$.
-Lisäksi vektoria pystyy kääntämään kulman $a$
-verran kertomalla se vektorilla,
-jonka pituus on 1 ja kulma on $a$.
+The function \texttt{polar(s,a)} constructs a vector
+whose length is $s$ and that points to angle $a$.
+In addition, a vector can be rotated by angle $a$
+by multiplying it by a vector with length 1 and angle $a$.
 
-Seuraava koodi laskee vektorin $(4,2)$ kulman,
-kääntää sitä sitten $1/2$ radiaania vastapäivään
-ja laskee uuden kulman:
+The following code calculates the angle of
+the vector $(4,2)$, rotates it $1/2$ radians
+counterclockwise, and then calculates the angle again:
 
 \begin{lstlisting}
 P v = {4,2};
@@ -225,19 +223,17 @@ v *= polar(1.0,0.5);
 cout << arg(v) << "\n"; // 0.963648
 \end{lstlisting}
 
-\section{Pisteet ja suorat}
+\section{Points and lines}
 
-\index{ristitulo@ristitulo}
-Vektorien
-$a=(x_1,y_1)$ ja $b=(x_2,y_2)$ \key{ristitulo} $a \times b$
-lasketaan kaavalla $x_1 y_2 - x_2 y_1$.
-Ristitulo ilmaisee, mihin suuntaan vektori $b$
-kääntyy, jos se laitetaan vektorin $a$ perään.
-Positiivinen ristitulo tarkoittaa käännöstä vasemmalle,
-negatiivinen käännöstä oikealle, ja nolla tarkoittaa,
-että vektorit ovat samalla suoralla.
+\index{cross product}
 
-Seuraava kuva näyttää kolme esimerkkiä ristitulosta:
+The \key{cross product} $a \times b$ of vectors
+$a=(x_1,y_1)$ and $b=(x_2,y_2)$ equals $x_1 y_2 - x_2 y_1$.
+The cross product indicates whether the vector $b$
+turns to the left (positive value) or to the right (negative value)
+when it is placed directly after the vector $a$.
+
+The following picture shows three examples:
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -268,10 +264,10 @@ Seuraava kuva näyttää kolme esimerkkiä ristitulosta:
 \end{center}
 
 \noindent
-Esimerkiksi vasemmassa kuvassa
-$a=(4,2)$ ja $b=(1,2)$.
-Seuraava koodi laskee vastaavan ristitulon
-luokkaa \texttt{complex} käyttäen:
+For example, in the left picture
+$a=(4,2)$ and $b=(1,2)$.
+The following code calculates the cross product
+using the class \texttt{complex}:
 
 \begin{lstlisting}
 P a = {4,2};
@@ -279,23 +275,23 @@ P b = {1,2};
 C r = (conj(a)*b).Y; // 6
 \end{lstlisting}
 
-Tämä perustuu siihen, että funktio \texttt{conj}
-muuttaa vektorin y-koordinaatin käänteiseksi
-ja kompleksilukujen kertolaskun seurauksena
-vektorien $(x_1,-y_1)$ ja $(x_2,y_2)$
-kertolaskun y-koordinaatti on $x_1 y_2 - x_2 y_1$.
+The function \texttt{conj} negates the y coordinate
+of a vector,
+and when the vectors $(x_1,-y_1)$ and $(x_2,y_2)$
+are multiplied together, the y coordinate
+of the result is $x_1 y_2 - x_2 y_1$.
 
-\subsubsection{Pisteen sijainti suoraan nähden}
+\subsubsection{Point location}
 
-Ristitulon avulla voi selvittää,
-kummalla puolella suoraa tutkittava piste sijaitsee.
-Oletetaan, että suora kulkee pisteiden
-$s_1$ ja $s_2$ kautta, katsontasuunta on
-pisteestä $s_1$ pisteeseen $s_2$ ja
-tutkittava piste on $p$.
+The cross product can be used for testing
+whether a point is located on the left or right
+side of a line.
+Assume that the line goes through points
+$s_1$ and $s_2$, we are looking from $s_1$
+to $s_2$ and the point is $p$.
 
-Esimerkiksi seuraavassa kuvassa piste $p$
-on suoran vasemmalla puolella:
+For example, in the following picture,
+$p$ is on the left side of the line:
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 \draw[dashed,thick,->] (0,-3)--(12,6);
@@ -308,29 +304,31 @@ on suoran vasemmalla puolella:
 \end{tikzpicture}
 \end{center}
 
-Nyt ristitulo $(p-s_1) \times (p-s_2)$
-kertoo, kummalla puolella suoraa piste $p$ sijaitsee.
-Jos ristitulo on positiivinen,
-piste $p$ on suoran vasemmalla puolella,
-ja jos ristitulo on negatiivinen,
-piste $p$ on suoran oikealla puolella.
-Jos taas ristitulo on nolla,
-piste $p$ on pisteiden $s_1$ ja $s_2$
-kanssa suoralla.
+Now the cross product $(p-s_1) \times (p-s_2)$
+indicates the location of the point $p$.
+If the cross product is positive,
+$p$ is located on the left side,
+and if the cross product is negative,
+$p$ is located on the right side.
+Finally, if the cross product is zero,
+points $s_1$, $s_2$ and $p$ are on the same line.
 
-\subsubsection{Janojen leikkaaminen}
+\subsubsection{Line segment intersection}
 
-\index{leikkauspiste@leikkauspiste}
+\index{line segment intersection}
 
-Tarkastellaan tilannetta, jossa tasossa on kaksi
-janaa $ab$ ja $cd$ ja tehtävänä on selvittää,
-leikkaavatko janat. Mahdolliset tapaukset ovat seuraavat:
+Consider a problem where we are given two line segments
+$ab$ and $cd$ and our task is to check whether they
+intersect. The possible cases are:
 
-\textit{Tapaus 1:}
-Janat ovat samalla suoralla ja ne sivuavat toisiaan.
-Tällöin janoilla on ääretön määrä leikkauspisteitä.
-Esimerkiksi seuraavassa kuvassa janat leikkaavat
-pisteestä $c$ pisteeseen $b$:
+\textit{Case 1:}
+The line segments are on the same line
+and they overlap each other.
+In this case, there is an infinite number of
+intersection points.
+For example, in the following picture,
+all points between $c$ and $b$ are
+intersection points:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \draw (1.5,1.5)--(6,3);
@@ -346,16 +344,16 @@ pisteestä $c$ pisteeseen $b$:
 \end{tikzpicture}
 \end{center}
 
-Tässä tapauksessa ristitulon avulla voi tarkastaa,
-ovatko kaikki pisteet samalla suoralla.
-Tämän jälkeen riittää järjestää pisteet ja
-tarkastaa, menevätkö janat toistensa päälle.
+In this case, we can use cross products to
+check if all points are on the same line.
+After this, we can sort the points and check
+whether the line segments overlap each other.
 
-\textit{Tapaus 2:}
-Janoilla on yhteinen päätepiste, joka on
-ainoa leikkauspiste.
-Esimerkiksi seuraavassa kuvassa
-janat leikkaavat pisteessä $b=c$:
+\textit{Case 2:}
+The line segments have a common vertex
+that is the only intersection point.
+For example, in the following picture the
+intersection point is $b=c$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -371,15 +369,15 @@ janat leikkaavat pisteessä $b=c$:
 \end{tikzpicture}
 \end{center}
 
-Tämä tapaus on helppoa tarkastaa,
-koska mahdolliset vaihtoehdot
-yhteiselle päätepisteelle ovat
-$a=c$, $a=d$, $b=c$ ja $b=d$.
+This case is easy to test because the
+possibilities for the common intersection point
+are $a=c$, $a=d$, $b=c$ and $b=d$.
 
-\textit{Tapaus 3:}
-Janoilla on yksi leikkauspiste,
-joka ei ole mikään janojen päätepisteistä.
-Seuraavassa kuvassa leikkauspiste on $p$:
+\textit{Case 3:}
+There is exactly one intersection point
+that is not a vertex of any line segment.
+In the following picture, the point $p$
+is the intersection point:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \draw (0,1)--(6,3);
@@ -397,34 +395,25 @@ Seuraavassa kuvassa leikkauspiste on $p$:
 \end{tikzpicture}
 \end{center}
 
-Tässä tapauksessa janat leikkaavat
-tarkalleen silloin, kun samaan aikaan
-pisteet $c$ ja $d$ ovat eri puolilla
-$a$:sta $b$:hen kulkevaa suoraa
-ja pisteet $a$ ja $b$
-ovat eri puolilla 
-$c$:stä $d$:hen kulkevaa suoraa.
-Niinpä janojen leikkaamisen voi tarkastaa
-ristitulon avulla.
+In this case, the line segments intersect
+exactly when both points $c$ and $d$ are
+on different sides of a line through $a$ and $b$,
+and points $a$ and $b$ are on different
+sides of a line through $c$ and $d$.
+Hence, we can use cross products to check this.
 
-% Janojen leikkauspiste $p$ selviää etsimällä
-% parametrit $t$ ja $u$ niin, että
-% 
-% \[ p = a+t(b-a) = c+u(d-c). \]
+\subsubsection{Point distance from a line}
 
-
-\subsubsection{Pisteen etäisyys suorasta}
-
-Kolmion pinta-ala voidaan lausua
-ristitulon avulla
+The area of a triangle can be calculated
+using the formula
 \[\frac{| (a-c) \times (b-c) |}{2},\]
-missä $a$, $b$ ja $c$ ovat kolmion kärkipisteet.
+where $a$, $b$ and $c$ are the vertices of the triangle.
 
-Tämän kaavan avulla on mahdollista laskea,
-kuinka kaukana annettu piste on suorasta.
-Esimerkiksi seuraavassa kuvassa $d$
-on lyhin etäisyys pisteestä $p$ suoralle,
-jonka määrittävät pisteet $s_1$ ja $s_2$:
+Using this formula, it is possible to calculate the
+shortest distance of a point from a line.
+For example, in the following picture $d$ is the
+shortest distance between point $p$ and the line
+that is defined by points $s_1$ and $s_2$:
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
 \draw (-2,-1)--(6,3);
@@ -439,22 +428,23 @@ jonka määrittävät pisteet $s_1$ ja $s_2$:
 \end{tikzpicture}
 \end{center}
 
-Pisteiden $s_1$, $s_2$ ja $p$ muodostaman kolmion
-pinta-ala on toisaalta $\frac{1}{2} |s_2-s_1| d$ ja toisaalta
+The area of the triangle whose vertices are
+$s_1$, $s_2$ and $p$ can be calculated in two ways:
+it is both
+$\frac{1}{2} |s_2-s_1| d$ and
 $\frac{1}{2} ((s_1-p) \times (s_2-p))$.
-Niinpä haluttu etäisyys on
+Thus, the shortest distance is
 
 \[ d = \frac{(s_1-p) \times (s_2-p)}{|s_2-s_1|} .\]
 
+\subsubsection{Point inside a polygon}
 
-\subsubsection{Piste monikulmiossa}
-
-Tarkastellaan sitten tehtävää, jossa
-tulee selvittää, onko annettu piste
-monikulmion sisäpuolella vai ulkopuolella.
-Esimerkiksi seuraavassa kuvassa piste $a$ on
-sisäpuolella ja piste $b$ on 
-ulkopuolella.
+Let us now consider a problem where our task is to
+find out whether a point is located inside or outside
+a polygon.
+For example, in the following picture point $a$
+is inside the polygon and point $b$ is outside
+the polygon.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
@@ -468,18 +458,17 @@ ulkopuolella.
 \end{tikzpicture}
 \end{center}
 
-Kätevä ratkaisu tehtävään
-on lähettää pisteestä säde
-satunnaiseen suuntaan ja laskea,
-montako kertaa se osuu monikulmion reunaan.
-Jos kertoja on pariton määrä,
-niin piste on sisäpuolella,
-ja jos taas kertoja on parillinen määrä,
-niin piste on ulkopuolella.
+A convenient way to solve the problem is to
+send a ray from the point to an arbitrary direction
+and calculate the number of times it touches
+the border of the polygon.
+If the number is odd,
+the point is inside the polygon,
+and if the number is even,
+the point is outside the polygon.
 
 \begin{samepage}
-Äskeisessä tilanteessa säteitä
-voisi lähteä seuraavasti:
+For example, we could send the following rays:
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
 \draw (0,0)--(2,2)--(5,1)--(2,3)--(1,2)--(-1,2)--(1,4)--(-2,4)--(-2,1)--(-3,3)--(-4,0)--(0,0);
@@ -498,26 +487,27 @@ voisi lähteä seuraavasti:
 \end{center}
 \end{samepage}
 
-Pisteestä $a$ lähtevät säteet osuvat 1 ja 3
-kertaa monikulmion reunaan,
-joten piste on sisäpuolella.
-Vastaavasti pisteestä $b$ lähtevät
-säteet osuvat 0 ja 2 kertaa monikulmion reunaan,
-joten piste on ulkopuolella.
+The rays from $a$ touch 1 and 3 times
+the border of the polygon,
+so $a$ is inside the polygon.
+Correspondingly, the rays from $b$
+touch 0 and 2 times the border of the polygon,
+so $b$ is outside the polygon.
 
-\section{Monikulmion pinta-ala}
+\section{Polygon are}
 
-Yleinen kaava monikulmion pinta-alan laskemiseen on
+A general formula for calculating the area
+of a polygon is
 \[\frac{1}{2} |\sum_{i=1}^{n-1} (p_i \times p_{i+1})| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|, \]
-kun kärkipisteet ovat
+when the vertices are
 $p_1=(x_1,y_1)$, $p_2=(x_2,y_2)$, $\ldots$, $p_n=(x_n,y_n)$
-järjestettynä niin,
-että $p_i$ ja $p_{i+1}$ ovat vierekkäiset kärkipisteet
-monikulmion reunalla
-ja ensimmäinen ja viimeinen kärkipiste ovat samat eli $p_1=p_n$.
+sorted so that
+$p_i$ and $p_{i+1}$ are adjacent vertices on the border
+of the polygon,
+and the first and last vertex is the same, i.e., $p_1=p_n$.
 
-Esimerkiksi monikulmion
+For example, the area of the polygon
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \filldraw (4,1.4) circle (2pt);
@@ -533,11 +523,13 @@ Esimerkiksi monikulmion
 \path[draw] (4,1.4) -- (7,3.4) -- (5,5.4) -- (2,4.4) -- (4,3.4) -- (4,1.4);
 \end{tikzpicture}
 \end{center}
-pinta-ala on
+is
 \[\frac{|(2\cdot5-4\cdot5)+(5\cdot3-5\cdot7)+(7\cdot1-3\cdot4)+(4\cdot3-1\cdot4)+(4\cdot4-3\cdot2)|}{2} = 17/2.\]
-Kaavassa on ideana käydä läpi puolisuunnikkaita,
-joiden yläreuna on yksi monikulmion sivuista ja
-alareuna on vaakataso. Esimerkiksi:
+
+The idea in the formula is to go through trapezoids
+where one side is a side of the polygon,
+and another side is on the horizontal line $y=0$.
+For example:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \path[draw,fill=lightgray] (5,5.4) -- (7,3.4) -- (7,0) -- (5,0) -- (5,5.4);
@@ -555,37 +547,35 @@ alareuna on vaakataso. Esimerkiksi:
 \draw (0,0) -- (10,0);
 \end{tikzpicture}
 \end{center}
-Tällaisen puolisuunnikkaan pinta-ala on
+The are of such a trapezoid is
 \[(x_{i+1}-x_{i}) \frac{y_i+y_{i+1}}{2},\]
-kun kärkipisteet ovat $p_i$ ja $p_{i+1}$.
-Jos $x_{i+1}>x_{i}$, niin pinta-ala on positiivinen,
-ja jos $x_{i+1}<x_{i}$, niin pinta-ala on negatiivinen.
+when the vertices of the polygon are $p_i$ and $p_{i+1}$.
+If $x_{i+1}>x_{i}$, the area is positive,
+and if $x_{i+1}<x_{i}$, the area is negative.
 
-Monikulmion pinta-ala saadaan laskemalla yhteen kaikkien
-tällaisten puolisuunnikkaiden pinta-alat, mistä tulee:
+The area of the polygon is the sum of areas of
+all such trapezoids, which yields the formula
 
 \[|\sum_{i=1}^{n-1} (x_{i+1}-x_{i}) \frac{y_i+y_{i+1}}{2}| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|.\]
 
-Huomaa, että pinta-alan kaavassa on itseisarvo,
-koska monikulmion kiertosuunnasta (myötä- tai vastapäivään)
-riippuen tuloksena oleva pinta-ala on joko
-positiivinen tai negatiivinen.
+Note that the absolute value of the sum is calculated,
+because the value of the sum may be positive or negative
+depending on whether we walk clockwise or counterclockwise
+along the sides of the the polygon.
 
-\subsubsection{Pickin lause}
+\subsubsection{Pick's theorem}
 
-\index{Pickin lause@Pickin lause}
+\index{Pick's theorem}
 
-\key{Pickin lause} on vaihtoehtoinen tapa laskea
-monikulmion pinta-ala,
-kun kaikki monikulmion kärkipisteet
-ovat kokonaislukupisteissä.
-Pickin lauseen mukaan monikulmion pinta-ala on
+\key{Pick's theorem} provides another way to calculate
+the area of a polygon where are vertices have integer coordinates.
+According to Pick's theorem, the area of the polygon is
 \[ a + b/2 -1,\]
-missä $a$ on kokonaislukupisteiden määrä monikulmion sisällä
-ja $b$ on kokonaislukupisteiden määrä monikulmion reunalla.
+where $a$ is the number of integer points inside the polygon
+and $b$ is the number of integer points on the border of the polygon.
 
-Esimerkiksi monikulmion
+For example, the area of the polygon
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \filldraw (4,1.4) circle (2pt);
@@ -615,25 +605,27 @@ Esimerkiksi monikulmion
 \filldraw (5,2.4) circle (2pt);
 \end{tikzpicture}
 \end{center}
-pinta-ala on $6+7/2-1=17/2$.
+is $6+7/2-1=17/2$.
 
-\section{Etäisyysmitat}
+\section{Distance functions}
 
-\index{etxisyysmitta@etäisyysmitta}
-\index{Euklidinen etxisyys@Euklidinen etäisyys}
-\index{Manhattan-etäisyys}
+\index{distance function}
+\index{Euklidean distance}
+\index{Manhattan distance}
 
-\key{Etäisyysmitta} määrittää tavan laskea kahden pisteen etäisyys.
-Tavallisimmin geometriassa käytetty etäisyysmitta on
-\key{euklidinen etäisyys}, jolloin pisteiden
-$(x_1,y_1)$ ja $(x_2,y_2)$ etäisyys on
+A \key{distance function} defines the distance between
+two points.
+The usual distance function in geometry is the
+\key{Euclidean distance} where the distance between
+points $(x_1,y_1)$ and $(x_2,y_2)$ is
 \[\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}.\]
-Vaihtoehtoinen etäisyysmitta on \key{Manhattan-etäisyys},
-jota käyttäen pisteiden
-$(x_1,y_1)$ ja $(x_2,y_2)$ etäisyys on
+An alternative distance function is the
+\key{Manhattan distance}
+where the distance between points
+$(x_1,y_1)$ and $(x_2,y_2)$ is
 \[|x_1-x_2|+|y_1-y_2|.\]
 \begin{samepage}
-Esimerkiksi kuvaparissa
+For example, consider the following picture:
 \begin{center}
 \begin{tikzpicture}
 
@@ -654,75 +646,75 @@ Esimerkiksi kuvaparissa
 \draw[dashed] (5+2,1) -- (5+2,2);
 \draw[dashed] (5+2,2) -- (5+5,2);
 
-\node at (3.5,-0.5) {euklidinen etäisyys};
-\node at (5+3.5,-0.5) {Manhattan-etäisyys};
+\node at (3.5,-0.5) {Euclidean distance};
+\node at (5+3.5,-0.5) {Manhattan distance};
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-pisteiden euklidinen etäisyys on
+The Euclidean distance between the points is
 \[\sqrt{(5-2)^2+(2-1)^2}=\sqrt{10}\]
-ja pisteiden Manhattan-etäisyys on
+and the Manhattan distance is
 \[|5-2|+|2-1|=4.\]
-Seuraava kuvapari näyttää alueen, joka on pisteestä etäisyyden 1
-sisällä käyttäen euklidista ja Manhattan-etäisyyttä:
+The following picture shows regions that are within a distance of 1
+from the center point, using Euclidean and Manhattan distances:
 \begin{center}
 \begin{tikzpicture}
 
 \draw[fill=gray!20] (0,0) circle [radius=1];
 \draw[fill] (0,0) circle [radius=0.05];
 
-\node at (0,-1.5) {euklidinen etäisyys};
+\node at (0,-1.5) {Euclidean distance};
 
 \draw[fill=gray!20] (5+0,1) -- (5-1,0) -- (5+0,-1) -- (5+1,0) -- (5+0,1);
 \draw[fill] (5,0) circle [radius=0.05];
-\node at (5,-1.5) {Manhattan-etäisyys};
+\node at (5,-1.5) {Manhattan distance};
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Kaukaisimmat pisteet}
+\subsubsection{Furthest points}
 
-Joidenkin ongelmien ratkaiseminen on helpompaa, jos käytössä on
-Manhattan-etäisyys euklidisen etäisyyden sijasta.
-Tarkastellaan esimerkkinä tehtävää, jossa annettuna
-on $n$ pistettä $(x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n)$
-ja tehtävänä on laskea, mikä on suurin mahdollinen etäisyys
-kahden pisteen välillä.
+Some problems are easier to solve if we use the
+Manhattan distance instead of the Euclidean distance.
+For example, consider a problem where we are given
+$n$ points $(x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n)$
+and our task is to calculate the maximum distance
+between any two points.
 
-Tämän tehtävän ratkaiseminen tehokkaasti on vaikeaa,
-jos laskettavana on euklidinen etäisyys.
-Sen sijaan suurin Manhattan-etäisyys on helppoa selvittää,
-koska se on suurempi etäisyyksistä
-\[\max A - \min A \hspace{20px} \textrm{ja} \hspace{20px} \max B - \min B,\]
-missä
+This is a difficult problem if we should maximize
+the Euclidean distance,
+but calculating
+the maximum Manhattan distance is easy
+because it either
+\[\max A - \min A \hspace{20px} \textrm{or} \hspace{20px} \max B - \min B,\]
+where
 \[A = \{x_i+y_i : i = 1,2,\ldots,n\}\]
-ja
+and
 \[B = \{x_i-y_i : i = 1,2,\ldots,n\}.\]
 \begin{samepage}
-Tämä johtuu siitä, että Manhattan-etäisyys
+The reason for this is that the Manhattan distance
 \[|x_a-x_b|+|y_a-y_b]\]
-voidaan ilmaista muodossa
+can be written
 \begin{center}
 \begin{tabular}{cl}
 & $\max(x_a-x_b+y_a-y_b,\,x_a-x_b-y_a+y_b)$ \\
 $=$ & $\max(x_a+y_a-(x_b+y_b),\,x_a-y_a-(x_b-y_b))$
 \end{tabular}
 \end{center}
-olettaen, että $x_a \ge x_b$.
+assuming that $x_a \ge x_b$.
 \end{samepage}
 
 \begin{samepage}
-\subsubsection{Koordinaatiston kääntäminen}
+\subsubsection{Rotating coordinates}
 
-Kätevä tekniikka Manhattan-etäisyyden yhteydessä on myös
-kääntää koordinaatistoa 45 astetta
-niin, että pisteestä $(x,y)$ tulee piste $(a(x+y),a(y-x))$,
-missä $a=1/\sqrt{2}$.
-Kerroin $a$ on valittu niin, että
-pisteiden etäisyydet säilyvät samana käännöksen jälkeen.
+A useful technique related to the Manhattan distance
+is to rotate all coordinates 45 degrees so that
+a point $(x,y)$ becomes $(a(x+y),a(y-x))$,
+where $a=1/\sqrt{2}$.
+The multiplier $a$ is so chosen that
+the distances of the points remain the same.
 
-Tämän seurauksena pisteestä etäisyydellä $d$ oleva alue
-on neliö, jonka sivut ovat vaaka- ja pystysuuntaisia,
-mikä helpottaa alueen käsittelyä.
+After the rotation, the region within a distance of $d$
+from a point is a square with horizontal and vertical sides:
 \begin{center}
 \begin{tikzpicture}
 \draw[fill=gray!20] (0,1) -- (-1,0) -- (0,-1) -- (1,0) -- (0,1);
@@ -736,3 +728,5 @@ mikä helpottaa alueen käsittelyä.
 \end{center}
 \end{samepage}
 
+Implementing many algorithms is easier when we may assume that all
+objects are squares with horizontal and vertical sides.
