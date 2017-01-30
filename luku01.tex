@@ -1,12 +1,12 @@
 \chapter{Introduction}
 
 Competitive programming combines two topics:
-(1) design of algorithms and (2) implementation of algorithms.
+(1) the design of algorithms and (2) the implementation of algorithms.
 
 The \key{design of algorithms} consists of problem solving
 and mathematical thinking.
 Skills for analyzing problems and solving them
-using creativity is needed.
+creatively is needed.
 An algorithm for solving a problem
 has to be both correct and efficient,
 and the core of the problem is often
@@ -63,23 +63,24 @@ large collection
 of data structures and algorithms.
 
 On the other hand, it is good to
-master several languages and know the
-benefits of them.
-For example, if big integers are needed
+master several languages and know
+their strengths.
+For example, if large numbers are needed
 in the problem,
 Python can be a good choice because it
 contains a built-in library for handling
-big integers.
-Still, usually the goal is to write the problems so that
-the use of a specific programming language
-is not an unfair advantage in the contest.
+large numbers.
+Still, most problems in programming contests
+are set so that
+using a specific programming language
+is not an unfair advantage.
 
-All examples in this book are written in C++,
-and the data structures and algorithms in
-the standard library are often used.
-The book follows the C++11 standard,
+All example programs in this book are written in C++,
+and the standard library's
+data structures and algorithms are often used.
+The programs follow the C++11 standard,
 that can be used in most contests nowadays.
-If you can't program in C++ yet,
+If you cannot program in C++ yet,
 now it is a good time to start learning.
 
 \subsubsection{C++ template}
@@ -155,21 +156,21 @@ or one newline between each element in the input.
 For example, the above code accepts
 both the following inputs:
 \begin{lstlisting}
-123 456 apina
+123 456 monkey
 \end{lstlisting}
 \begin{lstlisting}
 123    456
-apina
+monkey
 \end{lstlisting}
 The \texttt{cout} stream is used for output
 as follows:
 \begin{lstlisting}
 int a = 123, b = 456;
-string x = "apina";
+string x = "monkey";
 cout << a << " " << b << " " << x << "\n";
 \end{lstlisting}
 
-Handling input and output is sometimes
+Input and output is sometimes
 a bottleneck in the program.
 The following lines at the beginning of the code
 make input and output more efficient:
@@ -181,7 +182,7 @@ cin.tie(0);
 
 Note that the newline \texttt{"\textbackslash n"}
 works faster than \texttt{endl},
-becauses \texttt{endl} always causes
+because \texttt{endl} always causes
 a flush operation.
 
 The C functions \texttt{scanf}
@@ -214,7 +215,7 @@ If the amount of data is unknown, the following
 loop can be handy:
 \begin{lstlisting}
 while (cin >> x) {
-    // koodia
+    // code
 }
 \end{lstlisting}
 This loop reads elements from the input
@@ -240,14 +241,14 @@ After this, the code reads the input from the file
 
 \subsubsection{Integers}
 
-The most popular integer type in competitive programming
-is \texttt{int}. This is a 32-bit type with
-value range $-2^{31} \ldots 2^{31}-1$,
-i.e., about $-2 \cdot 10^9 \ldots 2 \cdot 10^9$.
+The most used integer type in competitive programming
+is \texttt{int}, that is a 32-bit type with
+value range $-2^{31} \ldots 2^{31}-1$
+or about $-2 \cdot 10^9 \ldots 2 \cdot 10^9$.
 If the type \texttt{int} is not enough,
 the 64-bit type \texttt{long long} can be used,
-with value range $-2^{63} \ldots 2^{63}-1$,
-i.e., about $-9 \cdot 10^{18} \ldots 9 \cdot 10^{18}$.
+with value range $-2^{63} \ldots 2^{63}-1$
+or about $-9 \cdot 10^{18} \ldots 9 \cdot 10^{18}$.
 
 The following code defines a
 \texttt{long long} variable:
@@ -257,7 +258,7 @@ long long x = 123456789123456789LL;
 The suffix \texttt{LL} means that the
 type of the number is \texttt{long long}.
 
-A typical error when using the type \texttt{long long}
+A common error when using the type \texttt{long long}
 is that the type \texttt{int} is still used somewhere
 in the code.
 For example, the following code contains
@@ -279,13 +280,13 @@ The problem can be solved by changing the type
 of \texttt{a} to \texttt{long long} or
 by changing the expression to \texttt{(long long)a*a}.
 
-Usually, the problems are written so that the
+Usually contest problems are set so that the
 type \texttt{long long} is enough.
 Still, it is good to know that
-the \texttt{g++} compiler also features
+the \texttt{g++} compiler also provides
 an 128-bit type \texttt{\_\_int128\_t}
 with value range
-$-2^{127} \ldots 2^{127}-1$, i.e., $-10^{38} \ldots 10^{38}$.
+$-2^{127} \ldots 2^{127}-1$ or $-10^{38} \ldots 10^{38}$.
 However, this type is not available in all contest systems.
 
 \subsubsection{Modular arithmetic}
@@ -299,12 +300,12 @@ For example, $17 \bmod 5 = 2$,
 because $17 = 3 \cdot 5 + 2$.
 
 Sometimes, the answer for a problem is a
-very big integer but it is enough to
-print it ''modulo $m$'', i.e.,
+very large number but it is enough to
+output it ''modulo $m$'', i.e.,
 the remainder when the answer is divided by $m$
 (for example, ''modulo $10^9+7$'').
 The idea is that even if the actual answer
-may be very big,
+may be very large,
 it is enough to use the types
 \texttt{int} and \texttt{long long}.
 
@@ -333,12 +334,12 @@ for (int i = 2; i <= n i++) {
 cout << x << "\n";
 \end{lstlisting}
 
-Usually, the answer should be always given so
-that the remainder is between $0\ldots m-1$.
+Usually the remainder should be always
+be between $0\ldots m-1$.
 However, in C++ and other languages,
-the remainder of a negative number can
-be negative.
-An easy way to make sure that this will
+the remainder of a negative number
+is either zero or negative.
+An easy way to make sure this will
 not happen is to first calculate
 the remainder as usual and then add $m$
 if the result is negative:
@@ -363,10 +364,11 @@ In most cases, \texttt{double} is enough,
 but \texttt{long double} is more accurate.
 
 The required precision of the answer
-is usually given.
-The easiest way is to use
+is usually given in the problem statement.
+An easy way to output the answer is to use
 the \texttt{printf} function
-that can be given the number of decimal places.
+and give the number of decimal places
+in the formatting string.
 For example, the following code prints
 the value of $x$ with 9 decimal places:
 
@@ -376,7 +378,7 @@ printf("%.9f\n", x);
 
 A difficulty when using floating point numbers
 is that some numbers cannot be represented
-accurately, but there will be rounding errors.
+accurately but there will be rounding errors.
 For example, the result of the following code
 is surprising:
 
@@ -417,7 +419,7 @@ integers having absolute value at most $2^{53}$.
 \section{Shortening code}
 
 Short code is ideal in competitive programming,
-because the algorithm should be implemented
+because algorithms should be implemented
 as fast as possible.
 Because of this, competitive programmers often define
 shorter names for datatypes and other parts of code.
@@ -485,9 +487,9 @@ v.PB(MP(y2,x2));
 int d = v[i].F+v[i].S;
 \end{lstlisting}
 
-It is also possible to define a macro with parameters
+A macro can also have parameters
 which makes it possible to shorten loops and other
-structures in the code.
+structures.
 For example, we can define the following macro:
 \begin{lstlisting}
 #define REP(i,a,b) for (int i = a; i <= b; i++)
@@ -495,13 +497,13 @@ For example, we can define the following macro:
 After this, the code
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
-    haku(i);
+    search(i);
 }
 \end{lstlisting}
 can be shortened as follows:
 \begin{lstlisting}
 REP(i,1,n) {
-    haku(i);
+    search(i);
 }
 \end{lstlisting}
 
@@ -566,7 +568,7 @@ This formula can be derived as follows. Let
 By multiplying both sides by $x$, we get
 \[ xS = ax + ax^2 + ax^3 + \cdots + bx,\]
 and solving the equation
-\[ xS-S = bx-a.\]
+\[ xS-S = bx-a\]
 yields the formula.
 
 A special case of a geometric sum is the formula
@@ -578,9 +580,9 @@ A \key{harmonic sum} is a sum of the form
 \[ \sum_{x=1}^n \frac{1}{x} = 1+\frac{1}{2}+\frac{1}{3}+\ldots+\frac{1}{n}.\]
 
 An upper bound for the harmonic sum is $\log_2(n)+1$.
-The reason for this is that we can
-change each term $1/k$ so that $k$ becomes
-a power of two that doesn't exceed $k$.
+Namely, we can
+modify each term $1/k$ so that $k$ becomes
+the nearest power of two that does not exceed $k$.
 For example, when $n=6$, we can estimate
 the sum as follows:
 \[ 1+\frac{1}{2}+\frac{1}{3}+\frac{1}{4}+\frac{1}{5}+\frac{1}{6} \le
@@ -605,18 +607,18 @@ For example, the set
 \[X=\{2,4,7\}\]
 contains elements 2, 4 and 7.
 The symbol $\emptyset$ denotes an empty set,
-and $|S|$ denotes the size of set $S$,
+and $|S|$ denotes the size of the set $S$,
 i.e., the number of elements in the set.
 For example, in the above set, $|X|=3$.
 
-If set $S$ contains element $x$,
+If a set $S$ contains an element $x$,
 we write $x \in S$,
 and otherwise we write $x \notin S$.
 For example, in the above set
 \[4 \in X \hspace{10px}\textrm{and}\hspace{10px} 5 \notin X.\]
 
 \begin{samepage}
-New sets can be constructed as follows using set operations:
+New sets can be constructed using set operations:
 \begin{itemize}
 \item The \key{intersection} $A \cap B$ consists of elements
 that are both in $A$ and $B$.
@@ -631,7 +633,7 @@ that are not in $A$.
 The interpretation of a complement depends on
 the \key{universal set} that contains all possible elements.
 For example, if $A=\{1,2,5,7\}$ and the universal set is
-$P=\{1,2,\ldots,10\}$, then $\bar A = \{3,4,6,8,9,10\}$.
+$\{1,2,\ldots,10\}$, then $\bar A = \{3,4,6,8,9,10\}$.
 \item The \key{difference} $A \setminus B = A \cap \bar B$
 consists of elements that are in $A$ but not in $B$.
 Note that $B$ can contain elements that are not in $A$.
@@ -643,12 +645,12 @@ then $A \setminus B = \{2,7\}$.
 If each element of $A$ also belongs to $S$,
 we say that $A$ is a \key{subset} of $S$,
 denoted by $A \subset S$.
-Set $S$ always has $2^{|S|}$ subsets,
+A set $S$ always has $2^{|S|}$ subsets,
 including the empty set.
 For example, the subsets of the set $\{2,4,7\}$ are
 \begin{center}
 $\emptyset$,
-$\{2\}$, $\{4\}$, $\{7\}$, $\{2,4\}$, $\{2,7\}$, $\{4,7\}$ ja $\{2,4,7\}$.
+$\{2\}$, $\{4\}$, $\{7\}$, $\{2,4\}$, $\{2,7\}$, $\{4,7\}$ and $\{2,4,7\}$.
 \end{center}
 
 Often used sets are
@@ -669,7 +671,7 @@ or $\mathbb{N}=\{1,2,3,...\}$.
 We can also construct a set using a rule of the form
 \[\{f(n) : n \in S\},\]
 where $f(n)$ is some function.
-This set contains all elements $f(n)$
+This set contains all elements of the form $f(n)$,
 where $n$ is an element in $S$.
 For example, the set
 \[X=\{2n : n \in \mathbb{Z}\}\]
@@ -692,7 +694,7 @@ $\land$ (\key{conjunction}),
 $\lor$ (\key{disjunction}),
 $\Rightarrow$ (\key{implication}) and
 $\Leftrightarrow$ (\key{equivalence}).
-The following table shows the meaning of the operators:
+The following table shows the meaning of these operators:
 
 \begin{center}
 \begin{tabular}{rr|rrrrrrr}
@@ -705,7 +707,7 @@ $A$ & $B$ & $\lnot A$ & $\lnot B$ & $A \land B$ & $A \lor B$ & $A \Rightarrow B$
 \end{tabular}
 \end{center}
 
-The negation $\lnot A$ reverses the value of an expression.
+The expression $\lnot A$ has the reverse value of $A$.
 The expression $A \land B$ is true if both $A$ and $B$
 are true,
 and the expression $A \lor B$ is true if $A$ or $B$ or both
@@ -741,10 +743,10 @@ but false in the set of natural numbers.
 Using the notation described above,
 we can express many kinds of logical propositions.
 For example,
-\[\forall x ((x>2 \land \lnot P(x)) \Rightarrow (\exists a (\exists b (x = ab \land a > 1 \land b > 1))))\]
-means that if a number $x$ is larger than 2
+\[\forall x ((x>1 \land \lnot P(x)) \Rightarrow (\exists a (\exists b (x = ab \land a > 1 \land b > 1))))\]
+means that if a number $x$ is larger than 1
 and not a prime number,
-there are numbers $a$ and $b$
+then there exist numbers $a$ and $b$
 that are larger than $1$ and whose product is $x$.
 This proposition is true in the set of integers.
 
@@ -758,14 +760,14 @@ up to an integer. For example,
 
 The functions $\min(x_1,x_2,\ldots,x_n)$
 and $\max(x_1,x_2,\ldots,x_n)$
-return the smallest and the largest of values
+return the smallest and largest of values
 $x_1,x_2,\ldots,x_n$.
 For example,
 \[ \min(1,2,3)=1 \hspace{10px} \textrm{and} \hspace{10px} \max(1,2,3)=3.\]
 
 \index{factorial}
 
-The \key{factorial} $n!$ is defined
+The \key{factorial} $n!$ can be defined
 \[\prod_{x=1}^n x = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n\]
 or recursively
 \[
@@ -777,7 +779,7 @@ n! & = & n \cdot (n-1)! \\
 
 \index{Fibonacci number}
 
-The \key{Fibonacci numbers} arise in several situations.
+The \key{Fibonacci numbers} arise in many situations.
 They can be defined recursively as follows:
 \[
 \begin{array}{lcl}
@@ -797,12 +799,12 @@ for calculating Fibonacci numbers:
 \index{logarithm}
 
 The \key{logarithm} of a number $x$
-is denoted $\log_k(x)$ where $k$ is the base
+is denoted $\log_k(x)$, where $k$ is the base
 of the logarithm.
-The logarithm is defined so that
+According to the definition,
 $\log_k(x)=a$ exactly when $k^a=x$.
 
-A useful interpretation in algorithmics is
+A useful interpretation in algorithm design is
 that $\log_k(x)$ equals the number of times
 we have to divide $x$ by $k$ before we reach 
 the number 1.
@@ -812,10 +814,10 @@ because 5 divisions are needed:
 \[32 \rightarrow 16 \rightarrow 8 \rightarrow 4 \rightarrow 2 \rightarrow 1 \]
 
 Logarithms are often needed in the analysis of
-algorithms because many efficient algorithms
+algorithms, because many efficient algorithms
 divide in half something at each step.
-Thus, we can estimate the efficiency of those algorithms
-using the logarithm.
+Hence, we can estimate the efficiency of such algorithms
+using logarithms.
 
 The logarithm of a product is
 \[\log_k(ab) = \log_k(a)+\log_k(b),\]
@@ -834,7 +836,7 @@ calculate logarithms to some fixed base.
 The \key{natural logarithm} $\ln(x)$ of a number $x$
 is a logarithm whose base is $e \approx 2{,}71828$.
 
-Another property of the logarithm is that
+Another property of logarithms is that
 the number of digits of a number $x$ in base $b$ is
 $\lfloor \log_b(x)+1 \rfloor$.
 For example, the representation of
