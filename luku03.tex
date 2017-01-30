@@ -93,21 +93,21 @@ Simple algorithms for sorting an array
 work in $O(n^2)$ time.
 Such algorithms are short and usually
 consist of two nested loops.
-A famous $O(n^2)$ time algorithm for sorting
+A famous $O(n^2)$ time sorting algorithm
 is \key{bubble sort} where the elements
-''bubble'' forward in the array according to their values.
+''bubble'' in the array according to their values.
 
 Bubble sort consists of $n-1$ rounds.
 On each round, the algorithm iterates through
 the elements in the array.
-Whenever two successive elements are found
+Whenever two consecutive elements are found
 that are not in correct order,
 the algorithm swaps them.
 The algorithm can be implemented as follows
 for array
 $\texttt{t}[1],\texttt{t}[2],\ldots,\texttt{t}[n]$:
 \begin{lstlisting}
-for (int i = 1; i <= n-1; i++) {
+for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n-i; j++) {
         if (t[j] > t[j+1]) swap(t[j],t[j+1]);
     }
@@ -115,10 +115,10 @@ for (int i = 1; i <= n-1; i++) {
 \end{lstlisting}
 
 After the first round of the algorithm,
-the largest element is in the correct place,
-after the second round the second largest
-element is in the correct place, etc.
-Thus, after $n-1$ rounds, all elements
+the largest element will be in the correct position,
+and in general, after $k$ rounds, the $k$ largest
+elements will be in the correct positions.
+Thus, after $n$ rounds, the whole array
 will be sorted.
 
 For example, in the array
@@ -263,20 +263,20 @@ as follows:
 \index{inversion}
 
 Bubble sort is an example of a sorting
-algorithm that always swaps successive
+algorithm that always swaps consecutive
 elements in the array.
 It turns out that the time complexity
-of this kind of an algorithm is \emph{always}
+of such an algorithm is \emph{always}
 at least $O(n^2)$ because in the worst case,
 $O(n^2)$ swaps are required for sorting the array.
 
 A useful concept when analyzing sorting
-algorithms is an \key{inversion}.
-It is a pair of elements
+algorithms is an \key{inversion}:
+a pair of elements
 $(\texttt{t}[a],\texttt{t}[b])$
 in the array such that
 $a<b$ and $\texttt{t}[a]>\texttt{t}[b]$,
-i.e., they are in wrong order.
+i.e., the elements are in the wrong order.
 For example, in the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -303,19 +303,19 @@ For example, in the array
 \end{center}
 the inversions are $(6,3)$, $(6,5)$ and $(9,8)$.
 The number of inversions indicates
-how sorted the array is.
+how much work is needed to sort the array.
 An array is completely sorted when
 there are no inversions.
 On the other hand, if the array elements
-are in reverse order,
-the number of inversions is maximum:
+are in the reverse order,
+the number of inversions is the largest possible:
 \[1+2+\cdots+(n-1)=\frac{n(n-1)}{2} = O(n^2)\]
 
-Swapping successive elements that are
-in wrong order removes exactly one inversion
+Swapping a pair of consecutive elements that are
+in the wrong order removes exactly one inversion
 from the array.
-Thus, if a sorting algorithm can only
-swap successive elements, each swap removes
+Hence, if a sorting algorithm can only
+swap consecutive elements, each swap removes
 at most one inversion and the time complexity
 of the algorithm is at least $O(n^2)$.
 
@@ -324,28 +324,27 @@ of the algorithm is at least $O(n^2)$.
 \index{merge sort}
 
 It is possible to sort an array efficiently
-in $O(n \log n)$ time using an algorithm
-that is not limited to swapping successive elements.
+in $O(n \log n)$ time using algorithms
+that are not limited to swapping consecutive elements.
 One such algorithm is \key{mergesort}
-that sorts an array recursively by dividing
-it into smaller subarrays.
+that is based on recursion.
 
-Mergesort sorts the subarray $[a,b]$ as follows:
+Mergesort sorts a subarray \texttt{t}$[a,b]$ as follows:
 
 \begin{enumerate}
-\item If $a=b$, don't do anything because the subarray is already sorted.
+\item If $a=b$, do not do anything because the subarray is already sorted.
 \item Calculate the index of the middle element: $k=\lfloor (a+b)/2 \rfloor$.
-\item Recursively sort the subarray $[a,k]$.
-\item Recursively sort the subarray $[k+1,b]$.
-\item \emph{Merge} the sorted subarrays $[a,k]$ and $[k+1,b]$
-into a sorted subarray $[a,b]$.
+\item Recursively sort the subarray \texttt{t}$[a,k]$.
+\item Recursively sort the subarray \texttt{t}$[k+1,b]$.
+\item \emph{Merge} the sorted subarrays \texttt{t}$[a,k]$ and \texttt{t}$[k+1,b]$
+into a sorted subarray \texttt{t}$[a,b]$.
 \end{enumerate}
 
 Mergesort is an efficient algorithm because it
 halves the size of the subarray at each step.
 The recursion consists of $O(\log n)$ levels,
 and processing each level takes $O(n)$ time.
-Merging the subarrays $[a,k]$ and $[k+1,b]$
+Merging the subarrays \texttt{t}$[a,k]$ and \texttt{t}$[k+1,b]$
 is possible in linear time because they are already sorted.
 
 For example, consider sorting the following array:
@@ -515,7 +514,7 @@ $x$ and $y$ are compared.
 If $x<y$, the process continues to the left,
 and otherwise to the right.
 The results of the process are the possible
-ways to order the array, a total of $n!$ ways.
+ways to sort the array, a total of $n!$ ways.
 For this reason, the height of the tree
 must be at least
 \[ \log_2(n!) = \log_2(1)+\log_2(2)+\cdots+\log_2(n).\]
@@ -525,7 +524,7 @@ changing the value of each element to $\log_2(n/2)$.
 This yields an estimate
 \[ \log_2(n!) \ge (n/2) \cdot \log_2(n/2),\]
 so the height of the tree and the minimum
-possible number of steps in an sorting
+possible number of steps in a sorting
 algorithm in the worst case
 is at least $n \log n$.
 
@@ -533,7 +532,7 @@ is at least $n \log n$.
 
 \index{counting sort}
 
-The lower bound $n \log n$ doesn't apply to
+The lower bound $n \log n$ does not apply to
 algorithms that do not compare array elements
 but use some other information.
 An example of such an algorithm is
@@ -572,7 +571,7 @@ For example, the array
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-produces the following bookkeeping array:
+corresponds to the following bookkeeping array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (9,1);
@@ -600,15 +599,15 @@ produces the following bookkeeping array:
 \end{tikzpicture}
 \end{center}
 
-For example, the value of element 3
+For example, the value at index 3
 in the bookkeeping array is 2,
-because the element 3 appears two times
+because the element 3 appears 2 times
 in the original array (indices 2 and 6).
 
 The construction of the bookkeeping array
 takes $O(n)$ time. After this, the sorted array
 can be created in $O(n)$ time because
-the amount of each element can be retrieved
+the number of occurrences of each element can be retrieved
 from the bookkeeping array.
 Thus, the total time complexity of counting
 sort is $O(n)$.
@@ -622,8 +621,8 @@ be used as indices in the bookkeeping array.
 
 \index{sort@\texttt{sort}}
 
-It is almost never a good idea to use
-an own implementation of a sorting algorithm
+It is almost never a good idea to implement
+an own sorting algorithm
 in a contest, because there are good
 implementations available in programming languages.
 For example, the C++ standard library contains
@@ -639,8 +638,8 @@ that a home-made sorting function would be better.
 
 In this section we will see how to use the
 C++ \texttt{sort} function.
-The following code sorts the numbers
-in vector \texttt{t} in increasing order:
+The following code sorts
+a vector in increasing order:
 \begin{lstlisting}
 vector<int> v = {4,2,5,3,5,8,3};
 sort(v.begin(),v.end());
@@ -648,7 +647,7 @@ sort(v.begin(),v.end());
 After the sorting, the contents of the
 vector will be
 $[2,3,3,4,5,5,8]$.
-The default sorting order in increasing,
+The default sorting order is increasing,
 but a reverse order is possible as follows:
 \begin{lstlisting}
 sort(v.rbegin(),v.rend());
@@ -681,7 +680,7 @@ whenever it is needed to find out the order of two elements.
 Most C++ data types have a built-in comparison operator
 and elements of those types can be sorted automatically.
 For example, numbers are sorted according to their values
-and strings are sorted according to alphabetical order.
+and strings are sorted in alphabetical order.
 
 \index{pair@\texttt{pair}}
 
@@ -770,9 +769,9 @@ sort(v.begin(), v.end(), cmp);
 
 A general method for searching for an element
 in an array is to use a \texttt{for} loop
-that iterates through all elements in the array.
+that iterates through the elements in the array.
 For example, the following code searches for
-an element $x$ in array \texttt{t}:
+an element $x$ in the array \texttt{t}:
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
@@ -780,11 +779,11 @@ for (int i = 1; i <= n; i++) {
 }
 \end{lstlisting}
 
-The time complexity of this approach is $O(n)$
-because in the worst case, we have to check
+The time complexity of this approach is $O(n)$,
+because in the worst case, it is needed to check
 all elements in the array.
 If the array can contain any elements,
-this is also the best possible approach because
+this is also the best possible approach, because
 there is no additional information available where
 in the array we should search for the element $x$.
 
@@ -802,14 +801,14 @@ in $O(\log n)$ time.
 The traditional way to implement binary search
 resembles looking for a word in a dictionary.
 At each step, the search halves the active region in the array, 
-until the desired element is found, or it turns out
+until the target element is found, or it turns out
 that there is no such element.
 
 First, the search checks the middle element in the array.
-If the middle element is the desired element,
+If the middle element is the target element,
 the search terminates.
 Otherwise, the search recursively continues
-to the left half or to the right half of the array,
+to the left or right half of the array,
 depending on the value of the middle element.
 
 The above idea can be implemented as follows:
@@ -832,18 +831,18 @@ so the time complexity is $O(\log n)$.
 \subsubsection{Method 2}
 
 An alternative method for implementing binary search
-is based on a more efficient way to iterate through
+is based on an efficient way to iterate through
 the elements in the array.
 The idea is to make jumps and slow the speed
-when we get closer to the desired element.
+when we get closer to the target element.
 
-The search goes through the array from the left to
-the right, and the initial jump length is $n/2$.
+The search goes through the array from left to
+right, and the initial jump length is $n/2$.
 At each step, the jump length will be halved:
 first $n/4$, then $n/8$, $n/16$, etc., until
 finally the length is 1.
-After the jumps, either the desired element has
-been found or we know that it doesn't exist in the array.
+After the jumps, either the target element has
+been found or we know that it does not appear in the array.
 
 The following code implements the above idea:
 \begin{lstlisting}
@@ -854,10 +853,10 @@ for (int b = n/2; b >= 1; b /= 2) {
 if (t[k] == x) // x was found at index k
 \end{lstlisting}
 
-Variable $k$ is the position in the array,
-and variable $b$ is the jump length.
+The variables $k$ and $b$ contain the position
+in the array and the jump length.
 If the array contains the element $x$,
-the index of the element will be in variable $k$
+the index of the element will be in the variable $k$
 after the search.
 The time complexity of the algorithm is $O(\log n)$,
 because the code in the \texttt{while} loop
@@ -866,7 +865,7 @@ is performed at most twice for each jump length.
 \subsubsection{Finding the smallest solution}
 
 In practice, it is seldom needed to implement
-binary search for array search,
+binary search for searching elements in an array,
 because we can use the standard library instead.
 For example, the C++ functions \texttt{lower\_bound}
 and \texttt{upper\_bound} implement binary search,
@@ -874,7 +873,7 @@ and the data structure \texttt{set} maintains a
 set of elements with $O(\log n)$ time operations.
 
 However, an important use for binary search is
-to find a position where the value of a function changes.
+to find the position where the value of a function changes.
 Suppose that we wish to find the smallest value $k$
 that is a valid solution for a problem.
 We are given a function $\texttt{ok}(x)$
@@ -917,11 +916,11 @@ The algorithm calls the function \texttt{ok}
 $O(\log z)$ times, so the total time complexity
 depends on the function \texttt{ok}.
 For example, if the function works in $O(n)$ time,
-the total time complexity becomes $O(n \log z)$.
+the total time complexity is $O(n \log z)$.
 
 \subsubsection{Finding the maximum value}
 
-Binary search can also be used for finding
+Binary search can also be used to find
 the maximum value for a function that is
 first increasing and then decreasing.
 Our task is to find a value $k$ such that
@@ -930,7 +929,7 @@ Our task is to find a value $k$ such that
 \item
 $f(x)<f(x+1)$ when $x<k$, and
 \item
-$f(x)>f(x+1)$ when $x >= k$.
+$f(x)>f(x+1)$ when $x \ge k$.
 \end{itemize}
 
 The idea is to use binary search
@@ -948,8 +947,8 @@ for (int b = z; b >= 1; b /= 2) {
 int k = x+1;
 \end{lstlisting}
 
-Note that unlike in the regular binary search,
-here it is not allowed that successive values
+Note that unlike in the standard binary search,
+here it is not allowed that consecutive values
 of the function are equal.
 In this case it would not be possible to know
 how to continue the search.
