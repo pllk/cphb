@@ -4,7 +4,7 @@
 
 A \key{data structure} is a way to store
 data in the memory of the computer.
-It is important to choose a suitable
+It is important to choose an appropriate
 data structure for a problem,
 because each data structure has its own
 advantages and disadvantages.
@@ -24,13 +24,12 @@ in the standard library.
 
 \index{dynamic array}
 \index{vector}
-\index{vector@\texttt{vector}}
 
 A \key{dynamic array} is an array whose
 size can be changed during the execution
-of the code.
+of the program.
 The most popular dynamic array in C++ is
-the \key{vector} structure (\texttt{vector}),
+the \texttt{vector} structure,
 that can be used almost like a regular array.
 
 The following code creates an empty vector and
@@ -107,23 +106,22 @@ uses a regular array.
 If the size of the vector increases and
 the array becomes too small,
 a new array is allocated and all the
-elements are copied to the new array.
-However, this doesn't happen often and the
-time complexity of
-\texttt{push\_back} is $O(1)$ on average.
+elements are moved to the new array.
+However, this does not happen often and the
+average time complexity of
+\texttt{push\_back} is $O(1)$.
 
 \index{string}
-\index{string@\texttt{string}}
 
-Also the \key{string} structure (\texttt{string})
-is a dynamic array that can be used almost like a vector.
+The \texttt{string} structure
+is also a dynamic array that can be used almost like a vector.
 In addition, there is special syntax for strings
 that is not available in other data structures.
 Strings can be combined using the \texttt{+} symbol.
 The function $\texttt{substr}(k,x)$ returns the substring
-that begins at index $k$ and has length $x$.
-The function $\texttt{find}(\texttt{t})$ finds the position
-where a substring \texttt{t} appears in the string.
+that begins at index $k$ and has length $x$,
+and the function $\texttt{find}(\texttt{t})$ finds the position
+of the first occurrence of a substring \texttt{t}.
 
 The following code presents some string operations:
 
@@ -140,11 +138,9 @@ cout << c << "\n"; // tiva
 \section{Set structure}
 
 \index{set}
-\index{set@\texttt{set}}
-\index{unordered\_set@\texttt{unordered\_set}}
 
 A \key{set} is a data structure that
-contains a collection of elements.
+maintains a collection of elements.
 The basic operations in a set are element
 insertion, search and removal.
 
@@ -167,10 +163,10 @@ often more efficient.
 
 The following code creates a set
 that consists of integers,
-and shows how to use it.
+and shows some of the operations.
 The function \texttt{insert} adds an element to the set,
-the function \texttt{count} returns how many times an
-element appears in the set,
+the function \texttt{count} returns the number of occurrences
+of an element,
 and the function \texttt{erase} removes an element from the set.
 
 \begin{lstlisting}
@@ -201,7 +197,7 @@ for (auto x : s) {
 \end{lstlisting}
 
 An important property of a set is
-that all the elements are distinct.
+that all the elements are \emph{distinct}.
 Thus, the function \texttt{count} always returns
 either 0 (the element is not in the set)
 or 1 (the element is in the set),
@@ -218,15 +214,12 @@ s.insert(5);
 cout << s.count(5) << "\n"; // 1
 \end{lstlisting}
 
-\index{multiset@\texttt{multiset}}
-\index{unordered\_multiset@\texttt{unordered\_multiset}}
-
-C++ also contains the structures
+C++ also has the structures
 \texttt{multiset} and \texttt{unordered\_multiset}
 that work otherwise like \texttt{set}
 and \texttt{unordered\_set}
-but they can contain multiple copies of an element.
-For example, in the following code all copies
+but they can contain multiple instances of an element.
+For example, in the following code all three instances
 of the number 5 are added to the set:
 
 \begin{lstlisting}
@@ -252,17 +245,15 @@ cout << s.count(5) << "\n"; // 2
 
 \section{Map structure}
 
-\index{hakemisto@hakemisto}
-\index{map@\texttt{map}}
-\index{unordered\_map@\texttt{unordered\_map}}
+\index{map}
 
 A \key{map} is a generalized array
 that consists of key-value-pairs.
 While the keys in a regular array are always
-the successive integers $0,1,\ldots,n-1$,
+the consecutive integers $0,1,\ldots,n-1$,
 where $n$ is the size of the array,
 the keys in a map can be of any data type and
-they don't have to be successive values.
+they do not have to be consecutive values.
 
 C++ contains two map implementations that
 correspond to the set implementations:
@@ -285,8 +276,8 @@ m["harpsichord"] = 9;
 cout << m["banana"] << "\n"; // 3
 \end{lstlisting}
 
-If a value of a key is requested
-but the map doesn't contain it,
+If the value of a key is requested
+but the map does not contain it,
 the key is automatically added to the map with
 a default value.
 For example, in the following code,
@@ -317,8 +308,7 @@ for (auto x : m) {
 \index{iterator}
 
 Many functions in the C++ standard library
-are given iterators to data structures,
-and iterators often correspond to ranges.
+operate with iterators.
 An \key{iterator} is a variable that points
 to an element in a data structure.
 
@@ -344,7 +334,7 @@ Note the asymmetry in the iterators:
 while \texttt{s.end()} points outside the data structure.
 Thus, the range defined by the iterators is \emph{half-open}.
 
-\subsubsection{Handling ranges}
+\subsubsection{Working with ranges}
 
 Iterators are used in C++ standard library functions
 that work with ranges of data structures.
@@ -402,7 +392,7 @@ auto it = s.begin();
 cout << *it << "\n";
 \end{lstlisting}
 
-Iterators can be moved using operators
+Iterators can be moved using the operators
 \texttt{++} (forward) and \texttt{---} (backward),
 meaning that the iterator moves to the next
 or previous element in the set.
@@ -422,7 +412,7 @@ cout << *it << "\n";
 
 The function $\texttt{find}(x)$ returns an iterator
 that points to an element whose value is $x$.
-However, if the set doesn't contain $x$,
+However, if the set does not contain $x$,
 the iterator will be \texttt{end}.
 
 \begin{lstlisting}
@@ -432,16 +422,15 @@ if (it == s.end()) cout << "x is missing";
 
 The function $\texttt{lower\_bound}(x)$ returns
 an iterator to the smallest element in the set
-whose value is at least $x$.
-Correspondingly, 
+whose value is \emph{at least} $x$, and
 the function $\texttt{upper\_bound}(x)$
 returns an iterator to the smallest element
-in the set whose value is larger than $x$.
+in the set whose value is \emph{larger than} $x$.
 If such elements do not exist,
 the return value of the functions will be \texttt{end}.
 These functions are not supported by the
 \texttt{unordered\_set} structure that
-doesn't maintain the order of the elements.
+does not maintain the order of the elements.
 
 \begin{samepage}
 For example, the following code finds the element
@@ -450,7 +439,7 @@ nearest to $x$:
 \begin{lstlisting}
 auto a = s.lower_bound(x);
 if (a == s.begin() && a == s.end()) {
-    cout << "joukko on tyhjä\n";
+    cout << "the set is empty\n";
 } else if (a == s.begin()) {
     cout << *a << "\n";
 } else if (a == s.end()) {
@@ -473,7 +462,7 @@ If \texttt{a} equals \texttt{begin},
 the corresponding element is nearest to $x$.
 If \texttt{a} equals \texttt{end},
 the last element in the set is nearest to $x$.
-If none of the previous cases is true,
+If none of the previous cases holds,
 the element nearest to $x$ is either the
 element that corresponds to $a$ or the previous element.
 \end{samepage}
@@ -483,9 +472,8 @@ element that corresponds to $a$ or the previous element.
 \subsubsection{Bitset}
 
 \index{bitset}
-\index{bitset@\texttt{bitset}}
 
-A \key{bitset} (\texttt{bitset}) is an array
+A \texttt{bitset} is an array
 where each element is either 0 or 1.
 For example, the following code creates
 a bitset that contains 10 elements:
@@ -536,12 +524,11 @@ cout << (a|b) << "\n"; // 1011111110
 cout << (a^b) << "\n"; // 1001101110
 \end{lstlisting}
 
-\subsubsection{Pakka}
+\subsubsection{Deque}
 
 \index{deque}
-\index{deque@\texttt{deque}}
 
-A \key{deque} (\texttt{deque}) is a dynamic array
+A \texttt{deque} is a dynamic array
 whose size can be changed at both ends of the array.
 Like a vector, a deque contains functions
 \texttt{push\_back} and \texttt{pop\_back}, but
@@ -565,12 +552,11 @@ For this reason, a deque is slower than a vector.
 Still, the time complexity of adding and removing
 elements is $O(1)$ on average at both ends.
 
-\subsubsection{Pino}
+\subsubsection{Stack}
 
 \index{stack}
-\index{stack@\texttt{stack}}
 
-A \key{stack} (\texttt{stack})
+A \texttt{stack}
 is a data structure that provides two
 $O(1)$ time operations:
 adding an element to the top,
@@ -591,12 +577,11 @@ cout << s.top(); // 2
 \subsubsection{Queue}
 
 \index{queue}
-\index{queue@\texttt{queue}}
 
-A \key{queue} (\texttt{queue}) also
+A \texttt{queue} also
 provides two $O(1)$ time operations:
-adding a new element to the end,
-and removing the first element.
+adding a element to the end of the queue,
+and removing the first element in the queue.
 It is only possible to access the first
 and the last element of a queue.
 
@@ -615,9 +600,8 @@ cout << s.front(); // 2
 
 \index{priority queue}
 \index{heap}
-\index{priority\_queue@\texttt{priority\_queue}}
 
-A \key{priority queue} (\texttt{priority\_queue})
+A \texttt{priority\_queue}
 maintains a set of elements.
 The supported operations are insertion and,
 depending on the type of the queue,
@@ -657,7 +641,8 @@ q.pop();
 \end{lstlisting}
 \end{samepage}
 
-The following definition creates a priority queue
+Using the following declaration,
+we can create a priority queue
 that supports finding and removing the minimum element:
 
 \begin{lstlisting}
@@ -666,7 +651,7 @@ priority_queue<int,vector<int>,greater<int>> q;
 
 \section{Comparison to sorting}
 
-Often it's possible to solve a problem
+Often it is possible to solve a problem
 using either data structures or sorting.
 Sometimes there are remarkable differences
 in the actual efficiency of these approaches,
@@ -682,7 +667,7 @@ For example, for the lists
 the answer is 3 because the numbers 2, 5
 and 9 belong to both of the lists.
 
-A straightforward solution for the problem is
+A straightforward solution to the problem is
 to go through all pairs of numbers in $O(n^2)$ time,
 but next we will concentrate on
 more efficient solutions.
@@ -690,7 +675,7 @@ more efficient solutions.
 \subsubsection{Solution 1}
 
 We construct a set of the numbers in $A$,
-and after this, iterate through the numbers
+and after this, we iterate through the numbers
 in $B$ and check for each number if it
 also belongs to $A$.
 This is efficient because the numbers in $A$
@@ -704,8 +689,8 @@ It is not needed to maintain an ordered set,
 so instead of the \texttt{set} structure
 we can also use the \texttt{unordered\_set} structure.
 This is an easy way to make the algorithm
-more efficient because we only have to change
-the data structure that the algorithm uses.
+more efficient, because we only have to change
+the underlying data structure.
 The time complexity of the new algorithm is $O(n)$.
 
 \subsubsection{Solution 3}
@@ -738,10 +723,9 @@ $5 \cdot 10^6$ & $10{,}0$ s & $2{,}3$ s & $0{,}9$ s \\
 \end{center}
 
 Solutions 1 and 2 are equal except that
-solution 1 uses the \texttt{set} structure
-and solution 2 uses the \texttt{unordered\_set} structure.
-In this case, this choice has a big effect on
-the running time becase solution 2
+they use different set structures.
+In this problem, this choice has an important effect on
+the running time, because solution 2
 is 4–5 times faster than solution 1.
 
 However, the most efficient solution is solution 3
@@ -750,7 +734,7 @@ It only uses half of the time compared to solution 2.
 Interestingly, the time complexity of both
 solution 1 and solution 3 is $O(n \log n)$,
 but despite this, solution 3 is ten times faster.
-The explanation for this is that
+This can be explained by the fact that
 sorting is a simple procedure and it is done
 only once at the beginning of solution 3,
 and the rest of the algorithm works in linear time.
