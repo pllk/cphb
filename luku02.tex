@@ -7,7 +7,7 @@ Usually, it is easy to design an algorithm
 that solves the problem slowly,
 but the real challenge is to invent a
 fast algorithm.
-If an algorithm is too slow, it will get only
+If the algorithm is too slow, it will get only
 partial points or no points at all.
 
 The \key{time complexity} of an algorithm
@@ -16,7 +16,7 @@ for some input.
 The idea is to represent the efficiency
 as an function whose parameter is the size of the input.
 By calculating the time complexity,
-we can estimate if the algorithm is good enough
+we can find out whether the algorithm is good enough
 without implementing it.
 
 \section{Calculation rules}
@@ -34,7 +34,7 @@ $n$ will be the length of the string.
 
 \subsubsection*{Loops}
 
-The typical reason why an algorithm is slow is
+A common reason why an algorithm is slow is
 that it contains many loops that go through the input.
 The more nested loops the algorithm contains,
 the slower it is.
@@ -48,7 +48,7 @@ for (int i = 1; i <= n; i++) {
 }
 \end{lstlisting}
 
-Correspondingly, the time complexity of the following code is $O(n^2)$:
+And the time complexity of the following code is $O(n^2)$:
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n; j++) {
@@ -59,9 +59,9 @@ for (int i = 1; i <= n; i++) {
 
 \subsubsection*{Order of magnitude}
 
-A time complexity doesn't tell the exact number
+A time complexity does not indicate the exact number
 of times the code inside a loop is executed,
-but it only tells the order of magnitude.
+but it only shows the order of magnitude.
 In the following examples, the code inside the loop
 is executed $3n$, $n+5$ and $\lceil n/2 \rceil$ times,
 but the time complexity of each code is $O(n)$.
@@ -101,8 +101,7 @@ If the code consists of consecutive phases,
 the total time complexity is the largest
 time complexity of a single phase.
 The reason for this is that the slowest
-phase is usually the bottleneck of the code
-and the other phases are not important.
+phase is usually the bottleneck of the code.
 
 For example, the following code consists
 of three phases with time complexities
@@ -126,8 +125,8 @@ for (int i = 1; i <= n; i++) {
 \subsubsection*{Several variables}
 
 Sometimes the time complexity depends on
-several variables.
-In this case, the formula for the time complexity
+several factors.
+In this case, the time complexity formula
 contains several variables.
 
 For example, the time complexity of the
@@ -168,11 +167,12 @@ void g(int n) {
     g(n-1);
 }
 \end{lstlisting}
-In this case the function branches into two parts.
-Thus, the call $\texttt{g}(n)$ causes the following calls:
+In this case each function call generates two other
+calls, except for $n=1$.
+Hence, the call $\texttt{g}(n)$ causes the following calls:
 \begin{center}
 \begin{tabular}{rr}
-call & amount \\
+parameter & number of calls \\
 \hline
 $\texttt{g}(n)$ & 1 \\
 $\texttt{g}(n-1)$ & 2 \\
@@ -187,13 +187,14 @@ Based on this, the time complexity is
 
 \index{complexity classes}
 
-Typical complexity classes are:
+The following list contains common time complexities
+of algorithms:
 
 \begin{description}
 \item[$O(1)$]
 \index{constant-time algorithm}
 The running time of a \key{constant-time} algorithm
-doesn't depend on the input size.
+does not depend on the input size.
 A typical constant-time algorithm is a direct
 formula that calculates the answer.
 
@@ -201,34 +202,35 @@ formula that calculates the answer.
 \index{logarithmic algorithm}
 A \key{logarithmic} algorithm often halves
 the input size at each step.
-The reason for this is that the logarithm
+The running time of such an algorithm
+is logarithmic, because
 $\log_2 n$ equals the number of times
-$n$ must be divided by 2 to produce 1.
+$n$ must be divided by 2 to get 1.
 
 \item[$O(\sqrt n)$]
-The running time of this kind of algorithm
-is between $O(\log n)$ and $O(n)$.
-A special feature of the square root is that
-$\sqrt n = n/\sqrt n$, so the square root lies
-''in the middle'' of the input.
+A \key{square root algorithm} is slower than
+$O(\log n)$ but faster than $O(n)$.
+A special feature of square roots is that
+$\sqrt n = n/\sqrt n$, so the square root $\sqrt n$ lies
+in some sense in the middle of the input.
 
 \item[$O(n)$]
 \index{linear algorithm}
 A \key{linear} algorithm goes through the input
 a constant number of times.
-This is often the best possible time complexity
+This is often the best possible time complexity,
 because it is usually needed to access each
 input element at least once before
 reporting the answer.
 
 \item[$O(n \log n)$]
-This time complexity often means that the
+This time complexity often indicates that the
 algorithm sorts the input
 because the time complexity of efficient
 sorting algorithms is $O(n \log n)$.
 Another possibility is that the algorithm
-uses a data structure where the time
-complexity of each operation is $O(\log n)$.
+uses a data structure where each operation
+takes $O(\log n)$ time.
 
 \item[$O(n^2)$]
 \index{quadratic algorithm}
@@ -245,7 +247,7 @@ It is possible to go through all triplets of
 input elements in $O(n^3)$ time.
 
 \item[$O(2^n)$]
-This time complexity often means that
+This time complexity often indicates that
 the algorithm iterates through all
 subsets of the input elements.
 For example, the subsets of $\{1,2,3\}$ are
@@ -253,8 +255,8 @@ $\emptyset$, $\{1\}$, $\{2\}$, $\{3\}$, $\{1,2\}$,
 $\{1,3\}$, $\{2,3\}$ and $\{1,2,3\}$.
 
 \item[$O(n!)$]
-This time complexity often means that
-the algorithm iterates trough all
+This time complexity often indicates that
+the algorithm iterates through all
 permutations of the input elements.
 For example, the permutations of $\{1,2,3\}$ are
 $(1,2,3)$, $(1,3,2)$, $(2,1,3)$, $(2,3,1)$,
@@ -284,9 +286,10 @@ of problems for which no polynomial algorithm is known.
 \section{Estimating efficiency}
 
 By calculating the time complexity,
-it is possible to check before the implementation that
-an algorithm is efficient enough for the problem.
-The starting point for the estimation is the fact that
+it is possible to check before
+implementing an algorithm that it is
+efficient enough for the problem.
+The starting point for estimations is the fact that
 a modern computer can perform some hundreds of
 millions of operations in a second.
 
@@ -294,19 +297,19 @@ For example, assume that the time limit for
 a problem is one second and the input size is $n=10^5$.
 If the time complexity is $O(n^2)$,
 the algorithm will perform about $(10^5)^2=10^{10}$ operations.
-This should take some tens of seconds time,
+This should take at least some tens of seconds time,
 so the algorithm seems to be too slow for solving the problem.
 
 On the other hand, given the input size,
 we can try to guess
-the desired time complexity of the algorithm
+the required time complexity of the algorithm
 that solves the problem.
 The following table contains some useful estimates
 assuming that the time limit is one second.
 
 \begin{center}
 \begin{tabular}{ll}
-input size ($n$) & desired time complexity \\
+input size ($n$) & required time complexity \\
 \hline
 $n \le 10^{18}$ & $O(1)$ or $O(\log n)$ \\
 $n \le 10^{12}$ & $O(\sqrt n)$ \\
@@ -320,18 +323,18 @@ $n \le 10$ & $O(n!)$ \\
 
 For example, if the input size is $n=10^5$,
 it is probably expected that the time
-complexity of the algorithm should be $O(n)$ or $O(n \log n)$.
-This information makes it easier to design an algorithm
+complexity of the algorithm is $O(n)$ or $O(n \log n)$.
+This information makes it easier to design the algorithm,
 because it rules out approaches that would yield
 an algorithm with a slower time complexity.
 
 \index{constant factor}
 
 Still, it is important to remember that a
-time complexity doesn't tell everything about 
-the efficiency because it hides the \key{constant factors}.
+time complexity is only an estimate of efficiency,
+because it hides the \key{constant factors}.
 For example, an algorithm that runs in $O(n)$ time
-can perform $n/2$ or $5n$ operations.
+may perform $n/2$ or $5n$ operations.
 This has an important effect on the actual
 running time of the algorithm.
 
@@ -340,8 +343,8 @@ running time of the algorithm.
 \index{maximum subarray sum}
 
 There are often several possible algorithms
-for solving a problem with different
-time complexities.
+for solving a problem such that their
+time complexities are different.
 This section discusses a classic problem that
 has a straightforward $O(n^3)$ solution.
 However, by designing a better algorithm it
@@ -353,7 +356,7 @@ our task is to find the
 \key{maximum subarray sum}, i.e.,
 the largest possible sum of numbers
 in a contiguous region in the array.
-The problem is interesting because there may be
+The problem is interesting when there may be
 negative numbers in the array.
 For example, in the array
 \begin{center}
@@ -411,7 +414,7 @@ the following subarray produces the maximum sum $10$:
 
 \subsubsection{Solution 1}
 
-A straightforward solution for the problem
+A straightforward solution to the problem
 is to go through all possible ways to
 select a subarray, calculate the sum of
 numbers in each subarray and maintain
@@ -432,23 +435,23 @@ for (int a = 1; a <= n; a++) {
 cout << p << "\n";
 \end{lstlisting}
 
-The code assumes that the numbers are stored in array \texttt{x}
+The code assumes that the numbers are stored in an array \texttt{x}
 with indices $1 \ldots n$.
-Variables $a$ and $b$ select the first and last
+The variables $a$ and $b$ select the first and last
 number in the subarray,
-and the sum of the subarray is calculated to variable $s$.
-Variable $p$ contains the maximum sum found during the search.
+and the sum of the subarray is calculated to the variable $s$.
+The variable $p$ contains the maximum sum found during the search.
 
-The time complexity of the algorithm is $O(n^3)$
+The time complexity of the algorithm is $O(n^3)$,
 because it consists of three nested loops and
 each loop contains $O(n)$ steps.
 
 \subsubsection{Solution 2}
 
 It is easy to make the first solution more efficient
-by removing one loop.
+by removing one loop from it.
 This is possible by calculating the sum at the same
-time when the right border of the subarray moves.
+time when the right end of the subarray moves.
 The result is the following code:
 
 \begin{lstlisting}
@@ -467,28 +470,28 @@ After this change, the time complexity is $O(n^2)$.
 \subsubsection{Solution 3}
 
 Surprisingly, it is possible to solve the problem
-in $O(n)$ time which means that we can remove
+in $O(n)$ time, which means that we can remove
 one more loop.
-The idea is to calculate for each array index
-the maximum subarray sum that ends to that index.
+The idea is to calculate for each array position
+the maximum subarray sum that ends at that position.
 After this, the answer for the problem is the
 maximum of those sums.
 
 Condider the subproblem of finding the maximum subarray
-for a fixed ending index $k$.
+that ends at position $k$.
 There are two possibilities:
 \begin{enumerate}
-\item The subarray only contains the element at index $k$.
+\item The subarray only contains the element at position $k$.
 \item The subarray consists of a subarray that ends
-to index $k-1$, followed by the element at index $k$.
+at position $k-1$, followed by the element at position $k$.
 \end{enumerate}
 
 Our goal is to find a subarray with maximum sum,
-so in case 2 the subarray that ends to index $k-1$
+so in case 2 the subarray that ends at index $k-1$
 should also have the maximum sum.
 Thus, we can solve the problem efficiently
 when we calculate the maximum subarray sum
-for each ending index from left to right.
+for each ending position from left to right.
 
 The following code implements the solution:
 \begin{lstlisting}
@@ -509,7 +512,7 @@ has to access all array elements at least once.
 
 \subsubsection{Efficiency comparison}
 
-It is interesting to study how efficient the
+It is interesting to study how efficient 
 algorithms are in practice.
 The following table shows the running times
 of the above algorithms for different
@@ -536,8 +539,8 @@ The comparison shows that all algorithms
 are efficient when the input size is small,
 but larger inputs bring out remarkable
 differences in running times of the algorithms.
-The $O(n^3)$ time solution 1 becomes slower
-when $n=10^3$, and the $O(n^2)$ time solution 2
-becomes slower when $n=10^4$.
+The $O(n^3)$ time solution 1 becomes slow
+when $n=10^4$, and the $O(n^2)$ time solution 2
+becomes slow when $n=10^5$.
 Only the $O(n)$ time solution 3 solves
 even the largest inputs instantly.
