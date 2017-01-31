@@ -6,9 +6,9 @@
 is a technique that combines the correctness
 of complete search and the efficiency
 of greedy algorithms.
-Dynamic programming can be used if the
-problem can be divided into subproblems
-that can be calculated independently.
+Dynamic programming can be applied if the
+problem can be divided into overlapping subproblems
+that can be solved independently.
 
 There are two uses for dynamic programming:
 
@@ -18,7 +18,7 @@ There are two uses for dynamic programming:
 We want to find a solution that is
 as large as possible or as small as possible.
 \item
-\key{Couting the number of solutions}:
+\key{Counting the number of solutions}:
 We want to calculate the total number of
 possible solutions.
 \end{itemize}
@@ -37,49 +37,50 @@ that are a good starting point.
 
 \section{Coin problem}
 
-We first consider a problem that we
-have already seen:
+We first discuss a problem that we
+have already seen in Chapter 6:
 Given a set of coin values $\{c_1,c_2,\ldots,c_k\}$
 and a sum of money $x$, our task is to
 form the sum $x$ using as few coins as possible.
 
-In Chapter 6.1, we solved the problem using a
+In Chapter 6, we solved the problem using a
 greedy algorithm that always selects the largest
-possible coin for the sum.
+possible coin.
 The greedy algorithm works, for example,
-when the coins are the euro coins,
+when coins are euro coins,
 but in the general case the greedy algorithm
-doesn't necessarily produce an optimal solution.
+does not necessarily produce an optimal solution.
 
-Now it's time to solve the problem efficiently
-using dynamic programming, so that the algorithms
+Now it is time to solve the problem efficiently
+using dynamic programming, so that the algorithm
 works for any coin set.
 The dynamic programming
 algorithm is based on a recursive function
 that goes through all possibilities how to
-select the coins, like a brute force algorithm.
+form the sum, like a brute force algorithm.
 However, the dynamic programming
 algorithm is efficient because
-it uses memoization to
-calculate the answer for each subproblem only once.
+it uses \emph{memoization} to
+calculate the answer to each subproblem only once.
 
 \subsubsection{Recursive formulation}
 
 The idea in dynamic programming is to
 formulate the problem recursively so
-that the answer for the problem can be
-calculated from the answers for the smaller
+that the answer to the problem can be
+calculated from the answers for smaller
 subproblems.
-In this case, a natural problem is as follows:
+In the coin problem, a natural recursive
+problem is as follows:
 what is the smallest number of coins
 required for constructing sum $x$?
 
 Let $f(x)$ be a function that gives the answer
-for the problem, i.e., $f(x)$ is the smallest
+to the problem, i.e., $f(x)$ is the smallest
 number of coins required for constructing sum $x$.
 The values of the function depend on the
 values of the coins.
-For example, if the values are $\{1,3,4\}$,
+For example, if the coin values are $\{1,3,4\}$,
 the first values of the function are as follows:
 
 \[
@@ -99,7 +100,7 @@ f(10) & = & 3 \\
 \]
 
 First, $f(0)=0$ because no coins are needed
-for sum $0$.
+for the sum $0$.
 Moreover, $f(3)=1$ because the sum $3$
 can be formed using coin 3,
 and $f(5)=2$ because the sum 5 can
@@ -128,16 +129,17 @@ The base case for the function is
 \[f(0)=0,\]
 because no coins are needed for constructing
 the sum 0.
-In addition, it's a good idea to define
-\[f(x)=\infty,\hspace{8px}\textrm{jos $x<0$}.\]
+In addition, it is convenient to define
+\[f(x)=\infty\hspace{8px}\textrm{if $x<0$}.\]
 This means that an infinite number of coins
-is needed to create a negative sum of money.
+is needed for forming a negative sum of money.
 This prevents the situation that the recursive
 function would form a solution where the
 initial sum of money is negative.
 
-Now it's possible to implement the function in C++
-directly using the recursive definition:
+Once a recursive function that solves the problem
+has been found,
+we can directly implement a solution in C++:
 
 \begin{lstlisting}
 int f(int x) {
@@ -153,8 +155,8 @@ int f(int x) {
 
 The code assumes that the available coins are
 $\texttt{c}[1], \texttt{c}[2], \ldots, \texttt{c}[k]$,
-and the value $10^9$ means infinity.
-This function works but it is not efficient yet
+and the value $10^9$ denotes infinity.
+This function works but it is not efficient yet,
 because it goes through a large number
 of ways to construct the sum.
 However, the function becomes efficient by
@@ -164,15 +166,15 @@ using memoization.
 
 \index{memoization}
 
-Dynamic programming allows to calculate the
+Dynamic programming allows us to calculate the
 value of a recursive function efficiently
 using \key{memoization}.
 This means that an auxiliary array is used
 for storing the values of the function
 for different parameters.
 For each parameter, the value of the function
-is calculated only once, and after this,
-it can be directly retrieved from the array.
+is calculated recursively only once, and after this,
+the value can be directly retrieved from the array.
 
 In this problem, we can use the array
 \begin{lstlisting}
@@ -182,8 +184,8 @@ int d[N];
 where $\texttt{d}[x]$ will contain
 the value $f(x)$.
 The constant $N$ should be chosen so
-that there is space for all needed
-values of the function.
+that all required values of the function fit
+in the array.
 
 After this, the function can be efficiently
 implemented as follows:
@@ -206,22 +208,21 @@ The function handles the base cases
 $x=0$ and $x<0$ as previously.
 Then the function checks if
 $f(x)$ has already been calculated
-and stored to $\texttt{d}[x]$.
-If $f(x)$ can be found in the array,
+and stored in $\texttt{d}[x]$.
+If $f(x)$ is found in the array,
 the function directly returns it.
 Otherwise the function calculates the value
-recursively and stores it to $\texttt{d}[x]$.
+recursively and stores it in $\texttt{d}[x]$.
 
 Using memoization the function works
-efficiently because it is needed to
-recursively calculate
-the answer for each $x$ only once.
-After a value $f(x)$ has been stored to the array,
-it can be directly retrieved whenever the
+efficiently, because the answer for each $x$
+is calculated recursively only once.
+After a value of $f(x)$ has been stored in the array,
+it can be efficiently retrieved whenever the
 function will be called again with parameter $x$.
 
 The time complexity of the resulting algorithm
-is $O(xk)$ when the sum is $x$ and the number of
+is $O(xk)$ where the sum is $x$ and the number of
 coins is $k$.
 In practice, the algorithm is usable if
 $x$ is so small that it is possible to allocate
@@ -245,17 +246,17 @@ for (int i = 1; i <= x; i++) {
 This implementation is shorter and somewhat
 more efficient than recursion,
 and experienced competitive programmers
-often implement dynamic programming solutions
-using loops.
+often prefer dynamic programming solutions
+that are implemented using loops.
 Still, the underlying idea is the same as
 in the recursive function.
 
 \subsubsection{Constructing the solution}
 
-Sometimes it is not enough to find out the value
-of the optimal solution, but we should also give
+Sometimes we are asked both to find the value
+of an optimal solution and also to give
 an example how such a solution can be constructed.
-In this problem, this means that the algorithm
+In the coin problem, this means that the algorithm
 should show how to select the coins that produce
 the sum $x$ using as few coins as possible.
 
@@ -294,11 +295,11 @@ while (x > 0) {
 \subsubsection{Counting the number of solutions}
 
 Let us now consider a variation of the problem
-that it's like the original problem but we should
-count the total number of solutions instead
+that is otherwise like the original problem,
+but we should count the total number of solutions instead
 of finding the optimal solution.
 For example, if the coins are $\{1,3,4\}$ and
-the required sum is $5$,
+the target sum is $5$,
 there are a total of 6 solutions:
 
 \begin{multicols}{2}
@@ -316,24 +317,23 @@ The number of the solutions can be calculated
 using the same idea as finding the optimal solution.
 The difference is that when finding the optimal solution,
 we maximize or minimize something in the recursion,
-but now we will sum together all possible alternatives to
-construct a solution.
+but now we will calculate sums of numbers of solutions.
 
-In this case, we can define a function $f(x)$
+In the coin problem, we can define a function $f(x)$
 that returns the number of ways to construct
 the sum $x$ using the coins.
 For example, $f(5)=6$ when the coins are $\{1,3,4\}$.
-The function $f(x)$ can be recursively calculated
+The value of $f(x)$ can be calculated recursively
 using the formula
-\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_k)\]
-because to form the sum $x$ we should first
-choose some coin $c_i$ and after this form the sum $x-c_i$.
-The base cases are $f(0)=1$ because there is exactly
+\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_k),\]
+because to form the sum $x$, we have to first
+choose some coin $c_i$ and then form the sum $x-c_i$.
+The base cases are $f(0)=1$, because there is exactly
 one way to form the sum 0 using an empty set of coins,
 and $f(x)=0$, when $x<0$, because it's not possible
 to form a negative sum of money.
 
-In the above example the function becomes
+If the coin set is $\{1,3,4\}$, the function is
 \[ f(x) = f(x-1)+f(x-3)+f(x-4) \]
 and the first values of the function are:
 \[
@@ -351,7 +351,7 @@ f(9) & = & 40 \\
 \end{array}
 \]
 
-The following code calculates the value $f(x)$
+The following code calculates the value of $f(x)$
 using dynamic programming by filling the array
 \texttt{d} for parameters $0 \ldots x$:
 
@@ -365,13 +365,13 @@ for (int i = 1; i <= x; i++) {
 }
 \end{lstlisting}
 
-Often the number of the solutions is so large
+Often the number of solutions is so large
 that it is not required to calculate the exact number
 but it is enough to give the answer modulo $m$
 where, for example, $m=10^9+7$.
 This can be done by changing the code so that
-all calculations will be done in modulo $m$.
-In this case, it is enough to add the line
+all calculations are done in modulo $m$.
+In the above code, it is enough to add the line
 \begin{lstlisting}
         d[i] %= m;
 \end{lstlisting}
@@ -386,8 +386,8 @@ dynamic programming.
 Since dynamic programming can be used
 in many different situations,
 we will now go through a set of problems
-that show further examples how dynamic
-programming can be used.
+that show further examples about
+possibilities of dynamic programming.
 
 \section{Longest increasing subsequence}
 
@@ -395,11 +395,11 @@ programming can be used.
 
 Given an array that contains $n$
 numbers $x_1,x_2,\ldots,x_n$,
-our task is find the
+our task is to find the
 \key{longest increasing subsequence}
 in the array.
 This is a sequence of array elements
-that goes from the left to the right,
+that goes from left to right,
 and each element in the sequence is larger
 than the previous element.
 For example, in the array
@@ -463,12 +463,12 @@ contains 4 elements:
 
 Let $f(k)$ be the length of the
 longest increasing subsequence
-that ends to index $k$.
-Thus, the answer for the problem
+that ends at position $k$.
+Using this function, the answer to the problem
 is the largest of values
 $f(1),f(2),\ldots,f(n)$.
 For example, in the above array
-the values for the function are as follows:
+the values of the function are as follows:
 \[
 \begin{array}{lcl}
 f(1) & = & 1 \\
@@ -482,30 +482,30 @@ f(8) & = & 2 \\
 \end{array}
 \]
 
-When calculating the value $f(k)$,
+When calculating the value of $f(k)$,
 there are two possibilities how the subsequence
-that ends to index $k$ is constructed:
+that ends at position $k$ is constructed:
 \begin{enumerate}
 \item The subsequence
 only contains the element $x_k$, so $f(k)=1$.
-\item We choose some index $i$ for which $i<k$
+\item We choose some position $i$ for which $i<k$
 and $x_i<x_k$.
 We extend the longest increasing subsequence
-that ends to index $i$ by adding the element $x_k$
+that ends at position $i$ by adding the element $x_k$
 to it. In this case $f(k)=f(i)+1$.
 \end{enumerate}
 
-Consider calculating the value $f(7)$.
+Consider calculating the value of $f(7)$.
 The best solution is to extend the longest
-increasing subsequence that ends to index 5,
+increasing subsequence that ends at position 5,
 i.e., the sequence $[2,5,7]$, by adding
 the element $x_7=8$.
 The result is
 $[2,5,7,8]$, and $f(7)=f(5)+1=4$.
 
-A straightforward way to calculate the
-value $f(k)$ is to
-go through all indices
+An easy way to calculate the
+value of $f(k)$ is to
+inspect all positions
 $i=1,2,\ldots,k-1$ that can contain the
 previous element in the subsequence.
 The time complexity of such an algorithm is $O(n^2)$.
@@ -517,16 +517,15 @@ problem in $O(n \log n)$ time, but this is more difficult.
 Our next problem is to find a path
 in an $n \times n$ grid
 from the upper-left corner to
-the lower-right corner.
+the lower-right corner such that
+we can only move down and right.
 Each square contains a number,
 and the path should be constructed so
 that the sum of numbers along
 the path is as large as possible.
-In addition, it is only allowed to move
-downwards and to the right.
 
-In the followig grid, the best path is
-marked with gray background:
+The following picture shows an optimal
+path in a grid:
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
@@ -568,23 +567,22 @@ marked with gray background:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-The sum of numbers is
-$3+9+8+7+9+8+5+10+8=67$
-that is the largest possible sum in a path
+The sum of numbers on the path is 67,
+and this is the largest possible sum on a path
 from the
 upper-left corner to the lower-right corner.
 
-A good approach for the problem is to
-calculate for each square $(y,x)$
-the largest possible sum in a path
-from the upper-left corner to the square $(y,x)$.
-We denote this sum $f(y,x)$,
-so $f(n,n)$ is the largest sum in a path
+We can approach the problem by
+calculating for each square $(y,x)$
+the largest possible sum on a path
+from the upper-left corner to square $(y,x)$.
+Let $f(y,x)$ denote this sum,
+so $f(n,n)$ is the largest sum on a path
 from the upper-left corner to
 the lower-right corner.
 
 The recursive formula is based on the observation
-that a path that ends to square$(y,x)$
+that a path that ends at square $(y,x)$
 can either come from square $(y,x-1)$
 or from square $(y-1,x)$:
 \begin{center}
@@ -647,12 +645,12 @@ D & 5 & 3 \\
 \end{tabular}
 \end{center}
 \end{samepage}
-and the maximum total weight is 12,
-the optimal solution is to select objects $B$ and $D$.
-Their total weight $6+5=11$ doesn't exceed 12,
-and their total value $3+3=6$ is as large as possible.
+and the maximum allowed total weight is 12,
+an optimal solution is to select objects $B$ and $D$.
+Their total weight $6+5=11$ does not exceed 12,
+and their total value $3+3=6$ is the largest possible.
 
-This task is possible to solve in two different ways
+This task can be solved in two different ways
 using dynamic programming.
 We can either regard the problem as maximizing the
 total value of the objects or 
@@ -664,12 +662,12 @@ minimizing the total weight of the objects.
 denote the largest possible total value
 when a subset of objects $1 \ldots k$ is selected
 such that the total weight is $u$.
-The solution for the problem is
+The solution to the problem is
 the largest value
 $f(n,u)$ where $0 \le u \le x$.
 A recursive formula for calculating
 the function is
-\[f(k,u) = \max(f(k-1,u),f(k-1,u-p_k)+a_k)\]
+\[f(k,u) = \max(f(k-1,u),f(k-1,u-p_k)+a_k),\]
 because we can either include or not include
 object $k$ in the solution.
 The base cases are $f(0,0)=0$ and $f(0,u)=-\infty$
@@ -693,7 +691,7 @@ largest value $u$
 for which  $0 \le u \le s$ and $f(n,u) \le x$
 where $s=\sum_{i=1}^n a_i$.
 A recursive formula for calculating the function is
-\[f(k,u) = \min(f(k-1,u),f(k-1,u-a_k)+p_k).\]
+\[f(k,u) = \min(f(k-1,u),f(k-1,u-a_k)+p_k)\]
 as in solution 1.
 The base cases are $f(0,0)=0$ and $f(0,u)=\infty$
 when $u \neq 0$.
@@ -704,8 +702,8 @@ that can be constructed using the following sequence:
 \[f(4,6)=f(3,3)+5=f(2,3)+5=f(1,0)+6+5=f(0,0)+6+5=11.\]
 
 ~\\
-It is interesting to note how the features of the input
-affect on the efficiency of the solutions.
+It is interesting to note how the parameters of the input
+affect the efficiency of the solutions.
 The efficiency of solution 1 depends on the weights
 of the objects, while the efficiency of solution 2
 depends on the values of the objects.
@@ -715,10 +713,8 @@ depends on the values of the objects.
 \index{edit distance}
 \index{Levenshtein distance}
 
-The \key{edit distance},
-also known as the \key{Levenshtein distance},
-indicates how similar two strings are.
-It is the minimum number of editing operations
+The \key{edit distance} or \key{Levenshtein distance}
+is the minimum number of editing operations
 needed for transforming the first string
 into the second string.
 The allowed editing operations are as follows:
@@ -735,13 +731,14 @@ because we can first perform operation
 (change) and then operation
 \texttt{MOVE} $\rightarrow$ \texttt{MOVIE}
 (insertion).
-This is the smallest possible number of operations
-because it is clear that one operation is not enough.
+This is the smallest possible number of operations,
+because it is clear that it is not possible
+to use only one operation.
 
 Suppose we are given strings
-\texttt{x} of $n$ characters and
-\texttt{y} of $m$ characters,
-and we want to calculate the edit distance
+\texttt{x} and \texttt{y} that contain
+$n$ and $m$ characters, respectively,
+and we wish to calculate the edit distance
 between them.
 This can be efficiently done using
 dynamic programming in $O(nm)$ time.
@@ -749,9 +746,7 @@ Let $f(a,b)$ denote the edit distance
 between the first $a$ characters of \texttt{x}
 and the first $b$ characters of \texttt{y}.
 Using this function, the edit distance between
-\texttt{x} and \texttt{y} is $f(n,m)$,
-and the function also determines
-the editing operations needed.
+\texttt{x} and \texttt{y} equals $f(n,m)$.
 
 The base cases for the function are
 \[
@@ -765,10 +760,10 @@ and in the general case the formula is
 where $c=0$ if the $a$th character of \texttt{x}
 equals the $b$th character of \texttt{y},
 and otherwise $c=1$.
-The formula covers all ways to shorten the strings:
+The formula considers all ways how to shorten the strings:
 \begin{itemize}
 \item $f(a,b-1)$ means that a character is inserted to \texttt{x}
-\item $f(a-1,b)$ means that a chacater is removed from \texttt{x}
+\item $f(a-1,b)$ means that a character is removed from \texttt{x}
 \item $f(a-1,b-1)$ means that \texttt{x} and \texttt{y} contain
 the same character ($c=0$),
 or a character in \texttt{x} is transformed into
@@ -898,11 +893,11 @@ the edit distance between \texttt{LOV} and \texttt{MOV}, etc.
 
 \section{Counting tilings}
 
-Sometimes the dynamic programming state
-is more complex than a fixed combination of numbers.
+Sometimes the states in a dynamic programming solution
+are more complex than fixed combinations of numbers.
 As an example,
-we consider a problem where our task
-is to calculate the number of different ways to
+we consider the problem of calculating
+the number of distinct ways to
 fill an $n \times m$ grid using
 $1 \times 2$ and $2 \times 1$ size tiles.
 For example, one valid solution
@@ -949,16 +944,16 @@ $\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$
 \end{itemize}
 
 Let $f(k,x)$ denote the number of ways to
-construct a solution for the rows $1 \ldots k$
+construct a solution for rows $1 \ldots k$
 in the grid so that string $x$ corresponds to row $k$.
-It is possible to use dynamic programing here
+It is possible to use dynamic programing here,
 because the state of a row is constrained
-only be the state of the previous row.
+only by the state of the previous row.
 
-A solution is valid if row $1$ doesn't contain
+A solution is valid if row $1$ does not contain
 the character $\sqcup$,
-row $n$ doesn't contain the character $\sqcap$,
-and all successive rows are \emph{compatible}.
+row $n$ does not contain the character $\sqcap$,
+and all consecutive rows are \emph{compatible}.
 For example, the rows
 $\sqcup \sqsubset \sqsupset \sqcup \sqcap \sqcap \sqcup$ and
 $\sqsubset \sqsupset \sqsubset \sqsupset \sqcup \sqcup \sqcap$ 
@@ -968,15 +963,15 @@ $\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$
 are not compatible.
 
 Since a row consists of $m$ characters and there are
-four choices for each character, the number of different
+four choices for each character, the number of distinct
 rows is at most $4^m$.
 Thus, the time complexity of the solution is
-$O(n 4^{2m})$ because we can check the
+$O(n 4^{2m})$ because we can go through the
 $O(4^m)$ possible states for each row,
 and for each state, there are $O(4^m)$
 possible states for the previous row.
-In practice, it's a good idea to rotate the grid
-so that the shorter side has length $m$
+In practice, it is a good idea to rotate the grid
+so that the shorter side has length $m$,
 because the factor $4^{2m}$ dominates the time complexity.
 
 It is possible to make the solution more efficient
@@ -985,18 +980,18 @@ It turns out that it is sufficient to know the
 columns of the previous row that contain the first square
 of a vertical tile.
 Thus, we can represent a row using only characters
-$\sqcap$ and $\Box$ where $\Box$ is a combination
+$\sqcap$ and $\Box$, where $\Box$ is a combination
 of characters
 $\sqcup$, $\sqsubset$ and $\sqsupset$.
-In this case, there are only
-$2^m$ distinct rows and the time complexity becomes
+Using this representation, there are only
+$2^m$ distinct rows and the time complexity is
 $O(n 2^{2m})$.
 
 As a final note, there is also a surprising direct formula
 for calculating the number of tilings:
-\[ \prod_{a=1}^{\lceil n/2 \rceil} \prod_{b=1}^{\lceil m/2 \rceil} 4 \cdot (\cos^2 \frac{\pi a}{n + 1} + \cos^2 \frac{\pi b}{m+1}).\]
-This formula is very efficient because it calculates
-the number of tilings on $O(nm)$ time,
+\[ \prod_{a=1}^{\lceil n/2 \rceil} \prod_{b=1}^{\lceil m/2 \rceil} 4 \cdot (\cos^2 \frac{\pi a}{n + 1} + \cos^2 \frac{\pi b}{m+1})\]
+This formula is very efficient, because it calculates
+the number of tilings in $O(nm)$ time,
 but since the answer is a product of real numbers,
 a practical problem in using the formula is
 how to store the intermediate results accurately.
