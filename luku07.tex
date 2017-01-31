@@ -465,7 +465,7 @@ Let $f(k)$ be the length of the
 longest increasing subsequence
 that ends at position $k$.
 Using this function, the answer to the problem
-is the largest of values
+is the largest of the values
 $f(1),f(2),\ldots,f(n)$.
 For example, in the above array
 the values of the function are as follows:
@@ -487,27 +487,23 @@ there are two possibilities how the subsequence
 that ends at position $k$ is constructed:
 \begin{enumerate}
 \item The subsequence
-only contains the element $x_k$, so $f(k)=1$.
-\item We choose some position $i$ for which $i<k$
-and $x_i<x_k$.
-We extend the longest increasing subsequence
-that ends at position $i$ by adding the element $x_k$
-to it. In this case $f(k)=f(i)+1$.
+only contains the element $x_k$. In this case $f(k)=1$.
+\item The subsequence is constructed
+by adding the element $x_k$ to
+a subsequence that ends at position $i$
+where $i<k$ and $x_i<x_k$. In this case $f(k)=f(i)+1$.
 \end{enumerate}
 
-Consider calculating the value of $f(7)$.
-The best solution is to extend the longest
-increasing subsequence that ends at position 5,
-i.e., the sequence $[2,5,7]$, by adding
-the element $x_7=8$.
-The result is
-$[2,5,7,8]$, and $f(7)=f(5)+1=4$.
+For example, in the above example $f(7)=4$,
+because the subsequence $[2,5,7]$ of length 3
+ends at position 5, and after adding the element
+at position 7 to the subsequence,
+we get the optimal subsequence $[2,5,7,8]$ of length 4.
 
 An easy way to calculate the
 value of $f(k)$ is to
-inspect all positions
-$i=1,2,\ldots,k-1$ that can contain the
-previous element in the subsequence.
+go through all previous values
+$f(1),f(2),\ldots,f(k-1)$ and select the best solution.
 The time complexity of such an algorithm is $O(n^2)$.
 Surprisingly, it is also possible to solve the
 problem in $O(n \log n)$ time, but this is more difficult.
