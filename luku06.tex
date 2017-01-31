@@ -3,7 +3,7 @@
 \index{greedy algorithm}
 
 A \key{greedy algorithm}
-constructs a solution for a problem
+constructs a solution to the problem
 by always making a choice that looks
 the best at the moment.
 A greedy algorithm never takes back
@@ -15,15 +15,15 @@ are usually very efficient.
 The difficulty in designing a greedy algorithm
 is to invent a greedy strategy
 that always produces an optimal solution
-for the problem.
+to the problem.
 The locally optimal choices in a greedy
 algorithm should also be globally optimal.
-It's often difficult to argue why
+It is often difficult to argue that
 a greedy algorithm works.
 
 \section{Coin problem}
 
-As the first example, we consider a problem
+As a first example, we consider a problem
 where we are given a set of coin values
 and our task is to form a sum of money
 using the coins.
@@ -41,7 +41,7 @@ $200+200+100+20$ whose sum is 520.
 
 \subsubsection{Greedy algorithm}
 
-A natural greedy algorithm for the problem
+A simple greedy algorithm to the problem
 is to always select the largest possible coin,
 until we have constructed the required sum of money.
 This algorithm works in the example case,
@@ -54,10 +54,10 @@ the greedy algorithm \emph{always} works, i.e.,
 it always produces a solution with the fewest
 possible number of coins.
 The correctness of the algorithm can be
-argued as follows:
+shown as follows:
 
 Each coin 1, 5, 10, 50 and 100 appears
-at most once in the optimal solution.
+at most once in an optimal solution.
 The reason for this is that if the
 solution would contain two such coins,
 we could replace them by one coin and
@@ -65,14 +65,14 @@ obtain a better solution.
 For example, if the solution would contain
 coins $5+5$, we could replace them by coin $10$.
 
-In the same way, both coins 2 and 20 can appear
-at most twice in the optimal solution
-because, we could replace
+In the same way, coins 2 and 20 appear
+at most twice in an optimal solution,
+because we could replace
 coins $2+2+2$ by coins $5+1$ and
 coins $20+20+20$ by coins $50+10$.
-Moreover, the optimal solution can't contain
+Moreover, an optimal solution cannot contain
 coins $2+2+1$ or $20+20+10$
-because we would replace them by coins $5$ and $50$.
+because we could replace them by coins $5$ and $50$.
 
 Using these observations,
 we can show for each coin $x$ that
@@ -80,32 +80,33 @@ it is not possible to optimally construct
 sum $x$ or any larger sum by only using coins
 that are smaller than $x$.
 For example, if $x=100$, the largest optimal
-sum using the smaller coins is  $5+20+20+5+2+2=99$.
+sum using the smaller coins is  $50+20+20+5+2+2=99$.
 Thus, the greedy algorithm that always selects
 the largest coin produces the optimal solution.
 
 This example shows that it can be difficult
-to argue why a greedy algorithm works,
+to argue that a greedy algorithm works,
 even if the algorithm itself is simple.
 
 \subsubsection{General case}
 
 In the general case, the coin set can contain any coins
-and the greedy algorithm \emph{not} necessarily produces
+and the greedy algorithm \emph{does not} necessarily produce
 an optimal solution.
 
-We can prove that a greedy algorithm doesn't work
+We can prove that a greedy algorithm does not work
 by showing a counterexample
 where the algorithm gives a wrong answer.
-In this problem it's easy to find a counterexample:
-if the coins are $\{1,3,4\}$ and the sum of money
+In this problem we can easily find a counterexample:
+if the coins are $\{1,3,4\}$ and the target sum
 is 6, the greedy algorithm produces the solution
-$4+1+1$, while the optimal solution is $3+3$.
+$4+1+1$ while the optimal solution is $3+3$.
 
-We don't know if the general coin problem
+We do not know if the general coin problem
 can be solved using any greedy algorithm.
-However, we will revisit the problem in the next chapter
-because the general problem can be solved using a dynamic
+However, as we will see in Chapter 7,
+the general problem can be efficiently
+solved using a dynamic
 programming algorithm that always gives the
 correct answer.
 
@@ -115,9 +116,9 @@ Many scheduling problems can be solved
 using a greedy strategy.
 A classic problem is as follows:
 Given $n$ events with their starting and ending
-times, our task is to plan a schedule
-so that we can join as many events as possible.
-It's not possible to join an event partially.
+times, we should plan a schedule
+that includes as many events as possible.
+It is not possible to select an event partially.
 For example, consider the following events:
 \begin{center}
 \begin{tabular}{lll}
@@ -130,7 +131,7 @@ $D$ & 6 & 8 \\
 \end{tabular}
 \end{center}
 In this case the maximum number of events is two.
-For example, we can join events $B$ and $D$
+For example, we can select events $B$ and $D$
 as follows:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
@@ -171,8 +172,8 @@ selects the following events:
 \end{tikzpicture}
 \end{center}
 
-However, choosing short events is not always
-a correct strategy but the algorithm fails,
+However, select short events is not always
+a correct strategy, but the algorithm fails,
 for example, in the following case:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
@@ -206,10 +207,10 @@ This algorithm selects the following events:
 \end{tikzpicture}
 \end{center}
 
-However, we can find a counterexample for this
-algorithm, too.
+However, we can find a counterexample
+also for this algorithm.
 For example, in the following case,
-the algorithm selects only one event:
+the algorithm only selects one event:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -221,7 +222,7 @@ the algorithm selects only one event:
 \end{center}
 If we select the first event, it is not possible
 to select any other events.
-However, it would be possible to join the
+However, it would be possible to select the
 other two events.
 
 \subsubsection*{Algorithm 3}
@@ -246,35 +247,37 @@ This algorithm selects the following events:
 
 It turns out that this algorithm
 \emph{always} produces an optimal solution.
-The algorithm works because 
-regarding the final solution, it is
-optimal to select an event that
-ends as soon as possible.
-Then it is optimal to select
-the next event using the same strategy, etc.
+First, it is always an optimal choice
+to first select an event that ends
+as early as possible.
+After this, it is an optimal choice
+to select the next event
+using the same strategy, etc.,
+until we cannot select any more events.
 
-One way to justify the choice is to think
-what happens if we first select some event
+One way to argue that the algorithm works
+is to consider
+what happens if we first select an event
 that ends later than the event that ends
-as soon as possible.
-This can never be a better choice
-because after an event that ends later,
-we will have at most an equal number of
-possibilities to select for the next events,
-compared to the strategy that we select the
-event that ends as soon as possible.
+as early as possible.
+Now, we will have at most an equal number of
+choices how we can select the next event.
+Hence, selecting an event that ends later
+can never yield a better solution,
+and the greedy algorithm is correct.
 
 \section{Tasks and deadlines}
 
-We are given $n$ tasks with duration and deadline.
-Our task is to choose an order to perform the tasks.
+Let us now consider a problem where
+we are given $n$ tasks with durations and deadlines,
+and our task is to choose an order to perform the tasks.
 For each task, we get $d-x$ points
-where $d$ is the deadline of the task
+where $d$ is the task's deadline
 and $x$ is the moment when we finished the task.
 What is the largest possible total score
 we can obtain?
 
-For example, if the tasks are
+For example, suppose that the tasks are as follows:
 \begin{center}
 \begin{tabular}{lll}
 task & duration & deadline \\
@@ -285,8 +288,8 @@ $C$ & 2 & 7 \\
 $D$ & 4 & 5 \\
 \end{tabular}
 \end{center}
-then the optimal solution is to perform
-the tasks as follows:
+In this case, an optimal schedule for the tasks
+is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -317,16 +320,16 @@ $B$ yields 0 points, $A$ yields $-7$ points
 and $D$ yields $-8$ points,
 so the total score is $-10$.
 
-Surprisingly, the optimal solution for the problem
-doesn't depend on the dedalines at all,
+Surprisingly, the optimal solution to the problem
+does not depend on the deadlines at all,
 but a correct greedy strategy is to simply
 perform the tasks \emph{sorted by their durations}
 in increasing order.
 The reason for this is that if we ever perform
-two successive tasks such that the first task
+two tasks one after another such that the first task
 takes longer than the second task,
 we can obtain a better solution if we swap the tasks.
-For example, if the successive tasks are
+For example, consider the following schedule:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -345,7 +348,7 @@ For example, if the successive tasks are
   \end{scope}
 \end{tikzpicture}
 \end{center}
-and $a>b$, the swapped order of the tasks
+Here $a>b$, so we should swap the tasks:
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -364,10 +367,10 @@ and $a>b$, the swapped order of the tasks
   \end{scope}
 \end{tikzpicture}
 \end{center}
-gives $b$ points less to $X$ and $a$ points more to $Y$,
+Now $X$ gives $b$ points less and $Y$ gives $a$ points more,
 so the total score increases by $a-b > 0$.
 In an optimal solution,
-for each two successive tasks,
+for any two consecutive tasks,
 it must hold that the shorter task comes
 before the longer task.
 Thus, the tasks must be performed
@@ -378,9 +381,8 @@ sorted by their durations.
 We will next consider a problem where
 we are given $n$ numbers $a_1,a_2,\ldots,a_n$
 and our task is to find a value $x$
-such that the sum
-\[|a_1-x|^c+|a_2-x|^c+\cdots+|a_n-x|^c\]
-becomes as small as possible.
+that minimizes the sum
+\[|a_1-x|^c+|a_2-x|^c+\cdots+|a_n-x|^c.\]
 We will focus on the cases $c=1$ and $c=2$.
 
 \subsubsection{Case $c=1$}
@@ -400,13 +402,12 @@ For example, the list $[1,2,9,2,6]$
 becomes $[1,2,2,6,9]$ after sorting,
 so the median is 2.
 
-The median is the optimal choice,
+The median is an optimal choice,
 because if $x$ is smaller than the median,
 the sum becomes smaller by increasing $x$,
 and if $x$ is larger then the median,
-the sum becomes smaller by decreasing $x$
-Thus, we should move $x$ as near the median
-as possible, so the optimal solution that $x$
+the sum becomes smaller by decreasing $x$.
+Hence, the optimal solution is that $x$
 is the median.
 If $n$ is even and there are two medians,
 both medians and all values between them
@@ -428,9 +429,9 @@ In the example the average is $(1+2+9+2+6)/5=4$.
 This result can be derived by presenting
 the sum as follows:
 \[
-nx^2 - 2x(a_1+a_2+\cdots+a_n) + (a_1^2+a_2^2+\cdots+a_n^2).
+nx^2 - 2x(a_1+a_2+\cdots+a_n) + (a_1^2+a_2^2+\cdots+a_n^2)
 \]
-The last part doesn't depend on $x$,
+The last part does not depend on $x$,
 so we can ignore it.
 The remaining parts form a function
 $nx^2-2xs$ where $s=a_1+a_2+\cdots+a_n$.
@@ -446,16 +447,13 @@ the average of the numbers $a_1,a_2,\ldots,a_n$.
 \index{binary code}
 \index{codeword}
 
-We are given a string, and our task is to
-\emph{compress} it so that it requires less space.
-We will do this using a \key{binary code}
-that determines for each character
-a \key{codeword} that consists of bits.
-After this, we can compress the string
+A \key{binary code} assigns for each character
+of a given string a \key{codeword} that consists of bits.
+We can \emph{compress} the string using the binary code
 by replacing each character by the
 corresponding codeword.
 For example, the following binary code
-determines codewords for characters
+assigns codewords for characters
 \texttt{A}–\texttt{D}:
 \begin{center}
 \begin{tabular}{rr}
@@ -470,19 +468,20 @@ character & codeword \\
 This is a \key{constant-length} code
 which means that the length of each
 codeword is the same.
-For example, the compressed form of the string
-\texttt{AABACDACA} is
-\[000001001011001000,\]
-so 18 bits are needed.
+For example, we can compress the string
+\texttt{AABACDACA} as follows:
+\[000001001011001000\]
+Using this code, the length of the compressed
+string is 18 bits.
 However, we can compress the string better
-by using a \key{variable-length} code
+if we use a \key{variable-length} code
 where codewords may have different lengths.
 Then we can give short codewords for
-characters that appear often,
+characters that appear often
 and long codewords for characters
 that appear rarely.
-It turns out that the \key{optimal} code
-for the aforementioned string is as follows:
+It turns out that an \key{optimal} code
+for the above string is as follows:
 \begin{center}
 \begin{tabular}{rr}
 character & codeword \\
@@ -493,21 +492,21 @@ character & codeword \\
 \texttt{D} & 111 \\
 \end{tabular}
 \end{center}
-The optimal code produces a compressed string
+An optimal code produces a compressed string
 that is as short as possible.
-In this case, the compressed form using
+In this case, the compressed string using
 the optimal code is
 \[001100101110100,\]
-so only 15 bits are needed.
+so only 15 bits are needed instead of 18 bits.
 Thus, thanks to a better code it was possible to
 save 3 bits in the compressed string.
 
-Note that it is required that no codeword
+We require that no codeword
 is a prefix of another codeword.
 For example, it is not allowed that a code
 would contain both codewords 10
 and 1011.
-The reason for this is that we also want
+The reason for this is that we want
 to be able to generate the original string
 from the compressed string.
 If a codeword could be a prefix of another codeword,
@@ -515,7 +514,7 @@ this would not always be possible.
 For example, the following code is \emph{not} valid:
 \begin{center}
 \begin{tabular}{rr}
-merkki & koodisana \\
+character & codeword \\
 \hline
 \texttt{A} & 10 \\
 \texttt{B} & 11 \\
@@ -524,7 +523,7 @@ merkki & koodisana \\
 \end{tabular}
 \end{center}
 Using this code, it would not be possible to know
-if the compressed string 1011 means
+if the compressed string 1011 corresponds to
 the string \texttt{AB} or the string \texttt{C}.
 
 \index{Huffman coding}
@@ -533,11 +532,11 @@ the string \texttt{AB} or the string \texttt{C}.
 
 \key{Huffman coding} is a greedy algorithm
 that constructs an optimal code for
-compressing a string.
+compressing a given string.
 The algorithm builds a binary tree
 based on the frequencies of the characters
 in the string,
-and a codeword for each characters can be read
+and each character's codeword can be read
 by following a path from the root to
 the corresponding node.
 A move to the left correspons to bit 0,
@@ -547,11 +546,10 @@ Initially, each character of the string is
 represented by a node whose weight is the
 number of times the character appears in the string.
 Then at each step two nodes with minimum weights
-are selected and they are combined by creating
+are combined by creating
 a new node whose weight is the sum of the weights
 of the original nodes.
-The process continues until all nodes have been
-combined and the code is ready.
+The process continues until all nodes have been combined.
 
 Next we will see how Huffman coding creates
 the optimal code for the string
