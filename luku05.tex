@@ -1,32 +1,30 @@
 \chapter{Complete search}
 
-\key{Compelete search}
+\key{Complete search}
 is a general method that can be used
 for solving almost any algorithm problem.
 The idea is to generate all possible
-solutions for the problem using brute force,
-and select the best solution or count the
+solutions to the problem using brute force,
+and then select the best solution or count the
 number of solutions, depending on the problem.
 
 Complete search is a good technique
-if it is feasible to go through all the solutions,
+if there is enough time to go through all the solutions,
 because the search is usually easy to implement
 and it always gives the correct answer.
 If complete search is too slow,
-greedy algorithms or dynamic programming,
-presented in the next chapters,
-may be used.
+other techniques, such as greedy algorithms or
+dynamic programming, may be needed.
 
 \section{Generating subsets}
 
 \index{subset}
 
-We first consider the case where
-the possible solutions for the problem
-are the subsets of a set of $n$ elements.
-In this case, a complete search algorithm
-has to generate
-all $2^n$ subsets of the set.
+We first consider the problem of generating
+all subsets of a set of $n$ elements.
+There are two common methods for this:
+we can either implement a recursive search
+or use bit operations of integers.
 
 \subsubsection{Method 1}
 
@@ -35,11 +33,10 @@ of a set is to use recursion.
 The following function \texttt{gen}
 generates the subsets of the set
 $\{1,2,\ldots,n\}$.
-The function maintains a vector \texttt{v}
-that will contain the elements in the subset.
-The generation of the subsets
-begins when the function
-is called with parameter $1$.
+The function maintains a vector
+that will contain the elements of each subset.
+The search begins when the function is called
+with parameter 1.
 
 \begin{lstlisting}
 void gen(int k) {
@@ -54,18 +51,19 @@ void gen(int k) {
 }
 \end{lstlisting}
 
-The parameter $k$ is the number that is the next
+The parameter $k$ is the next
 candidate to be included in the subset.
-The function branches to two cases:
-either $k$ is included or it is not included in the subset.
-Finally, when $k=n+1$, a decision has been made for
-all the numbers and one subset has been generated.
+The function considers two cases that both
+generate a recursive call:
+either $k$ is included or not included in the subset.
+Finally, when $k=n+1$, all elements have been processed
+and one subset has been generated.
 
-For example, when $n=3$, the function calls
-create a tree illustrated below.
-At each call, the left branch doesn't include
-the number and the right branch includes the number
-in the subset.
+The following tree illustrates how the function is
+called when $n=3$.
+We can always choose either the left branch
+($k$ is not included in the subset) or the right branch
+($k$ is included in the subset).
 
 \begin{center}
 \begin{tikzpicture}[scale=.45]
@@ -122,21 +120,21 @@ in the subset.
 
 \subsubsection{Method 2}
 
-Another way to generate the subsets is to exploit
+Another way to generate subsets is to exploit
 the bit representation of integers.
 Each subset of a set of $n$ elements
 can be represented as a sequence of $n$ bits,
 which corresponds to an integer between $0 \ldots 2^n-1$.
-The ones in the bit representation indicate
-which elements of the set are included in the subset.
+The ones in the bit sequence indicate
+which elements are included in the subset.
 
-The usual interpretation is that element $k$
-is included in the subset if $k$th bit from the
-end of the bit sequence is one.
+The usual convention is that element $k$
+is included in the subset if the $k$th last bit
+in the sequence is one.
 For example, the bit representation of 25
-is 11001 that corresponds to the subset $\{1,4,5\}$.
+is 11001, that corresponds to the subset $\{1,4,5\}$.
 
-The following iterates through all subsets
+The following code goes through all subsets
 of a set of $n$ elements
 
 \begin{lstlisting}
@@ -145,11 +143,11 @@ for (int b = 0; b < (1<<n); b++) {
 }
 \end{lstlisting}
 
-The following code converts each bit
-representation to a vector \texttt{v}
-that contains the elements in the subset.
-This can be done by checking which bits
-are one in the bit representation.
+The following code shows how we can derive
+the elements in a subset from the bit sequence.
+When processing each subset,
+the code builds a vector that contains the
+elements in the subset.
 
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
@@ -164,21 +162,22 @@ for (int b = 0; b < (1<<n); b++) {
 
 \index{permutation}
 
-Another common situation is that the solutions
-for the problem are permutations of a
-set of $n$ elements.
-In this case, a complete search algorithm has to
-generate $n!$ possible permutations.
+Next we will consider the problem of generating
+all permutations of a set of $n$ elements.
+Again, there are two approaches:
+we can either use recursion or go trough the
+permutations iteratively.
 
 \subsubsection{Method 1}
 
 Like subsets, permutations can be generated
 using recursion.
-The following function \texttt{gen} iterates
+The following function \texttt{gen} goes
 through the permutations of the set $\{1,2,\ldots,n\}$.
-The function uses the vector \texttt{v}
-for storing the permutations, and the generation
-begins by calling the function without parameters.
+The function builds a vector that contains
+the elements in the permutation,
+and the search begins when the function is
+called without parameters.
 
 \begin{lstlisting}
 void haku() {
@@ -198,25 +197,25 @@ void haku() {
 \end{lstlisting}
 
 Each function call adds a new element to
-the permutation in the vector \texttt{v}.
+the vector \texttt{v}.
 The array \texttt{p} indicates which
-elements are already included in the permutation.
-If $\texttt{p}[k]=0$, element $k$ is not included,
+elements are already included in the permutation:
+if $\texttt{p}[k]=0$, element $k$ is not included,
 and if $\texttt{p}[k]=1$, element $k$ is included.
-If the size of the vector equals the size of the set,
+If the size of \texttt{v} equals the size of the set,
 a permutation has been generated.
 
 \subsubsection{Method 2}
 
 \index{next\_permutation@\texttt{next\_permutation}}
 
-Another method is to begin from permutation
-$\{1,2,\ldots,n\}$ and at each step generate the
-next permutation in increasing order.
+Another method for generating permutations
+is to begin with the permutation
+$\{1,2,\ldots,n\}$ and repeatedly
+use a function that constructs the next permutation
+in increasing order.
 The C++ standard library contains the function
-\texttt{next\_permutation} that can be used for this.
-The following code generates the permutations
-of the set $\{1,2,\ldots,n\}$ using the function:
+\texttt{next\_permutation} that can be used for this:
 
 \begin{lstlisting}
 vector<int> v;
@@ -233,23 +232,21 @@ do {
 \index{backtracking}
 
 A \key{backtracking} algorithm
-begins from an empty solution
+begins with an empty solution
 and extends the solution step by step.
-At each step, the search branches
-to all possible directions how the solution
-can be extended.
-After processing one branch, the search
-continues to other possible directions.
+The search recursively
+goes through all different ways how
+a solution can be constructed.
 
 \index{queen problem}
 
 As an example, consider the \key{queen problem}
-where our task is to calculate the number
+where the task is to calculate the number
 of ways we can place $n$ queens to
 an $n \times n$ chessboard so that
 no two queens attack each other.
 For example, when $n=4$,
-there are two possible solutions for the problem:
+there are two possible solutions to the problem:
 
 \begin{center}
 \begin{tikzpicture}[scale=.65]
@@ -272,14 +269,14 @@ there are two possible solutions for the problem:
 
 The problem can be solved using backtracking
 by placing queens to the board row by row.
-More precisely, we should place exactly one queen
-to each row so that no queen attacks
+More precisely, exactly one queen will
+be placed to each row so that no queen attacks
 any of the queens placed before.
-A solution is ready when we have placed all
-$n$ queens to the board.
+A solution has been found when all
+$n$ queens have been placed to the board.
 
-For example, when $n=4$, the tree produced by
-the backtracking algorithm begins like this:
+For example, when $n=4$, the backtracking
+algorithm generates the following tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=.55]
@@ -291,10 +288,10 @@ the backtracking algorithm begins like this:
     \draw (3, -6) grid (7, -2);
     \draw (9, -6) grid (13, -2);
 
-    \node at (-9+0.5,-3+0.5) {$K$};
-    \node at (-3+1+0.5,-3+0.5) {$K$};
-    \node at (3+2+0.5,-3+0.5) {$K$};
-    \node at (9+3+0.5,-3+0.5) {$K$};
+    \node at (-9+0.5,-3+0.5) {$Q$};
+    \node at (-3+1+0.5,-3+0.5) {$Q$};
+    \node at (3+2+0.5,-3+0.5) {$Q$};
+    \node at (9+3+0.5,-3+0.5) {$Q$};
 
     \draw (2,0) -- (-7,-2);
     \draw (2,0) -- (-1,-2);
@@ -306,14 +303,14 @@ the backtracking algorithm begins like this:
     \draw (-1, -12) grid (3, -8);
     \draw (4, -12) grid (8, -8);
     \draw[white] (11, -12) grid (15, -8);
-    \node at (-11+1+0.5,-9+0.5) {$K$};
-    \node at (-6+1+0.5,-9+0.5) {$K$};
-    \node at (-1+1+0.5,-9+0.5) {$K$};
-    \node at (4+1+0.5,-9+0.5) {$K$};
-    \node at (-11+0+0.5,-10+0.5) {$K$};
-    \node at (-6+1+0.5,-10+0.5) {$K$};
-    \node at (-1+2+0.5,-10+0.5) {$K$};
-    \node at (4+3+0.5,-10+0.5) {$K$};
+    \node at (-11+1+0.5,-9+0.5) {$Q$};
+    \node at (-6+1+0.5,-9+0.5) {$Q$};
+    \node at (-1+1+0.5,-9+0.5) {$Q$};
+    \node at (4+1+0.5,-9+0.5) {$Q$};
+    \node at (-11+0+0.5,-10+0.5) {$Q$};
+    \node at (-6+1+0.5,-10+0.5) {$Q$};
+    \node at (-1+2+0.5,-10+0.5) {$Q$};
+    \node at (4+3+0.5,-10+0.5) {$Q$};
 
     \draw (-1,-6) -- (-9,-8);
     \draw (-1,-6) -- (-4,-8);
@@ -329,10 +326,10 @@ the backtracking algorithm begins like this:
 \end{tikzpicture}
 \end{center}
 
-At the bottom level, the three first subsolutions
-are not valid because the queens attack each other.
-However, the fourth subsolution is valid
-and it can be extended to a full solution by
+At the bottom level, the three first boards
+are not valid, because the queens attack each other.
+However, the fourth board is valid
+and it can be extended to a complete solution by
 placing two more queens to the board.
 
 \begin{samepage}
@@ -360,16 +357,16 @@ to the variable $c$.
 The code assumes that the rows and columns
 of the board are numbered from 0.
 The function places a queen to row $y$
-when $0 \le y < n$.
-Finally, if $y=n$, one solution has been found
+where $0 \le y < n$.
+Finally, if $y=n$, a solution has been found
 and the variable $c$ is increased by one.
 
 The array \texttt{r1} keeps track of the columns
-that already contain a queen.
-Similarly, the arrays \texttt{r2} and \texttt{r3}
+that already contain a queen,
+and the arrays \texttt{r2} and \texttt{r3}
 keep track of the diagonals.
 It is not allowed to add another queen to a
-column or to a diagonal. 
+column or diagonal that already contains a queen. 
 For example, the rows and the diagonals of
 the $4 \times 4$ board are numbered as follows:
 
@@ -438,37 +435,37 @@ the $4 \times 4$ board are numbered as follows:
 \end{tikzpicture}
 \end{center}
 
-Using the presented backtracking
-algorithm, we can calculate that,
-for example, there are 92 ways to place 8
-queens to an $8 \times 8$ chessboard.
-When $n$ increases, the search quickly becomes slow
+The above backtracking
+algorithm shows that
+there are 92 ways to place 8
+queens to the $8 \times 8$ chessboard.
+When $n$ increases, the search quickly becomes slow,
 because the number of the solutions increases
 exponentially.
 For example, calculating the ways to
 place 16 queens to the $16 \times 16$
 chessboard already takes about a minute
+on a modern computer
 (there are 14772512 solutions).
 
 \section{Pruning the search}
 
-A backtracking algorithm can often be optimized
+We can often optimize backtracking
 by pruning the search tree.
 The idea is to add ''intelligence'' to the algorithm
-so that it will notice as soon as possible
-if is not possible to extend a subsolution into
-a full solution.
-This kind of optimization can have a tremendous
+so that it will realize as soon as possible
+if a partial solution cannot be extended
+to a complete solution.
+Such optimizations can have a tremendous
 effect on the efficiency of the search.
 
-Let us consider a problem where
-our task is to calculate the number of paths
+Let us consider a problem
+of calculating the number of paths
 in an $n \times n$ grid from the upper-left corner
 to the lower-right corner so that each square
 will be visited exactly once.
-For example, in the $7 \times 7$ grid,
-there are 111712 possible paths from the
-lower-right corner to the upper-right corner.
+For example, in a $7 \times 7$ grid,
+there are 111712 such paths.
 One of the paths is as follows:
 
 \begin{center}
@@ -487,11 +484,10 @@ One of the paths is as follows:
 \end{tikzpicture}
 \end{center}
 
-We will concentrate on the $7 \times 7$ case
-because it is computationally suitable difficult.
+Next we will concentrate on the $7 \times 7$ case.
 We begin with a straightforward backtracking algorithm,
 and then optimize it step by step using observations
-how the search tree can be pruned.
+how the search can be pruned.
 After each optimization, we measure the running time
 of the algorithm and the number of recursive calls,
 so that we will clearly see the effect of each
@@ -499,10 +495,10 @@ optimization on the efficiency of the search.
 
 \subsubsection{Basic algorithm}
 
-The first version of the algorithm doesn't contain
+The first version of the algorithm does not contain
 any optimizations. We simply use backtracking to generate
 all possible paths from the upper-left corner to
-the lower-right corner.
+the lower-right corner and count the number of such paths.
 
 \begin{itemize}
 \item
@@ -513,8 +509,8 @@ recursive calls: 76 billions
 
 \subsubsection{Optimization 1}
 
-The first step in a solution is either
-downward or to the right.
+In any solution, we first move a step
+down or right.
 There are always two paths that 
 are symmetric
 about the diagonal of the grid
@@ -554,8 +550,8 @@ For example, the following paths are symmetric:
 \end{tabular}
 \end{center}
 
-Thus, we can decide that the first step
-in the solution is always downward,
+Hence, we can decide that we always first
+move down,
 and finally multiply the number of the solutions by two.
 
 \begin{itemize}
@@ -571,7 +567,7 @@ If the path reaches the lower-right square
 before it has visited all other squares of the grid,
 it is clear that
 it will not be possible to complete the solution.
-An example of this is the following case:
+An example of this is the following path:
 
 \begin{center}
 \begin{tikzpicture}[scale=.55]
@@ -585,7 +581,7 @@ An example of this is the following case:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Using this observation, we can terminate the search branch
+Using this observation, we can terminate the search
 immediately if we reach the lower-right square too early.
 \begin{itemize}
 \item
@@ -597,10 +593,10 @@ recursive calls: 20 billions
 \subsubsection{Optimization 3}
 
 If the path touches the wall so that there is
-an unvisited square at both sides,
+an unvisited square on both sides,
 the grid splits into two parts.
-For example, in the following case
-both the left and the right squares
+For example, in the following path
+both the left and right squares
 are unvisited:
 
 \begin{center}
@@ -616,8 +612,8 @@ are unvisited:
 \end{tikzpicture}
 \end{center}
 Now it will not be possible to visit every square,
-so we can terminate the search branch.
-This optimization is very useful:
+so we can terminate the search.
+It turns out that this optimization is very useful:
 
 \begin{itemize}
 \item
@@ -636,7 +632,7 @@ of the current square are unvisited and
 the left and right neighbors are
 wall or visited (or vice versa).
 
-For example, in the following case
+For example, in the following path
 the top and bottom neighbors are unvisited,
 so the path cannot visit all squares
 in the grid anymore:
@@ -652,8 +648,9 @@ in the grid anymore:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-The search becomes even faster when we terminate
-the search branch in all such cases:
+Thus, we can terminate the search in all such cases.
+After this optimization, the search will be
+very efficient:
 
 \begin{itemize}
 \item
@@ -663,22 +660,22 @@ recursive calls: 69 millions
 \end{itemize}
 
 ~\\
-Now it's a good moment to stop optimization
-and remember our starting point.
+Now it is a good moment to stop optimizing
+the algorithm and see what we have achieved.
 The running time of the original algorithm
 was 483 seconds,
 and now after the optimizations,
 the running time is only 0.6 seconds.
 Thus, the algorithm became nearly 1000 times
-faster after the optimizations.
+faster thanks to the optimizations.
 
-This is a usual phenomenon in backtracking
+This is a usual phenomenon in backtracking,
 because the search tree is usually large
-and even simple optimizations can prune
-a lot of branches in the tree.
+and even simple observations can effectively
+prune the search.
 Especially useful are optimizations that
-occur at the top of the search tree because
-they can prune the search very efficiently.
+occur during the first steps of the algorithm,
+i.e., at the top of the search tree.
 
 \section{Meet in the middle}
 
@@ -691,10 +688,10 @@ A separate search is performed
 for each of the parts,
 and finally the results of the searches are combined.
 
-The meet in the middle technique can be used
+The technique can be used
 if there is an efficient way to combine the
 results of the searches.
-In this case, the two searches may require less
+In such a situation, the two searches may require less
 time than one large search.
 Typically, we can turn a factor of $2^n$
 into a factor of $2^{n/2}$ using the meet in the
@@ -702,52 +699,52 @@ middle technique.
 
 As an example, consider a problem where
 we are given a list of $n$ numbers and
-an integer $x$.
+a number $x$.
 Our task is to find out if it is possible
 to choose some numbers from the list so that
-the sum of the numbers is $x$.
+their sum is $x$.
 For example, given the list $[2,4,5,9]$ and $x=15$,
 we can choose the numbers $[2,4,9]$ to get $2+4+9=15$.
-However, if the list remains the same but $x=10$,
+However, if $x=10$,
 it is not possible to form the sum.
 
 A standard solution for the problem is to
 go through all subsets of the elements and
 check if the sum of any of the subsets is $x$.
-The time complexity of this solution is $O(2^n)$
-because there are $2^n$ possible subsets.
+The running time of such a solution is $O(2^n)$,
+because there are $2^n$ subsets.
 However, using the meet in the middle technique,
-we can create a more efficient $O(2^{n/2})$ time solution.
+we can achieve a more efficient $O(2^{n/2})$ time solution.
 Note that $O(2^n)$ and $O(2^{n/2})$ are different
 complexities because $2^{n/2}$ equals $\sqrt{2^n}$.
 
-The idea is to divide the list given as input
-to two lists $A$ and $B$ that each contain
-about half of the numbers.
+The idea is to divide the list into
+two lists $A$ and $B$ such that both
+lists contain about half of the numbers.
 The first search generates all subsets
-of the numbers in the list $A$ and stores their sums
-to list $S_A$.
+of the numbers in $A$ and stores their sums
+to a list $S_A$.
 Correspondingly, the second search creates
-the list $S_B$ from the list $B$.
+a list $S_B$ from $B$.
 After this, it suffices to check if it is possible
 to choose one number from $S_A$ and another
 number from $S_B$ so that their sum is $x$.
 This is possible exactly when there is a way to
 form the sum $x$ using the numbers in the original list.
 
-For example, assume that the list is $[2,4,5,9]$ and $x=15$.
+For example, suppose that the list is $[2,4,5,9]$ and $x=15$.
 First, we divide the list into $A=[2,4]$ and $B=[5,9]$.
-After this, we create the lists
+After this, we create lists
 $S_A=[0,2,4,6]$ and $S_B=[0,5,9,14]$.
-The sum $x=15$ is possible to form
+In this case, the sum $x=15$ is possible to form
 because we can choose the number $6$ from $S_A$
-and the number $9$ from $S_B$.
-This choice corresponds to the solution $[2,4,9]$.
+and the number $9$ from $S_B$,
+which corresponds to the solution $[2,4,9]$.
 
-The time complexity of the algorithm is $O(2^{n/2})$
+The time complexity of the algorithm is $O(2^{n/2})$,
 because both lists $A$ and $B$ contain $n/2$ numbers
 and it takes $O(2^{n/2})$ time to calculate the sums of
 their subsets to lists $S_A$ and $S_B$.
 After this, it is possible to check in 
-$O(2^{n/2})$ time if the sum $x$ can be created
+$O(2^{n/2})$ time if the sum $x$ can be formed
 using the numbers in $S_A$ and $S_B$.
