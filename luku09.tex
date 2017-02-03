@@ -5,16 +5,15 @@
 \index{minimum query}
 \index{maximum query}
 
-In a \key{range query}, a range of an array
-is given and we should calculate some value from the
-elements in the range. Typical range queries are:
+A \key{range query} asks to calculate some information
+about the elements in a given range of an array.
+Typical range queries are:
 \begin{itemize}
-\item \key{sum query}: calculate the sum of elements in range $[a,b]$
-\item \key{minimum query}: find the smallest element in range $[a,b]$
-\item \key{maximum query}: find the largest element in range $[a,b]$
+\item \key{sum query}: calculate the sum of elements in a range
+\item \key{minimum query}: find the smallest element in a range
+\item \key{maximum query}: find the largest element in a range
 \end{itemize}
-For example, in range $[4,7]$ of the following array,
-the sum is $4+6+1+3=14$, the minimum is 1 and the maximum is 6:
+For example, consider the range $[4,7]$ in the following array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -40,10 +39,14 @@ the sum is $4+6+1+3=14$, the minimum is 1 and the maximum is 6:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
+In this range, the sum of elements is $4+6+1+3=16$,
+the minimum element is 1 and the maximum element is 6.
 
-An easy way to answer a range query is
-to iterate through all the elements in the range.
-For example, we can answer a sum query as follows:
+
+An easy way to process range queries is
+to go through all the elements in the range.
+For example, we can calculate the sum
+in a range $[a,b]$ as follows:
 
 \begin{lstlisting}
 int sum(int a, int b) {
@@ -55,34 +58,34 @@ int sum(int a, int b) {
 }
 \end{lstlisting}
 
-The above function handles a sum query
-in $O(n)$ time, which is slow if the array is large
-and there are a lot of queries.
-In this chapter we will learn how
-range queries can be answered much more efficiently.
+The above function works in $O(n)$ time.
+However, if the array is large and there are several queries,
+such an approach is slow.
+In this chapter, we will learn how
+range queries can be processed much more efficiently.
 
 \section{Static array queries}
 
-We will first focus on a simple case where
+We first focus on a simple situation where
 the array is \key{static}, i.e.,
 the elements never change between the queries.
-In this case, it suffices to process the
-contents of the array beforehand and construct
-a data structure that can be used for answering
+In this case, it suffices to preprocess the
+array and construct
+a data structure that can be used for
+finding the answer for
 any possible range query efficiently.
 
 \subsubsection{Sum query}
 
 \index{prefix sum array}
 
-Sum queries can be answered efficiently
+Sum queries can be processed efficiently
 by constructing a \key{sum array}
-that contains the sum of the range $[1,k]$
+that contains the sum of elements in the range $[1,k]$
 for each $k=1,2,\ldots,n$.
-After this, the sum of any range $[a,b]$ of the
-original array
-can be calculated in $O(1)$ time using the
-precalculated sum array.
+Using the sum array, the sum of elements in
+any range $[a,b]$ of the original array can
+be calculated in $O(1)$ time.
 
 For example, for the array
 \begin{center}
@@ -137,27 +140,27 @@ the corresponding sum array is as follows:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-The following code constructs a prefix sum
-array \texttt{s} from array \texttt{t} in $O(n)$ time:
+The following code constructs a sum array
+\texttt{s} for an array \texttt{t} in $O(n)$ time:
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     s[i] = s[i-1]+t[i];
 }
 \end{lstlisting}
-After this, the following function answers
-a sum query in $O(1)$ time:
+After this, the following function processes
+any sum query in $O(1)$ time:
 \begin{lstlisting}
 int sum(int a, int b) {
     return s[b]-s[a-1];
 }
 \end{lstlisting}
 
-The function calculates the sum of range $[a,b]$
-by subtracting the sum of range $[1,a-1]$
-from the sum of range $[1,b]$.
-Thus, only two values from the sum array
+The function calculates the sum in the range $[a,b]$
+by subtracting the sum in the range $[1,a-1]$
+from the sum in the range $[1,b]$.
+Thus, only two values of the sum array
 are needed, and the query takes $O(1)$ time.
-Note that thanks to the one-based indexing,
+Note that because of the one-based indexing,
 the function also works when $a=1$ if $\texttt{s}[0]=0$. 
 
 As an example, consider the range $[4,7]$:
@@ -186,9 +189,9 @@ As an example, consider the range $[4,7]$:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-The sum of the range $[4,7]$ is $8+6+1+4=19$.
-This can be calculated from the sum array
-using the sums $[1,3]$ and $[1,7]$:
+The sum in the range is $8+6+1+4=19$.
+This can be calculated using the precalculated
+sums for the ranges $[1,3]$ and $[1,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (3,1);
@@ -216,14 +219,15 @@ using the sums $[1,3]$ and $[1,7]$:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-Thus, the sum of the range $[4,7]$ is $27-8=19$.
+Thus, the sum in the range $[4,7]$ is $27-8=19$.
 
-We can also generalize the idea of a sum array
-for a two-dimensional array.
-In this case, it will be possible to calculate the sum of
-any rectangular subarray in $O(1)$ time.
-The sum array will contain sums
-for all subarrays that begin from the upper-left corner.
+It is also possible to generalize this idea
+to higher dimensions.
+For example, we can construct a two-dimensional
+sum array that can be used for calculating
+the sum of any rectangular subarray in $O(1)$ time.
+Each value in such an array is the sum of a subarray
+that begins at the upper-left corner of the array.
 
 \begin{samepage}
 The following picture illustrates the idea:
@@ -240,23 +244,23 @@ The following picture illustrates the idea:
 \end{center}
 \end{samepage}
 
-The sum inside the gray subarray can be calculated
+The sum of the gray subarray can be calculated
 using the formula
-\[S(A) - S(B) - S(C) + S(D)\]
-where $S(X)$ denotes the sum in a rectangular
+\[S(A) - S(B) - S(C) + S(D),\]
+where $S(X)$ denotes the sum of a rectangular
 subarray from the upper-left corner
-to the position of letter $X$.
+to the position of $X$.
 
 \subsubsection{Minimum query}
 
-It is also possible to answer a minimum query
+It is also possible to process minimum queries
 in $O(1)$ time after preprocessing, though it is
-more difficult than answer a sum query.
+more difficult than processing sum queries.
 Note that minimum and maximum queries can always
 be implemented using same techniques,
-so it suffices to focus on the minimum query.
+so it suffices to focus on minimum queries.
 
-The idea is to find the minimum element for each range
+The idea is to precalculate the minimum element of each range
 of size $2^k$ in the array.
 For example, in the array
 
@@ -336,21 +340,22 @@ $[1,8]$ & 8 & 1 \\
 
 \end{center}
 
-The number of $2^k$ ranges in an array is $O(n \log n)$
-because there are $O(\log n)$ ranges that begin
-from each array index.
-The minima for all $2^k$ ranges can be calculated
-in $O(n \log n)$ time because each $2^k$ range
-consists of two $2^{k-1}$ ranges, so the minima
+There are $O(n \log n)$ ranges of size $2^k$,
+because for each array position,
+there are $O(\log n)$ ranges that begin at that position.
+The minima in all ranges of size $2^k$ can be calculated
+in $O(n \log n)$ time, because each range of size $2^k$
+consists of two ranges of size $2^{k-1}$ and the minima
 can be calculated recursively.
 
-After this, the minimum of any range $[a,b]$c
+After this, the minimum in any range $[a,b]$
 can be calculated in $O(1)$ time as a minimum of
-two $2^k$ ranges where $k=\lfloor \log_2(b-a+1) \rfloor$.
-The first range begins from index $a$,
-and the second range ends to index $b$.
-The parameter $k$ is so chosen that
-two $2^k$ ranges cover the range $[a,b]$ entirely.
+two ranges of size $2^k$ where $k=\lfloor \log_2(b-a+1) \rfloor$.
+The first range begins at index $a$,
+and the second range ends at index $b$.
+The parameter $k$ is chosen so that
+the two ranges of size $2^k$
+fully cover the range $[a,b]$.
 
 As an example, consider the range $[2,7]$:
 \begin{center}
@@ -378,7 +383,7 @@ As an example, consider the range $[2,7]$:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-The length of the range $[2,7]$ is 6,
+The length of the range is 6,
 and $\lfloor \log_2(6) \rfloor = 2$.
 Thus, the minimum can be calculated
 from two ranges of length 4.
@@ -434,9 +439,9 @@ The ranges are $[2,5]$ and $[4,7]$:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-The minimum of the range $[2,5]$ is 3,
-and the minimum of the range $[4,7]$ is 1.
-Thus, the minimum of the range $[2,7]$ is 1.
+Since the minimum in the range $[2,5]$ is 3
+and the minimum in the range $[4,7]$ is 1,
+we know that the minimum in the range $[2,7]$ is 1.
 
 \section{Binary indexed tree}
 
