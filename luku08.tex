@@ -2,40 +2,45 @@
 
 \index{amortized analysis}
 
-Often the time complexity of an algorithm
-is easy to analyze by looking at the structure
+The time complexity of an algorithm
+is often easy to analyze
+just by examining the structure
 of the algorithm:
-what loops there are and how many times
-they are performed.
+what loops does the algorithm contain,
+and how many times the loops are performed.
 However, sometimes a straightforward analysis
-doesn't give a true picture of the efficiency of the algorithm.
+does not give a true picture of the efficiency of the algorithm.
 
 \key{Amortized analysis} can be used for analyzing
-an algorithm that contains an operation whose
+algorithms that contain operations whose
 time complexity varies.
-The idea is to consider all such operations during the
-execution of the algorithm instead of a single operation,
-and estimate the total time complexity of the operations.
+The idea is to estimate the total time used for
+all such operations during the
+execution of the algorithm, instead of focusing
+on individual operations.
 
 \section{Two pointers method}
 
 \index{two pointers method}
 
 In the \key{two pointers method},
-two pointers iterate through the elements in an array.
+two pointers are used for
+iterating through the elements in an array.
 Both pointers can move during the algorithm,
-but the restriction is that each pointer can move
-to only one direction.
-This ensures that the algorithm works efficiently.
+but each pointer can move to one direction only.
+This restriction ensures that the algorithm works efficiently.
 
 We will next discuss two problems that can be solved
 using the two pointers method.
 
 \subsubsection{Subarray sum}
 
-Given an array that contains $n$ positive integers,
-our task is to find out if there is a subarray
-where the sum of the elements is $x$.
+As the first example,
+we consider a problem where we are
+given an array of $n$ positive numbers
+and a target sum $x$,
+and we should find a subarray whose sum is $x$
+or report that there is no such subarray.
 For example, the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -61,7 +66,7 @@ For example, the array
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-contains a subarray with sum 8:
+contains a subarray whose sum is 8:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (5,1);
@@ -89,16 +94,17 @@ contains a subarray with sum 8:
 \end{center}
 
 It turns out that the problem can be solved in
-$O(n)$ time using the two pointers method.
-The idea is to iterate through the array
-using two pointers that define a range in the array.
+$O(n)$ time by using the two pointers method.
+The idea is that
+the left and right pointer indicate the
+first and last element of an subarray.
 On each turn, the left pointer moves one step
 forward, and the right pointer moves forward
-as long as the sum is at most $x$.
-If the sum of the range becomes exactly $x$,
+as long as the subarray sum is at most $x$.
+If the sum becomes exactly $x$,
 we have found a solution.
 
-As an example, we consider the following array
+As an example, consider the following array
 with target sum $x=8$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -125,10 +131,10 @@ with target sum $x=8$:
 \end{tikzpicture}
 \end{center}
 
-First, the pointers define a range with sum $1+3+2=6$.
-The range can't be larger
-because the next number 5 would make the sum
-larger than $x$.
+Initially, the subarray contains the elements
+1, 3 and 2, and the sum of the subarray is 6.
+The subarray cannot be larger because
+the next element 5 would make the sum larger than $x$.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -159,8 +165,8 @@ larger than $x$.
 \end{tikzpicture}
 \end{center}
 
-After this, the left pointer moves one step forward.
-The right pointer doesn't move because otherwise
+Then, the left pointer moves one step forward.
+The right pointer does not move because otherwise
 the sum would become too large.
 
 \begin{center}
@@ -232,37 +238,38 @@ the number of steps the right pointer moves.
 There is no upper bound how many steps the
 pointer can move on a single turn.
 However, the pointer moves \emph{a total of}
-$O(n)$ steps during the algorithm
+$O(n)$ steps during the algorithm,
 because it only moves forward.
 
-Since both the left and the right pointer
+Since both the left and right pointer
 move $O(n)$ steps during the algorithm,
 the time complexity is $O(n)$.
 
-\subsubsection{Sum of two numbers}
+\subsubsection{2SUM-problem}
 
-\index{2SUM problem}
+\index{2SUM-problem}
 
-Given an array of $n$ integers and an integer $x$,
-our task is to find two numbers in array
-whose sum is $x$ or report that there are no such numbers.
-This problem is known as the \key{2SUM} problem,
-and it can be solved efficiently using the
-two pointers method.
+Another problem that can be solved using
+the two pointers method is the following problem,
+also known as the \key{2SUM-problem}:
+We are given an array of $n$ numbers and
+a target sum $x$, and our task is to find two numbers
+in the array such that their sum is $x$,
+or report that no such numbers exist.
 
-First, we sort the numbers in the array in
-increasing order.
-After this, we iterate through the array using
-two pointers that begin at both ends of the array.
-The left pointer begins from the first element
+To solve the problem, we first
+sort the numbers in the array in increasing order.
+After that, we iterate through the array using
+two pointers initially located at both ends of the array.
+The left pointer begins at the first element
 and moves one step forward on each turn.
-The right pointer begins from the last element
-and always moves backward until the sum of the range
-defined by the pointers is at most $x$.
+The right pointer begins at the last element
+and always moves backward until the sum of the
+subarray is at most $x$.
 If the sum is exactly $x$, we have found a solution.
 
-For example, consider the following array when
-our task is to find two elements whose sum is $x=12$:
+For example, consider the following array
+with target sum $x=12$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -358,7 +365,7 @@ and the sum becomes $4+7=11$.
 \end{center}
 
 After this, the left pointer moves one step forward again.
-The right pointer doesn't move, and the solution
+The right pointer does not move, and a solution
 $5+7=12$ has been found.
 
 \begin{center}
@@ -391,16 +398,16 @@ $5+7=12$ has been found.
 \end{tikzpicture}
 \end{center}
 
-At the beginning of the algorithm,
-the sorting takes $O(n \log n)$ time.
+The algorithm consists of two phases:
+First, sorting the array takes $O(n \log n)$ time.
 After this, the left pointer moves $O(n)$ steps
 forward, and the right pointer moves $O(n)$ steps
 backward. Thus, the total time complexity
 of the algorithm is $O(n \log n)$.
 
-Note that it is possible to solve
+Note that it is possible to solve the problem
 in another way in $O(n \log n)$ time using binary search.
-In this solution, we iterate through the array
+In such a solution, we iterate through the array
 and for each number, we try to find another
 number such that the sum is $x$.
 This can be done by performing $n$ binary searches,
@@ -408,8 +415,9 @@ and each search takes $O(\log n)$ time.
 
 \index{3SUM-problem}
 A somewhat more difficult problem is 
-the \key{3SUM} problem where our task is
-to find \emph{three} numbers whose sum is $x$.
+the \key{3SUM-problem} that asks to
+find \emph{three} numbers in the array
+such that their sum is $x$.
 This problem can be solved in $O(n^2)$ time.
 Can you see how it is possible?
 
@@ -421,34 +429,33 @@ Amortized analysis is often used for
 estimating the number of operations
 performed for a data structure.
 The operations may be distributed unevenly so
-that the most operations appear during a
-certain phase in the algorithm, but the total
+that most operations occur during a
+certain phase of the algorithm, but the total
 number of the operations is limited.
 
-As an example, let us consider a problem
-where our task is to find for each element
+As an example, consider the problem
+of finding for each element
 in an array the
 \key{nearest smaller element}, i.e.,
-the nearest smaller element that precedes
+the first smaller element that precedes
 the element in the array.
 It is possible that no such element exists,
-and the algorithm should notice this.
-It turns out that the problem can be efficiently solved
-in $O(n)$ time using a suitable data structure.
+in which case the algorithm should report this.
+It turns out that the problem can be solved
+in $O(n)$ time using an appropriate data structure.
 
-An efficient solution for the problem is to
-iterate through the array from the left to the right,
+An efficient solution to the problem is to
+iterate through the array from left to right,
 and maintain a chain of elements where the
-first element is the active element in the array
+first element is the current element,
 and each following element is the nearest smaller
 element of the previous element.
 If the chain only contains one element,
-the active element doesn't have a nearest smaller element.
-At each step, we remove elements from the chain
+the current element does not have the nearest smaller element.
+At each step, elements are removed from the chain
 until the first element is smaller
-than the active element, or the chain is empty.
-After this, the active element becomes the first element
-in the chain.
+than the current element, or the chain is empty.
+After this, the current element is added to the chain.
 
 As an example, consider the following array:
 \begin{center}
@@ -476,11 +483,10 @@ As an example, consider the following array:
 \end{tikzpicture}
 \end{center}
 
-First, numbers 1, 3 and 4 are added to the chain
-because each element is larger than the previous element.
-This means that the nearest smaller element of
-number 4 is number 3 whose nearest smaller element
-is number 1.
+First, the numbers 1, 3 and 4 are added to the chain,
+because each number is larger than the previous number.
+Thus, the nearest smaller element of 4 is 3,
+and the nearest smaller element of 3 is 1.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (3,1);
@@ -510,10 +516,11 @@ is number 1.
 \end{tikzpicture}
 \end{center}
 
-The next number 2 is smaller than two first numbers in the chain.
-Thus, numbers 4 and 3 are removed, and then number 2 becomes
-the first element in the chain.
-Its nearest smaller element is number 1:
+The next number 2 is smaller than the two first numbers in the chain.
+Thus, the numbers 4 and 3 are removed from the chain,
+and then the number 2
+is added to the chain.
+Its nearest smaller element is 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (4,1);
@@ -542,9 +549,9 @@ Its nearest smaller element is number 1:
 \end{tikzpicture}
 \end{center}
 
-After this, number 5 is larger than number 2,
-so it will be added to the chain and
-its nearest smaller element is number 2:
+After this, the number 5 is larger than the number 2,
+so it will be added to the chain, and
+its nearest smaller element is 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (5,1);
@@ -574,22 +581,22 @@ its nearest smaller element is number 2:
 \end{tikzpicture}
 \end{center}
 
-Algorithm continues in a similar way
-and finds out the nearest smaller element
+The algorithm continues in the same way,
+and finds the nearest smaller element
 for each number in the array.
 But how efficient is the algorithm?
 
 The efficiency of the algorithm depends on
 the total time used for manipulating the chain.
 If an element is larger than the first
-element in the chain, it will only be inserted
-to the beginning of the chain which is efficient.
+element in the chain, it is directly added
+to the chain, which is efficient.
 However, sometimes the chain can contain several
-larger elements and it takes time to remove them.
+larger elements, and it takes time to remove them.
 Still, each element is added exactly once to the chain
-and removed at most once.
-Thus, each element causes $O(1)$ operations
-to the chain, and the total time complexity
+and removed at most once from the chain.
+Thus, each element causes $O(1)$ chain operations,
+and the total time complexity
 of the algorithm is $O(n)$.
 
 \section{Sliding window minimum}
@@ -597,33 +604,33 @@ of the algorithm is $O(n)$.
 \index{sliding window}
 \index{sliding window minimum}
 
-A \key{sliding window} is an active subarray
-that moves through the array whose size is constant.
+A \key{sliding window} is a constant-size subarray
+that moves through the array.
 At each position of the window,
 we typically want to calculate some information
 about the elements inside the window.
 An interesting problem is to maintain
-the \key{sliding window minimum}.
-This means that at each position of the window,
+the \key{sliding window minimum},
+which means that at each position of the window,
 we should report the smallest element inside the window.
 
-The sliding window minima can be calculated
+The sliding window minimum can be calculated
 using the same idea that we used for calculating
 the nearest smaller elements.
-The idea is to maintain a chain whose
-first element is the last element in the window,
-and each element is smaller than the previous element.
+We maintain a chain whose
+first element is always the last element in the window,
+and each element in the chain is smaller than the previous element.
 The last element in the chain is always the
 smallest element inside the window.
 When the sliding window moves forward and
-a new element appears, we remove all elements
-from the chain that are larger than the new element.
-After this, we add the new number to the chain.
-In addition, if the last element in the chain
-doesn't belong to the window anymore, it is removed from the chain.
+a new element appears, we remove from the chain
+all elements that are larger than the new element.
+After this, we add the new element to the chain.
+Finally, if the last element in the chain
+does not belong to the window anymore,
+it is removed from the chain.
 
-As an example, consider the following array
-when the window size is $k=4$:
+As an example, consider the following array:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -650,7 +657,7 @@ when the window size is $k=4$:
 \end{tikzpicture}
 \end{center}
 
-The sliding window begins from the left border of the array.
+Suppose that the size of the sliding window is 4.
 At the first window position, the smallest element is 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -685,8 +692,9 @@ At the first window position, the smallest element is 1:
 Then the window moves one step forward.
 The new number 3 is smaller than the numbers
 5 and 4 in the chain, so the numbers 5 and 4
-are removed and the number 3 is added to the chain.
-The smallest element is 1 as before.
+are removed from the chain
+and the number 3 is added to the chain.
+The smallest element is still 1.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -716,8 +724,9 @@ The smallest element is 1 as before.
 \end{tikzpicture}
 \end{center}
 
-After this, the window moves again and the smallest element 1
-doesn't belong to the window anymore.
+After this, the window moves again,
+and the smallest element 1
+does not belong to the window anymore.
 Thus, it is removed from the chain and the smallest
 element is now 3. In addition, the new number 4
 is added to the chain.
