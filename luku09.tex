@@ -448,31 +448,33 @@ we know that the minimum in the range $[2,7]$ is 1.
 \index{binary indexed tree}
 \index{Fenwick tree}
 
-A \key{binary indexed tree} or a \key{Fenwick tree}
-is a data structure that resembles a sum array.
-The supported operations are answering
-a sum query for range $[a,b]$,
-and updating the element at index $k$.
-The time complexity for both of the operations is $O(\log n)$.
+A \key{binary indexed tree} or \key{Fenwick tree}
+can be seen as a dynamic version of a sum array.
+The tree supports two $O(\log n)$ time operations:
+calculating the sum of elements in a range,
+and modifying the value of an element.
 
-Unlike a sum array, a binary indexed tree
-can be efficiently updated between the sum queries.
-This would not be possible using a sum array
-because we should build the whole sum array again
-in $O(n)$ time after each update.
+The benefit in using a binary indexed tree is
+that the elements of the underlying array
+can be efficiently updated between the queries.
+This would not be possible with a sum array,
+because after each update, we should build the
+whole sum array again in $O(n)$ time.
 
 \subsubsection{Structure}
 
-A binary indexed tree can be represented as an array
-where index $k$ contains the sum of a range in the
-original array that ends to index $k$.
+Given an array of $n$ elements, indexed $1 \ldots n$,
+the binary indexed tree for that array
+is an array such that the value at position $k$
+equals the sum of elements in the original array in a range
+that ends at position $k$.
 The length of the range is the largest power of two
 that divides $k$.
-For example, if $k=6$, the length of the range is $2$
-because $2$ divides $6$ but $4$ doesn't divide $6$.
+For example, if $k=6$, the length of the range is $2$,
+because $2$ divides $6$ but $4$ does not divide $6$.
 
 \begin{samepage}
-For example, for the array
+For example, consider the following array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -498,7 +500,7 @@ For example, for the array
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-the corresponding binary indexed tree is as follows:
+The corresponding binary indexed tree is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -543,21 +545,21 @@ the corresponding binary indexed tree is as follows:
 \end{tikzpicture}
 \end{center}
 
-For example, the binary indexed tree
-contains the value 7 at index 6
-because the sum of the elements in the range $[5,6]$
-of the original array is $6+1=7$.
+For example, the value at position 6
+in the binary indexed tree is 7,
+because the sum of elements in the range $[5,6]$
+in the original array is $6+1=7$.
 
 \subsubsection{Sum query}
 
 The basic operation in a binary indexed tree is
-calculating the sum of a range $[1,k]$ where $k$
-is any index in the array.
-The sum of any range can be constructed by combining
-sums of subranges in the tree.
+to calculate the sum of elements in a range $[1,k]$,
+where $k$ is any position in the array.
+The sum of such a range can be calculated as a
+sum of one or more values stored in the tree.
 
-For example, the range $[1,7]$ will be divided
-into three subranges:
+For example, the range $[1,7]$ corresponds to
+the following values:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -602,25 +604,24 @@ into three subranges:
 \end{tikzpicture}
 \end{center}
 
-Thus, the sum of the range $[1,7]$ is $16+7+4=27$.
-Because of the structure of the binary indexed tree,
-the length of each subrange inside a range is distinct,
-so the sum of a range
-always consists of sums of $O(\log n)$ subranges.
+Hence, the sum of elements in the range $[1,7]$ is $16+7+4=27$.
+The structure of the binary indexed tree allows us to calculate
+the sum of elements in any range using only $O(\log n)$
+values from the tree.
 
 Using the same technique that we previously used
 with a sum array,
 we can efficiently calculate the sum of any range
 $[a,b]$ by substracting the sum of the range $[1,a-1]$
 from the sum of the range $[1,b]$.
-The time complexity remains $O(\log n)$
+Also here, only $O(\log n)$ values are needed,
 because it suffices to calculate two sums of $[1,k]$ ranges.
 
 \subsubsection{Array update}
 
 When an element in the original array changes,
 several sums in the binary indexed tree change.
-For example, if the value at index 3 changes,
+For example, if the element at position 3 changes,
 the sums of the following ranges change:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -666,28 +667,28 @@ the sums of the following ranges change:
 \end{tikzpicture}
 \end{center}
 
-Also in this case, the length of each range is distinct,
-so $O(\log n)$ ranges will be updated in the binary indexed tree.
+However, it turns out that
+the number of values that need to be updated
+in the binary indexed tree is only $O(\log n)$.
 
 \subsubsection{Implementation}
 
 The operations of a binary indexed tree can be implemented
-in an elegant and efficient way using bit manipulation.
-The bit operation needed is $k \& -k$ that
-returns the last bit one from number $k$.
+in an elegant and efficient way using bit operations.
+The key fact needed is that $k \& -k$
+isolates the last one bit in a number $k$.
 For example, $6 \& -6=2$ because the number $6$
 corresponds to 110 and the number $2$ corresponds to 10.
 
-It turns out that when calculating a range sum,
-the index $k$ in the binary indexed tree should be
-decreased by $k \& -k$ at every step.
-Correspondingly, when updating the array,
-the index $k$ should be increased by $k \& -k$ at every step.
+It turns out that when processing a range query,
+the position $k$ in the binary indexed tree should be
+decreased by $k \& -k$ at every step,
+and when updating the array,
+the position $k$ should be increased by $k \& -k$ at every step.
 
-The following functions assume that the binary indexed tree
-is stored to array \texttt{b} and it consists of indices $1 \ldots n$.
-
-The function \texttt{sum} calculates the sum of the range $[1,k]$:
+Suppose that the binary indexed tree is stored in an array \texttt{b}.
+The following function \texttt{sum} calculates
+the sum of elements in the range $[1,k]$:
 \begin{lstlisting}
 int sum(int k) {
     int s = 0;
@@ -699,7 +700,9 @@ int sum(int k) {
 }
 \end{lstlisting}
 
-The function \texttt{add} increases the value of element $k$ by $x$:
+The following function \texttt{add} increases the value
+of the element at position $k$ by $x$
+($x$ can be positive or negative):
 \begin{lstlisting}
 void add(int k, int x) {
     while (k <= n) {
@@ -709,11 +712,11 @@ void add(int k, int x) {
 }
 \end{lstlisting}
 
-The time complexity of both above functions is
-$O(\log n)$ because the functions change $O(\log n)$
-values in the binary indexed tree and each move
-to the next index
-takes $O(1)$ time using the bit operation.
+The time complexity of both the functions is
+$O(\log n)$, because the functions access $O(\log n)$
+values in the binary indexed tree, and each transition
+to the next position
+takes $O(1)$ time using bit operations.
 
 \section{Segment tree}
 
