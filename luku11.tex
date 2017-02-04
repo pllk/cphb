@@ -2,17 +2,18 @@
 
 Many programming problems can be solved by
 interpreting the problem as a graph problem
-and using a suitable graph algorithm.
+and using an appropriate graph algorithm.
 A typical example of a graph is a network
 of roads and cities in a country.
 Sometimes, though, the graph is hidden
 in the problem and it can be difficult to detect it.
 
-This part of the book discusses techniques and algorithms
-involving graphs
-that are important in competitive programming.
-We will first go through graph terminology
-and different ways to store graphs in algorithms.
+This part of the book discusses graph algorithms,
+especially focusing on topics that
+are important in competitive programming.
+In this chapter, we go through terminology
+related to graphs,
+and study different ways to represent graphs in algorithms.
 
 \section{Terminology}
 
@@ -26,10 +27,10 @@ In this book,
 the variable $n$ denotes the number of nodes
 in a graph, and the variable $m$ denotes
 the number of edges.
-In addition, the nodes are numbered
+The nodes are numbered
 using integers $1,2,\ldots,n$.
 
-For example, the following graph contains 5 nodes and 7 edges:
+For example, the following graph consists of 5 nodes and 7 edges:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -51,12 +52,12 @@ For example, the following graph contains 5 nodes and 7 edges:
 
 \index{path}
 
-A \key{path} is a route from node $a$ to node $b$
-that goes through the edges in the graph.
+A \key{path} leads from node $a$ to node $b$
+through edges of the graph.
 The \key{length} of a path is the number of
-edges in the path.
-For example, in the above graph, paths
-from node 1 to node 5 are:
+edges in it.
+For example, in the above graph, there
+are several paths from node 1 to node 5:
 
 \begin{itemize}
 \item $1 \rightarrow 2 \rightarrow 5$ (length 2)
@@ -71,7 +72,7 @@ from node 1 to node 5 are:
 
 \index{connected graph}
 
-A graph is \key{connected}, if there is path
+A graph is \key{connected} if there is path
 between any two nodes.
 For example, the following graph is connected:
 \begin{center}
@@ -88,9 +89,9 @@ For example, the following graph is connected:
 \end{tikzpicture}
 \end{center}
 
-The following graph is not connected
-because it is not possible to get to other
-nodes from node 4.
+The following graph is not connected,
+because it is not possible to get
+from node 4 to any other node:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -103,10 +104,10 @@ nodes from node 4.
 \end{tikzpicture}
 \end{center}
 
-\index{compomnent}
+\index{component}
 
 The connected parts of a graph are
-its \key{components}.
+called its \key{components}.
 For example, the following graph
 contains three components:
 $\{1,\,2,\,3\}$,
@@ -138,9 +139,9 @@ $\{8\}$.
 \index{tree}
 
 A \key{tree} is a connected graph
-that contains $n$ nodes and $n-1$ edges.
-In a tree, there is a unique path
-between any two nodes.
+that consists of $n$ nodes and $n-1$ edges.
+There is a unique path
+between any two nodes in a tree.
 For example, the following graph is a tree:
 
 \begin{center}
@@ -165,8 +166,8 @@ For example, the following graph is a tree:
 \index{directed graph}
 
 A graph is \key{directed}
-if the edges can be travelled only
-in one direction.
+if the edges can be traversed
+in one direction only.
 For example, the following graph is directed:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -185,10 +186,9 @@ For example, the following graph is directed:
 \end{center}
 
 The above graph contains a path from
-node $3$ to $5$ using edges
-$3 \rightarrow 1 \rightarrow 2 \rightarrow 5$.
-However, the graph doesn't contain
-a path from node $5$ to $3$.
+node $3$ to node $5$ through the edges
+$3 \rightarrow 1 \rightarrow 2 \rightarrow 5$,
+but there is no path from node $5$ to node $3$.
 
 \index{cycle}
 \index{acyclic graph}
@@ -198,7 +198,7 @@ last node is the same.
 For example, the above graph contains
 a cycle
 $1 \rightarrow 2 \rightarrow 4 \rightarrow 1$.
-If a graph doesn't contain any cycles,
+If a graph does not contain any cycles,
 it is called \key{acyclic}.
 
 \subsubsection{Edge weights}
@@ -225,14 +225,14 @@ For example, the following graph is weighted:
 \end{tikzpicture}
 \end{center}
 
-Now the length of a path is the sum of
-edge weights.
-For example, in the above graph
-the length of path
-$1 \rightarrow 2 \rightarrow 5$
-is $12$, and the length of path
+The length of a path in a weighted graph
+is the sum of edge weights on the path.
+For example, in the above graph,
+the length of the path
+$1 \rightarrow 2 \rightarrow 5$ is $12$
+and the length of the path
 $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ is $11$.
-The latter is the shortest path from node $1$ to node $5$.
+The latter path is the \key{shortest} path from node $1$ to node $5$.
 
 \subsubsection{Neighbors and degrees}
 
@@ -240,7 +240,7 @@ The latter is the shortest path from node $1$ to node $5$.
 \index{degree}
 
 Two nodes are \key{neighbors} or \key{adjacent}
-if there is a edge between them.
+if there is an edge between them.
 The \key{degree} of a node
 is the number of its neighbors.
 For example, in the following graph,
@@ -265,11 +265,11 @@ so its degree is 3.
 \end{tikzpicture}
 \end{center}
 
-The sum of degrees in a graph is always $2m$
-where $m$ is the number of edges.
-The reason for this is that each edge
+The sum of degrees in a graph is always $2m$,
+where $m$ is the number of edges,
+because each edge
 increases the degree of two nodes by one.
-Thus, the sum of degrees is always even.
+For this reason, the sum of degrees is always even.
 
 \index{regular graph}
 \index{complete graph}
@@ -285,11 +285,13 @@ between the nodes.
 \index{outdegree}
 
 In a directed graph, the \key{indegree}
-and \key{outdegree} of a node is
-the number of edges that end and begin
-at the node, respectively.
+of a node is the number of edges
+that end at the node,
+and the \key{outdegree} of a node
+is the number of edges that start at the node.
 For example, in the following graph,
-node 2 has indegree 2 and outdegree 1.
+the indegree of node 2 is 2
+and the outdegree of the node is 1.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -320,8 +322,8 @@ no adjacent nodes have the same color.
 A graph is \key{bipartite} if
 it is possible to color it using two colors.
 It turns out that a graph is bipartite
-exactly when it doesn't contain a cycle
-with odd number of edges.
+exactly when it does not contain a cycle
+with an odd number of edges.
 For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -339,7 +341,7 @@ For example, the graph
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-is bipartite because we can color it as follows:
+is bipartite, because it can be colored as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle, fill=blue!40] (1) at (1,3) {$2$};
@@ -356,16 +358,34 @@ is bipartite because we can color it as follows:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
+However, the following graph is not bipartite:
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\node[draw, circle] (1) at (1,3) {$2$};
+\node[draw, circle] (2) at (4,3) {$3$};
+\node[draw, circle] (3) at (1,1) {$5$};
+\node[draw, circle] (4) at (4,1) {$6$};
+\node[draw, circle] (5) at (-2,1) {$4$};
+\node[draw, circle] (6) at (-2,3) {$1$};
+\path[draw,thick,-] (1) -- (2);
+\path[draw,thick,-] (1) -- (3);
+\path[draw,thick,-] (3) -- (4);
+\path[draw,thick,-] (2) -- (4);
+\path[draw,thick,-] (3) -- (6);
+\path[draw,thick,-] (5) -- (6);
+\path[draw,thick,-] (1) -- (6);
+\end{tikzpicture}
+\end{center}
 
 \subsubsection{Simplicity}
 
 \index{simple graph}
 
 A graph is \key{simple}
-if no edge begins and ends at the same node,
+if no edge starts and ends at the same node,
 and there are no multiple
 edges between two nodes.
-Often we will assume that the graph is simple.
+Often we assume that graphs are simple.
 For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -389,41 +409,39 @@ For example, the graph
 \path[draw,thick,-] (5) edge [loop left] (5);
 \end{tikzpicture}
 \end{center}
-is \emph{not} simple because there is an edge that begins
+is \emph{not} simple, because there is an edge that starts
 and ends at node 4, and there are two edges
 between nodes 2 and 3.
 
 \section{Graph representation}
 
-There are several ways how to represent graphs in memory
-in an algorithm.
+There are several ways to represent graphs
+in algorithms.
 The choice of a data structure
 depends on the size of the graph and
-how the algorithm manipulates it.
-Next we will go through three representations.
+the way the algorithm processes it.
+Next we will go through three possible representations.
 
 \subsubsection{Adjacency list representation}
 
 \index{adjacency list}
 
-A usual way to represent a graph is
-to create an \key{adjacency list} for each node.
-An adjacency list contains contains all nodes
-that can be reached from the node using a single edge.
-The adjacency list representation is the most popular
-way to store a graph, and most algorithms can be
-efficiently implemented using it.
+In the adjacency list representation,
+each node $x$ in the graph is assigned an \key{adjacency list}
+that consists of nodes
+to which there is an edge from $x$.
+Adjacency lists are the most popular
+way to represent a graph, and most algorithms can be
+efficiently implemented using them.
 
-A good way to store the adjacency lists is to allocate an array
-whose each element is a vector:
+A convenient way to store the adjacency lists is to declare
+an array of vectors as follows:
 \begin{lstlisting}
 vector<int> v[N];
 \end{lstlisting}
 
-The adjacency list for node $s$ is in position
-$\texttt{v}[s]$ in the array.
-The constant $N$ is so chosen that all
-adjacency lists can be stored.
+The constant $N$ is chosen so that there
+is space for all adjacency lists.
 For example, the graph
 
 \begin{center}
@@ -450,18 +468,18 @@ v[4].push_back(1);
 \end{lstlisting}
 
 If the graph is undirected, it can be stored in a similar way,
-but each edge each is store in both directions.
+but each edge is stored in both directions.
 
-For an weighted graph, the structure can be extended
+For a weighted graph, the structure can be extended
 as follows:
 
 \begin{lstlisting}
 vector<pair<int,int>> v[N];
 \end{lstlisting}
 
-Now each adjacency list contains pairs whose first
-element is the target node,
-and the second element is the edge weight.
+If there is an edge from node $a$ to node $b$
+with weight $w$, the adjacency list of node $a$
+contains the pair $(b,w)$.
 For example, the graph
 
 \begin{center}
@@ -487,11 +505,11 @@ v[3].push_back({4,5});
 v[4].push_back({1,2});
 \end{lstlisting}
 
-The benefit in the adjacency list representation is that
-we can efficiently find the nodes that can be
-reached from a certain node.
-For example, the following loop goes trough all nodes
-that can be reached from node $s$:
+The benefit in using adjacency lists is that
+we can efficiently find the nodes to which
+we can move from a certain node through an edge.
+For example, the following loop goes through all nodes
+to which we can move from node $s$:
 
 \begin{lstlisting}
 for (auto u : v[s]) {
@@ -504,17 +522,14 @@ for (auto u : v[s]) {
 \index{adjacency matrix}
 
 An \key{adjacency matrix} is a two-dimensional array
-that indicates for each possible edge if it is
-included in the graph.
-Using an adjacency matrix, we can efficiently check
+that indicates which edges exist in the graph.
+We can efficiently check from an adjacency matrix
 if there is an edge between two nodes.
-On the other hand, the matrix takes a lot of memory
-if the graph is large.
-We can store the matrix as an array
+The matrix can be stored as an array
 \begin{lstlisting}
 int v[N][N];
 \end{lstlisting}
-where the value $\texttt{v}[a][b]$ indicates
+where each value $\texttt{v}[a][b]$ indicates
 whether the graph contains an edge from
 node $a$ to node $b$.
 If the edge is included in the graph,
@@ -619,22 +634,29 @@ corresponds to the following matrix:
 \end{center}
 \end{samepage}
 
+The drawback in the adjacency matrix representation
+is that there are $n^2$ elements in the matrix
+and usually most of them are zero.
+For this reason, the representation cannot be used
+if the graph is large.
+
 \subsubsection{Edge list representation}
 
 \index{edge list}
 
-An \key{edge list} contains all edges of a graph.
-This is a convenient way to represent a graph,
-if the algorithm will go trough all edges of the graph,
-and it is not needed to find edges that begin
+An \key{edge list} contains all edges of a graph
+in some order.
+This is a convenient way to represent a graph
+if the algorithm processes all edges of the graph,
+and it is not needed to find edges that start
 at a given node.
 
 The edge list can be stored in a vector
 \begin{lstlisting}
 vector<pair<int,int>> v;
 \end{lstlisting}
-where each element contains the starting
-and ending node of an edge.
+where each pair $(a,b)$ denotes that
+there is an edge from node $a$ to node $b$.
 Thus, the graph
 
 \begin{center}
@@ -661,14 +683,14 @@ v.push_back({4,1});
 \end{lstlisting}
 
 \noindent
-If the graph is weighted, we can extend the
-structure as follows:
+If the graph is weighted, the structure can
+be extended as follows:
 \begin{lstlisting}
-vector<pair<pair<int,int>,int>> v;
+vector<tuple<int,int,int>> v;
 \end{lstlisting}
-Now the list contains pairs whose first element
-contains the starting and ending node of an edge,
-and the second element corresponds to the edge weight.
+Each element in this list is of the
+form $(a,b,w)$, which means that there
+is an edge from node $a$ to node $b$ with weight $w$.
 For example, the graph
 
 \begin{center}
@@ -688,10 +710,10 @@ For example, the graph
 \begin{samepage}
 can be represented as follows:
 \begin{lstlisting}
-v.push_back({{1,2},5});
-v.push_back({{2,3},7});
-v.push_back({{2,4},6});
-v.push_back({{3,4},5});
-v.push_back({{4,1},2});
+v.push_back(make_tuple(1,2,5));
+v.push_back(make_tuple(2,3,7));
+v.push_back(make_tuple(2,4,6));
+v.push_back(make_tuple(3,4,5));
+v.push_back(make_tuple(4,1,2));
 \end{lstlisting}
 \end{samepage}
