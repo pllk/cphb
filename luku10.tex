@@ -1,92 +1,94 @@
 \chapter{Bit manipulation}
 
-A computer internally manipulates data
-as bits, i.e., as numbers 0 and 1.
+All data in a program is internally stored as bits,
+i.e., as numbers 0 and 1.
 In this chapter, we will learn how integers
 are represented as bits, and how bit operations
-can be used for manipulating them.
+can be used to manipulate them.
 It turns out that there are many uses for
-bit operations in the implementation of algorithms.
+bit operations in algorithm programming.
 
 \section{Bit representation}
 
 \index{bit representation}
 
-The \key{bit representation} of a number
-indicates which powers of two form the number.
-For example, the bit representation of the number 43
-is 101011 because
-$43 = 2^5 + 2^3 + 2^1 + 2^0$ where
-bits 0, 1, 3 and 5 from the right are ones,
-and all other bits are zeros.
+Every nonnegative integer can be represented as a sum
+\[c_k 2^k + \ldots + c_2 2^2 + c_1 2^1 + c_0 2^0,\]
+where each coefficient $c_i$ is either 0 or 1,
+and the bit representation of such a number is
+$c_k \cdots c_2 c_1 c_0$.
+For example, the number 43 corresponds to the sum
+\[1 \cdot 2^5 + 0 \cdot 2^4 + 1 \cdot 2^3 + 0 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0,\]
+so the bit representation of the number is 101011.
 
-The length of a bit representation of a number
-in a computer is static, and depends on the
-data type chosen.
-For example, the \texttt{int} type in C++ is
-usually a 32-bit type, and an \texttt{int} number
+In programming, the length of the bit representation
+depends on the data type chosen.
+For example, in C++ the type \texttt{int} is
+usually a 32-bit type and an \texttt{int} number
 consists of 32 bits.
-In this case, the bit representation of 43
+Thus, the bit representation of 43
 as an \texttt{int} number is as follows:
-
 \[00000000000000000000000000101011\]
 
 The bit representation of a number is either
 \key{signed} or \key{unsigned}.
-The first bit of a signed number is the sign
-($+$ or $-$), and we can represent numbers
-$-2^{n-1} \ldots 2^{n-1}-1$ using $n$ bits.
-In an unsigned number, in turn,
-all bits belong to the number and we
-can represent numbers $0 \ldots 2^n-1$ using $n$ bits.
+Usually a signed representation is used,
+which means that both negative and positive
+numbers can be represented.
+A signed number of $n$ bits can contain any
+integer between $2^{n-1}$ and $2^{n-1}-1$.
+For example, the \texttt{int} type in C++ is
+a signed type, and it can contain any
+integer between $2^{31}$ and $2^{31}-1$.
 
-In an signed bit representation,
-the first bit of a nonnegative number is 0,
-and the first bit of a negative number is 1.
-\key{Two's complement} is used which means that
-the opposite number of a number can be calculated
-by first inversing all the bits in the number,
+The first bit in a signed representation
+is the sign of the number (0 for nonnegative numbers
+and 1 for negative numbers), and
+the remaining $n-1$ bits contain the value of the number.
+\key{Two's complement} is used, which means that the
+opposite number of a number is calculated by first
+inverting all the bits in the number,
 and then increasing the number by one.
 
-For example, the representation of $-43$
+For example, the bit representation of $-43$
 as an \texttt{int} number is as follows:
-
 \[11111111111111111111111111010101\]
 
-The connection between signed and unsigned numbers
-is that the representations of a signed
-number $-x$ and an unsigned number $2^n-x$
-are equal.
-Thus, the above representation corresponds to
-the unsigned number $2^{32}-43$.
+In a signed representation, only nonnegative
+numbers can be used, but the upper bound of the numbers is larger.
+A signed number of $n$ bits can contain any
+integer between $0$ and $2^n-1$.
+For example, the \texttt{unsigned int} type in C++
+can contain any integer between $0$ and $2^{32}-1$.
 
-In C++, the numbers are signed as default,
-but we can create unsigned numbers by
-using the keyword \texttt{unsigned}.
-For example, in the code
+There is a connection between signed and unsigned
+representations:
+a number $-x$ in a signed representation
+equals the number $2^n-x$ in an unsigned representation.
+For example, the following code shows that
+the signed number $x=-43$ equals the unsigned
+number $y=2^{32}-43$:
 \begin{lstlisting}
 int x = -43;
 unsigned int y = x;
 cout << x << "\n"; // -43
 cout << y << "\n"; // 4294967253
 \end{lstlisting}
-the signed number
-$x=-43$ becomes the unsigned number $y=2^{32}-43$.
 
-If a number becomes too large or too small for the
-bit representation chosen, it will overflow.
-In practice, in a signed representation,
+If a number is larger than the upper bound
+of the bit representation, the number will overflow.
+In a signed representation,
 the next number after $2^{n-1}-1$ is $-2^{n-1}$,
 and in an unsigned representation,
 the next number after $2^{n-1}$ is $0$.
-For example, in the code
+For example, in the following code,
+the next number after $2^{31}-1$ is $-2^{31}$:
 \begin{lstlisting}
 int x = 2147483647
 cout << x << "\n"; // 2147483647
 x++;
 cout << x << "\n"; // -2147483648
 \end{lstlisting}
-we increase $2^{31}-1$ by one to get $-2^{31}$.
 
 \section{Bit operations}
 
@@ -97,9 +99,9 @@ we increase $2^{31}-1$ by one to get $-2^{31}$.
 \index{and operation}
 
 The \key{and} operation $x$ \& $y$ produces a number
-that has bit 1 in positions where both the numbers
-$x$ and $y$ have bit 1.
-For example, $22$ \& $26$ = 18 because
+that has one bits in positions where both
+$x$ and $y$ have one bits.
+For example, $22$ \& $26$ = 18, because
 
 \begin{center}
 \begin{tabular}{rrr}
@@ -114,16 +116,17 @@ Using the and operation, we can check if a number
 $x$ is even because
 $x$ \& $1$ = 0 if $x$ is even, and
 $x$ \& $1$ = 1 if $x$ is odd.
+More generally, $x$ is divisible by $2^k$
+exactly when $x$ \& $(2^k-1)$ = 0.
 
 \subsubsection{Or operation}
 
 \index{or operation}
 
 The \key{or} operation $x$ | $y$ produces a number
-that has bit 1 in positions where at least one
-of the numbers
-$x$ and $y$ have bit 1.
-For example, $22$ | $26$ = 30 because
+that has one bits in positions where at least one
+of $x$ and $y$ have one bits.
+For example, $22$ | $26$ = 30, because
 
 \begin{center}
 \begin{tabular}{rrr}
@@ -139,10 +142,9 @@ For example, $22$ | $26$ = 30 because
 \index{xor operation}
 
 The \key{xor} operation $x$ $\XOR$ $y$ produces a number
-that has bit 1 in positions where exactly one
-of the numbers
-$x$ and $y$ have bit 1.
-For example, $22$ $\XOR$ $26$ = 12 because
+that has one bits in positions where exactly one
+of $x$ and $y$ have one bits.
+For example, $22$ $\XOR$ $26$ = 12, because
 
 \begin{center}
 \begin{tabular}{rrr}
@@ -159,12 +161,12 @@ $\XOR$ & 11010 & (26) \\
 
 The \key{not} operation \textasciitilde$x$
 produces a number where all the bits of $x$
-have been inversed.
+have been inverted.
 The formula \textasciitilde$x = -x-1$ holds,
 for example, \textasciitilde$29 = -30$.
 
 The result of the not operation at the bit level
-depends on the length of the bit representation
+depends on the length of the bit representation,
 because the operation changes all bits.
 For example, if the numbers are 32-bit
 \texttt{int} numbers, the result is as follows:
@@ -180,60 +182,64 @@ $x$ & = & 29 &   00000000000000000000000000011101 \\
 
 \index{bit shift}
 
-The left bit shift $x < < k$ produces a number
-where the bits of $x$ have been moved $k$ steps to
-the left by adding $k$ zero bits to the number.
-The right bit shift $x > > k$ produces a number
-where the bits of $x$ have been moved $k$ steps
-to the right by removing $k$ last bits from the number.
-
-For example, $14 < < 2 = 56$
-because $14$ equals 1110,
-and it becomes $56$ that equals 111000.
-Correspondingly, $49 > > 3 = 6$
-because $49$ equals 110001,
-and it becomes $6$ that equals 110.
-
-Note that the left bit shift $x < < k$
-corresponds to multiplying $x$ by $2^k$,
+The left bit shift $x < < k$ appends $k$
+zeros to the end of the number,
 and the right bit shift $x > > k$
+removes the $k$ last bits from the number.
+For example, $14 < < 2 = 56$,
+because $14$ equals 1110
+and $56$ equals 111000.
+Similarily, $49 > > 3 = 6$,
+because $49$ equals 110001
+and $6$ equals 110.
+
+Note that $x < < k$
+corresponds to multiplying $x$ by $2^k$,
+and $x > > k$
 corresponds to dividing $x$ by $2^k$
-rounding downwards.
+rounded down to an integer.
 
-\subsubsection{Bit manipulation}
+\subsubsection{Applications}
 
-The bits in a number are indexed from the right
-to the left beginning from zero.
-A number of the form $1 < < k$ contains a one bit
+A number of the form $1 < < k$ has a one bit
 in position $k$, and all other bits are zero,
-so we can manipulate single bits of numbers
-using these numbers.
+so we can use such numbers to access single bits of numbers.
+For example, the $k$th bit of a number is one
+exactly when $x$ \& $(1 < < k)$ is not zero.
+The following code prints the bit representation
+of an \texttt{int} number $x$:
 
-The $k$th bit in $x$ is one if
-$x$ \& $(1 < < k) = (1 < < k)$.
-The formula $x$ | $(1 < < k)$
+\begin{lstlisting}
+for (int i = 31; i >= 0; i--) {
+    if (x&(1<<i)) cout << "1";
+    else cout << "0";
+}
+\end{lstlisting}
+
+It is also possible to modify single bits
+of numbers using a similar idea.
+For example, the expression $x$ | $(1 < < k)$
 sets the $k$th bit of $x$ to one,
-the formula
+the expression
 $x$ \& \textasciitilde $(1 < < k)$
 sets the $k$th bit of $x$ to zero,
-and the formula
+and the expression
 $x$ $\XOR$ $(1 < < k)$
-inverses the $k$th bit of $x$.
+inverts the $k$th bit of $x$.
 
 The formula $x$ \& $(x-1)$ sets the last
 one bit of $x$ to zero,
 and the formula $x$ \& $-x$ sets all the
 one bits to zero, except for the last one bit.
-The formula $x$ | $(x-1)$, in turn,
-inverses all the bits after the last one bit.
-
+The formula $x$ | $(x-1)$
+inverts all the bits after the last one bit.
 Also note that a positive number $x$ is
 of the form $2^k$ if $x$ \& $(x-1) = 0$.
 
 \subsubsection*{Additional functions}
 
-The g++ compiler contains the following
-functions for bit manipulation:
+The g++ compiler provides the following
+functions for counting bits:
 
 \begin{itemize}
 \item
@@ -251,7 +257,7 @@ the parity (even or odd) of the number of ones
 \end{itemize}
 \begin{samepage}
 
-The following code shows how to use the functions:
+The functions can be used as follows:
 \begin{lstlisting}
 int x = 5328; // 00000000000000000001010011010000
 cout << __builtin_clz(x) << "\n"; // 19
@@ -261,12 +267,12 @@ cout << __builtin_parity(x) << "\n"; // 1
 \end{lstlisting}
 \end{samepage}
 
-The functions support \texttt{int} numbers,
+The functions can be used with \texttt{int} numbers,
 but there are also \texttt{long long} versions
 of the functions
 available with the prefix \texttt{ll}.
 
-\section{Bit representation of sets}
+\section{Representing sets}
 
 Each subset of a set $\{0,1,2,\ldots,n-1\}$
 corresponds to a $n$ bit number
