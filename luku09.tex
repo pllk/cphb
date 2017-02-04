@@ -687,8 +687,8 @@ and when updating the array,
 the position $k$ should be increased by $k \& -k$ at every step.
 
 Suppose that the binary indexed tree is stored in an array \texttt{b}.
-The following function \texttt{sum} calculates
-the sum of elements in the range $[1,k]$:
+The following function calculates
+the sum of elements in a range $[1,k]$:
 \begin{lstlisting}
 int sum(int k) {
     int s = 0;
@@ -700,7 +700,7 @@ int sum(int k) {
 }
 \end{lstlisting}
 
-The following function \texttt{add} increases the value
+The following function increases the value
 of the element at position $k$ by $x$
 ($x$ can be positive or negative):
 \begin{lstlisting}
@@ -723,11 +723,11 @@ takes $O(1)$ time using bit operations.
 \index{segment tree}
 
 A \key{segment tree} is a data structure
-whose supported operations are
-handling a range query for range $[a,b]$
-and updating the element at index $k$.
-Using a segment tree, we can implement sum
-queries, minimum queries and many other
+that supports two operations:
+processing a range query and
+modifying an element in the array.
+Segment trees can support
+sum queries, minimum and maximum queries and many other
 queries so that both operations work in $O(\log n)$ time.
 
 Compared to a binary indexed tree,
@@ -740,16 +740,15 @@ memory and is a bit more difficult to implement.
 
 \subsubsection{Structure}
 
-A segment tree contains $2n-1$ nodes
-so that the bottom $n$ nodes correspond
-to the original array and the other nodes
-contain information needed for range queries.
-The values in a segment tree depend on
-the supported query type.
-We will first assume that the supported
-query is the sum query.
+A segment tree is a binary tree that
+contains $2n-1$ nodes.
+The nodes on the bottom level of the tree
+correspond to the original array,
+and the other nodes
+contain information needed for processing range queries.
 
-For example, the array
+We will first discuss segment trees that support
+sum queries. As an example, consider the following array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -763,18 +762,18 @@ For example, the array
 \node at (6.5,0.5) {$2$};
 \node at (7.5,0.5) {$6$};
 
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-corresponds to the following segment tree:
+The corresponding segment tree is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -823,22 +822,18 @@ and it can be calculated as the sum of
 the values of its left and right child node.
 
 It is convenient to build a segment tree
-when the size of the array is a power of two
-and the tree is a complete binary tree.
+for an array whose size is a power of two,
+because in this case every internal node has a left
+and right child.
 In the sequel, we will assume that the tree
 is built like this.
 If the size of the array is not a power of two,
-we can always extend it using zero elements.
+we can always add zero elements to the array.
 
 \subsubsection{Range query}
 
-In a segment tree, the answer for a range query
-is calculated from nodes that belong to the range
-and are as high as possible in the tree.
-Each node gives the answer for a subrange,
-and the answer for the entire range can be
-calculated by combining these values.
-
+The sum of elements in a given range
+can be calculated as a sum of values in the segment tree.
 For example, consider the following range:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -853,22 +848,22 @@ For example, consider the following range:
 \node[anchor=center] at (5.5, 0.5) {7};
 \node[anchor=center] at (6.5, 0.5) {2};
 \node[anchor=center] at (7.5, 0.5) {6};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-The sum of elements in the range $[3,8]$ is
+The sum of elements in the range is
 $6+3+2+7+2+6=26$.
-The sum can be calculated from the segment tree
-using the following subranges:
+The following two nodes in the tree
+cover the range:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -907,22 +902,23 @@ using the following subranges:
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-Thus, the sum of the range is $9+17=26$.
+Thus, the sum of elements in the range is $9+17=26$.
 
-When the answer for a range query is
-calculated using as high nodes as possible,
+When the sum is calculated using nodes
+that are located as high as possible in the tree,
 at most two nodes on each level
-of the segment tree are needed.
-Because of this, the total number of nodes
+of the tree are needed.
+Hence, the total number of nodes
 examined is only $O(\log n)$.
 
 \subsubsection{Array update}
 
 When an element in the array changes,
-we should update all nodes in the segment tree
-whose value depends on the changed element.
-This can be done by travelling from the bottom
-to the top in the tree and updating the nodes along the path.
+we should update all nodes in the tree
+whose value depends on the element.
+This can be done by traversing the path
+from the element to the top node
+and updating the nodes along the path.
 
 \begin{samepage}
 The following picture shows which nodes in the segment tree
@@ -969,24 +965,24 @@ change if the element 7 in the array changes.
 \end{center}
 \end{samepage}
 
-The path from the bottom of the segment tree to the top
+The path from bottom to top
 always consists of $O(\log n)$ nodes,
-so updating the array affects $O(\log n)$ nodes in the tree.
+so each update changes $O(\log n)$ nodes in the tree.
 
 \subsubsection{Storing the tree}
 
-A segment tree can be stored as an array
+A segment tree can be stored in an array
 of $2N$ elements where $N$ is a power of two.
 From now on, we will assume that the indices
 of the original array are between $0$ and $N-1$.
 
-The element at index 1 in the segment tree array
-contains the top node of the tree,
-the elements at indices 2 and 3 correspond to
+The element at position 1 in the array
+corresponds to the top node of the tree,
+the elements at positions 2 and 3 correspond to
 the second level of the tree, and so on.
-Finally, the elements beginning from index $N$
-contain the bottom level of the tree, i.e.,
-the actual content of the original array.
+Finally, the elements at positions $N \ldots 2N-1$
+correspond to the bottom level of the tree, i.e.,
+the elements of the original array.
 
 For example, the segment tree
 \begin{center}
@@ -1068,11 +1064,11 @@ can be stored as follows ($N=8$):
 \end{tikzpicture}
 \end{center}
 Using this representation,
-for a node at index $k$,
+for a node at position $k$,
 \begin{itemize}
-\item the parent node is at index $\lfloor k/2 \rfloor$,
-\item the left child node is at index $2k$, and
-\item the right child node is at index $2k+1$.
+\item the parent node is at position $\lfloor k/2 \rfloor$,
+\item the left child node is at position $2k$, and
+\item the right child node is at position $2k+1$.
 \end{itemize}
 Note that this implies that the index of a node
 is even if it is a left child and odd if it is a right child.
@@ -1080,8 +1076,9 @@ is even if it is a left child and odd if it is a right child.
 \subsubsection{Functions}
 
 We assume that the segment tree is stored
-in the array \texttt{p}.
-The following function calculates the sum of range $[a,b]$:
+in an array \texttt{p}.
+The following function
+calculates the sum of elements in a range $[a,b]$:
 
 \begin{lstlisting}
 int sum(int a, int b) {
@@ -1096,15 +1093,18 @@ int sum(int a, int b) {
 }
 \end{lstlisting}
 
-The function begins from the bottom of the tree
-and moves step by step upwards in the tree.
-The function calculates the range sum to
-the variable $s$ by combining the sums in the tree nodes.
-The value of a node is added to the sum if
-the parent node doesn't belong to the range.
+The function maintains a range in the segment tree array.
+Initially the range is $[a+N,b+N]$,
+that corresponds to the range $[a,b]$
+in the underlying array.
+At each step, the function adds the value of
+the left and right node to the sum
+if their parent nodes do not belong to the range.
+After this, the same process continues on the
+next level of the tree.
 
-The function \texttt{add} increases the value
-of element $k$ by $x$:
+The following function increases the value
+of the element at position $k$ by $x$:
 
 \begin{lstlisting}
 void add(int k, int x) {
@@ -1115,28 +1115,27 @@ void add(int k, int x) {
     }
 }
 \end{lstlisting}
-First the function updates the bottom level
-of the tree that corresponds to the original array.
+First the function updates the element
+at the bottom level of the tree.
 After this, the function updates the values of all
 internal nodes in the tree, until it reaches
-the root node of the tree.
+the top node of the tree.
 
-Both operations in the segment tree work
-in $O(\log n)$ time because a segment tree
+Both above functions work
+in $O(\log n)$ time, because a segment tree
 of $n$ elements consists of $O(\log n)$ levels,
-and the operations move one level forward at each step.
+and the operations move one level forward in the tree at each step.
 
 \subsubsection{Other queries}
 
-Besides the sum query,
-the segment tree can support any range query
-where the answer for range $[a,b]$
-can be efficiently calculated
-from ranges $[a,c]$ and $[c+1,b]$ where
-$c$ is some element between $a$ and $b$.
-Such queries are, for example,
+A segment tree can support any query
+where the answer for a range $[a,b]$
+can be calculated
+from the answers for ranges $[a,c]$ and $[c+1,b]$, where
+$c$ is some index between $a$ and $b$.
+Examples of such queries are
 minimum and maximum, greatest common divisor,
-and bit operations.
+and bit operations and, or and xor.
 
 \begin{samepage}
 For example, the following segment tree
@@ -1184,23 +1183,23 @@ supports minimum queries:
 
 In this segment tree, every node in the tree
 contains the smallest element in the corresponding
-range of the original array.
+range of the underlying array.
 The top node of the tree contains the smallest
-element in the array.
-The tree can be implemented like previously,
+element in the whole array.
+The operations can be implemented like previously,
 but instead of sums, minima are calculated.
 
 \subsubsection{Binary search in tree}
 
-The structure of the segment tree makes it possible
-to use binary search.
+The structure of the segment tree allows us
+to use binary search for finding elements in the array.
 For example, if the tree supports the minimum query,
-we can find the index of the smallest
+we can find the position of the smallest
 element in $O(\log n)$ time.
 
 For example, in the following tree the
-smallest element is 1 that can be found
-by following a path downwards from the top node:
+smallest element 1 can be found
+by traversing a path downwards from the top node:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1252,31 +1251,31 @@ by following a path downwards from the top node:
 
 \subsubsection{Index compression}
 
-A limitation in data structures that have
-been built upon an array is that
+A limitation in data structures that
+are built upon an array is that
 the elements are indexed using integers
 $1,2,3,$ etc.
-Difficulties arise when the indices
-needed are large.
-For example, using the index $10^9$ would
-require that the array would contain $10^9$
+Difficulties arise when large indices
+are needed.
+For example, if we wish to use the index $10^9$,
+the array should contain $10^9$
 elements which is not realistic.
 
 \index{index compression}
 
 However, we can often bypass this limitation
-by using \key{index compression}
-where the indices are redistributed so that
-they are integers $1,2,3,$ etc.
+by using \key{index compression},
+where the original indices are replaced
+with the indices $1,2,3,$ etc.
 This can be done if we know all the indices
 needed during the algorithm beforehand.
 
 The idea is to replace each original index $x$
-with index $p(x)$ where $p$ is a function that
-redistributes the indices.
+with $p(x)$ where $p$ is a function that
+compresses the indices.
 We require that the order of the indices
-doesn't change, so if $a<b$, then $p(a)<p(b)$.
-Thanks to this, we can conviently perform queries
+does not change, so if $a<b$, then $p(a)<p(b)$.
+This allows us to conviently perform queries
 despite the fact that the indices are compressed.
 
 For example, if the original indices are
@@ -1295,15 +1294,15 @@ p(10^9) & = & 3 \\
 So far, we have implemented data structures
 that support range queries and modifications
 of single values.
-Let us now consider a reverse situation
+Let us now consider a reverse situation,
 where we should update ranges and
 retrieve single values.
 We focus on an operation that increases all
-elements in range $[a,b]$ by $x$.
+elements in a range $[a,b]$ by $x$.
 
 Surprisingly, we can use the data structures
 presented in this chapter also in this situation.
-This requires that we change the array so that
+To do this, we change the array so that
 each element indicates the \emph{change}
 with respect to the previous element.
 For example, the array
@@ -1361,18 +1360,18 @@ becomes as follows:
 \end{center}
 
 The original array is the sum array of the new array.
-Thus, any value in the original array corresponds
-to a sum of elements in the new array.
-For example, the value 6 at index 5 in the original array
+Thus, each element in the original array equals
+a sum of values in the new array.
+For example, the value 5 at position 6 in the original array
 corresponds to the sum $3-2+4=5$.
 
 The benefit in using the new array is
 that we can update a range by changing just
-two elements in the new array.
+two elements in the array.
 For example, if we want to 
-increase the range $2 \ldots 5$ by 5,
-it suffices to increase the element at index 2 by 5
-and decrease the element at index 6 by 5.
+increase the elements in the range $2 \ldots 5$ by 5,
+it suffices to increase the value at position 2 by 5
+and decrease the value at position 6 by 5.
 The result is as follows:
 
 \begin{center}
@@ -1400,18 +1399,17 @@ The result is as follows:
 \end{tikzpicture}
 \end{center}
 
-More generally, to increase the range
-$a \ldots b$ by $x$,
-we increase the element at index $a$ by $x$
-and decrease the element at index $b+1$ by $x$.
-The required operations are calculating
-the sum in a range and updating a value,
+More generally, to increase the elements
+in the range $[a,b]$ by $x$,
+we increase the value at position $a$ by $x$
+and decrease the value at position $b+1$ by $x$.
+Thus, it is only needed to update single values
+and process sum queries,
 so we can use a binary indexed tree or a segment tree.
 
 A more difficult problem is to support both
 range queries and range updates.
-In Chapter 28 we will see that this is possible
-as well.
+In Chapter 28 we will see that even this is possible.
 
 
 
