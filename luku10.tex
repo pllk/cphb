@@ -278,26 +278,26 @@ Each subset of a set $\{0,1,2,\ldots,n-1\}$
 corresponds to a $n$ bit number
 where the one bits indicate which elements
 are included in the subset.
-For example, the bit representation for $\{1,3,4,8\}$
+For example, the bit representation of $\{1,3,4,8\}$
 is 100011010 that equals $2^8+2^4+2^3+2^1=282$.
 
-The bit representation of a set uses little memory
-because only one bit is needed for the information
-whether an element belongs to the set.
-In addition, we can efficiently manipulate sets
-that are stored as bits.
+The benefit in using a bit representation is
+that the information whether an element belongs
+to the set requires only one bit of memory.
+In addition, we can implement set operations
+efficiently as bit operations.
 
 \subsubsection{Set operations}
 
-In the following code, the variable $x$
+In the following code, $x$
 contains a subset of $\{0,1,2,\ldots,31\}$.
-The code adds elements 1, 3, 4 and 8
-to the set and then prints the elements in the set.
+The code adds the elements 1, 3, 4 and 8
+to the set and then prints the elements.
 
 \begin{lstlisting}
 // x is an empty set
 int x = 0;
-// add numbers 1, 3, 4 and 8 to the set
+// add elements 1, 3, 4 and 8 to the set
 x |= (1<<1);
 x |= (1<<3);
 x |= (1<<4);
@@ -309,24 +309,13 @@ for (int i = 0; i < 32; i++) {
 cout << "\n";
 \end{lstlisting}
 
-The output of the code is as follows:
-\begin{lstlisting}
-1 3 4 8
-\end{lstlisting}
-
-Using the bit representation of a set,
-we can efficiently implement set operations
-using bit operations:
+Set operations can be implemented as follows:
 \begin{itemize}
 \item $a$ \& $b$ is the intersection $a \cap b$ of $a$ and $b$
-(this contains the elements that are in both the sets)
 \item $a$ | $b$ is the union $a \cup b$ of $a$ and $b$
-(this contains the elements that are at least
-in one of the sets)
+\item \textasciitilde$a$ is the complement $\bar a$ of $a$
 \item $a$ \& (\textasciitilde$b$) is the difference
 $a \setminus b$ of $a$ and $b$
-(this contains the elements that are in $a$
-but not in $b$)
 \end{itemize}
 
 The following code constructs the union
@@ -346,14 +335,9 @@ for (int i = 0; i < 32; i++) {
 cout << "\n";
 \end{lstlisting}
 
-The output of the code is as follows:
-\begin{lstlisting}
-1 3 4 6 8 9
-\end{lstlisting}
-
 \subsubsection{Iterating through subsets}
 
-The following code iterates through
+The following code goes through
 the subsets of $\{0,1,\ldots,n-1\}$:
 
 \begin{lstlisting}
@@ -362,7 +346,7 @@ for (int b = 0; b < (1<<n); b++) {
 }
 \end{lstlisting}
 The following code goes through
-subsets with exactly $k$ elements:
+the subsets with exactly $k$ elements:
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
     if (__builtin_popcount(b) == k) {
@@ -378,51 +362,44 @@ do {
     // process subset b
 } while (b=(b-x)&x);
 \end{lstlisting}
-% Esimerkiksi jos $x$ esittää joukkoa $\{2,5,7\}$,
-% niin koodi käy läpi osajoukot
-% $\emptyset$, $\{2\}$, $\{5\}$, $\{7\}$,
-% $\{2,5\}$, $\{2,7\}$, $\{5,7\}$ ja $\{2,5,7\}$.
 
 \section{Dynamic programming}
 
 \subsubsection{From permutations to subsets}
 
 Using dynamic programming, it is often possible
-to change iteration over permutations into
-iteration over subsets.
-In this case, the dynamic programming state
+to turn an iteration over permutations into
+an iteration over subsets so that
+the dynamic programming state
 contains a subset of a set and possibly
 some additional information.
 
-The benefit in this technique is that
+The benefit in this is that
 $n!$, the number of permutations of an $n$ element set,
 is much larger than $2^n$, the number of subsets.
 For example, if $n=20$, then
 $n!=2432902008176640000$ and $2^n=1048576$.
-Thus, for certain values of $n$,
-we can go through subsets but not through permutations.
+Hence, for certain values of $n$,
+we can efficiently go through subsets but not through permutations.
 
-As an example, let's calculate the number of
-permutations of set $\{0,1,\ldots,n-1\}$
-where the difference between any two successive
+As an example, consider the problem of
+calculating the number of
+permutations of a set $\{0,1,\ldots,n-1\}$,
+where the difference between any two consecutive
 elements is larger than one.
-For example, there are two solutions for $n=4$:
-\begin{itemize}
-\item $(1,3,0,2)$
-\item $(2,0,3,1)$
-\end{itemize}
+For example, when $n=4$, there are two such permutations:
+$(1,3,0,2)$ and $(2,0,3,1)$.
 
-Let $f(x,k)$ denote the number of permutations
-for a subset $x$
-where the last number is $k$ and
+Let $f(x,k)$ denote the number of valid permutations
+of $x$ where the last element is $k$ and
 the difference between any two successive
 elements is larger than one.
-For example, $f(\{0,1,3\},1)=1$
+For example, $f(\{0,1,3\},1)=1$,
 because there is a permutation $(0,3,1)$,
-and $f(\{0,1,3\},3)=0$ because 0 and 1
-can't be next to each other.
+and $f(\{0,1,3\},3)=0$, because 0 and 1
+cannot be next to each other.
 
-Using $f$, the solution for the problem is the sum
+Using $f$, the solution to the problem equals
 
 \[ \sum_{i=0}^{n-1} f(\{0,1,\ldots,n-1\},i). \]
 
@@ -441,7 +418,7 @@ for (int i = 0; i < n; i++) d[1<<i][i] = 1;
 \end{lstlisting}
 
 \noindent
-After this, the other values can be calculated
+Then, the other values can be calculated
 as follows:
 
 \begin{lstlisting}
@@ -457,15 +434,13 @@ for (int b = 0; b < (1<<n); b++) {
 \end{lstlisting}
 
 \noindent
-The variable $b$ contains the bit representation
-of the subset, and the corresponding
-permutation is of the form $(\ldots,j,i)$.
-It is required that the difference between
-$i$ and $j$ is larger than 1, and the
-numbers belong to subset $b$.
+The variable $b$ goes through all subsets, and each
+permutation is of the form $(\ldots,j,i)$
+where the difference between $i$ and $j$ is
+larger than one and $i$ and $j$ belong to $b$.
 
 Finally, the number of solutions can be
-calculated as follows to $s$:
+calculated as follows:
 
 \begin{lstlisting}
 long long s = 0;
@@ -476,17 +451,17 @@ for (int i = 0; i < n; i++) {
 
 \subsubsection{Sums of subsets}
 
-Let's assume that every subset $x$
+Finally, we consider the following problem:
+Every subset $x$
 of $\{0,1,\ldots,n-1\}$
 is assigned a value $c(x)$,
 and our task is to calculate for
 each subset $x$ the sum
-\[s(x)=\sum_{y \subset x} c(y)\]
-that corresponds to the sum
-\[s(x)=\sum_{y \& x = y} c(y)\]
-using bit operations.
-The following table gives an example of
-the values of the functions when $n=3$:
+\[s(x)=\sum_{y \subset x} c(y).\]
+Using bit operations, the corresponding sum is
+\[s(x)=\sum_{y \& x = y} c(y).\]
+The following table shows an example of
+the functions when $n=3$:
 \begin{center}
 \begin{tabular}{rrr}
 $x$ & $c(x)$ & $s(x)$ \\
@@ -505,28 +480,28 @@ For example, $s(110)=c(000)+c(010)+c(100)+c(110)=5$.
 
 The problem can be solved in $O(2^n n)$ time
 by defining a function $f(x,k)$ that calculates
-the sum of values $c(y)$ where $x$ can be
-converted into $y$ by changing any one bits
-in positions $0,1,\ldots,k$ to zero bits.
-Using this function, the solution for the
+the sum of $c(y)$ values such that $x$ can be
+turned into $y$ by changing zero or more one bits
+at positions $0,1,\ldots,k$ to zero bits.
+Using this function, the solution to the
 problem is $s(x)=f(x,n-1)$.
 
 The base cases for the function are:
 \begin{equation*}
     f(x,0) = \begin{cases}
-               c(x)          & \textrm{if bit 0 in $x$ is 0}\\
-               c(x)+c(x \XOR 1) & \textrm{if bit 0 in $x$ is 1}\\
+               c(x)          & \textrm{if bit 0 of $x$ is 0}\\
+               c(x)+c(x \XOR 1) & \textrm{if bit 0 of $x$ is 1}\\
            \end{cases}
 \end{equation*}
 For larger values of $k$, the following recursion holds:
 \begin{equation*}
     f(x,k) = \begin{cases}
-               f(x,k-1)          & \textrm{if bit $k$ in $x$ is 0}\\
-               f(x,k-1)+f(x \XOR (1 < < k),k-1)    & \textrm{if bit $k$ in $x$ is 1}\\
+               f(x,k-1)          & \textrm{if bit $k$ of $x$ is 0}\\
+               f(x,k-1)+f(x \XOR (1 < < k),k-1)    & \textrm{if bit $k$ of $x$ is 1}\\
            \end{cases}
 \end{equation*}
 
-Thus, we can calculate the values for the function
+Thus, we can calculate the values of the function
 as follows using dynamic programming.
 The code assumes that the array \texttt{c}
 contains the values for $c$,
@@ -546,9 +521,9 @@ for (int k = 1; k < n; k++) {
 }
 \end{lstlisting}
 
-Actually, a much shorter implementation is possible
+Actually, a much shorter implementation is possible,
 because we can calculate the results directly
-to array \texttt{s}:
+into the array \texttt{s}:
 \begin{lstlisting}
 for (int x = 0; x < (1<<n); x++) s[x] = c[x];
 for (int k = 0; k < n; k++) {
