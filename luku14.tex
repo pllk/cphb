@@ -3,14 +3,14 @@
 \index{tree}
 
 A \key{tree} is a connected, acyclic graph
-that contains $n$ nodes and $n-1$ edges.
+that consists of $n$ nodes and $n-1$ edges.
 Removing any edge from a tree divides it
 into two components,
 and adding any edge to a tree creates a cycle.
 Moreover, there is always a unique path between any
 two nodes in a tree.
 
-For example, the following tree contains 7 nodes and 6 edges:
+For example, the following tree consists of 7 nodes and 6 edges:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -31,7 +31,7 @@ For example, the following tree contains 7 nodes and 6 edges:
 
 \index{leaf}
 
-The \key{leaves} of a tree are nodes
+The \key{leaves} of a tree are the nodes
 with degree 1, i.e., with only one neighbor.
 For example, the leaves in the above tree
 are nodes 3, 5, 6 and 7.
@@ -40,7 +40,8 @@ are nodes 3, 5, 6 and 7.
 \index{rooted tree}
 
 In a \key{rooted} tree, one of the nodes
-is chosen to be a \key{root}, and all other nodes are
+is appointed the \key{root} of the tree,
+and all other nodes are
 placed underneath the root.
 For example, in the following tree,
 node 1 is the root of the tree.
@@ -66,11 +67,11 @@ node 1 is the root of the tree.
 \index{child}
 \index{parent}
 
-In a rooted tree, the \key{childern} of a node
+In a rooted tree, the \key{children} of a node
 are its lower neighbors, and the \key{parent} of a node
 is its upper neighbor.
 Each node has exactly one parent,
-except that the root doesn't have a parent.
+except for the root that does not have a parent.
 For example, in the above tree,
 the childern of node 4 are nodes 3 and 7,
 and the parent is node 1.
@@ -80,22 +81,22 @@ and the parent is node 1.
 The structure of a rooted tree is \emph{recursive}:
 each node in the tree is the root of a \key{subtree}
 that contains the node itself and all other nodes
-that can be reached by travelling downwards in the tree.
+that can be reached by traversing down the tree.
 For example, in the above tree, the subtree of node 4
-contains nodes 4, 3 and 7.
+consists of nodes 4, 3 and 7.
 
-\section{Tree search}
+\section{Tree traversal}
 
 Depth-first search and breadth-first search
-can be used for going through the nodes in a tree.
-However, the search is easier to implement than
-for a general graph, because
+can be used for traversing the nodes in a tree.
+However, the traversal is easier to implement than
+in a general graph because
 there are no cycles in the tree, and it is not
-possible that the search would visit a node several times.
+possible to reach a node from multiple directions.
 
-Often, we start a depth-first search from a chosen
-root node.
-The following recursive function implements it:
+The typical way to traverse a tree is to start
+a depth-first search at an arbitrary node.
+The following recursive function can be used:
 
 \begin{lstlisting}
 void dfs(int s, int e) {
@@ -108,9 +109,9 @@ void dfs(int s, int e) {
 
 The function parameters are the current node $s$
 and the previous node $e$.
-The idea of the parameter $e$ is to ensure
-that the search only proceeds downwards in the tree
-towards nodes that have not been visited yet.
+The purpose of the parameter $e$ is to make sure
+that the search only moves to nodes
+that have not been visited yet.
 
 The following function call starts the search
 at node $x$:
@@ -119,21 +120,22 @@ at node $x$:
 dfs(x, 0);
 \end{lstlisting}
 
-In the first call $e=0$ because there is no
+In the first call $e=0$, because there is no
 previous node, and it is allowed
 to proceed to any direction in the tree.
 
 \subsubsection{Dynamic programming}
 
-We can also use dynamic programming to calculate
-some information from the tree during the search.
+Dynamic programming can be used to calculate
+some information during a tree traversal.
 Using dynamic programming, we can, for example,
-calculate in $O(n)$ time for each node the
-number of nodes in its subtree,
-or the length of the longest path downwards
-that begins at the node.
+calculate in $O(n)$ time for each node
+in a rooted tree the
+number of nodes in its subtree
+or the length of the longest path from the node
+to a leaf.
 
-As an example, let's calculate for each node $s$
+As an example, let us calculate for each node $s$
 a value $\texttt{c}[s]$: the number of nodes in its subtree.
 The subtree contains the node itself and
 all nodes in the subtrees of its children.
@@ -141,11 +143,11 @@ Thus, we can calculate the number of nodes
 recursively using the following code:
 
 \begin{lstlisting}
-void haku(int s, int e) {
+void dfs(int s, int e) {
     c[s] = 1;
     for (auto u : v[s]) {
         if (u == e) continue;
-        haku(u, s);
+        dfs(u, s);
         c[s] += c[u];
     }
 }
@@ -189,14 +191,15 @@ to calculate the diameter.
 
 \subsubsection{Algorithm 1}
 
-First, one of the nodes is chosen to be the root.
-After this, the algorithm calculates for each node
+First, we root the tree arbitrarily.
+After this, we use dynamic programming
+to calculate for each node $x$
 the length of the longest path that begins at some leaf,
-ascends to the node and then descends to another leaf.
+ascends to $x$ and then descends to another leaf.
 The length of the
 longest such path equals the diameter of the tree.
 
-In the example case, the longest path begins at node 7,
+In the example graph, the longest path begins at node 7,
 ascends to node 1, and then descends to node 6:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -221,32 +224,30 @@ ascends to node 1, and then descends to node 6:
 \end{tikzpicture}
 \end{center}
 
-The algorithm first calculates using dynamic programming
-for each node the length of the longest path
-that goes downwards from the node.
+The algorithm first calculates for each node $x$
+the length of the longest path from $x$ to a leaf.
 For example, in the above tree,
-the longest path from node 1 downwards has length 2
+the longest path from node 1 to a leaf has length 2
 (the path can be $1 \rightarrow 4 \rightarrow 3$,
 $1 \rightarrow 4 \rightarrow 7$ or $1 \rightarrow 2 \rightarrow 6$).
-
 After this, the algorithm calculates for each node
-the length of the longest path where the node
+$x$ the length of the longest path where $x$
 is the turning point of the path.
-The longest such path can be found by selecting
-two children with longest paths downwards.
+The longest such path can be found by choosing
+two children with longest paths two leaves.
 For example, in the above graph, 
-nodes 2 and 4 are chosen for node 1.
+nodes 2 and 4 yield the longest path for node 1.
 
 \subsubsection{Algorithm 2}
 
 Another efficient way to calculate the diameter
 of a tree is based on two depth-first searches.
 First, we choose an arbitrary node $a$ in the tree
-and find a node $b$ with maximum distance to $a$.
-Then, we find a node $c$ with maximum distance to $b$.
-The diameter is the distance between nodes $b$ and $c$.
+and find the farthest node $b$ from $a$.
+Then, we find the farthest node $c$ from $b$.
+The diameter of the tree is the distance between $b$ and $c$.
 
-In the example case, $a$, $b$ and $c$ could be:
+In the example graph, $a$, $b$ and $c$ could be:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -312,7 +313,7 @@ to the diameter.
 The farthest node from $a$
 is node $b$, node $c$ or some other node
 that is at least as far from node $x$.
-Thus, this node can always be chosen for
+Thus, this node is always a valid choice for
 a starting node of a path that corresponds to the diameter.
 
 \section{Distances between nodes}
@@ -321,10 +322,10 @@ A more difficult problem is to calculate
 for each node in the tree and for each direction,
 the maximum distance to a node in that direction.
 It turns out that this can be calculated in
-$O(n)$ time as well using dynamic programming.
+$O(n)$ time using dynamic programming.
 
 \begin{samepage}
-In the example case, the distances are as follows:
+In the example graph, the distances are as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -355,15 +356,15 @@ In the example case, the distances are as follows:
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-For example, the furthest node from node 4
-upwards is node 6, and the distance to this
+For example, the farthest node from node 4
+in the direction of node 1 is node 6, and the distance to this
 node is 3 using the path
 $4 \rightarrow 1 \rightarrow 2 \rightarrow 6$.
 
 \begin{samepage}
 Also in this problem, a good starting point
 is to root the tree.
-After this, all distances downwards can
+After this, all distances to leaves can
 be calculated using dynamic programming:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -393,8 +394,9 @@ be calculated using dynamic programming:
 \end{center}
 \end{samepage}
 
-The remaining task is to calculate the distances upwards.
-This can be done by going through the nodes once again
+The remaining task is to calculate
+the distances through parents.
+This can be done by traversing the tree once again
 and keeping track of the largest distance from the parent
 of the current node to some other node in another direction.
 
@@ -466,11 +468,10 @@ and all directions:
 
 \begin{samepage}
 A \key{binary tree} is a rooted tree
-where each node has a left subtree
-and a right subtree.
+where each node has a left and right subtree.
 It is possible that a subtree of a node is empty.
 Thus, every node in a binary tree has
-0, 1 or 2 children.
+zero, one or two children.
 
 For example, the following tree is a binary tree:
 \begin{center}
@@ -498,7 +499,7 @@ For example, the following tree is a binary tree:
 \index{post-order}
 
 The nodes in a binary tree have three natural
-orders that correspond to different ways to 
+orderings that correspond to different ways to 
 recursively traverse the nodes: 
 
 \begin{itemize}
@@ -516,18 +517,18 @@ $[1,2,4,5,6,3,7]$,
 in in-order $[4,2,6,5,1,3,7]$
 and in post-order $[4,6,5,2,7,3,1]$.
 
-If we know the pre-order and the in-order
-of a tree, we can find out the exact structure of the tree.
+If we know the pre-order and in-order
+of a tree, we can reconstruct the exact structure of the tree.
 For example, the tree above is the only possible tree
 with pre-order $[1,2,4,5,6,3,7]$ and
 in-order $[4,2,6,5,1,3,7]$.
-Correspondingly, the post-order and the in-order
+In a similar way, the post-order and in-order
 also determine the structure of a tree.
 
 However, the situation is different if we only know
-the pre-order and the post-order of a tree.
+the pre-order and post-order of a tree.
 In this case, there may be more than one tree
-that match the orders.
+that match the orderings.
 For example, in both of the trees
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -540,6 +541,6 @@ For example, in both of the trees
 \path[draw,thick,-] (1b) -- (2b);
 \end{tikzpicture}
 \end{center}
-the pre-order is $[1,2]$ and the post-order is $[2,1]$
-but the trees have different structures.
+the pre-order is $[1,2]$ and the post-order is $[2,1]$,
+but the structures of the trees are different.
 
