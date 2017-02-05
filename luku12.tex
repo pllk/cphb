@@ -1,6 +1,6 @@
-\chapter{Graph search}
+\chapter{Graph traversal}
 
-This chapter introduces two fundamental
+This chapter discusses two fundamental
 graph algorithms:
 depth-first search and breadth-first search.
 Both algorithms are given a starting
@@ -15,7 +15,7 @@ in which they visit the nodes.
 \index{depth-first search}
 
 \key{Depth-first search} (DFS)
-is a straightforward graph search technique.
+is a straightforward graph traversal technique.
 The algorithm begins at a starting node,
 and proceeds to all other nodes that are
 reachable from the starting node using
@@ -24,14 +24,14 @@ the edges in the graph.
 Depth-first search always follows a single
 path in the graph as long as it finds
 new nodes.
-After this, it returns back to previous
+After this, it returns to previous
 nodes and begins to explore other parts of the graph.
 The algorithm keeps track of visited nodes,
 so that it processes each node only once.
 
 \subsubsection*{Example}
 
-Let's consider how depth-first search processes
+Let us consider how depth-first search processes
 the following graph:
 \begin{center}
 \begin{tikzpicture}
@@ -92,9 +92,9 @@ After this, nodes 3 and 5 will be visited:
 \end{center}
 The neighbors of node 5 are 2 and 3,
 but the search has already visited both of them,
-so it's time to return back.
+so it is time to return to previous nodes.
 Also the neighbors of nodes 3 and 2
-have been visited, so we'll next proceed
+have been visited, so we next move
 from node 1 to node 4:
 \begin{center}
 \begin{tikzpicture}
@@ -128,7 +128,7 @@ implemented using recursion.
 The following function \texttt{dfs} begins
 a depth-first search at a given node.
 The function assumes that the graph is
-stored as adjacency lists in array
+stored as adjacency lists in an array
 \begin{lstlisting}
 vector<int> v[N];
 \end{lstlisting}
@@ -175,7 +175,7 @@ have been visited.
 
 \subsubsection*{Example}
 
-Let's consider how the algorithm processes
+Let us consider how the algorithm processes
 the following graph:
 
 \begin{center}
@@ -196,7 +196,7 @@ the following graph:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Assume again that the search begins at node 1.
+Suppose again that the search begins at node 1.
 First, we process all nodes that can be reached
 from node 1 using a single edge:
 \begin{center}
@@ -224,7 +224,7 @@ from node 1 using a single edge:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-After this, we procees to nodes 3 and 5:
+After this, we proceed to nodes 3 and 5:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -301,10 +301,10 @@ and $m$ is the number of edges.
 \subsubsection*{Implementation}
 
 Breadth-first search is more difficult
-to implement than depth-first search
+to implement than depth-first search,
 because the algorithm visits nodes
-in different parts in the graph.
-A typical implementation is to maintain
+in different parts of the graph.
+A typical implementation is based on
 a queue of nodes to be processed.
 At each step, the next node in the queue
 will be processed.
@@ -326,9 +326,9 @@ In addition, the code uses arrays
 \begin{lstlisting}
 int z[N], e[N];
 \end{lstlisting}
-so that array \texttt{z} indicates
-which nodes the search already has visited
-and array \texttt{e} will contain the
+so that the array \texttt{z} indicates
+which nodes the search has already visited
+and the array \texttt{e} will contain the
 minimum distance to all nodes in the graph.
 The search can be implemented as follows:
 \begin{lstlisting}
@@ -347,12 +347,12 @@ while (!q.empty()) {
 
 \section{Applications}
 
-Using the graph search algorithms,
+Using the graph traversal algorithms,
 we can check many properties of the graph.
 Usually, either depth-first search or
 bredth-first search can be used,
 but in practice, depth-first search
-is a better choice because it is
+is a better choice, because it is
 easier to implement.
 In the following applications we will
 assume that the graph is undirected.
@@ -403,18 +403,18 @@ the following nodes:
 \end{tikzpicture}
 \end{center}
 
-Since the search didn't visit all the nodes,
+Since the search did not visit all the nodes,
 we can conclude that the graph is not connected.
-In a similar way, we can also find all components
-in a graph by iterating trough the nodes and always
-starting a new depth-first search if the node
-doesn't belong to a component.
+In a similar way, we can also find all connected components
+of a graph by iterating trough the nodes and always
+starting a new depth-first search if the current node
+does not belong to any component yet.
 
 \subsubsection{Finding cycles}
 
 \index{cycle}
 
-A graph contains a cycle if during a graph search,
+A graph contains a cycle if during a graph traversal,
 we find a node whose neighbor (other than the
 previous node in the current path) has already been
 visited.
@@ -442,7 +442,7 @@ For example, the graph
 \end{center}
 contains a cycle because when we move from
 node 2 to node 5 it turns out
-that the neighbor node 3 has already been visited.
+that the neighbor 3 has already been visited.
 Thus, the graph contains a cycle that goes through node 3,
 for example, $3 \rightarrow 2 \rightarrow 5 \rightarrow 3$.
 
@@ -452,7 +452,7 @@ in every component.
 If a component contains $c$ nodes and no cycle,
 it must contain exactly $c-1$ edges.
 If there are $c$ or more edges, the component
-always contains a cycle.
+surely contains a cycle.
 
 \subsubsection{Bipartiteness check}
 
@@ -460,9 +460,9 @@ always contains a cycle.
 
 A graph is bipartite if its nodes can be colored
 using two colors so that there are no adjacent
-nodes with same color.
+nodes with the same color.
 It is suprisingly easy to check if a graph
-is bipartite using graph search algorithms.
+is bipartite using graph traversal algorithms.
 
 The idea is to color the starting node blue,
 all its neighbors red, all their neighbors blue, and so on.
@@ -490,7 +490,7 @@ For example, the graph
 \end{tikzpicture}
 \end{center}
 is not bipartite because a search from node 1
-produces the following situation:
+proceeds as follows:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=red!40] (2) at (5,5) {$2$};
@@ -516,11 +516,11 @@ We notice that the color or both node 2 and node 5
 is red, while they are adjacent nodes in the graph.
 Thus, the graph is not bipartite.
 
-This algorithm always works because when there
+This algorithm always works, because when there
 are only two colors available,
 the color of the starting node in a component
 determines the colors of all other nodes in the component.
-It doesn't make any difference whether the
+It does not make any difference whether the
 starting node is red or blue.
 
 Note that in the general case,
