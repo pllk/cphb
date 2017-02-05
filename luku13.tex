@@ -3,7 +3,8 @@
 \index{shortest path}
 
 Finding the shortest path between two nodes
-is an important graph problem that has many
+of a graph
+is an important problem that has many
 applications in practice.
 For example, a natural problem in a road network
 is to calculate the length of the shorthest route
@@ -11,37 +12,38 @@ between two cities, given the lengths of the roads.
 
 In an unweighted graph, the length of a path equals
 the number of edges in the path and we can
-simply use breadth-first search for finding
+simply use breadth-first search to find
 the shortest path.
 However, in this chapter we concentrate on
-weighted graphs.
-In this case we need more sophisticated algorithms
+weighted graphs,
+and more sophisticated algorithms
+are needed
 for finding shortest paths.
 
 \section{Bellman–Ford algorithm}
 
 \index{Bellman–Ford algorithm}
 
-The \key{Bellman–Fordin algoritmi} finds the
-shortest path from a starting node to all
+The \key{Bellman–Ford algorithm} finds the
+shortest paths from a starting node to all
 other nodes in the graph.
-The algorithm works in all kinds of graphs,
-provided that the graph doesn't contain a
+The algorithm can process all kinds of graphs,
+provided that the graph does not contain a
 cycle with negative length.
 If the graph contains a negative cycle,
 the algorithm can detect this.
 
-The algorithm keeps track of estimated distances
+The algorithm keeps track of distances
 from the starting node to other nodes.
-Initially, the estimated distance is 0
-to the starting node and infinite to all other nodes.
-The algorithm improves the estimates by finding
+Initially, the distance to the starting node is 0
+and the distance to all other nodes in infinite.
+The algorithm reduces the distances by finding
 edges that shorten the paths until it is not
-possible to improve any estimate.
+possible to reduce any distance.
 
 \subsubsection{Example}
 
-Let's consider how the Bellman–Ford algorithm
+Let us consider how the Bellman–Ford algorithm
 works in the following graph:
 \begin{center}
 \begin{tikzpicture}
@@ -64,13 +66,13 @@ works in the following graph:
 \path[draw,thick,-] (1) -- node[font=\small,label=above:7] {} (4);
 \end{tikzpicture}
 \end{center}
-Each node in the graph is assigned an estimated distance.
-Initially, the distance is 0 to the starting node
-and infinite to all other nodes.
+Each node in the graph is assigned a distance.
+Initially, the distance to the starting node is 0,
+and the distance to all other nodes is infinite.
 
-The algorithm searches for edges that improve the
-estimated distances.
-First, all edges from node 1 improve the estimates:
+The algorithm searches for edges that reduce the
+distances.
+First, all edges from node 1 reduce the distances:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -98,7 +100,7 @@ First, all edges from node 1 improve the estimates:
 \end{center}
 After this, edges
 $2 \rightarrow 5$ and $3 \rightarrow 4$
-improve the estimates:
+reduce the distances:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -123,7 +125,7 @@ improve the estimates:
 \path[draw=red,thick,->,line width=2pt] (3) -- (4);
 \end{tikzpicture}
 \end{center}
-Finally, there is one more improvment:
+Finally, there is one more change:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -148,7 +150,7 @@ Finally, there is one more improvment:
 \end{tikzpicture}
 \end{center}
 
-After this, no edge improves the estimates.
+After this, no edge can reduce any distance.
 This means that the distances are final
 and we have successfully
 calculated the shortest distance
@@ -187,20 +189,20 @@ the following path:
 \subsubsection{Implementation}
 
 The following implementation of the
-Bellman–Ford algorithm finds the shortest paths
+Bellman–Ford algorithm finds the shortest distances
 from a node $x$ to all other nodes in the graph.
 The code assumes that the graph is stored
-as adjacency lists in array
+as adjacency lists in an array
 \begin{lstlisting}
 vector<pair<int,int>> v[N];
 \end{lstlisting}
-so that each pair contains the target node
-and the edge weight.
+as pairs of the form $(x,w)$:
+there is an edge to node $x$ with weight $w$.
 
 The algorithm consists of $n-1$ rounds,
 and on each round the algorithm goes through
-all nodes in the graph and tries to improve
-the estimated distances.
+all edges in the graph and tries to
+reduce the distances.
 The algorithm builds an array \texttt{e}
 that will contain the distance from $x$
 to all nodes in the graph.
@@ -218,24 +220,24 @@ for (int i = 1; i <= n-1; i++) {
 }
 \end{lstlisting}
 
-The time complexity of the algorithm is $O(nm)$
-because it consists of $n-1$ rounds and
-iterates through all $m$ nodes during a round.
+The time complexity of the algorithm is $O(nm)$,
+because the algorithm consists of $n-1$ rounds and
+iterates through all $m$ edges during a round.
 If there are no negative cycles in the graph,
-all distances are final after $n-1$ rounds
+all distances are final after $n-1$ rounds,
 because each shortest path can contain at most $n-1$ edges.
 
 In practice, the final distances can usually
 be found much faster than in $n-1$ rounds.
 Thus, a possible way to make the algorithm more efficient
-is to stop the algorithm if we can't
-improve any distance during a round.
+is to stop the algorithm if no distance
+can be reduced during a round.
 
 \subsubsection{Negative cycle}
 
 \index{negative cycle}
 
-Using the Bellman–Ford algorithm we can also
+The Bellman–Ford algorithm can be also used to
 check if the graph contains a cycle with negative length.
 For example, the graph
 
@@ -263,12 +265,12 @@ we can shorten a path that contains the cycle
 infinitely many times by repeating the cycle
 again and again.
 Thus, the concept of a shortest path
-is not meaningful here.
+is not meaningful in this situation.
 
 A negative cycle can be detected
 using the Bellman–Ford algorithm by
 running the algorithm for $n$ rounds.
-If the last round improves any distance,
+If the last round reduces any distance,
 the graph contains a negative cycle.
 Note that this algorithm searches for
 a negative cycle in the whole graph
@@ -278,27 +280,27 @@ regardless of the starting node.
 
 \index{SPFA algorithm}
 
-The \key{SPFA algoritmi} (''Shortest Path Faster Algorithm'')
-is a variation for the Bellman–Ford algorithm,
+The \key{SPFA algorithm} (''Shortest Path Faster Algorithm'')
+is a variant of the Bellman–Ford algorithm,
 that is often more efficient than the original algorithm.
-It doesn't go through all the edges on each round,
+It does not go through all the edges on each round,
 but instead, it chooses the edges to be examined
 in a more intelligent way.
 
 The algorithm maintains a queue of nodes that might
-be used for improving the distances.
+be used for reducing the distances.
 First, the algorithm adds the starting node $x$
 to the queue.
 Then, the algorithm always processes the
 first node in the queue, and when an edge
-$a \rightarrow b$ improves a distance,
+$a \rightarrow b$ reduces a distance,
 node $b$ is added to the end of the queue.
 
 The following implementation uses a
 \texttt{queue} structure \texttt{q}.
-In addition, array \texttt{z} indicates
+In addition, the array \texttt{z} indicates
 if a node is already in the queue,
-in which case the algorithm doesn't add
+in which case the algorithm does not add
 the node to the queue again.
 
 \begin{lstlisting}
@@ -319,7 +321,7 @@ while (!q.empty()) {
 
 The efficiency of the SPFA algorithm depends
 on the structure of the graph:
-the algorithm is usually very efficient,
+the algorithm is often very efficient,
 but its worst case time complexity is still
 $O(nm)$ and it is possible to create inputs
 that make the algorithm as slow as the
@@ -339,16 +341,16 @@ However, the algorithm requires that there
 are no negative weight edges in the graph.
 
 Like the Bellman–Ford algorithm,
-Dijkstra's algorithm maintains estimated distances
-for the nodes and improves them during the algorithm.
-Dijkstra's algorithm is efficient because
+Dijkstra's algorithm maintains distances
+for the nodes and reduces them during the algorithm.
+Dijkstra's algorithm is efficient, because
 it only processes
 each edge in the graph once, using the fact
 that there are no negative edges.
 
 \subsubsection{Example}
 
-Let's consider how Dijkstra's algorithm
+Let us consider how Dijkstra's algorithm
 works in the following graph when the
 starting node is node 1:
 \begin{center}
@@ -374,17 +376,17 @@ starting node is node 1:
 \end{tikzpicture}
 \end{center}
 Like in the Bellman–Ford algorithm,
-the estimated distance is 0 to the starting node
-and infinite to all other nodes.
+intially the distance to the starting node is 0
+and the distance to all other nodes is infinite.
 
 At each step, Dijkstra's algorithm selects a node
-that has not been processed yet and whose estimated distance
+that has not been processed yet and whose distance
 is as small as possible.
 The first such node is node 1 with distance 0.
 
 When a node is selected, the algorithm
-goes through all edges that begin from the node
-and improves the distances using them:
+goes through all edges that start at the node
+and reduces the distances using them:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -411,8 +413,8 @@ and improves the distances using them:
 \path[draw=red,thick,->,line width=2pt] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-The edges from node 1 improved distances to
-nodes 2, 4 and 5 whose now distances are now 5, 9 and 1.
+The edges from node 1 reduced distances to
+nodes 2, 4 and 5, whose distances are now 5, 9 and 1.
 
 The next node to be processed is node 5 with distance 1:
 \begin{center}
@@ -465,7 +467,7 @@ After this, the next node is node 4:
 \end{tikzpicture}
 \end{center}
 
-A nice property in Dijkstra's algorithm is that
+A remarkable property in Dijkstra's algorithm is that
 whenever a node is selected, its distance is final.
 For example, at this point of the algorithm,
 the distances 0, 1 and 3 are the final distances
@@ -500,7 +502,7 @@ remaining nodes, and the final distances are as follows:
 \subsubsection{Negative edges}
 
 The efficiency of Dijkstra's algorithm is
-based on the fact that the graph doesn't
+based on the fact that the graph does not
 contain negative edges.
 If there is a negative edge,
 the algorithm may give incorrect results.
@@ -521,52 +523,50 @@ As an example, consider the following graph:
 \end{center}
 \noindent
 The shortest path from node 1 to node 4 is
-$1 \rightarrow 3 \rightarrow 4$,
+$1 \rightarrow 3 \rightarrow 4$
 and its length is 1.
 However, Dijkstra's algorithm
 finds the path $1 \rightarrow 2 \rightarrow 4$
-by following the lightest edges.
-The algorithm cannot recognize that
-in the lower path, the weight $-5$
+by following the minimum weight edges.
+The algorithm does not take into account that
+on the lower path, the weight $-5$
 compensates the previous large weight $6$.
 
 \subsubsection{Implementation}
 
 The following implementation of Dijkstra's algorithm
-calculates the minimum distance from a node $x$
+calculates the minimum distances from a node $x$
 to all other nodes.
 The graph is stored in an array \texttt{v}
-as adjacency lists that contain target nodes
-and weights for each edge.
+as adjacency lists like in the Bellman–Ford algorithm.
 
 An efficient implementation of Dijkstra's algorithm
-requires that it is possible to quickly find the
-smallest node that has not been processed.
-A suitable data structure for this is a priority queue
-that contains the nodes ordered by the estimated distances.
+requires that it is possible to efficiently find the
+minimum distance node that has not been processed.
+An appropriate data structure for this is a priority queue
+that contains the nodes ordered by their distances.
 Using a priority queue, the next node to be processed
 can be retrieved in logarithmic time.
 
 In the following implementation,
 the priority queue contains pairs whose first
-element is the estimated distance and second
-element is the identifier of the corresponding node.
+element is the current distance of the node and second
+element is the identifier of the node.
 \begin{lstlisting}
 priority_queue<pair<int,int>> q;
 \end{lstlisting}
 A small difficulty is that in Dijkstra's algorithm,
-we should find the node with \emph{minimum} distance,
+we should find the node with the \emph{minimum} distance,
 while the C++ priority queue finds the \emph{maximum}
 element as default.
 An easy solution is to use \emph{negative} distances,
-so we can directly use the C++ priority queue.
+which allows us to directly use the C++ priority queue.
 
 The code keeps track of processed nodes
-in array \texttt{z},
+in the array \texttt{z},
 and maintains estimated distances in array \texttt{e}.
 Initially, the distance to the starting node is 0,
-and the distance to all other nodes is $10^9$
-that corresponds to infinity.
+and the distance to all other nodes is $10^9$ (infinite).
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) e[i] = 1e9;
@@ -597,7 +597,7 @@ at most one estimated distance to the priority queue.
 The \key{Floyd–Warshall algorithm}
 is an alternative way to approach the problem
 of finding shortest paths.
-Unlike other algorihms in this chapter,
+Unlike the other algorihms in this chapter,
 it finds all shortest paths between the nodes
 in a single run.
 
@@ -606,11 +606,11 @@ that contains distances between the nodes.
 First, the distances are calculated only using
 direct edges between the nodes.
 After this the algorithm updates the distances
-by allowing to use intermediate nodes in the paths.
+by using intermediate nodes in the paths.
 
 \subsubsection{Example}
 
-Let's consider how the Floyd–Warshall algorithm
+Let us consider how the Floyd–Warshall algorithm
 works in the following graph:
 
 \begin{center}
@@ -648,16 +648,16 @@ In this graph, the initial array is as follows:
 \end{tabular}
 \end{center}
 \vspace{10pt}
-The algorithm consists of successive rounds.
-On each round, one new node is selected that
-can act as intermediate node in paths,
-and the algorithm improves the distances in the array
+The algorithm consists of consecutive rounds.
+On each round, the algorithm selects a new node
+that can act as an intermediate node in paths from now on,
+and the algorithm reduces the distances in the array
 using this node.
 
 On the first round, node 1 is the intermediate node.
-Now there is a new path between nodes 2 and 4
-with length 14 because node 1 connects them.
-Correspondingly, there is a new path 
+There is a new path between nodes 2 and 4
+with length 14, because node 1 connects them.
+There is also a new path 
 between nodes 2 and 5 with length 6.
 
 \begin{center}
@@ -674,7 +674,7 @@ between nodes 2 and 5 with length 6.
 \vspace{10pt}
 
 On the second round, node 2 is the intermediate node.
-This creates new paths between nodes 1 and 3,
+This creates new paths between nodes 1 and 3
 and between nodes 3 and 5:
 
 \begin{center}
@@ -709,7 +709,7 @@ There is a new path between nodes 2 and 4:
 The algorithm continues like this,
 until all nodes have been intermediate nodes.
 After the algorithm has finished, the array contains
-the minimum distance between any two nodes:
+the minimum distances between any two nodes:
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -750,15 +750,15 @@ This corresponds to the following path:
 
 \subsubsection{Implementation}
 
-The benefit in the
+The advantage of the
 Floyd–Warshall algorithm that it is
 easy to implement.
 The following code constructs a
 distance matrix \texttt{d} where $\texttt{d}[a][b]$
-is the smallest distance in a path between nodes $a$ and $b$.
+is the smallest distance between nodes $a$ and $b$.
 First, the algorithm initializes \texttt{d}
 using the adjacency matrix \texttt{v} of the graph
-(value $10^9$ means infinity):
+($10^9$ means infinity):
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
@@ -782,13 +782,13 @@ for (int k = 1; k <= n; k++) {
 }
 \end{lstlisting}
 
-The time complexity of the algorithm is $O(n^3)$
+The time complexity of the algorithm is $O(n^3)$,
 because it contains three nested loops
 that go through the nodes in the graph.
 
 Since the implementation of the Floyd–Warshall
 algorithm is simple, the algorithm can be
-a good choice even if we need to find only a
+a good choice even if it is only needed to find a
 single shortest path in the graph.
-However, this is only possible when the graph
-is so small that a cubic time complexity is enough.
+However, the algorithm can only be used when the graph
+is so small that a cubic time complexity is fast enough.
