@@ -2,14 +2,15 @@
 
 \index{spanning tree}
 
-A \key{spanning tree} is a set of edges of a graph
-such that there is a path between any two nodes
-in the graph using only the edges in the spanning tree.
-Like trees in general, a spanning tree is
+A \key{spanning tree} of a graph consists of
+the nodes of the graph and some of the
+edges of the graph so that there is a unique path
+between any two nodes.
+Like trees in general, spanning trees are
 connected and acyclic.
-Usually, there are many ways to construct a spanning tree.
+Usually there are several ways to construct a spanning tree.
 
-For example, in the graph
+For example, consider the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -28,7 +29,7 @@ For example, in the graph
 \path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-one possible spanning tree is as follows:
+A possible spanning tree for the graph is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -54,7 +55,7 @@ $3+5+9+3+2=22$.
 A \key{minimum spanning tree}
 is a spanning tree whose weight is as small as possible.
 The weight of a minimum spanning tree for the above graph
-is 20, and a tree can be constructed as follows:
+is 20, and such a tree can be constructed as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -78,7 +79,7 @@ is 20, and a tree can be constructed as follows:
 
 \index{maximum spanning tree}
 
-Correspondingly, a \key{maximum spanning tree}
+In a similar way, a \key{maximum spanning tree}
 is a spanning tree whose weight is as large as possible.
 The weight of a maximum spanning tree for the
 above graph is 32:
@@ -102,45 +103,46 @@ above graph is 32:
 \end{tikzpicture}
 \end{center}
 
-Note that there may be several different ways
-for constructing a minimum or maximum spanning tree,
+Note that there may be several
+minimum and maximum spanning trees
+for a graph,
 so the trees are not unique.
 
-This chapter discusses algorithms that construct
-a minimum or maximum spanning tree for a graph.
-It turns out that it is easy to find such spanning trees
-because many greedy methods produce an optimal solution.
-
-We will learn two algorithms that both construct the
-tree by choosing edges ordered by weights.
-We will focus on finding a minimum spanning tree,
-but the same algorithms can be used for finding a
-maximum spanning tree by processing the edges in reverse order.
+This chapter discusses algorithms
+for constructing spanning trees.
+It turns out that it is easy to find
+minimum and maximum spanning trees,
+because many greedy methods produce optimals solutions.
+We will learn two algorithms that both process
+the edges of the graph ordered by their weights.
+We will focus on finding minimum spanning trees,
+but similar algorithms can be used for finding
+maximum spanning trees by processing the edges in reverse order.
 
 \section{Kruskal's algorithm}
 
 \index{Kruskal's algorithm}
 
 In \key{Kruskal's algorithm}, the initial spanning tree
-is empty and doesn't contain any edges.
-Then the algorithm adds edges to the tree
-one at a time
-in increasing order of their weights.
-At each step, the algorithm includes an edge in the tree
-if it doesn't create a cycle.
+only contains the nodes of the graph
+and does not contain any edges.
+Then the algorithm goes through the edges
+ordered by their weights, and always adds an edge
+to the tree if it does not create a cycle.
 
-Kruskal's algorithm maintains the components
-in the tree.
+The algorithm maintains the components
+of the tree.
 Initially, each node of the graph
-is in its own component,
-and each edge added to the tree joins two components.
-Finally, all nodes will be in the same component,
+belongs to a separate component.
+Always when an edge is added to the tree,
+two components are joined.
+Finally, all nodes belong to the same component,
 and a minimum spanning tree has been found.
 
 \subsubsection{Example}
 
 \begin{samepage}
-Let's consider how Kruskal's algorithm processes the
+Let us consider how Kruskal's algorithm processes the
 following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -184,7 +186,7 @@ edge & weight \\
 \end{samepage}
 
 After this, the algorithm goes through the list
-and adds an edge to the tree if it joins
+and adds each edge to the tree if it joins
 two separate components.
 
 Initially, each node is in its own component:
@@ -208,8 +210,8 @@ Initially, each node is in its own component:
 \end{tikzpicture}
 \end{center}
 The first edge to be added to the tree is
-edge 5--6 that joins components
-$\{5\}$ and $\{6\}$ into component $\{5,6\}$:
+the edge 5--6 that creates the component $\{5,6\}$
+by joining the components $\{5\}$ and $\{6\}$:
 
 \begin{center}
 \begin{tikzpicture}
@@ -230,7 +232,7 @@ $\{5\}$ and $\{6\}$ into component $\{5,6\}$:
 %\path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-After this, edges 1--2, 3--6 and 1--5 are added in a similar way:
+After this, the edges 1--2, 3--6 and 1--5 are added in a similar way:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -252,18 +254,17 @@ After this, edges 1--2, 3--6 and 1--5 are added in a similar way:
 \end{tikzpicture}
 \end{center}
 
-After those steps, many components have been joined
+After those steps, most components have been joined
 and there are two components in the tree:
 $\{1,2,3,5,6\}$ and $\{4\}$.
 
-The next edge in the list is edge 2--3,
-but it will not be included in the tree because
+The next edge in the list is the edge 2--3,
+but it will not be included in the tree, because
 nodes 2 and 3 are already in the same component.
-For the same reason, edge 2--5 will not be added
-to the tree.
+For the same reason, the edge 2--5 will not be included in the tree.
 
 \begin{samepage}
-Finally, edge 4--6 will be included in the tree:
+Finally, the edge 4--6 will be included in the tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -286,25 +287,25 @@ Finally, edge 4--6 will be included in the tree:
 \end{center}
 \end{samepage}
 
-After this, the algorithm terminates because
-there is a path between any two nodes and
-the graph is connected.
+After this, the algorithm will not add any
+new edges, because the graph is connected
+and there is a path between any two nodes.
 The resulting graph is a minimum spanning tree
 with weight $2+3+3+5+7=20$.
 
 \subsubsection{Why does this work?}
 
-It's a good question why Kruskal's algorithm works.
+It is a good question why Kruskal's algorithm works.
 Why does the greedy strategy guarantee that we
 will find a minimum spanning tree?
 
-Let's see what happens if the lightest edge in
-the graph is not included in the minimum spanning tree.
-For example, assume that a minimum spanning tree
-for the above graph would not contain the edge
-between nodes 5 and 6 with weight 2.
-We don't know exactly how the new minimum spanning tree
-would look like, but still it has to contain some edges.
+Let us see what happens if the minimum weight edge of
+the graph is not included in the spanning tree.
+For example, suppose that a spanning tree
+for the above graph would not contain the
+minimum weight edge 5--6.
+We do not know the exact structure of such a spanning tree,
+but in any case it has to contain some edges.
 Assume that the tree would be as follows:
 
 \begin{center}
@@ -324,10 +325,10 @@ Assume that the tree would be as follows:
 \end{tikzpicture}
 \end{center}
 
-However, it's not possible that the above tree
-would be a real minimum spanning tree for the graph.
+However, it is not possible that the above tree
+would be a minimum spanning tree for the graph.
 The reason for this is that we can remove an edge
-from it and replace it with the edge with weight 2.
+from the tree and replace it with the minimum weight edge 5--6.
 This produces a spanning tree whose weight is
 \emph{smaller}:
 
@@ -348,23 +349,24 @@ This produces a spanning tree whose weight is
 \end{tikzpicture}
 \end{center}
 
-For this reason, it is always optimal to include the lightest edge
-in the minimum spanning tree.
-Using a similar argument, we can show that we
-can also add the second lightest edge to the tree, and so on.
-Thus, Kruskal's algorithm works correctly and
+For this reason, it is always optimal
+to include the minimum weight edge
+in the tree to produce a minimum spanning tree.
+Using a similar argument, we can show that it
+is also optimal to add the next edge in weight order
+to the tree, and so on.
+Hence, Kruskal's algorithm works correctly and
 always produces a minimum spanning tree.
 
 \subsubsection{Implementation}
 
-Kruskal's algorithm can be conveniently
-implemented using an edge list.
+When implementing Kruskal's algorithm,
+the edge list representation of the graph
+is convenient.
 The first phase of the algorithm sorts the
-edges in $O(m \log m)$ time.
+edges in the list in $O(m \log m)$ time.
 After this, the second phase of the algorithm
-builds the minimum spanning tree. 
-
-The second phase of the algorithm looks as follows:
+builds the minimum spanning tree as follows:
 
 \begin{lstlisting}
 for (...) {
@@ -378,21 +380,21 @@ where $a$ and $b$ are two nodes.
 The code uses two functions:
 the function \texttt{same} determines
 if the nodes are in the same component,
-and the function \texttt{unite}
-joins two components into a single component.
+and the function \texttt{union}
+joins the components that contain nodes $a$ and $b$.
 
 The problem is how to efficiently implement
-the functions \texttt{same} and \texttt{unite}.
-One possibility is to maintain the graph
-in a usual way and implement the function
-\texttt{same} as graph traversal.
-However, using this technique,
-the running time of the function \texttt{same} would be $O(n+m)$,
-and this would be slow because the function will be
-called for each edge in the graph.
+the functions \texttt{same} and \texttt{union}.
+One possibility is to implement the function
+\texttt{same} as graph traversal and check if
+we can reach node $b$ from node $a$.
+However, the time complexity of such a function
+would be $O(n+m)$,
+and the resulting algorithm would be slow,
+because the function \texttt{same} will be called for each edge in the graph.
 
 We will solve the problem using a union-find structure
-that implements both the functions in $O(\log n)$ time.
+that implements both functions in $O(\log n)$ time.
 Thus, the time complexity of Kruskal's algorithm
 will be $O(m \log n)$ after sorting the edge list.
 
@@ -400,23 +402,23 @@ will be $O(m \log n)$ after sorting the edge list.
 
 \index{union-find structure}
 
-The \key{union-find structure} maintains
+A \key{union-find structure} maintains
 a collection of sets.
 The sets are disjoint, so no element
 belongs to more than one set.
-Two $O(\log n)$ time operations are supported.
-The first operation checks if two elements
-belong to the same set,
-and the second operation joins two sets into a single set.
+Two $O(\log n)$ time operations are supported:
+the \texttt{union} operation joins two sets,
+and the \texttt{find} operation finds the representative
+of the set that contains a given element.
 
 \subsubsection{Structure}
 
-In the union-find structure, one element in each set
-is the representative of the set.
-All other elements in the set point to the
-representative directly or through other elements in the set.
-For example, in the following picture there are three sets:
-$\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$.
+In a union-find structure, one element in each set
+is the representative of the set,
+and there is a chain from any other element in the
+set to the representative.
+For example, assume that the sets are
+$\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,-1) {$1$};
@@ -437,23 +439,22 @@ $\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$.
 
 \end{tikzpicture}
 \end{center}
-In this case the representatives
+In this example the representatives
 of the sets are 4, 5 and 2.
-For each element, we can find the representative
-for the corresponding set by following the
-path that begins at the element.
-For example, element 2 is the representative for the set
-that contains element 6 because
-the path is $6 \rightarrow 3 \rightarrow 2$.
-Thus, two elements belong to the same set exactly when
-they point to the same representative.
+For each element, we can find its representative
+by following the chain that begins at the element.
+For example, the element 2 is the representative
+for the element 6, because
+there is a chain $6 \rightarrow 3 \rightarrow 2$.
+Two elements belong to the same set exactly when
+their representatives are the same.
 
-Two sets can be combined by connecting the
+Two sets can be joined by connecting the
 representative of one set to the
 representative of another set.
-For example, sets
+For example, the sets
 $\{1,4,7\}$ and $\{2,3,6,8\}$
-can be combined as follows into set $\{1,2,3,4,6,7,8\}$:
+can be joined as follows:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (2,-1) {$1$};
@@ -475,44 +476,45 @@ can be combined as follows into set $\{1,2,3,4,6,7,8\}$:
 \end{tikzpicture}
 \end{center}
 
-In this case, element 2 becomes the representative
-for the whole set and the old representative 4
-points to it.
+The resulting set contains the elements
+$\{1,2,3,4,6,7,8\}$.
+From this on, the element 2 will be the representative
+for the entire set and the old representative 4
+will point to the element 2.
 
-The efficiency of the operations depends on
-the way the sets are combined.
-It turns out that we can follow a simple strategy
-and always connect the representative of the
+The efficiency of the structure depends on
+the way the sets are joined.
+It turns out that we can follow a simple strategy:
+always connect the representative of the
 smaller set to the representative of the larger set
-(or, if the sets are of the same size,
-both choices are fine).
-Using this strategy, the length of a path from
-a element in a set to a representative is
-always $O(\log n)$ because each step forward
-in the path doubles the size of the corresponding set.
+(or if the sets are of equal size,
+we can make an arbitrary choice).
+Using this strategy, the length of any chain
+will be $O(\log n)$, so we can always efficiently
+find the representative of any element by following the chain.
 
 \subsubsection{Implementation}
 
-We can implement the union-find structure
+The union-find structure can be implemented
 using arrays.
 In the following implementation,
-array \texttt{k} contains for each element
+the array \texttt{k} contains for each element
 the next element
-in the path, or the element itself if it is
+in the chain or the element itself if it is
 a representative,
-and array \texttt{s} indicates for each representative
+and the array \texttt{s} indicates for each representative
 the size of the corresponding set.
 
-Initially, each element has an own set with size 1:
+Initially, each element belongs to a separate set:
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) k[i] = i;
 for (int i = 1; i <= n; i++) s[i] = 1;
 \end{lstlisting}
 
 The function \texttt{find} returns
-the representative for element $x$.
+the representative for an element $x$.
 The representative can be found by following
-the path that begins at element $x$.
+the chain that begins at $x$.
 
 \begin{lstlisting}
 int find(int x) {
@@ -521,10 +523,10 @@ int find(int x) {
 }
 \end{lstlisting}
 
-The function \texttt{same} finds out
+The function \texttt{same} checks
 whether elements $a$ and $b$ belong to the same set.
 This can easily be done by using the
-function \texttt{find}.
+function \texttt{find}:
 
 \begin{lstlisting}
 bool same(int a, int b) {
@@ -533,9 +535,9 @@ bool same(int a, int b) {
 \end{lstlisting}
 
 \begin{samepage}
-The function \texttt{union} combines the sets
+The function \texttt{union} joins the sets
 that contain elements $a$ and $b$
-into a single set.
+(the elements has to be in different sets).
 The function first finds the representatives
 of the sets and then connects the smaller
 set to the larger set.
@@ -544,7 +546,7 @@ set to the larger set.
 void union(int a, int b) {
     a = find(a);
     b = find(b);
-    if (s[b] > s[a]) swap(a,b);
+    if (s[a] < s[b]) swap(a,b);
     s[a] += s[b];
     k[b] = a;
 }
@@ -552,12 +554,12 @@ void union(int a, int b) {
 \end{samepage}
 
 The time complexity of the function \texttt{find}
-is $O(\log n)$ assuming that the length of the
-path is $O(\log n)$.
-Thus, the functions \texttt{same} and \texttt{union}
+is $O(\log n)$ assuming that the length of each
+chain is $O(\log n)$.
+In this case, the functions \texttt{same} and \texttt{union}
 also work in $O(\log n)$ time.
-The function \texttt{union} ensures that the
-length of each path is $O(\log n)$ by connecting
+The function \texttt{union} makes sure that the
+length of each chain is $O(\log n)$ by connecting
 the smaller set to the larger set.
 
 \section{Prim's algorithm}
@@ -567,7 +569,8 @@ the smaller set to the larger set.
 \key{Prim's algorithm} is an alternative method
 for finding a minimum spanning tree.
 The algorithm first adds an arbitrary node
-to the tree, and then always selects an edge
+to the tree.
+After this, the algorithm always selects an edge
 whose weight is as small as possible and
 that adds a new node to the tree.
 Finally, all nodes have been added to the tree
@@ -575,14 +578,13 @@ and a minimum spanning tree has been found.
 
 Prim's algorithm resembles Dijkstra's algorithm.
 The difference is that Dijkstra's algorithm always
-selects an edge that creates a shortest path
-from the starting node to another node,
-but Prim's algorithm simply selects the lightest
-edge that adds a new node to the tree.
+selects an edge whose distance from the starting
+node is minimum, but Prim's algorithm simply selects
+the minimum weight edge that adds a new node to the tree.
 
 \subsubsection{Example}
 
-Let's consider how Prim's algorithm works
+Let us consider how Prim's algorithm works
 in the following graph:
 
 \begin{center}
@@ -624,8 +626,8 @@ Initially, there are no edges between the nodes:
 %\path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-We can select an arbitrary node as a starting node,
-so let's select node 1.
+An arbitrary node can be the starting node,
+so let us select node 1.
 First, an edge with weight 3 connects nodes 1 and 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -648,7 +650,7 @@ First, an edge with weight 3 connects nodes 1 and 2:
 
 After this, there are two edges with weight 5,
 so we can add either node 3 or node 5 to the tree.
-Let's add node 3 first:
+Let us add node 3 first:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -694,7 +696,7 @@ The process continues until all nodes have been included in the tree:
 
 Like Dijkstra's algorithm, Prim's algorithm can be
 efficiently implemented using a priority queue.
-In this case, the priority queue contains all nodes
+The priority queue should contain all nodes
 that can be connected to the current component using
 a single edge, in increasing order of the weights
 of the corresponding edges.
@@ -702,7 +704,7 @@ of the corresponding edges.
 The time complexity of Prim's algorithm is
 $O(n + m \log m)$ that equals the time complexity
 of Dijkstra's algorithm.
-In practice, Prim's algorithm and Kruskal's algorithm
+In practice, Prim's and Kruskal's algorithms
 are both efficient, and the choice of the algorithm
 is a matter of taste.
 Still, most competitive programmers use Kruskal's algorithm.
