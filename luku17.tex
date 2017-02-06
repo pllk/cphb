@@ -2,19 +2,19 @@
 
 \index{strongly connected graph}
 
-In a directed graph, the directions of
-the edges restrict possible paths in the graph,
+In a directed graph,
+the edges can be traversed in one direction only,
 so even if the graph is connected,
-this doesn't guarantee that there would be
-a path between any two nodes.
-Thus, it is meaningful to define a new concept
-for directed graphs that requires more than connectivity.
+this does not guarantee that there would be
+a path from a node to another node.
+For this reason, it is meaningful to define a new concept
+that requires more than connectivity.
 
 A graph is \key{strongly connected}
 if there is a path from any node to all
 other nodes in the graph.
 For example, in the following picture,
-the left graph is strongly connected,
+the left graph is strongly connected
 while the right graph is not.
 
 \begin{center}
@@ -50,7 +50,7 @@ from node 2 to node 1.
 
 The \key{strongly connected components}
 of a graph divide the graph into strongly connected
-subgraphs that are as large as possible.
+parts that are as large as possible.
 The strongly connected components form an
 acyclic \key{component graph} that represents
 the deep structure of the original graph.
@@ -125,11 +125,11 @@ The components are $A=\{1,2\}$,
 $B=\{3,6,7\}$, $C=\{4\}$ and $D=\{5\}$.
 
 A component graph is an acyclic, directed graph,
-so it is easier to process than the original
-graph because it doesn't contain cycles.
-Thus, as in Chapter 16, it is possible to 
-construct a topological sort for a component
-graph and also use dynamic programming algorithms.
+so it is easier to process than the original graph.
+Since the graph does not contain cycles,
+we can always construct a topological sort and
+use dynamic programming techniques like those
+presented in Chapter 16.
 
 \section{Kosaraju's algorithm}
 
@@ -138,14 +138,14 @@ graph and also use dynamic programming algorithms.
 \key{Kosaraju's algorithm} is an efficient
 method for finding the strongly connected components
 of a directed graph.
-It performs two depth-first searches:
+The algorithm performs two depth-first searches:
 the first search constructs a list of nodes
 according to the structure of the graph,
 and the second search forms the strongly connected components.
 
 \subsubsection{Search 1}
 
-The first phase of the algorithm constructs
+The first phase of Kosaraju's algorithm constructs
 a list of nodes in the order in which a
 depth-first search processes them.
 The algorithm goes through the nodes,
@@ -154,7 +154,7 @@ unprocessed node.
 Each node will be added to the list
 after it has been processed.
 
-In the example graph the nodes are processed
+In the example graph, the nodes are processed
 in the following order:
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -190,8 +190,8 @@ in the following order:
 The notation $x/y$ means that
 processing the node started at moment $x$
 and ended at moment $y$.
-When the nodes are sorted according to
-ending times, the result is the following list:
+The following list contains the nodes
+sorted according to their ending times:
 
 \begin{tabular}{ll}
 \\
@@ -206,10 +206,10 @@ node & ending time \\
 3 & 14 \\
 \\
 \end{tabular}
-
-In the second phase of the algorithm,
-the nodes will be processed
-in reverse order: $[3,7,6,1,2,5,4]$.
+% 
+% In the second phase of the algorithm,
+% the nodes will be processed
+% in reverse order: $[3,7,6,1,2,5,4]$.
 
 \subsubsection{Search 2}
 
@@ -218,12 +218,12 @@ forms the strongly connected components
 of the graph.
 First, the algorithm reverses every
 edge in the graph.
-This ensures that during the second search,
-we will always find a strongly connected
-component without extra nodes.
+This makes sure that during the second search,
+we will always find strongly connected
+components that do not have extra nodes.
 
-The example graph becomes as follows
-after reversing the edges:
+After reversing the edges,
+the example graph is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -247,13 +247,14 @@ after reversing the edges:
 \end{tikzpicture}
 \end{center}
 
-After this, the algorithm goes through the nodes
-in the order defined by the first search.
-If a node doesn't belong to a component,
+After this, the algorithm goes through
+the list of nodes created by the first search
+in \emph{reverse} order.
+If a node does not belong to a component,
 the algorithm creates a new component
-and begins a depth-first search
-where all new nodes found during the search
-are added to the new component.
+and starts a depth-first search
+that adds all new nodes found during the search
+to the new component.
 
 In the example graph, the first component
 begins at node 3:
@@ -286,8 +287,8 @@ begins at node 3:
 \end{tikzpicture}
 \end{center}
 
-Note that since we reversed all edges in the graph,
-the component doesn't ''leak'' to other parts in the graph.
+Note that since all edges were reversed,
+the component does not ''leak'' to other parts in the graph.
 
 \begin{samepage}
 The next nodes in the list are nodes 7 and 6,
@@ -323,7 +324,8 @@ The next new component begins at node 1:
 \end{center}
 \end{samepage}
 
-Finally, the algorithm processes nodes 5 and 5
+\begin{samepage}
+Finally, the algorithm processes nodes 5 and 4
 that create the remaining strongy connected components:
 
 \begin{center}
@@ -353,13 +355,12 @@ that create the remaining strongy connected components:
 \draw [red,thick,dashed,line width=2pt] (-6.5,0.5) rectangle (-7.5,-0.5);
 \end{tikzpicture}
 \end{center}
+\end{samepage}
 
-The time complexity of the algorithm is $O(n+m)$
-where $n$ is the number of nodes and $m$
-is the number of edges.
-The reason for this is that the algorithm
+The time complexity of the algorithm is $O(n+m)$,
+because the algorithm
 performs two depth-first searches and
-each search takes $O(n+m)$ time.
+both searches take $O(n+m)$ time.
 
 \section{2SAT problem}
 
@@ -378,8 +379,8 @@ or a negation of a logical variable
 The symbols ''$\land$'' and ''$\lor$'' denote
 logical operators ''and'' and ''or''.
 Our task is to assign each variable a value
-so that the formula is true or state
-that it is not possible.
+so that the formula is true, or state
+that this is not possible.
 
 For example, the formula
 \[
@@ -398,26 +399,27 @@ L_2 = (x_1 \lor x_2) \land
       (\lnot x_1 \lor x_3) \land
       (\lnot x_1 \lor \lnot x_3)
 \]
-is always false.
-The reason for this is that we can't
+is always false, regardless of how we
+choose the values of the variables.
+The reason for this is that we cannot
 choose a value for variable $x_1$
 without creating a contradiction.
 If $x_1$ is false, both $x_2$ and $\lnot x_2$
 should hold which is impossible,
 and if $x_1$ is true, both $x_3$ and $\lnot x_3$
-should hold which is impossible as well.
+should hold which is also impossible.
 
 The 2SAT problem can be represented as a graph
-where the nodes correspond to
+whose nodes correspond to
 variables $x_i$ and negations $\lnot x_i$,
-and the edges determine the connections
+and edges determine the connections
 between the variables.
 Each pair $(a_i \lor b_i)$ generates two edges:
 $\lnot a_i \to b_i$ and $\lnot b_i \to a_i$.
-This means that if $a_i$ doesn't hold,
+This means that if $a_i$ does not hold,
 $b_i$ must hold, and vice versa.
 
-The graph for formula $L_1$ is:
+The graph for the formula $L_1$ is:
 \\
 \begin{center}
 \begin{tikzpicture}[scale=1.0,minimum size=2pt]
@@ -442,7 +444,7 @@ The graph for formula $L_1$ is:
 \path[draw,thick,->] (7) -- (5);
 \end{tikzpicture}
 \end{center}
-And the graph for formula $L_2$ is:
+And the graph for the formula $L_2$ is:
 \\
 \begin{center}
 \begin{tikzpicture}[scale=1.0,minimum size=2pt]
@@ -475,32 +477,34 @@ a path from $x_i$ to $\lnot x_i$,
 and also a path from $\lnot x_i$ to $x_i$,
 so both $x_i$ and $\lnot x_i$ should hold
 which is not possible.
-However, if the graph doesn't contain
-such a variable, then there is always a solution.
+However, if the graph does not contain
+such a variable $x_i$, then there is always a solution.
 
-In the graph of formula $L_1$
-no nodes $x_i$ and $\lnot x_i$
+In the graph of the formula $L_1$
+there are no nodes $x_i$ and $\lnot x_i$
+such that both nodes 
 belong to the same strongly connected component,
 so there is a solution.
-In the graph of formula $L_2$
+In the graph of the formula $L_2$
 all nodes belong to the same strongly connected component,
 so there are no solutions.
 
 If a solution exists, the values for the variables
 can be found by processing the nodes of the
 component graph in a reverse topological sort order.
-At each step, we process and remove a component 
-that doesn't contain edges that lead to the
-remaining components.
-If the variables in the component don't have values,
+At each step, we process a component 
+that does not contain edges that lead to an
+unprocessed component.
+If the variables in the component
+have not been assigned values,
 their values will be determined
-according to the component,
+according to the values in the component,
 and if they already have values,
-they are not changed.
+they remain unchanged.
 The process continues until all variables
 have been assigned a value.
 
-The component graph for formula $L_1$ is as follows:
+The component graph for the formula $L_1$ is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
 \node[draw, circle] (1) at (0,0) {$A$};
@@ -520,16 +524,16 @@ $B = \{x_1, x_2, \lnot x_3\}$,
 $C = \{\lnot x_1, \lnot x_2, x_3\}$ and
 $D = \{x_4\}$.
 When constructing the solution,
-we first process component $D$
+we first process the component $D$
 where $x_4$ becomes true.
-After this, we process component $C$
+After this, we process the component $C$
 where $x_1$ and $x_2$ become false
 and $x_3$ becomes true.
 All variables have been assigned a value,
 so the remaining components $A$ and $B$
-don't change the variables anymore.
+do not change the variables.
 
-Note that this method works because the
+Note that this method, works because the
 structure of the graph is special.
 If there are paths from node $x_i$ to node $x_j$
 and from node $x_j$ to node $\lnot x_j$,
@@ -543,8 +547,8 @@ and both $x_i$ and $x_j$ become false.
 A more difficult problem is the \key{3SAT problem}
 where each part of the formula is of the form
 $(a_i \lor b_i \lor c_i)$.
-No efficient algorithm for solving this problem
-is known, but it is a NP-hard problem.
+This problem is NP-hard, so no efficient algorithm
+for solving the problem is known.
 
 
 
