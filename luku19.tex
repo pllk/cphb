@@ -11,12 +11,12 @@ While Eulerian and Hamiltonian paths look like
 similar concepts at first glance,
 the computational problems related to them
 are very different.
-It turns out that a simple rule based on node degrees
-determines if a graph contains an Eulerian path,
+It turns out that there is a simple rule that
+determines whether a graph contains an Eulerian path,
 and there is also an efficient algorithm for
-finding the path.
-On the contrary, finding a Hamiltonian path is a NP-hard
-problem and thus no efficient algorithm is known for solving the problem.
+finding a path if it exists.
+On the contrary, checking the existence of a Hamiltonian path is a NP-hard
+problem and no efficient algorithm is known for solving the problem.
 
 \section{Eulerian path}
 
@@ -67,7 +67,7 @@ has an Eulerian path from node 2 to node 5:
 \end{center}
 \index{Eulerian circuit}
 An \key{Eulerian circuit}
-is an Eulerian path that begins and ends
+is an Eulerian path that starts and ends
 at the same node.
 For example, the graph
 \begin{center}
@@ -113,12 +113,9 @@ has an Eulerian circuit that starts and ends at node 1:
 
 \subsubsection{Existence}
 
-It turns out that the existence of Eulerian paths and circuits
+The existence of Eulerian paths and circuits
 depends on the degrees of the nodes in the graph.
-The degree of a node is the number of its neighbours, i.e.,
-the number of nodes that are connected with a direct edge.
-
-An undirected graph has an Eulerian path if all the edges
+First, an undirected graph has an Eulerian path if all the edges
 belong to the same connected component and
 \begin{itemize}
 \item the degree of each node is even \emph{or}
@@ -126,9 +123,10 @@ belong to the same connected component and
 and the degree of all other nodes is even.
 \end{itemize}
 
-In the first case, each Eulerian path is also an Eulerian circuit.
+In the first case, each Eulerian path in the graph
+is also an Eulerian circuit.
 In the second case, the odd-degree nodes are the starting
-and ending nodes of an Eulerian path, and it is not an Eulerian circuit.
+and ending nodes of an Eulerian path which is not an Eulerian circuit.
 
 \begin{samepage}
 For example, in the graph
@@ -149,20 +147,15 @@ For example, in the graph
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-the degree of nodes 1, 3 and 4 is 2,
-and the degree of nodes 2 and 5 is 3.
+nodes 1, 3 and 4 have a degree of 2,
+and nodes 2 and 5 have a degree of 3.
 Exactly two nodes have an even degree,
 so there is an Eulerian path between nodes 2 and 5,
-but the graph doesn't contain an Eulerian circuit.
+but the graph does not contain an Eulerian circuit.
 
-In a directed graph, the situation is a bit more difficult.
-In this case we should focus on indegree and outdegrees
+In a directed graph,
+we should focus on indegrees and outdegrees
 of the nodes in the graph.
-The indegree of a node is the number of edges that
-end at the node,
-and correspondingly, the outdegree is the number of
-edges that begin at the node.
-
 A directed graph contains an Eulerian path
 if all the edges belong to the same strongly
 connected component and
@@ -173,9 +166,9 @@ in another node, outdegree is one larger than indegree,
 and all other nodes have the same indegree and outdegree.
 \end{itemize}
 
-In the first case,
-each Eulerian path is also an Eulerian circuit,
-and in the second case, the graph only contains an Eulerian path
+In the first case, each Eulerian path in the graph
+is also an Eulerian circuit,
+and in the second case, the graph contains an Eulerian path
 that begins at the node whose outdegree is larger
 and ends at the node whose indegree is larger.
 
@@ -229,41 +222,41 @@ from node 2 to node 5:
 
 \index{Hierholzer's algorithm}
 
-\key{Hierholzer's algorithm} constructs an Eulerian circuit
-in an undirected graph.
+\key{Hierholzer's algorithm} is an efficient
+method for constructing an Eulerian circuit
+for an undirected graph.
 The algorithm assumes that all edges belong to
 the same connected component,
 and the degree of each node is even.
-The algorithm can be implemented in $O(n+m)$ time.
 
 First, the algorithm constructs a circuit that contains
 some (not necessarily all) of the edges in the graph.
 After this, the algorithm extends the circuit
 step by step by adding subcircuits to it.
-This continues until all edges have been added
-and the Eulerian circuit is ready.
+The process continues until all edges have been added
+to the circuit.
 
 The algorithm extends the circuit by always choosing
 a node $x$ that belongs to the circuit but has
 some edges that are not included in the circuit.
-The algorith constructs a new path from node $x$
+The algorithm constructs a new path from node $x$
 that only contains edges that are not in the circuit.
 Since the degree of each node is even,
-sooner or later the path will return to node $x$
+the path will return to the node $x$ sooner or later,
 which creates a subcircuit.
 
 If the graph contains two odd-degree nodes,
-Hierholzer's algorithm can also be used for
-constructing an Eulerian path by adding an
+Hierholzer's algorithm can also be used to
+construct an Eulerian path by adding an
 extra edge between the odd-degree nodes.
 After this, we can first construct an Eulerian circuit
 and then remove the extra edge,
-which produces an Eulerian path in the original graph.
+which yields an Eulerian path in the original graph.
 
 \subsubsection{Example}
 
 \begin{samepage}
-Let's consider the following graph:
+Let us consider the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (3,5) {$1$};
@@ -289,9 +282,9 @@ Let's consider the following graph:
 \end{samepage}
 
 \begin{samepage}
-Assume that the algorithm first creates a circuit
+Suppose the algorithm first creates a circuit
 that begins at node 1.
-One possible circuit is
+A possible circuit is
 $1 \rightarrow 2 \rightarrow 3 \rightarrow 1$:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -321,8 +314,9 @@ $1 \rightarrow 2 \rightarrow 3 \rightarrow 1$:
 \end{center}
 \end{samepage}
 After this, the algorithm adds
-a subcircuit
-$2 \rightarrow 5 \rightarrow 6 \rightarrow 2$:
+the subcircuit
+$2 \rightarrow 5 \rightarrow 6 \rightarrow 2$
+to the circuit:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (3,5) {$1$};
@@ -352,8 +346,9 @@ $2 \rightarrow 5 \rightarrow 6 \rightarrow 2$:
 \path[draw=red,thick,->,line width=2pt] (3) -- node[font=\small,label={[red]east:6.}] {} (1);
 \end{tikzpicture}
 \end{center}
-Finally, the algorithm adds a subcircuit
-$6 \rightarrow 3 \rightarrow 4 \rightarrow 7 \rightarrow 6$:
+Finally, the algorithm adds the subcircuit
+$6 \rightarrow 3 \rightarrow 4 \rightarrow 7 \rightarrow 6$
+to the circuit:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (3,5) {$1$};
@@ -467,8 +462,8 @@ that begins and ends at node 1:
 
 \subsubsection{Existence}
 
-No efficient way is known to check if a graph
-contains a Hamiltonian path.
+No efficient method is known for testing if a graph
+contains a Hamiltonian path, but the problem is NP-hard.
 Still, in some special cases we can be certain
 that the graph contains a Hamiltonian path.
 
@@ -494,8 +489,8 @@ the graph contains a Hamiltonian path.
 A common feature in these theorems and other results is
 that they guarantee that a Hamiltonian path exists
 if the graph has \emph{a lot} of edges.
-This makes sense because the more edges the graph has,
-the more possibilities we have to construct a Hamiltonian graph.
+This makes sense, because the more edges the graph contains,
+the more possibilities there is to construct a Hamiltonian graph.
 
 \subsubsection{Construction}
 
@@ -507,15 +502,14 @@ whether it exists.
 
 A simple way to search for a Hamiltonian path is
 to use a backtracking algorithm that goes through all
-possibilities how to construct the path.
+possible ways to construct the path.
 The time complexity of such an algorithm is at least $O(n!)$,
-because there are $n!$ different ways to form a path
-from $n$ nodes.
+because there are $n!$ different ways to choose the order of $n$ nodes.
 
 A more efficient solution is based on dynamic programming
 (see Chapter 10.4).
 The idea is to define a function $f(s,x)$,
-where $s$ is a subset of nodes, and $x$
+where $s$ is a subset of nodes and $x$
 is one of the nodes in the subset.
 The function indicates whether there is a Hamiltonian path
 that visits the nodes in $s$ and ends at node $x$.
@@ -567,9 +561,9 @@ The following graph corresponds to the example case:
 
 An Eulerian path in this graph produces a string
 that contains all strings of length $n$.
-The string contains the characters in the starting node,
+The string contains the characters in the starting node
 and all character in the edges.
-The starting node contains $n-1$ characters
+The starting node has $n-1$ characters
 and there are $k^n$ characters in the edges,
 so the length of the string is $k^n+n-1$.
 
@@ -579,13 +573,13 @@ so the length of the string is $k^n+n-1$.
 
 A \key{knight's tour} is a sequence of moves
 of a knight on an $n \times n$ chessboard
-following the rules of chess where the knight
+following the rules of chess such that the knight
 visits each square exactly once.
 The tour is \key{closed} if the knight finally
 returns to the starting square and
 otherwise the tour is \key{open}.
 
-For example, here's a knight's tour on a $5 \times 5$ board:
+For example, here is an open knight's tour on a $5 \times 5$ board:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -623,7 +617,7 @@ whose nodes represent the squares of the board,
 and two nodes are connected with an edge if a knight
 can move between the squares according to the rules of chess.
 
-A natural way to solve the problem is to use backtracking.
+A natural way to construct a knight's tour is to use backtracking.
 The search can be made more efficient by using
 \key{heuristics} that attempts to guide the knight so that
 a complete tour will be found quickly.
@@ -635,14 +629,14 @@ a complete tour will be found quickly.
 
 \key{Warnsdorff's rule} is a simple and good heuristic
 for finding a knight's tour.
-Using the rule, it is possible to efficiently find a tour
+Using the rule, it is possible to efficiently construct a tour
 even on a large board.
 The idea is to always move the knight so that it ends up
 in a square where the number of possible moves is as
 \emph{small} as possible.
 
-For example, in the following case there are five
-possible squares where the knight can move:
+For example, in the following situation there are five
+possible squares to which the knight can move:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (5,5);
@@ -655,9 +649,9 @@ possible squares where the knight can move:
 \node at (3.5,1.5) {$d$};
 \end{tikzpicture}
 \end{center}
-In this case, Warnsdorff's rule moves the knight to square $a$,
-because after this choice there is only a single possible move.
+In this situation, Warnsdorff's rule moves the knight to square $a$,
+because after this choice, there is only a single possible move.
 The other choices would move the knight to squares where
-there are three moves available.
+there would be three moves available.
 
 
