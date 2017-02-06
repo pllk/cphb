@@ -3,23 +3,25 @@
 \index{tree query}
 
 This chapter discusses techniques for
-efficiently performing queries for a rooted tree.
-The queries are related to subtrees and paths
-in the tree.
+efficiently processing queries related
+to subtrees and paths of a rooted tree.
 For example, possible queries are:
 
 \begin{itemize}
-\item what is the $k$th ancestor of node $x$?
-\item what is the sum of values in the subtree of node $x$?
-\item what is the sum of values in a path between nodes $a$ and $b$?
-\item what is the lowest common ancestor of nodes $a$ and $b$?
+\item what is the $k$th ancestor of a node?
+\item what is the sum of values in the subtree of a node?
+\item what is the sum of values in a path between two nodes?
+\item what is the lowest common ancestor of two nodes?
 \end{itemize}
 
 \section{Finding ancestors}
 
-The $k$th ancestor of node $x$ in the tree is found
-when we ascend $k$ steps in the tree beginning at node $x$.
-Let $f(x,k)$ denote the $k$th ancestor of node $x$.
+\index{ancestor}
+
+The $k$th \key{ancestor} of a node $x$ in a rooted tree
+is the node that we will reach if we move $k$
+levels up from $x$.
+Let $f(x,k)$ denote the $k$th ancestor of $x$.
 For example, in the following tree, $f(2,1)=1$ and $f(8,2)=4$.
 
 \begin{center}
@@ -45,15 +47,16 @@ For example, in the following tree, $f(2,1)=1$ and $f(8,2)=4$.
 \end{tikzpicture}
 \end{center}
 
-A straighforward way to calculate $f(x,k)$
-is to move $k$ steps upwards in the tree
-beginning from node $x$.
+An easy way to calculate the value of $f(x,k)$
+is to perform a sequence of $k$ moves in the tree.
 However, the time complexity of this method
-is $O(n)$ because it is possible that the tree
-contains a chain of $O(n)$ nodes.
+is $O(n)$, because the tree may contain
+a chain of $O(n)$ nodes.
 
-As in Chapter 16.3, any value of $f(x,k)$
-can be efficiently calculated in $O(\log k)$
+Fortunately, it turns out that
+using a technique similar to that
+used in Chapter 16.3, any value of $f(x,k)$
+can be efficiently calculated in $O(\log k)$ time
 after preprocessing.
 The idea is to precalculate all values $f(x,k)$
 where $k$ is a power of two.
@@ -72,12 +75,12 @@ $\cdots$ \\
 \end{center}
 
 The value $0$ means that the $k$th ancestor
-of a node doesn't exist.
+of a node does not exist.
 
-The preprocessing takes $O(n \log n)$ time
+The preprocessing takes $O(n \log n)$ time,
 because each node can have at most $n$ ancestors.
-After this, any value $f(x,k)$ can be calculated
-in $O(\log k)$ time by representing the value $k$
+After this, any value of $f(x,k)$ can be calculated
+in $O(\log k)$ time by representing $k$
 as a sum where each term is a power of two.
 
 \section{Subtrees and paths}
@@ -215,18 +218,18 @@ nodes in the subtree of node $4$:
 \end{tikzpicture}
 \end{center}
 Using this fact, we can efficiently process queries
-that are related to subtrees of the tree.
+that are related to subtrees of a tree.
 As an example, consider a problem where each node
 is assigned a value, and our task is to support
 the following queries:
 \begin{itemize}
-\item change the value of node $x$
-\item calculate the sum of values in the subtree of node $x$
+\item update the value of a node
+\item calculate the sum of values in the subtree of a node
 \end{itemize}
 
-Let us consider the following tree where blue numbers
-are values of nodes.
-For example, the sum of values in the subtree of node $4$
+Consider the following tree where the blue numbers
+are the values of the nodes.
+For example, the sum of the subtree of node $4$
 is $3+4+3+1=11$.
 
 \begin{center}
@@ -263,8 +266,8 @@ is $3+4+3+1=11$.
 \end{center}
 
 The idea is to construct a node array that contains
-three values for each node: (1) identifier of the node,
-(2) size of the subtree, and (3) value of the node.
+three values for each node: (1) the identifier of the node,
+(2) the size of the subtree, and (3) the value of the node.
 For example, the array for the above tree is as follows:
 
 \begin{center}
@@ -314,8 +317,8 @@ For example, the array for the above tree is as follows:
 \end{tikzpicture}
 \end{center}
 
-Using this array, we can calculate the sum of nodes
-in a subtree by first reading the size of the subtree
+Using this array, we can calculate the sum of values
+in any subtree by first finding out the size of the subtree
 and then the values of the corresponding nodes.
 For example, the values in the subtree of node $4$
 can be found as follows:
@@ -370,22 +373,24 @@ can be found as follows:
 \end{tikzpicture}
 \end{center}
 
-The remaining step is to store the values of the
+To support the queries efficiently,
+it suffices to store the values of the
 nodes in a binary indexed tree or segment tree.
-After this, we can both calculate the sum
-of values and change a value in $O(\log n)$ time,
-so we can efficiently process the queries.
+After this, we can both update a value
+and calculate the sum of values in $O(\log n)$ time.
 
 \subsubsection{Path queries}
 
 Using a node array, we can also efficiently
-process paths between the root node and any other
+calculate sums of values on
+paths between the root node and any other
 node in the tree.
 Let us next consider a problem where our task
 is to support the following queries:
 \begin{itemize}
-\item change the value of node $x$
-\item calculate the sum of values from the root to node $x$
+\item change the value of a node
+\item calculate the sum of values on a path between
+the root node and a node
 \end{itemize}
 
 For example, in the following tree, the sum of
@@ -428,10 +433,10 @@ To solve this problem, we can use a similar
 technique as we used for subtree queries,
 but the values of the nodes are stored
 in a special way:
-if the value of a node at index $k$ 
+if the value of a node at position $k$ 
 increases by $a$,
-the value at index $k$ increases by $a$
-and the value at index $k+c$ decreases by $a$,
+the value at position $k$ increases by $a$
+and the value at position $k+c$ decreases by $a$,
 where $c$ is the size of the subtree.
 
 \begin{samepage}
@@ -555,29 +560,29 @@ can be calculated as follows:
 \end{tikzpicture}
 \end{center}
 The sum is
-\[4+5+3-5+2+5-2=12,\]
+\[4+5+3-5+2+5-2=12\]
 that equals the sum $4+5+3=12$.
-This method works because the value of each node
+This method works, because the value of each node
 is added to the sum when the depth-first search
-visits it for the first time, and correspondingly,
-the value is removed from the sum when the subtree of the
+visits the node for the first time, and the value
+of the node is removed from the sum when the subtree of the
 node has been processed.
 
 Once again, we can store the values of the nodes
 in a binary indexed tree or a segment tree,
-so it is possible to both calculate the sum of values and
-change a value efficiently in $O(\log n)$ time.
+so it is possible to both update a value and
+calculate the sum of values efficiently in $O(\log n)$ time.
 
 \section{Lowest common ancestor}
 
 \index{lowest common ancestor}
 
 The \key{lowest common ancestor}
-of two nodes is a the lowest node in the tree
+of two nodes in the tree is the lowest node
 whose subtree contains both the nodes.
 A typical problem is to efficiently process
-queries where the task is to find the lowest
-common ancestor of two nodes.
+queries that ask to find the lowest
+common ancestor of given two nodes.
 For example, in the tree
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -606,15 +611,15 @@ finding the lowest common ancestor of two nodes.
 
 \subsubsection{Method 1}
 
-One way to solve the problem is use the fact
+One way to solve the problem is to use the fact
 that we can efficiently find the $k$th
 ancestor of any node in the tree.
-Using this idea, we can first ensure that
+Thus, we can first make sure that
 both nodes are at the same level in the tree,
 and then find the smallest value of $k$
-where the $k$th ancestor of both nodes is the same.
+such that the $k$th ancestor of both nodes is the same.
 
-As an example, let's find the lowest common
+As an example, let us find the lowest common
 ancestor of nodes $5$ and $8$ in the following tree:
 
 \begin{center}
@@ -639,8 +644,8 @@ ancestor of nodes $5$ and $8$ in the following tree:
 
 Node $5$ is at level $3$, while node $8$ is at level $4$.
 Thus, we first move one step upwards from node $8$ to node $6$.
-After this, it turns out that the parent of both node $5$
-and node $6$ is node $2$, so we have found the lowest common ancestor.
+After this, it turns out that the parent of both nodes $5$
+and $6$ is node $2$, so we have found the lowest common ancestor.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -669,13 +674,13 @@ and node $6$ is node $2$, so we have found the lowest common ancestor.
 Using this method, we can find the lowest common ancestor
 of any two nodes in $O(\log n)$ time after an $O(n \log n)$ time
 preprocessing, because both steps can be
-done in $O(\log n)$ time.
+performed in $O(\log n)$ time.
 
 \subsubsection{Method 2}
 
 Another way to solve the problem is based on
 a node array.
-Again, the idea is to traverse the nodes
+Once again, the idea is to traverse the nodes
 using a depth-first search:
 
 \begin{center}
@@ -716,12 +721,12 @@ using a depth-first search:
 However, we add each node to the node array \emph{always}
 when the depth-first search visits the node,
 and not only at the first visit.
-Thus, a node that has $k$ children appears $k+1$ times
+Hence, a node that has $k$ children appears $k+1$ times
 in the node array, and there are a total of $2n-1$
 nodes in the array.
 
 We store two values in the array:
-(1) identifier of the node, and (2) the level of the 
+(1) the identifier of the node, and (2) the level of the 
 node in the tree.
 The following array corresponds to the above tree:
 
@@ -785,7 +790,7 @@ The following array corresponds to the above tree:
 \end{center}
 
 Using this array, we can find the lowest common ancestor
-of nodes $a$ and $b$ by locating the node with lowest level
+of nodes $a$ and $b$ by finding the node with lowest level
 between nodes $a$ and $b$ in the array.
 For example, the lowest common ancestor of nodes $5$ and $8$
 can be found as follows:
@@ -852,9 +857,9 @@ can be found as follows:
 \end{tikzpicture}
 \end{center}
 
-Node 5 is at index 3, node 8 is at index 6,
+Node 5 is at position 3, node 8 is at position 6,
 and the node with lowest level between
-indices $3 \ldots 6$ is node 2 at index 4
+positions $3 \ldots 6$ is node 2 at position 4
 whose level is 2.
 Thus, the lowest common ancestor of
 nodes 5 and 8 is node 2.
@@ -863,23 +868,23 @@ Using a segment tree, we can find the lowest
 common ancestor in $O(\log n)$ time.
 Since the array is static, the time complexity
 $O(1)$ is also possible, but this is rarely needed.
-In both cases, preprocessing takes $O(n \log n)$ time.
+In both cases, the preprocessing takes $O(n \log n)$ time.
 
 \subsubsection{Distances of nodes}
 
-Finally, let's consider a problem where
-each query asks to find the distance between
-two nodes in the tree, i.e., the length of the
-path between them.
+Finally, let us consider a problem of
+finding the distance between
+two nodes in the tree, which equals
+the length of the path between them.
 It turns out that this problem reduces to
-finding the lowest common ancestor.
+finding the lowest common ancestor of the nodes.
 
 First, we choose an arbitrary node for the
 root of the tree.
 After this, the distance between nodes $a$ and $b$
 is $d(a)+d(b)-2 \cdot d(c)$,
-where $c$ is the lowest common ancestor,
-and $d(s)$ is the distance from the root node
+where $c$ is the lowest common ancestor of $a$ and $b$
+and $d(s)$ denotes the distance from the root node
 to node $s$.
 For example, in the tree
 
