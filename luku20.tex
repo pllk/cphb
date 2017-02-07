@@ -1,26 +1,25 @@
 \chapter{Flows and cuts}
 
 In this chapter, we will focus on the following
-problems in a directed, weighted graph
-where a starting node and a ending node is given:
+two problems:
 
 \begin{itemize}
 \item \key{Finding a maximum flow}:
 What is the maximum amount of flow we can
-deliver
-from the starting node to the ending node?
+send from a node to another node?
 \item \key{Finding a minimum cut}:
 What is a minimum-weight set of edges
-that separates the starting node and the ending node?
+that separates two nodes of the graph?
 \end{itemize}
 
-It turns out that these problems correspond to
-each other, and we can solve them simultaneously
-using the same algorithm.
+The input for both these problems is a directed,
+weighted graph that contains two special nodes:
+the \key{source} is a node with no incoming edges,
+and the \key{sink} is a node with no outgoing edges.
 
 As an example, we will use the following graph
-where node 1 is the starting node and node 6
-is the ending node:
+where node 1 is the source and node 6
+is the sink:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -46,19 +45,20 @@ is the ending node:
 \index{flow}
 \index{maximum flow}
 
-A \key{maximum flow} is a flow from the
-starting node to the ending node whose
-total amount is as large as possible.
+In the \key{maximum flow} problem,
+our task is to send as much flow as possible
+from the source to the sink.
 The weight of each edge is a capacity that
-determines the maximum amount of flow that
-can go through the edge.
-In all nodes, except for the starting node
-and the ending node,
-the amount of incoming and outgoing flow
-must be the same.
+restricts the flow
+that can go through the edge.
+In each intermediate node,
+the incoming and outgoing
+flow has to be equal.
 
-A maximum flow for the example graph
-is as follows:
+For example, the size of the maximum flow
+in the example graph is 7.
+The following picture shows how we can
+route the flow:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -80,32 +80,31 @@ is as follows:
 \end{center}
 
 The notation $v/k$ means
-that amount of the flow through the edge is $v$
-and the capacity of the edge is $k$.
-For each edge, it is required that $v \le k$.
-In this graph, the size of a maximum flow is 7
-because the outgoing flow from the starting node is $3+4=7$,
-and the incoming flow to the ending node is $5+2=7$.
-
-Note that in each intermediate node,
-the incoming flow and the outgoing flow are equally large.
-For example, in node 2, the incoming flow is $3+3=6$
-from nodes 1 and 4,
-and the outgoing flow is $6$ to node 3.
+a flow of $v$ units is routed through
+an edge whose capacity is $k$ units.
+The size of the flow is $7$,
+because the source sends $3+4$ units of flow
+and the sink receives $5+2$ units of flow.
+It is easy see that this flow is maximum,
+because the total capacity of the edges
+leading to the sink is $7$.
 
 \subsubsection{Minimum cut}
 
 \index{cut}
 \index{minimum cut}
 
-A \key{minimum cut} is a set of edges
-whose removal separates the starting node from the ending node,
-and whose total weight is as small as possible.
-A cut divides the graph into two components,
-one containing the starting node and the other
-containing the ending node.
+In the \key{minimum cut} problem,
+our task is to remove a set
+of edges from the graph
+such that there will be no path from the source
+to the sink after the removal
+and the total weight of the removed edges
+is minimum.
 
-A minimum cut for the example graph is as follows:
+The size of the minimum cut in the example graph is 7.
+It suffices to remove the edges $2 \rightarrow 3$
+and $4 \rightarrow 5$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -131,24 +130,26 @@ A minimum cut for the example graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-In this cut, the first component contains nodes $\{1,2,4\}$,
-and the second component contains nodes $\{3,5,6\}$.
-The weight of the cut is 7,
-because it consists of edges
-$2 \rightarrow 3$ and $4 \rightarrow 5$,
-and the total weight of the edges is $6+1=7$.
+After removing the edges,
+there will be no path from the source to the sink.
+The size of the cut is $7$,
+because the weights of the removed edges
+are $6$ and $1$.
+The cut is minimum, because there is no valid
+way to remove edges from the graph such that
+their total weight would be less than $7$.
 \\\\
 It is not a coincidence that
 both the size of the maximum flow and 
-the weight of the minimum cut is 7
-in the example graph.
-It turns out that a maximum flow and
-a minimum cut are \emph{always} of equal size,
+the minimum cut is 7 in the above example.
+It turns out that the size of the maximum flow
+and the minimum cut is
+\emph{always} the same,
 so the concepts are two sides of the same coin.
 
 Next we will discuss the Ford–Fulkerson
 algorithm that can be used for finding
-a maximum flow and a minimum cut in a graph.
+the maximum flow and minimum cut of a graph.
 The algorithm also helps us to understand
 \emph{why} they are equally large.
 
@@ -157,20 +158,20 @@ The algorithm also helps us to understand
 \index{Ford–Fulkerson algorithm}
 
 The \key{Ford–Fulkerson algorithm} finds
-a maximum flow in a graph.
+the maximum flow in a graph.
 The algorithm begins with an empty flow,
 and at each step finds a path in the graph
 that generates more flow.
-Finally, when the algorithm can't extend the flow
-anymore, it terminates and a maximum flow has been found.
+Finally, when the algorithm cannot increase the flow
+anymore, it terminates and the maximum flow has been found.
 
 The algorithm uses a special representation
-for the graph  where each original edge has a reverse
+of the graph where each original edge has a reverse
 edge in another direction.
 The weight of each edge indicates how much more flow
-we could route through it.
-Initially, the weight of each original edge
-equals the capacity of the edge,
+we might route through it.
+At the beginning of the algorithm, the weight of each original edge
+equals the capacity of the edge
 and the weight of each reverse edge is zero.
 
 \begin{samepage}
@@ -205,15 +206,17 @@ The new representation for the example graph is as follows:
 \end{center}
 \end{samepage}
 
-\subsubsection{Algoritmin toiminta}
+\subsubsection{Algorithm description}
 
-The Ford–Fulkerson algorithm finds at each step
-a path from the starting node to the ending node
-where each edge has a positive weight.
-If there are more than one possible paths,
+The Ford–Fulkerson algorithm consists of several
+rounds.
+On each round, the algorithm finds
+a path from the source to the sink
+such that each edge on the path has a positive weight.
+If there is more than one possible path available,
 we can choose any of them.
 
-In the example graph, we can choose, say, the following path:
+For example, suppose we choose the following path:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -248,15 +251,15 @@ In the example graph, we can choose, say, the following path:
 \end{tikzpicture}
 \end{center}
 
-After choosing the path, the flow increases by $x$ units
-where $x$ is the smallest weight of an edge in the path.
-In addition, the weight of each edge in the path
+After choosing the path, the flow increases by $x$ units,
+where $x$ is the smallest edge weight on the path.
+In addition, the weight of each edge on the path
 decreases by $x$, and the weight of each reverse edge
 increases by $x$.
 
 In the above path, the weights of the
 edges are 5, 6, 8 and 2.
-The minimum weight is 2,
+The smallest weight is 2,
 so the flow increases by 2
 and the new graph is as follows:
 
@@ -290,15 +293,15 @@ and the new graph is as follows:
 
 The idea is that increasing the flow decreases the amount of
 flow that can go through the edges in the future.
-On the other hand, it is possible to adjust the
-amount of the flow later
-using the reverse edges if it turns out that
-we should route the flow in another way.
+On the other hand, it is possible to modify the
+flow later using the reverse edges of the graph
+if it turns out that
+it would be beneficial to route the flow in another way.
 
 The algorithm increases the flow as long as
-there is a path from the starting node
-to the ending node through positive edges.
-In the current example, our next path can be as follows:
+there is a path from the source
+to the sink through positive-weight edges.
+In the present example, our next path can be as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -333,10 +336,9 @@ In the current example, our next path can be as follows:
 \end{tikzpicture}
 \end{center}
 
-The minimum weight in this path is 3,
+The minimum edge weight on this path is 3,
 so the path increases the flow by 3,
-and the total amount of the flow after
-processing the path is 5.
+and the total flow after processing the path is 5.
 
 \begin{samepage}
 The new graph will be as follows:
@@ -370,7 +372,7 @@ The new graph will be as follows:
 \end{center}
 \end{samepage}
 
-We still need two more steps before we have reached a maximum flow.
+We still need two more rounds before reaching the maximum flow.
 For example, we can choose the paths
 $1 \rightarrow 2 \rightarrow 3 \rightarrow 6$ and
 $1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$.
@@ -405,55 +407,55 @@ and the final graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-It's not possible to increase the flow anymore,
-because there is no path from the starting node
-to the ending node with positive edge weights.
-Thus, the algorithm terminates and the maximum flow is 7.
+It is not possible to increase the flow anymore,
+because there is no path from the source
+to the sink with positive edge weights.
+Hence, the algorithm terminates and the maximum flow is 7.
 
 \subsubsection{Finding paths}
 
-The Ford–Fulkerson algorithm doesn't specify
-how the path that increases the flow should be chosen.
-In any case, the algorithm will stop sooner or later
-and produce a maximum flow.
+The Ford–Fulkerson algorithm does not specify
+how paths that increase the flow should be chosen.
+In any case, the algorithm will terminate sooner or later
+and correctly find the maximum flow.
 However, the efficiency of the algorithm depends on
 the way the paths are chosen.
 
 A simple way to find paths is to use depth-first search.
-Usually, this works well, but the worst case is that
-each path only increases the flow by 1, and the algorithm becomes slow.
-Fortunately, we can avoid this by using one of the following
-algorithms:
+Usually, this works well, but in the worst case,
+each path only increases the flow by 1
+and the algorithm is slow.
+Fortunately, we can avoid this situation
+by using one of the following algorithms:
 
 \index{Edmonds–Karp algorithm}
 
 The \key{Edmonds–Karp algorithm}
-is an implementation of the
-Ford–Fulkerson algorithm where
-each path that increases the flow
-is chosen so that the number of edges
-in the path is minimum.
+is a variant of the
+Ford–Fulkerson algorithm that
+chooses each path so that the number of edges
+on the path is as small as possible.
 This can be done by using breadth-first search
-instead of depth-first search.
+instead of depth-first search for finding paths.
 It turns out that this guarantees that
-flow increases quickly, and the time complexity
+the flow increases quickly, and the time complexity
 of the algorithm is $O(m^2 n)$.
 
 \index{scaling algorithm}
 
 The \key{scaling algorithm} uses depth-first
-search to find paths where the weight of each edge is
-at least a minimum value.
-Initially, the minimum value is $c$,
+search to find paths where each edge weight is
+at least a threshold value.
+Initially, the threshold value is
 the sum of capacities of the edges that
-begin at the starting edge.
-If the algorithm can't find a path,
-the minimum value is divided by 2,
-and finally it will be 1.
-The time complexity of the algorithm is $O(m^2 \log c)$.
+start at the source.
+Always when a path cannot be found,
+the threshold value is divided by 2.
+The time complexity of the algorithm is $O(m^2 \log c)$,
+where $c$ is the initial threshold value.
 
-In practice, the scaling algorithm is easier to code
-because we can use depth-first search to find paths.
+In practice, the scaling algorithm is easier to implement,
+because depth-first search can be used for finding paths.
 Both algorithms are efficient enough for problems
 that typically appear in programming contests.
 
@@ -463,10 +465,10 @@ that typically appear in programming contests.
 
 It turns out that once the Ford–Fulkerson algorithm
 has found a maximum flow,
-it has also produced a minimum cut.
+it has also found a minimum cut.
 Let $A$ be the set of nodes
-that can be reached from the starting node
-using positive edges.
+that can be reached from the source
+using positive-weight edges.
 In the example graph, $A$ contains nodes 1, 2 and 4:
 
 \begin{center}
@@ -497,25 +499,25 @@ In the example graph, $A$ contains nodes 1, 2 and 4:
 \end{tikzpicture}
 \end{center}
 
-Now the minimum cut consists of the edges in the original graph
-that begin at a node in $A$ and end at a node outside $A$,
+Now the minimum cut consists of the edges of the original graph
+that start at some node in $A$, end at some node outside $A$,
 and whose capacity is fully
 used in the maximum flow.
 In the above graph, such edges are
 $2 \rightarrow 3$ and $4 \rightarrow 5$,
 that correspond to the minimum cut $6+1=7$.
 
-Why is the flow produced by the algorithm maximum,
+Why is the flow produced by the algorithm maximum
 and why is the cut minimum?
-The reason for this is that a graph never
-contains a flow whose size is larger
+The reason is that a graph cannot
+contain a flow whose size is larger
 than the weight of any cut in the graph.
 Hence, always when a flow and a cut are equally large,
 they are a maximum flow and a minimum cut.
 
-Let's consider any cut in the graph
-where the starting node belongs to set $A$,
-the ending node belongs to set $B$
+Let us consider any cut in the graph
+such that the source belongs to $A$,
+the sink belongs to $B$
 and there are edges between the sets:
 
 \begin{center}
@@ -540,11 +542,11 @@ and there are edges between the sets:
 \end{tikzpicture}
 \end{center}
 
-The weight of the cut is the sum of those edges
-that go from set $A$ to set $B$.
-This is an upper bound for the amount of flow
+The size of the cut is the sum of the edges
+that go from the set $A$ to the set $B$.
+This is an upper bound for the flow
 in the graph, because the flow has to proceed
-from set $A$ to set $B$.
+from the set $A$ to the set $B$.
 Thus, a maximum flow is smaller than or equal to
 any cut in the graph.
 
