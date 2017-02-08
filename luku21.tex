@@ -9,9 +9,9 @@ because many questions involving integers
 are very difficult to solve even if they
 seem simple at first glance.
 
-As an example, let's consider the following equation:
+As an example, let us consider the following equation:
 \[x^3 + y^3 + z^3 = 33\]
-It's easy to find three real numbers $x$, $y$ and $z$
+It is easy to find three real numbers $x$, $y$ and $z$
 that satisfy the equation.
 For example, we can choose
 \[
@@ -28,9 +28,8 @@ is an open problem in number theory.
 
 In this chapter, we will focus on basic concepts
 and algorithms in number theory.
-We will start by discussing divisibility of numbers
-and important algorithms for primality testing
-and factorization.
+Throughout the chapter, we will assume that all numbers
+are integers, if not otherwise stated.
 
 \section{Primes and factors}
 
@@ -38,9 +37,8 @@ and factorization.
 \index{factor}
 \index{divisor}
 
-
 A number $a$ is a \key{factor} or \key{divisor} of a number $b$
-if $b$ is divisible by $a$.
+if $a$ divides $b$.
 If $a$ is a factor of $b$,
 we write $a \mid b$, and otherwise we write $a \nmid b$.
 For example, the factors of the number 24 are
@@ -52,8 +50,8 @@ For example, the factors of the number 24 are
 A number $n>1$ is a \key{prime}
 if its only positive factors are 1 and $n$.
 For example, the numbers 7, 19 and 41 are primes.
-The number 35 is not a prime because it can be
-divided into factors $5 \cdot 7 = 35$.
+The number 35 is not a prime, because it can be
+divided into the factors $5 \cdot 7 = 35$.
 For each number $n>1$, there is a unique
 \key{prime factorization}
 \[ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k},\]
@@ -75,7 +73,7 @@ The factors are
 
 The \key{sum of factors} of $n$ is
 \[\sigma(n)=\prod_{i=1}^k (1+p_i+\ldots+p_i^{\alpha_i}) = \prod_{i=1}^k \frac{p_i^{a_i+1}-1}{p_i-1},\]
-where the latter form is based on the geometric sum formula.
+where the latter formula is based on the geometric sum formula.
 For example, the sum of factors of the number 84 is
 \[\sigma(84)=\frac{2^3-1}{2-1} \cdot \frac{3^2-1}{3-1} \cdot \frac{7^2-1}{7-1} = 7 \cdot 4 \cdot 8 = 224.\]
 
@@ -91,23 +89,23 @@ and the product of the factors is $\mu(84)=84^6=351298031616$.
 \index{perfect number}
 
 A number $n$ is \key{perfect} if $n=\sigma(n)-n$,
-i.e., the number equals the sum of its divisors
-between $1 \ldots n-1$.
-For example, the number 28 is perfect because
-it equals the sum $1+2+4+7+14$.
+i.e., $n$ equals the sum of its divisors
+between $1$ and $n-1$.
+For example, the number 28 is perfect,
+because $28=1+2+4+7+14$.
 
 \subsubsection{Number of primes}
 
 It is easy to show that there is an infinite number
 of primes.
-If the number would be finite,
+If the number of primes would be finite,
 we could construct a set $P=\{p_1,p_2,\ldots,p_n\}$
-that contains all the primes.
+that would contain all the primes.
 For example, $p_1=2$, $p_2=3$, $p_3=5$, and so on.
-However, using this set, we could form a new prime
+However, using $P$, we could form a new prime
 \[p_1 p_2 \cdots p_n+1\]
 that is larger than all elements in $P$.
-This is a contradiction, and the number of the primes
+This is a contradiction, and the number of primes
 has to be infinite.
 
 \subsubsection{Density of primes}
@@ -115,14 +113,14 @@ has to be infinite.
 The density of primes means how often there are primes
 among the numbers.
 Let $\pi(n)$ denote the number of primes between
-$1 \ldots n$. For example, $\pi(10)=4$ because
-there are 4 primes between $1 \ldots 10$: 2, 3, 5 and 7.
+$1$ and $n$. For example, $\pi(10)=4$, because
+there are 4 primes between $1$ and $10$: 2, 3, 5 and 7.
 
-It's possible to show that
+It is possible to show that
 \[\pi(n) \approx \frac{n}{\ln n},\]
-which means that primes appear quite often.
+which means that primes are quite frequent.
 For example, the number of primes between
-$1 \ldots 10^6$ is $\pi(10^6)=78498$,
+$1$ and $10^6$ is $\pi(10^6)=78498$,
 and $10^6 / \ln 10^6 \approx 72382$.
 
 \subsubsection{Conjectures}
@@ -138,7 +136,7 @@ For example, the following conjectures are famous:
 Each even integer $n>2$ can be represented as a
 sum $n=a+b$ so that both $a$ and $b$ are primes.
 \index{twin prime}
-\item \key{twin prime}:
+\item \key{Twin prime conjecture}:
 There is an infinite number of pairs
 of the form $\{p,p+2\}$,
 where both $p$ and $p+2$ are primes.
@@ -153,15 +151,15 @@ $n^2$ and $(n+1)^2$, where $n$ is any positive integer.
 If a number $n$ is not prime,
 it can be represented as a product $a \cdot b$,
 where $a \le \sqrt n$ or $b \le \sqrt n$,
-so it certainly has a factor between $2 \ldots \sqrt n$.
+so it certainly has a factor between $2$ and $\lfloor \sqrt n \rfloor$.
 Using this observation, we can both test
 if a number is prime and find the prime factorization
 of a number in $O(\sqrt n)$ time.
 
 The following function \texttt{prime} checks
 if the given number $n$ is prime.
-The function tries to divide the number by
-all numbers between $2 \ldots \sqrt n$,
+The function attempts to divide $n$ by
+all numbers between $2$ and $\lfloor \sqrt n \rfloor$,
 and if none of them divides $n$, then $n$ is prime.
 
 \begin{lstlisting}
@@ -181,7 +179,7 @@ factorization of $n$.
 The function divides $n$ by its prime factors,
 and adds them to the vector.
 The process ends when the remaining number $n$
-has no factors between $2 \ldots \sqrt n$.
+has no factors between $2$ and $\lfloor \sqrt n \rfloor$.
 If $n>1$, it is prime and the last factor.
 
 \begin{lstlisting}
@@ -210,24 +208,24 @@ so the result of the function is $[2,2,2,3]$.
 The \key{sieve of Eratosthenes} is a preprocessing
 algorithm that builds an array using which we
 can efficiently check if a given number between $2 \ldots n$
-is prime and find one prime factor of the number.
+is prime and, if it is not, find one prime factor of the number.
 
 The algorithm builds an array $\texttt{a}$
-where indices $2,3,\ldots,n$ are used.
+whose positions $2,3,\ldots,n$ are used.
 The value $\texttt{a}[k]=0$ means
 that $k$ is prime,
 and the value $\texttt{a}[k] \neq 0$
-means that $k$ is not a prime but one
+means that $k$ is not a prime and one
 of its prime factors is $\texttt{a}[k]$.
 
 The algorithm iterates through the numbers
 $2 \ldots n$ one by one.
 Always when a new prime $x$ is found,
 the algorithm records that the multiples
-of $x$ ($2x,3x,4x,\ldots$) are not primes
+of $x$ ($2x,3x,4x,\ldots$) are not primes,
 because the number $x$ divides them.
 
-For example, if $n=20$, the array becomes:
+For example, if $n=20$, the array is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -301,12 +299,12 @@ of the algorithm is the harmonic sum
 
 \[\sum_{x=2}^n n/x = n/2 + n/3 + n/4 + \cdots + n/n = O(n \log n).\]
 
-In fact, the algorithm is even more efficient
+In fact, the algorithm is even more efficient,
 because the inner loop will be executed only if
 the number $x$ is prime.
 It can be shown that the time complexity of the
-algorithm is only $O(n \log \log n)$ 
-that is very near to $O(n)$.
+algorithm is only $O(n \log \log n)$,
+a complexity very near to $O(n)$. 
 
 \subsubsection{Euclid's algorithm}
 
@@ -331,7 +329,7 @@ are connected as follows:
 
 \key{Euclid's algorithm} provides an efficient way
 to find the greatest common divisor of two numbers.
-The algorithm is based on the formula
+The algorithm is based on the following formula:
 \begin{equation*}
     \textrm{gcd}(a,b) = \begin{cases}
                a        & b = 0\\
@@ -342,11 +340,9 @@ For example,
 \[\textrm{gcd}(24,36) = \textrm{gcd}(36,24)
 = \textrm{gcd}(24,12) = \textrm{gcd}(12,0)=12.\]
 The time complexity of Euclid's algorithm
-is $O(\log n)$ where $n=\min(a,b)$.
-The worst case is when
-$a$ and $b$ are successive Fibonacci numbers.
-In this case, the algorithm goes through
-all smaller Fibonacci numbers.
+is $O(\log n)$, where $n=\min(a,b)$.
+The worst case for the algorithm is
+the case when $a$ and $b$ are consecutive Fibonacci numbers.
 For example,
 \[\textrm{gcd}(13,8)=\textrm{gcd}(8,5)
 =\textrm{gcd}(5,3)=\textrm{gcd}(3,2)=\textrm{gcd}(2,1)=\textrm{gcd}(1,0)=1.\]
@@ -356,18 +352,18 @@ For example,
 \index{coprime}
 \index{Euler's totient function}
 
-Numbers $a$ and $b$ are coprime
+Numbers $a$ and $b$ are \key{coprime}
 if $\textrm{gcd}(a,b)=1$.
 \key{Euler's totient function} $\varphi(n)$
 returns the number of coprime numbers to $n$
-between $1 \ldots n$.
+between $1$ and $n$.
 For example, $\varphi(12)=4$,
-because the numbers 1, 5, 7 and 11
-are coprime to the number 12.
+because the 1, 5, 7 and 11
+are coprime to 12.
 
 The value of $\varphi(n)$ can be calculated
-using the prime factorization of $n$
-by the formula
+from the prime factorization of $n$
+using the formula
 \[ \varphi(n) = \prod_{i=1}^k p_i^{\alpha_i-1}(p_i-1). \]
 For example, $\varphi(12)=2^1 \cdot (2-1) \cdot 3^0 \cdot (3-1)=4$.
 Note that $\varphi(n)=n-1$ if $n$ is prime.
@@ -377,8 +373,8 @@ Note that $\varphi(n)=n-1$ if $n$ is prime.
 \index{modular arithmetic}
 
 In \key{modular arithmetic},
-the set of available numbers is restricted so
-that only numbers $0,1,2,\ldots,m-1$ can be used
+the set of available numbers is limited so
+that only numbers $0,1,2,\ldots,m-1$ may be used,
 where $m$ is a constant.
 Each number $x$ is
 represented by the number $x \bmod m$:
@@ -386,23 +382,22 @@ the remainder after dividing $x$ by $m$.
 For example, if $m=17$, then $75$
 is represented by $75 \bmod 17 = 7$.
 
-Often we can take the remainder before doing a
-calculation.
+Often we can take the remainder before doing
+calculations.
 In particular, the following formulas can be used:
 \[
 \begin{array}{rcl}
 (x+y) \bmod m & = & (x \bmod m + y \bmod m) \bmod m \\
 (x-y) \bmod m & = & (x \bmod m - y \bmod m) \bmod m \\
 (x \cdot y) \bmod m & = & (x \bmod m \cdot y \bmod m) \bmod m \\
-(x^k) \bmod m & = & (x \bmod m)^k \bmod m \\
+x^n \bmod m & = & (x \bmod m)^n \bmod m \\
 \end{array}
 \]
 
 \subsubsection{Modular exponentiation}
 
-
-Often there is need to efficiently calculate
-the remainder of $x^n$.
+There is often need to efficiently calculate
+the value of $x^n \bmod m$.
 This can be done in $O(\log n)$ time
 using the following recursion:
 \begin{equation*}
@@ -413,13 +408,13 @@ using the following recursion:
            \end{cases}
 \end{equation*}
 
-It's important that in the case of an even $n$,
-the number $x^{n/2}$ is calculated only once.
+It is important that in the case of an even $n$,
+the value of $x^{n/2}$ is calculated only once.
 This guarantees that the time complexity of the
-algorithm is $O(\log n)$ because $n$ is always halved
+algorithm is $O(\log n)$, because $n$ is always halved
 when it is even.
 
-The following function calculates the number
+The following function calculates the value of
 $x^n \bmod m$:
 
 \begin{lstlisting}
@@ -438,12 +433,12 @@ int modpow(int x, int n, int m) {
 \index{Euler's theorem}
 
 \key{Fermat's theorem} states that
-\[x^{m-1} \bmod m = 1,\]
+\[x^{m-1} \bmod m = 1\]
 when $m$ is prime and $x$ and $m$ are coprime.
 This also yields
 \[x^k \bmod m = x^{k \bmod (m-1)} \bmod m.\]
 More generally, \key{Euler's theorem} states that
-\[x^{\varphi(m)} \bmod m = 1,\]
+\[x^{\varphi(m)} \bmod m = 1\]
 when $x$ and $m$ are coprime.
 Fermat's theorem follows from Euler's theorem,
 because if $m$ is a prime, then $\varphi(m)=m-1$.
@@ -465,13 +460,13 @@ For example, to evaluate the value of $36/6 \bmod 17$,
 we can use the formula $2 \cdot 3 \bmod 17$,
 because $36 \bmod 17 = 2$ and $6^{-1} \bmod 17 = 3$.
 
-However, a modular inverse doesn't always exist.
+However, a modular inverse does not always exist.
 For example, if $x=2$ and $m=4$, the equation
-\[ x x^{-1} \bmod m = 1. \]
-can't be solved, because all multiples of the number 2
-are even, and the remainder can never be 1 when $m=4$.
-It turns out that the number $x^{-1} \bmod m$ exists
-exactly when $x$ and $m$ are coprime.
+\[ x x^{-1} \bmod m = 1 \]
+cannot be solved, because all multiples of the number 2
+are even and the remainder can never be 1 when $m=4$.
+It turns out that the value of $x^{-1} \bmod m$
+can be calculated exactly when $x$ and $m$ are coprime.
 
 If a modular inverse exists, it can be
 calculated using the formula
@@ -500,14 +495,14 @@ so the numbers $x^{-1}$ and $x^{\varphi(m)-1}$ are equal.
 
 \subsubsection{Computer arithmetic}
 
-In a computers, unsigned integers are represented modulo $2^k$
-where $k$ is the number of bits.
+In programming, unsigned integers are represented modulo $2^k$,
+where $k$ is the number of bits of the data type.
 A usual consequence of this is that a number wraps around
 if it becomes too large.
 
 For example, in C++, numbers of type \texttt{unsigned int}
 are represented modulo $2^{32}$.
-The following code defines an \texttt{unsigned int}
+The following code declares an \texttt{unsigned int}
 variable whose value is $123456789$.
 After this, the value will be multiplied by itself,
 and the result is
@@ -525,7 +520,7 @@ cout << x*x << "\n"; // 2537071545
 A \key{Diophantine equation} is of the form
 \[ ax + by = c, \]
 where $a$, $b$ and $c$ are constants,
-and our tasks is to solve variables $x$ and $y$.
+and we should find the values of $x$ and $y$.
 Each number in the equation has to be an integer.
 For example, one solution for the equation
 $5x+2y=11$ is $x=3$ and $y=-2$.
@@ -538,25 +533,25 @@ It turns out that we can extend Euclid's algorithm
 so that it will find numbers $x$ and $y$
 that satisfy the following equation:
 \[
-ax + by = \textrm{syt}(a,b)
+ax + by = \textrm{gcd}(a,b)
 \]
 
 A Diophantine equation can be solved if
 $c$ is divisible by
 $\textrm{gcd}(a,b)$,
-and otherwise it can't be solved.
+and otherwise the equation cannot be solved.
 
 \index{extended Euclid's algorithm}
 
 \subsubsection*{Extended Euclid's algorithm}
 
-As an example, let's find numbers $x$ and $y$
+As an example, let us find numbers $x$ and $y$
 that satisfy the following equation:
 \[
 39x + 15y = 12
 \]
 The equation can be solved, because
-$\textrm{syt}(39,15)=3$ and $3 \mid 12$.
+$\textrm{gcd}(39,15)=3$ and $3 \mid 12$.
 When Euclid's algorithm calculates the
 greatest common divisor of 39 and 15,
 it produces the following sequence of function calls:
@@ -580,15 +575,15 @@ and by multiplying this by 4, the result is
 \[
 39 \cdot 8 + 15 \cdot (-20) = 12,
 \]
-so a solution for the original equation is
+so a solution for the equation is
 $x=8$ and $y=-20$.
 
 A solution for a Diophantine equation is not unique,
 but we can form an infinite number of solutions
 if we know one solution.
-If the pair $(x,y)$ is a solution, then also the pair
+If a pair $(x,y)$ is a solution, then also all pairs
 \[(x+\frac{kb}{\textrm{gcd}(a,b)},y-\frac{ka}{\textrm{gcd}(a,b)})\]
-is a solution where $k$ is any integer.
+are solutions, where $k$ is any integer.
 
 \subsubsection{Chinese remainder theorem}
 
@@ -656,7 +651,7 @@ as the sum $8^2+5^2+5^2+3^2$.
 \key{Zeckendorf's theorem} states that every
 positive integer has a unique representation
 as a sum of Fibonacci numbers such that
-no two numbers are the same of successive
+no two numbers are equal or consecutive
 Fibonacci numbers.
 For example, the number 74 can be represented
 as the sum $55+13+5+1$.
@@ -685,7 +680,7 @@ all primitive Pythagorean triples.
 Each such triple is of the form
 \[(n^2-m^2,2nm,n^2+m^2),\]
 where $0<m<n$, $n$ and $m$ are coprime
-and at least one of the numbers $n$ and $m$ is even.
+and at least one of $n$ and $m$ is even.
 For example, when $m=1$ and $n=2$, the formula
 produces the smallest Pythagorean triple
 \[(2^2-1^2,2\cdot2\cdot1,2^2+1^2)=(3,4,5).\]
@@ -703,8 +698,8 @@ and the number 12 is not prime, because
 \[11! \bmod 12 = 0 \neq 11.\]
 
 Hence, Wilson's theorem tells us whether a number
-is prime. However, in practice, the formula can't be
-used for large values of $n$, because it's difficult
-to calculate the number $(n-1)!$ if $n$ is large.
+is prime. However, in practice, the theorem cannot be
+applied to large values of $n$, because it is difficult
+to calculate the value of $(n-1)!$ when $n$ is large.
 
 
