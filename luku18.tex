@@ -383,18 +383,19 @@ and calculate the sum of values in $O(\log n)$ time.
 
 Using a node array, we can also efficiently
 calculate sums of values on
-paths between the root node and any other
+paths from the root node to any other
 node in the tree.
 Let us next consider a problem where our task
 is to support the following queries:
 \begin{itemize}
 \item change the value of a node
-\item calculate the sum of values on a path between
-the root node and a node
+\item calculate the sum of values on a path from
+the root to a node
 \end{itemize}
 
-For example, in the following tree, the sum of
-values from the root to node 8 is $4+5+3=12$.
+For example, in the following tree,
+the sum of values from the root no node 7 is
+$4+5+5=14$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -429,21 +430,13 @@ values from the root to node 8 is $4+5+3=12$.
 \end{tikzpicture}
 \end{center}
 
-To solve this problem, we can use a similar
-technique as we used for subtree queries,
-but the values of the nodes are stored
-in a special way:
-if the value of a node at position $k$ 
-increases by $a$,
-the value at position $k$ increases by $a$
-and the value at position $k+c$ decreases by $a$,
-where $c$ is the size of the subtree.
-
-\begin{samepage}
+We can solve this problem in a similar way as before,
+but each value in the last row of the node array is the sum of values
+on a path from the root to a node.
 For example, the following array corresponds to the above tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
-\draw (0,1) grid (10,-2);
+\draw (0,1) grid (9,-2);
 
 \node at (0.5,0.5) {$1$};
 \node at (1.5,0.5) {$2$};
@@ -454,7 +447,6 @@ For example, the following array corresponds to the above tree:
 \node at (6.5,0.5) {$8$};
 \node at (7.5,0.5) {$9$};
 \node at (8.5,0.5) {$5$};
-\node at (9.5,0.5) {--};
 
 \node at (0.5,-0.5) {$9$};
 \node at (1.5,-0.5) {$2$};
@@ -465,18 +457,16 @@ For example, the following array corresponds to the above tree:
 \node at (6.5,-0.5) {$1$};
 \node at (7.5,-0.5) {$1$};
 \node at (8.5,-0.5) {$1$};
-\node at (9.5,-0.5) {--};
 
 \node at (0.5,-1.5) {$4$};
-\node at (1.5,-1.5) {$5$};
-\node at (2.5,-1.5) {$3$};
-\node at (3.5,-1.5) {$-5$};
-\node at (4.5,-1.5) {$2$};
-\node at (5.5,-1.5) {$5$};
-\node at (6.5,-1.5) {$-2$};
-\node at (7.5,-1.5) {$-2$};
-\node at (8.5,-1.5) {$-4$};
-\node at (9.5,-1.5) {$-4$};
+\node at (1.5,-1.5) {$9$};
+\node at (2.5,-1.5) {$12$};
+\node at (3.5,-1.5) {$7$};
+\node at (4.5,-1.5) {$9$};
+\node at (5.5,-1.5) {$14$};
+\node at (6.5,-1.5) {$12$};
+\node at (7.5,-1.5) {$10$};
+\node at (8.5,-1.5) {$6$};
 
 \footnotesize
 \node at (0.5,1.4) {$1$};
@@ -488,30 +478,18 @@ For example, the following array corresponds to the above tree:
 \node at (6.5,1.4) {$7$};
 \node at (7.5,1.4) {$8$};
 \node at (8.5,1.4) {$9$};
-\node at (9.5,1.4) {$10$};
 \end{tikzpicture}
 \end{center}
-\end{samepage}
 
-For example, the value of node $3$ is $-5$,
-because it is the next node after the subtrees
-of nodes $2$ and $6$ and its own value is $3$.
-So the value decreases by $5+3$ and increases by $3$.
-Note that the array contains an extra index 10
-that only has the opposite number of the value
-of the root node.
-
-Using this array, the sum of values in a path
-from the root to node $x$ equals the sum
-of values in the array from the beginning to node $x$.
-For example, the sum from the root to node $8$
-can be calculated as follows:
+When the value of a node increases by $x$,
+the sums of all nodes in its subtree increase by $x$.
+For example, if the value of node 4 increases by 1,
+the node array changes as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
-\fill[color=lightgray] (6,1) rectangle (7,0);
-\fill[color=lightgray] (0,-1) rectangle (7,-2);
-\draw (0,1) grid (10,-2);
+\fill[color=lightgray] (4,-1) rectangle (8,-2);
+\draw (0,1) grid (9,-2);
 
 \node at (0.5,0.5) {$1$};
 \node at (1.5,0.5) {$2$};
@@ -522,7 +500,6 @@ can be calculated as follows:
 \node at (6.5,0.5) {$8$};
 \node at (7.5,0.5) {$9$};
 \node at (8.5,0.5) {$5$};
-\node at (9.5,0.5) {--};
 
 \node at (0.5,-0.5) {$9$};
 \node at (1.5,-0.5) {$2$};
@@ -533,18 +510,16 @@ can be calculated as follows:
 \node at (6.5,-0.5) {$1$};
 \node at (7.5,-0.5) {$1$};
 \node at (8.5,-0.5) {$1$};
-\node at (9.5,-0.5) {--};
 
 \node at (0.5,-1.5) {$4$};
-\node at (1.5,-1.5) {$5$};
-\node at (2.5,-1.5) {$3$};
-\node at (3.5,-1.5) {$-5$};
-\node at (4.5,-1.5) {$2$};
-\node at (5.5,-1.5) {$5$};
-\node at (6.5,-1.5) {$-2$};
-\node at (7.5,-1.5) {$-2$};
-\node at (8.5,-1.5) {$-4$};
-\node at (9.5,-1.5) {$-4$};
+\node at (1.5,-1.5) {$9$};
+\node at (2.5,-1.5) {$12$};
+\node at (3.5,-1.5) {$7$};
+\node at (4.5,-1.5) {$10$};
+\node at (5.5,-1.5) {$15$};
+\node at (6.5,-1.5) {$13$};
+\node at (7.5,-1.5) {$11$};
+\node at (8.5,-1.5) {$6$};
 
 \footnotesize
 \node at (0.5,1.4) {$1$};
@@ -556,22 +531,15 @@ can be calculated as follows:
 \node at (6.5,1.4) {$7$};
 \node at (7.5,1.4) {$8$};
 \node at (8.5,1.4) {$9$};
-\node at (9.5,1.4) {$10$};
 \end{tikzpicture}
 \end{center}
-The sum is
-\[4+5+3-5+2+5-2=12\]
-that equals the sum $4+5+3=12$.
-This method works, because the value of each node
-is added to the sum when the depth-first search
-visits the node for the first time, and the value
-of the node is removed from the sum when the subtree of the
-node has been processed.
 
-Once again, we can store the values of the nodes
-in a binary indexed tree or a segment tree,
-so it is possible to both update a value and
-calculate the sum of values efficiently in $O(\log n)$ time.
+Thus, to support both the operations,
+we should be able to increase all values
+in a range and retrieve a single value.
+This can be done in $O(\log n)$ time
+(see Chapter 9.4) using a binary indexed tree
+or segment tree.
 
 \section{Lowest common ancestor}
 
