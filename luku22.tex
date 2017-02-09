@@ -8,9 +8,9 @@ Usually, the goal is to find a way to
 count the combinations efficiently
 without generating each combination separately.
 
-As an example, let's consider a problem where
-our task is to calculate the number of representations
-for an integer $n$ as a sum of positive integers.
+As an example, let us consider the problem
+of counting the number of ways to
+represent an integer $n$ as a sum of positive integers.
 For example, there are 8 representations
 for the number $4$:
 \begin{multicols}{2}
@@ -28,10 +28,11 @@ for the number $4$:
 
 A combinatorial problem can often be solved
 using a recursive function.
-In this case, we can define a function $f(n)$
+In this problem, we can define a function $f(n)$
 that counts the number of representations for $n$.
 For example, $f(4)=8$ according to the above example.
-The function can be recursively calculated as follows:
+The values of the function
+can be recursively calculated as follows:
 \begin{equation*}
     f(n) = \begin{cases}
                1               & n = 1\\
@@ -40,8 +41,8 @@ The function can be recursively calculated as follows:
 \end{equation*}
 The base case is $f(1)=1$,
 because there is only one way to represent the number 1.
-Otherwise, we go through all possibilities for
-the last number in the sum.
+When $n>1$, we go through all ways to
+select the last number in the sum.
 For example, in when $n=4$, the sum can end
 with $+1$, $+2$ or $+3$.
 In addition, we also count the representation
@@ -69,8 +70,8 @@ and we can choose any subset of them.
 
 \index{binomial coefficient}
 
-A \key{binomial coefficient} ${n \choose k}$
-is the number of ways we can choose a subset
+The \key{binomial coefficient} ${n \choose k}$
+equals the number of ways we can choose a subset
 of $k$ elements from a set of $n$ elements.
 For example, ${5 \choose 3}=10$,
 because the set $\{1,2,3,4,5\}$
@@ -87,22 +88,20 @@ recursively calculated as follows:
 {n \choose k}  =  {n-1 \choose k-1} + {n-1 \choose k}
 \]
 
-The idea is to consider a fixed
-element $x$ in the set.
+The idea is to fix an element $x$ in the set.
 If $x$ is included in the subset,
-the remaining task is to choose $k-1$
+we have to choose $k-1$
 elements from $n-1$ elements,
-and otherwise
-the remaining task is to choose $k$ elements from $n-1$ elements.
+and if $x$ is not included in the subset,
+we have to choose $k$ elements from $n-1$ elements.
 
-The base cases for the recursion are as follows:
+The base cases for the recursion are
 \[
-{n \choose 0}  =  {n \choose n} = 1
+{n \choose 0}  =  {n \choose n} = 1,
 \]
-
-The reason for this is that there is always
-one way to construct an empty subset,
-or a subset that contains all the elements.
+because there is always exactly
+one way to construct an empty subset
+and a subset that contains all the elements.
 
 \subsubsection{Formula 2}
 
@@ -111,12 +110,12 @@ Another way to calculate binomial coefficients is as follows:
 {n \choose k}  =  \frac{n!}{k!(n-k)!}.
 \]
 
-There are $n!$ permutations for $n$ elements.
-We go through all permutations and in each case
+There are $n!$ permutations of $n$ elements.
+We go through all permutations and always
 select the first $k$ elements of the permutation
 to the subset.
 Since the order of the elements in the subset
-and outside the subset doesn't matter,
+and outside the subset does not matter,
 the result is divided by $k!$ and $(n-k)!$
 
 \subsubsection{Properties}
@@ -126,9 +125,9 @@ For binomial coefficients,
 {n \choose k}  =  {n \choose n-k},
 \]
 because we can either select $k$
-elements to the subset,
-or select $n-k$ elements that
-will be outside the subset.
+elements that belong to the subset
+or $n-k$ elements that
+do not belong to the subset.
 
 The sum of binomial coefficients is
 \[
@@ -149,8 +148,7 @@ is that
 
 Binomial coefficients also appear in
 \key{Pascal's triangle}
-whose border consists of 1's,
-and each value is the sum of two
+where each value equals the sum of two
 above values:
 \begin{center}
 \begin{tikzpicture}{0.9}
@@ -179,12 +177,12 @@ above values:
 
 \subsubsection{Boxes and balls}
 
-''Boxes and models'' is a useful model,
+''Boxes and balls'' is a useful model,
 where we count the ways to
 place $k$ balls in $n$ boxes.
-Let's consider three cases:
+Let us consider three scenarios:
 
-\textit{Case 1}: Each box can contain
+\textit{Scenario 1}: Each box can contain
 at most one ball.
 For example, when $n=5$ and $k=2$,
 there are 10 solutions:
@@ -220,10 +218,10 @@ there are 10 solutions:
 \end{tikzpicture}
 \end{center}
 
-In this case, the answer is directly the
+In this scenario, the answer is directly the
 binomial coefficient ${n \choose k}$.
 
-\textit{Case 2}: A box can contain multiple balls.
+\textit{Scenario 2}: A box can contain multiple balls.
 For example, when $n=5$ and $k=2$,
 there are 15 solutions:
 
@@ -263,25 +261,26 @@ there are 15 solutions:
 \end{tikzpicture}
 \end{center}
 
-This process can be represented as a string
+The process of placing the balls in the boxes
+can be represented as a string
 that consists of symbols
 ''o'' and ''$\rightarrow$''.
-Initially, we are standing at the leftmost box.
-The symbol ''o'' means we place a ball
+Initially, assume that we are standing at the leftmost box.
+The symbol ''o'' means that we place a ball
 in the current box, and the symbol
 ''$\rightarrow$'' means that we move to
-the next box right.
+the next box to the right.
 
 Using this notation, each solution is a string
-that has $k$ times the symbol ''o'' and
+that contains $k$ times the symbol ''o'' and
 $n-1$ times the symbol ''$\rightarrow$''.
 For example, the upper-right solution
-corresponds to the string
+in the above picture corresponds to the string
 ''$\rightarrow$ $\rightarrow$ o $\rightarrow$ o $\rightarrow$''.
 Thus, the number of solutions is
 ${k+n-1 \choose k}$.
 
-\textit{Case 3}: Each box may contain at most one ball,
+\textit{Scenario 3}: Each box may contain at most one ball,
 and in addition, no two adjacent boxes may both contain a ball.
 For example, when $n=5$ and $k=2$,
 there are 6 solutions:
@@ -313,37 +312,37 @@ there are 6 solutions:
 \end{tikzpicture}
 \end{center}
 
-In this case, we can think that
-$k$ balls are initially placed in boxes.
-and between each such box there is an empty box.
+In this scenario, we can assume that
+$k$ balls are initially placed in boxes
+and there is an empty box between each
+two such boxes.
 The remaining task is to choose the
 positions for
 $n-k-(k-1)=n-2k+1$ empty boxes.
-There are $k+1$ positions, so as in case 2,
-the number of solutions is
+There are $k+1$ positions,
+so the number of solutions is
 ${n-2k+1+k+1-1 \choose n-2k+1} = {n-k+1 \choose n-2k+1}$.
 
 \subsubsection{Multinomial coefficient}
 
 \index{multinomial coefficient}
 
-A generalization for a binomial coefficient is
-a \key{multinomial coefficient}
-
+The \key{multinomial coefficient}
 \[ {n \choose k_1,k_2,\ldots,k_m} = \frac{n!}{k_1! k_2! \cdots k_m!}, \]
-
-where $k_1+k_2+\cdots+k_m=n$.
-A multinomial coefficient i the number of ways
+equals the number of ways
 we can divide $n$ elements into subsets
-whose sizes are $k_1,k_2,\ldots,k_m$.
-If $m=2$, the formula
+of sizes $k_1,k_2,\ldots,k_m$,
+where $k_1+k_2+\cdots+k_m=n$.
+Multinomial coefficients can be seen as a
+generalization of binomial cofficients;
+if $m=2$, the above formula
 corresponds to the binomial coefficient formula.
 
 \section{Catalan numbers}
 
 \index{Catalan number}
 
-A \key{Catalan number} $C_n$ is the
+The \key{Catalan number} $C_n$ equals the
 number of valid
 parenthesis expressions that consist of
 $n$ left parentheses and $n$ right parentheses.
@@ -379,8 +378,8 @@ then also the expression $AB$ is valid.
 \end{itemize}
 
 Another way to characterize valid 
-paranthesis expressions is that if
-we choose any prefix of the expression,
+parenthesis expressions is that if
+we choose any prefix of such an expression,
 it has to contain at least as many left
 parentheses as right parentheses.
 In addition, the complete expression has to
@@ -423,7 +422,7 @@ There are a total of ${2n \choose n}$ ways
 to construct a (not necessarily valid)
 parenthesis expression that contains $n$ left
 parentheses and $n$ right parentheses.
-Let's calculate the number of such
+Let us calculate the number of such
 expressions that are \emph{not} valid.
 
 If a parenthesis expression is not valid,
@@ -448,7 +447,7 @@ expressions can be calculated using the formula
 
 \subsubsection{Counting trees}
 
-Catalan numbers are also related to rooted trees:
+Catalan numbers are also related to trees:
 
 \begin{itemize}
 \item there are $C_n$ binary trees of $n$ nodes
@@ -554,18 +553,18 @@ The formula can be illustrated as follows:
 \end{tikzpicture}
 \end{center}
 
-In the above example, our goal is to calculate
+Our goal is to calculate
 the size of the union $A \cup B$
 that corresponds to the area of the region
-that is inside at least one circle.
+that belongs to at least one circle.
 The picture shows that we can calculate
 the area of $A \cup B$ by first summing the
 areas of $A$ and $B$, and then subtracting
 the area of $A \cap B$.
 
-The same idea can be applied, when the number
+The same idea can be applied when the number
 of sets is larger.
-When there are three sets, the formula becomes
+When there are three sets, the inclusio-exclusion formula is
 \[ |A \cup B \cup C| = |A| + |B| + |C| - |A \cap B|  - |A \cap C|  - |B \cap C| + |A \cap B \cap C| \]
 and the corresponding picture is
 
@@ -589,14 +588,14 @@ and the corresponding picture is
 
 In the general case, the size of the 
 union $X_1 \cup X_2 \cup \cdots \cup X_n$
-can be calculated by going through all ways to
-construct an intersection for a collection of
-sets $X_1,X_2,\ldots,X_n$.
+can be calculated by going through all possible
+intersections that contain some of the sets $X_1,X_2,\ldots,X_n$.
 If the intersection contains an odd number of sets,
-its size will be added to the answer,
-and otherwise subtracted from the answer.
+its size is added to the answer,
+and otherwise its size is subtracted from the answer.
 
-Note that similar formulas also work when counting
+Note that similar formulas can also be used
+for calculating
 the size of an intersection from the sizes of
 unions. For example,
 \[ |A \cap B| = |A| + |B| - |A \cup B|\]
@@ -607,16 +606,16 @@ and
 
 \index{derangement}
 
-As an example, let's count the number of \key{derangements}
-of numbers $\{1,2,\ldots,n\}$, i.e., permutations
+As an example, let us count the number of \key{derangements}
+of elements $\{1,2,\ldots,n\}$, i.e., permutations
 where no element remains in its original place.
 For example, when $n=3$, there are
-two possible derangements: $(2,3,1)$ ja $(3,1,2)$.
+two possible derangements: $(2,3,1)$ and $(3,1,2)$.
 
-One approach for the problem is to use
+One approach for solving the problem is to use
 inclusion-exclusion.
 Let $X_k$ be the set of permutations
-that contain the number $k$ at index $k$.
+that contain the element $k$ at position $k$.
 For example, when $n=3$, the sets are as follows:
 \[
 \begin{array}{lcl}
@@ -625,7 +624,7 @@ X_2 & = & \{(1,2,3),(3,2,1)\} \\
 X_3 & = & \{(1,2,3),(2,1,3)\} \\
 \end{array}
 \]
-Using these sets the number of derangements is
+Using these sets, the number of derangements equals
 \[ n! - |X_1 \cup X_2 \cup \cdots \cup X_n|, \]
 so it suffices to calculate the size of the union.
 Using inclusion-exclusion, this reduces to
@@ -642,8 +641,8 @@ $|X_1 \cup X_2 \cup X_3|$ is
 \]
 so the number of solutions is $3!-4=2$.
 
-It turns out that there is also another way for
-solving the problem without inclusion-exclusion.
+It turns out that the problem can also be solved
+without using inclusion-exclusion.
 Let $f(n)$ denote the number of derangements
 for $\{1,2,\ldots,n\}$. We can use the following
 recursive formula:
@@ -657,31 +656,32 @@ recursive formula:
 \end{equation*}
 
 The formula can be derived by going through
-the possibilities how the number 1 changes
+the possibilities how the element 1 changes
 in the derangement.
-There are $n-1$ ways to choose a number $x$
-that will replace the number 1.
+There are $n-1$ ways to choose an element $x$
+that replaces the element 1.
 In each such choice, there are two options:
 
-\textit{Option 1:} We also replace the number $x$
-by the number 1.
+\textit{Option 1:} We also replace the element $x$
+with the element 1.
 After this, the remaining task is to construct
-a derangement for $n-2$ numbers.
+a derangement of $n-2$ elements.
 
-\textit{Option 2:} We replace the number $x$
-by some other number than 1.
-Now we should construct a derangement
-for $n-1$ numbers, because we can't replace
-the number $x$ with number $1$, and all other
-numbers should be changed.
+\textit{Option 2:} We replace the element $x$
+with some other element than 1.
+Now we have to construct a derangement
+of $n-1$ element, because we cannot replace
+the element $x$ with the element $1$, and all other
+elements should be changed.
 
 \section{Burnside's lemma}
 
 \index{Burnside's lemma}
 
 \key{Burnside's lemma} counts the number of
-combinations so that for each group of
-symmetric combinations, only one representative is counted.
+combinations so that
+only one representative is counted
+for each group of symmetric combinations,
 Burnside's lemma states that the number of
 combinations is
 \[\sum_{k=1}^n \frac{c(k)}{n},\]
@@ -690,7 +690,7 @@ position of a combination,
 and there are $c(k)$ combinations that
 remain unchanged when the $k$th way is applied.
 
-As an example, let's calculate the number of
+As an example, let us calculate the number of
 necklaces of $n$ pearls,
 where the color of each pearl is
 one of $1,2,\ldots,m$.
@@ -750,12 +750,12 @@ a total of
 necklaces remain the same,
 where $\textrm{gcd}(k,n)$ is the greatest common
 divisor of $k$ and $n$.
-The reason for this is that sequences
-of pearls of size $\textrm{syt}(k,n)$
+The reason for this is that blocks
+of pearls of size $\textrm{gcd}(k,n)$
 will replace each other.
 Thus, according to Burnside's lemma,
 the number of necklaces is
-\[\sum_{i=0}^{n-1} \frac{m^{\textrm{syt}(i,n)}}{n}. \]
+\[\sum_{i=0}^{n-1} \frac{m^{\textrm{gcd}(i,n)}}{n}. \]
 For example, the number of necklaces of length 4
 with 3 colors is
 \[\frac{3^4+3+3^2+3}{4} = 24. \]
@@ -769,7 +769,7 @@ there are $n^{n-2}$ labeled trees
 that contain $n$ nodes.
 The nodes are labeled $1,2,\ldots,n$,
 and two trees are different
-if either their structure or their
+if either their structure or
 labeling is different.
 
 \begin{samepage}
@@ -829,11 +829,10 @@ be derived using Prüfer codes.
 
 A \key{Prüfer code} is a sequence of
 $n-2$ numbers that describes a labeled tree.
-The code is calculated by removing $n-2$
-leaves from the tree.
-At each step, we remove the leaf whose number
-is the smallest, and simultaneously
-add the number of its only neighbor to the code.
+The code is constructed by following a process
+that removes $n-2$ leaves from the tree.
+At each step, the leaf with the smallest label is removed,
+and the label of its only neighbor is added to the code.
 
 For example, the Prüfer code for
 \begin{center}
@@ -856,10 +855,11 @@ For example, the Prüfer code for
 is $[4,4,2]$, because we first remove
 node 1, then node 3 and finally node 5.
 
-We can calculate a Prüfer code for any tree,
+We can construct a Prüfer code for any tree,
 and more importantly,
-the original tree can be constructed
-from the Prüfer code.
-Hence, the number of labeled trees equals
-the number of Prüfer codes that is $n^{n-2}$.
-
+the original tree can be reconstructed
+from a Prüfer code.
+Hence, the number of labeled trees
+of $n$ nodes equals
+$n^{n-2}$, the number of Prüfer codes
+of size $n$.
