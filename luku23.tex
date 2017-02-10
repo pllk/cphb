@@ -73,7 +73,7 @@ The sum $A+B$ of matrices $A$ and $B$
 is defined if the matrices are of the same size.
 The result is a matrix where each element
 is the sum of the corresponding elements
-in matrices $A$ and $B$.
+in $A$ and $B$.
 
 For example,
 \[
@@ -99,8 +99,7 @@ For example,
 \]
 
 Multiplying a matrix $A$ by a value $x$ means
-that we multiply each element in $A$ by $x$.
-
+that each element of $A$ is multiplied by $x$.
 For example,
 \[
  2 \cdot \begin{bmatrix}
@@ -180,18 +179,18 @@ For example,
  \end{bmatrix}.
 \]
 
-Matrix multiplication is not commutative,
-so $AB = BA$ doesn't hold.
-However, it is associative,
-so $A(BC)=(AB)C$ holds.
+Matrix multiplication is associative,
+so $A(BC)=(AB)C$ holds,
+but it is not commutative,
+so $AB = BA$ does not hold.
 
 \index{identity matrix}
 
 An \key{identity matrix} is a square matrix
-where each element on the diagonal is 1,
+where each element on the diagonal is 1
 and all other elements are 0.
-For example, the $3 \times 3$ identity matrix
-is as follows:
+For example, the following matrix
+is the $3 \times 3$ identity matrix:
 \[
  I = \begin{bmatrix}
   1 & 0 & 0 \\
@@ -202,7 +201,7 @@ is as follows:
 
 \begin{samepage}
 Multiplying a matrix by an identity matrix
-doesn't change it. For example,
+does not change it. For example,
 \[
  \begin{bmatrix}
   1 & 0 & 0 \\
@@ -220,7 +219,7 @@ doesn't change it. For example,
   1 & 4 \\
   3 & 9 \\
   8 & 6 \\
- \end{bmatrix} \hspace{10px} \textrm{ja} \hspace{10px}
+ \end{bmatrix} \hspace{10px} \textrm{and} \hspace{10px}
  \begin{bmatrix}
   1 & 4 \\
   3 & 9 \\
@@ -328,13 +327,11 @@ where $C[i,j]$ is the \key{cofactor} of $A$
 at $[i,j]$.
 The cofactor is calculated using the formula
 \[C[i,j] = (-1)^{i+j} \det(M[i,j]),\]
-where $M[i,j]$ is a copy of matrix $A$
-where row $i$ and column $j$ are removed.
-Because of the multiplier $(-1)^{i+j}$ in the cofactor,
+where $M[i,j]$ is obtained by removing
+row $i$ and column $j$ from $A$.
+Due to the multiplier $(-1)^{i+j}$ in the cofactor,
 every other determinant is positive
 and negative.
-
-\begin{samepage}
 For example,
 \[
 \det(
@@ -344,10 +341,7 @@ For example,
  \end{bmatrix}
 ) = 3 \cdot 6 - 4 \cdot 1 = 14 
 \]
-\end{samepage}
-
 and
-
 \[
 \det(
  \begin{bmatrix}
@@ -381,9 +375,9 @@ and
 
 \index{inverse matrix}
 
-The determinant indicates if matrix $A$
-has an \key{inverse matrix}
-$A^{-1}$ for which $A \cdot A^{-1} = I$,
+The determinant of $A$ tells us
+whether there is an \key{inverse matrix}
+$A^{-1}$ such that $A \cdot A^{-1} = I$,
 where $I$ is an identity matrix.
 It turns out that $A^{-1}$ exists
 exactly when $\det(A) \neq 0$,
@@ -426,16 +420,16 @@ For example,
 
 A \key{linear recurrence}
 can be represented as a function $f(n)$
-with initial values
-$f(0),f(1),\ldots,f(k-1)$,
-whose values for $k$ and larger parameters
-are calculated recursively using a formula
+such that the initial values are
+$f(0),f(1),\ldots,f(k-1)$
+and the larger values
+are calculated recursively using the formula
 \[f(n) = c_1 f(n-1) + c_2 f(n-2) + \ldots + c_k f (n-k),\]
 where $c_1,c_2,\ldots,c_k$ are constant multipliers.
 
 We can use dynamic programming to calculate
-any value $f(n)$ in $O(kn)$ time by calculating
-all values $f(0),f(1),\ldots,f(n)$ one after another.
+any value of $f(n)$ in $O(kn)$ time by calculating
+all values of $f(0),f(1),\ldots,f(n)$ one after another.
 However, if $k$ is small, it is possible to calculate
 $f(n)$ much more efficiently in $O(k^3 \log n)$
 time using matrix operations.
@@ -445,7 +439,7 @@ time using matrix operations.
 \index{Fibonacci number}
 
 A simple example of a linear recurrence is the
-function that calculates Fibonacci numbers:
+following function that defines the Fibonacci numbers:
 \[
 \begin{array}{lcl}
 f(0) & = & 0 \\
@@ -456,9 +450,9 @@ f(n) & = & f(n-1)+f(n-2) \\
 In this case, $k=2$ and $c_1=c_2=1$.
 
 \begin{samepage}
-The idea is to represent the formula for
-calculating Fibonacci numbers as a
-square matrix $X$ of size $2 \times 2$
+The idea is to represent the
+Fibonacci formula as a
+square matrix $X$ of size $2 \times 2$,
 for which the following holds:
 \[ X \cdot
  \begin{bmatrix}
@@ -473,7 +467,7 @@ for which the following holds:
  \]
 Thus, values $f(i)$ and $f(i+1)$ are given as
 ''input'' for $X$,
-and $X$ constructs values $f(i+1)$ and $f(i+2)$
+and $X$ calculates values $f(i+1)$ and $f(i+2)$
 from them.
 It turns out that such a matrix is
 
@@ -540,14 +534,14 @@ X^n \cdot
   1 \\
  \end{bmatrix}.
 \]
-The power $X^n$ on can be calculated in
+The power $X^n$ can be calculated in
 $O(k^3 \log n)$ time,
-so the value $f(n)$ can also be calculated
+so the value of $f(n)$ can also be calculated
 in $O(k^3 \log n)$ time.
 
 \subsubsection{General case}
 
-Let's now consider a general case where
+Let us now consider the general case where
 $f(n)$ is any linear recurrence.
 Again, our goal is to construct a matrix $X$
 for which
@@ -583,8 +577,8 @@ In the first $k-1$ rows, each element is 0
 except that one element is 1.
 These rows replace $f(i)$ with $f(i+1)$,
 $f(i+1)$ with $f(i+2)$, etc.
-The last row contains the multipliers in the recurrence,
-and it calculates the new value $f(i+k)$.
+The last row contains the multipliers of the recurrence
+to calculate the new value $f(i+k)$.
 
 \begin{samepage}
 Now, $f(n)$ can be calculated in
@@ -674,8 +668,8 @@ Using a similar idea in a weighted graph,
 we can calculate for each pair of nodes the shortest
 path between them that contains exactly $n$ edges.
 To calculate this, we have to define matrix multiplication
-in another way, so that we don't calculate the number
-of paths but minimize the length of a path.
+in a new way, so that we do not calculate the numbers
+of paths but minimize the lengths of paths.
 
 \begin{samepage}
 As an example, consider the following graph:
@@ -700,8 +694,8 @@ As an example, consider the following graph:
 \end{center}
 \end{samepage}
 
-Let's construct an adjacency matrix where
-$\infty$ means that an edge doesn't exist,
+Let us construct an adjacency matrix where
+$\infty$ means that an edge does not exist,
 and other values correspond to edge weights.
 The matrix is
 \[
@@ -721,15 +715,16 @@ AB[i,j] = \sum_{k=1}^n A[i,k] \cdot B[k,j]
 \]
 we now use the formula
 \[
-AB[i,j] = \min_{k=1}^n A[i,k] + B[k,j],
+AB[i,j] = \min_{k=1}^n A[i,k] + B[k,j]
 \]
 for matrix multiplication, so we calculate
 a minimum instead of a sum,
 and a sum of elements instead of a product.
 After this modification,
-matrix powers can be used for calculating
-shortest paths in the graph:
+matrix powers correspond to
+shortest paths in the graph.
 
+For example, as
 \[
 V^4= \begin{bmatrix}
   \infty & \infty & 10 & 11 & 9 & \infty \\
@@ -738,9 +733,9 @@ V^4= \begin{bmatrix}
   \infty & 8 & \infty & \infty & \infty & \infty \\
   \infty & \infty & \infty & \infty & \infty & \infty \\
   \infty & \infty & 12 & 13 & 11 & \infty \\
- \end{bmatrix}
+ \end{bmatrix},
 \]
-For example, the shortest path of 4 edges
+we can conclude that the shortest path of 4 edges
 from node 2 to node 5 has length 8.
 This path is
 $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$.
@@ -750,9 +745,9 @@ $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$.
 \index{Kirchhoff's theorem}
 \index{spanning tree}
 
-\key{Kirchhoff's theorem} provides us a way
+\key{Kirchhoff's theorem} provides a way
 to calculate the number of spanning trees
-in a graph as a determinant of a special matrix.
+of a graph as a determinant of a special matrix.
 For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -802,12 +797,12 @@ has three spanning trees:
 \end{tikzpicture}
 \end{center}
 \index{Laplacean matrix}
-We construct a \key{Laplacean matrix} $L$,
+To calculate the number of spanning trees,
+we construct a \key{Laplacean matrix} $L$,
 where $L[i,i]$ is the degree of node $i$
 and $L[i,j]=-1$ if there is an edge between
 nodes $i$ and $j$, and otherwise $L[i,j]=0$.
-In this graph, the matrix is as follows:
-
+The Laplacean matrix for the above graph is as follows:
 \[
 L= \begin{bmatrix}
   3 & -1 & -1 & -1 \\
@@ -817,7 +812,7 @@ L= \begin{bmatrix}
  \end{bmatrix}
 \]
 
-The number of spanning trees is the same as
+The number of spanning trees equals
 the determinant of a matrix that is obtained
 when we remove any row and any column from $L$.
 For example, if we remove the first row
