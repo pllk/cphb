@@ -329,7 +329,7 @@ The cofactor is calculated using the formula
 \[C[i,j] = (-1)^{i+j} \det(M[i,j]),\]
 where $M[i,j]$ is obtained by removing
 row $i$ and column $j$ from $A$.
-Due to the multiplier $(-1)^{i+j}$ in the cofactor,
+Due to the coefficient $(-1)^{i+j}$ in the cofactor,
 every other determinant is positive
 and negative.
 For example,
@@ -425,7 +425,7 @@ $f(0),f(1),\ldots,f(k-1)$
 and the larger values
 are calculated recursively using the formula
 \[f(n) = c_1 f(n-1) + c_2 f(n-2) + \ldots + c_k f (n-k),\]
-where $c_1,c_2,\ldots,c_k$ are constant multipliers.
+where $c_1,c_2,\ldots,c_k$ are constant coefficients.
 
 We can use dynamic programming to calculate
 any value of $f(n)$ in $O(kn)$ time by calculating
@@ -577,7 +577,7 @@ In the first $k-1$ rows, each element is 0
 except that one element is 1.
 These rows replace $f(i)$ with $f(i+1)$,
 $f(i+1)$ with $f(i+2)$, etc.
-The last row contains the multipliers of the recurrence
+The last row contains the coefficients of the recurrence
 to calculate the new value $f(i+k)$.
 
 \begin{samepage}
