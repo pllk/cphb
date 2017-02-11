@@ -1,8 +1,7 @@
 \chapter{Game theory}
 
-In this chapter, we will focus on games where
-two players make alternate moves and that 
-do not contain random elements.
+In this chapter, we will focus on two-player
+games that do not contain random elements.
 Our goal is to find a strategy that we can
 follow to win the game
 no matter what the opponent does,
@@ -11,20 +10,20 @@ if such a strategy exists.
 It turns out that there is a general strategy
 for all such games,
 and we can analyze the games using the \key{nim theory}.
-First, we analyze simple games where
+First, we will analyze simple games where
 players remove sticks from heaps,
-and after this, we generalize the strategy
-for those games to all other games.
+and after this, we will generalize the strategy
+used in those games to all other games.
 
 \section{Game states}
 
-Let's consider a game where there is initially
+Let us consider a game where there is initially
 a heap of $n$ sticks.
 Players $A$ and $B$ move alternatively,
 and player $A$ begins.
 On each move, the player has to remove
-1, 2 or 3 sticks from the heap.
-The player who removes the last stick wins.
+1, 2 or 3 sticks from the heap,
+and the player who removes the last stick wins the game.
 
 For example, if $n=10$, the game may proceed as follows:
 \begin{enumerate}[noitemsep]
@@ -34,11 +33,10 @@ For example, if $n=10$, the game may proceed as follows:
 \item Player $B$ removes 2 sticks (2 sticks left).
 \item Player $A$ removes 2 sticks and wins.
 \end{enumerate}
+
 This game consists of states $0,1,2,\ldots,n$,
 where the number of the state corresponds to
 the number of sticks left.
-The player must always choose how many sticks
-they will remove from the heap.
 
 \subsubsection{Winning and losing states}
 
@@ -46,17 +44,17 @@ they will remove from the heap.
 \index{losing state}
 
 A \key{winning state} is a state where
-the player wins the game if they
-play optimally.
-Correspondingly, a \key{losing state} is a state
-where the player loses if the
+the player will win the game if they
+play optimally,
+and a \key{losing state} is a state
+where the player will lose the game if the
 opponent plays optimally.
 It turns out that we can classify all states
-in a game so that each state is either
+of a game so that each state is either
 a winning state or a losing state.
 
 In the above game, state 0 is clearly a
-losing state, because the player can't make
+losing state, because the player cannot make
 any moves.
 States 1, 2 and 3 are winning states,
 because we can remove 1, 2 or 3 sticks
@@ -70,12 +68,12 @@ from the current state to a losing state,
 the current state is a winning state,
 and otherwise it is a losing state.
 Using this observation, we can classify all states
-in a game beginning from losing states where
+of a game starting with losing states where
 there are no possible moves.
 
 The states $0 \ldots 15$ of the above game
 can be classified as follows
-($W$ means winning state, and $L$ means losing state):
+($W$ denotes a winning state and $L$ denotes a losing state):
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (16,1);
@@ -117,7 +115,7 @@ can be classified as follows
 \end{tikzpicture}
 \end{center}
 
-It's easy to analyze this game:
+It is easy to analyze this game:
 a state $k$ is a losing state if $k$ is
 divisible by 4, and otherwise it
 is winning state.
@@ -137,17 +135,17 @@ they play optimally.
 
 \subsubsection{State graph}
 
-Let's now consider another stick game,
-where in state $k$, it is allowed to remove
+Let us now consider another stick game,
+where in each state $k$, it is allowed to remove
 any number $x$ of sticks such that $x$
-is smaller than $x$ and divides $x$.
+is smaller than $k$ and divides $k$.
 For example, in state 8 we may remove
 1, 2 or 4 sticks, but in state 7 the only
 allowed move is to remove 1 stick.
 
 The following picture shows the states
 $1 \ldots 9$ of the game as a \key{state graph},
-where nodes are states and edges are moves between them:
+whose nodes are the states and edges are the moves between them:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -221,7 +219,7 @@ and all odd-numbered states are losing states.
 
 The \key{nim game} is a simple game that
 has an important role in game theory,
-because many games can be played using
+because many other games can be played using
 the same strategy.
 First, we focus on nim,
 and then we generalize the strategy
@@ -241,17 +239,17 @@ where $x_k$ denotes the number of sticks in heap $k$.
 For example, $[10,12,5]$ is a game where
 there are three heaps with 10, 12 and 5 sticks.
 The state $[0,0,\ldots,0]$ is a losing state,
-because it's not possible to remove any sticks,
+because it is not possible to remove any sticks,
 and this is always the final state.
 
 \subsubsection{Analysis}
 \index{nim sum}
 
-It turns out that we can easily find out
-the type of any nim state by calculating
-a \key{nim sum} $x_1 \oplus x_2 \oplus \cdots \oplus x_n$,
+It turns out that we can easily classify
+any nim state by calculating
+the \key{nim sum} $x_1 \oplus x_2 \oplus \cdots \oplus x_n$,
 where $\oplus$ is the xor operation.
-The states with nim sum 0 are losing states,
+The states whose nim sum is 0 are losing states,
 and all other states are winning states.
 For example, the nim sum for
 $[10,12,5]$ is $10 \oplus 12 \oplus 5 = 3$,
@@ -280,12 +278,12 @@ In this case, we can remove sticks from
 heap $k$ so that it will contain $x_k \oplus s$ sticks,
 which will lead to a losing state.
 There is always such a heap, where $x_k$
-has a one bit in position of the leftmost
+has a one bit at the position of the leftmost
 one bit in $s$.
 
 ~\\
 \noindent
-As an example, let's consider the state $[10,2,5]$.
+As an example, consider the state $[10,2,5]$.
 This state is a winning state,
 because its nim sum is 3.
 Thus, there has to be a move which
@@ -308,7 +306,7 @@ The nim sum of the state is as follows:
 
 In this case, the heap with 10 sticks
 is the only heap that has a one bit
-in the position of the leftmost
+at the position of the leftmost
 one bit in the nim sum:
 
 \begin{center}
@@ -350,18 +348,19 @@ optimally played almost like the standard nim game.
 The idea is to first play the misère game
 like a standard game, but change the strategy
 at the end of the game.
-The new strategy will be used when after the next move,
-each heap would contain at most one stick.
+The new strategy will be introduced in a situation
+where each heap would contain at most one stick
+after the next move.
 
 In the standard game, we should choose a move
 after which there is an even number of heaps with one stick.
 However, in the misère game, we choose a move so that
 there is an odd number of heaps with one stick.
 
-This strategy works because the state where the
-strategy changes always appears in a game,
+This strategy works because a state where the
+strategy changes always appears in the game,
 and this state is a winning state, because
-it contains exactly one heap that has more than one stick,
+it contains exactly one heap that has more than one stick
 so the nim sum is not 0.
 
 \section{Sprague–Grundy theorem}
@@ -369,23 +368,23 @@ so the nim sum is not 0.
 \index{Sprague–Grundy theorem}
 
 The \key{Sprague–Grundy theorem} generalizes the
-strategy used in nim for all games that fulfil
+strategy used in nim to all games that fulfil
 the following requirements:
 
 \begin{itemize}[noitemsep]
 \item There are two players who move alternatively.
 \item The game consists of states, and the possible moves
-in a state don't depend on whose turn it is.
-\item The game ends when a player can't make a move.
+in a state do not depend on whose turn it is.
+\item The game ends when a player cannot make a move.
 \item The game surely ends sooner or later.
 \item The players have complete information about
-states and moves, and there is no randomness in the game.
+the states and allowed moves, and there is no randomness in the game.
 \end{itemize}
 The idea is to calculate for each game state
 a Grundy number that corresponds to the number of
 sticks in a nim heap.
 When we know the Grundy numbers for all states,
-we can play the game like a nim game.
+we can play the game like the nim game.
 
 \subsubsection{Grundy number}
 
@@ -395,7 +394,7 @@ we can play the game like a nim game.
 The \key{Grundy number} for a game state is
 \[\textrm{mex}(\{g_1,g_2,\ldots,g_n\}),\]
 where $g_1,g_2,\ldots,g_n$ are Grundy numbers for
-states to which we can move from the current state,
+states to which we can move from the state,
 and the mex function returns the smallest
 nonnegative number that is not in the set.
 For example, $\textrm{mex}(\{0,1,3\})=2$.
@@ -447,8 +446,8 @@ The Grundy number of a losing state is 0,
 and the Grundy number of a winning state is
 a positive number.
 
-The Grundy number corresponds to a number of sticks
-in a nim heap.
+The Grundy number of a state corresponds to
+a number of sticks in a nim heap.
 If the Grundy number is 0, we can only move to
 states whose Grundy numbers are positive,
 and if the Grundy number is $x>0$, we can move
@@ -457,12 +456,12 @@ $0,1,\ldots,x-1$.
 
 ~\\
 \noindent
-As an example, let's consider a game where
+As an example, let us consider a game where
 the players move a figure in a maze.
 Each square in the maze is either floor or wall.
 On each turn, the player has to move
 the figure some number
-of steps either left or up.
+of steps left or up.
 The winner of the game is the player who
 makes the last move.
 
@@ -497,7 +496,7 @@ denotes a square where it can move.
 
 The states of the game are all floor squares
 in the maze.
-In this case, the Grundy numbers
+In this situation, the Grundy numbers
 are as follows:
 
 \begin{center}
@@ -544,7 +543,7 @@ are as follows:
 \end{tikzpicture}
 \end{center}
 
-Thus, a state in the maze game
+Thus, each state of the maze game
 corresponds to a heap in the nim game.
 For example, the Grundy number for
 the lower-right square is 2,
@@ -564,22 +563,22 @@ to escape from a losing state.
 
 \subsubsection{Subgames}
 
-Next we will assume that the game consists
+Next we will assume that our game consists
 of subgames, and on each turn, the player
 first chooses a subgame and then a move in the subgame.
-The game ends when it's not possible to make any move
+The game ends when it is not possible to make any move
 in any subgame.
 
 In this case, the Grundy number of a game
 is the nim sum of the Grundy numbers of the subgames.
 The game can be played like a nim game by calculating
-all Grundy numbers for subgames, and then their nim sum.
+all Grundy numbers for subgames and then their nim sum.
 
 ~\\
 \noindent
-As an example, let's consider a game that consists
+As an example, consider a game that consists
 of three mazes.
-In thsi game, on each turn the player chooses one
+In this game, on each turn the player chooses one
 of the mazes and then moves the figure in the maze.
 Assume that the initial state of the game is as follows:
 
@@ -755,7 +754,7 @@ In the initial state, the nim sum of the Grundy numbers
 is $2 \oplus 3 \oplus 3 = 2$, so
 the first player can win the game.
 An optimal move is to move two steps up
-in the left maze, which produces the nim sum
+in the first maze, which produces the nim sum
 $0 \oplus 3 \oplus 3 = 0$.
 
 \subsubsection{Grundy's game}
@@ -775,8 +774,8 @@ Grundy numbers $a_{k,1},a_{k,2},\ldots,a_{k,m}$.
 An example of such a game is \key{Grundy's game}.
 Initially, there is a single heap that contains $n$ sticks.
 On each turn, the player chooses a heap and divides
-it into two nonempty heaps such that the numbers of
-sticks in the heaps are different.
+it into two nonempty heaps such that the heaps
+are of different size.
 The player who makes the last move wins the game.
 
 Let $f(n)$ be the Grundy number of a heap
@@ -785,11 +784,11 @@ The Grundy number can be calculated by going
 through all ways to divide the heap into
 two heaps.
 For example, when $n=8$, the possibilities
-are $1+7$, $2+6$ ja $3+5$, so
+are $1+7$, $2+6$ and $3+5$, so
 \[f(8)=\textrm{mex}(\{f(1) \oplus f(7), f(2) \oplus f(6), f(3) \oplus f(5)\}).\]
 
-In this game, the value $f(n)$ is based on values
-$f(1),\ldots,f(n-1)$.
+In this game, the value of $f(n)$ is based on values
+of $f(1),\ldots,f(n-1)$.
 The base cases are $f(1)=f(2)=0$,
 because it is not possible to divide heaps
 of 1 and 2 sticks.
@@ -807,7 +806,7 @@ f(8) & = & 2 \\
 \end{array}
 \]
 The Grundy number for $n=8$ is 2,
-so it's possible to win the game.
+so it is possible to win the game.
 The winning move is to create heaps
 $1+7$, because $f(1) \oplus f(7) = 0$.
 
