@@ -2,54 +2,51 @@
 
 \index{probability}
 
-A \key{probability} is a number between $0 \ldots 1$
+A \key{probability} is a real number between $0$ and $1$
 that indicates how probable an event is.
 If an event is certain to happen,
 its probability is 1,
 and if an event is impossible,
 its probability is 0.
-
-A typical example is throwing a dice,
-where the result is an integer between
-$1,2,\ldots,6$.
-Usually it is assumed that the probability
-for each result is $1/6$,
-so all results have the same probability.
-
 The probability of an event is denoted $P(\cdots)$
-where the three dots are
-a description of the event.
+where the three dots describe the event.
+
 For example, when throwing a dice,
-$P(\textrm{''the result is 4''})=1/6$,
-$P(\textrm{''the result is not 6''})=5/6$
-and $P(\textrm{''the result is even''})=1/2$.
+the outcome is an integer between $1$ and $6$,
+and it is assumed that the probability of
+each outcome is $1/6$.
+For example, we can calculate the following probabilities:
+
+\begin{itemize}[noitemsep]
+\item $P(\textrm{''the result is 4''})=1/6$
+\item $P(\textrm{''the result is not 6''})=5/6$
+\item $P(\textrm{''the result is even''})=1/2$
+\end{itemize}
 
 \section{Calculation}
 
-There are two standard ways to calculate
-probabilities: combinatorial counting
-and simulating a process.
-As an example, let's calculate the probability
+To calculate the probability of an event,
+we can either use combinatorics
+or simulate the process that generates the event.
+As an example, let us calculate the probability
 of drawing three cards with the same value
 from a shuffled deck of cards
-(for example, eight of spades,
-eight of clubs and eight of diamonds).
+(for example, $\spadesuit 8$, $\clubsuit 8$ and $\diamondsuit 8$).
 
 \subsubsection*{Method 1}
 
-We can calculate the probability using
-the formula
+We can calculate the probability using the formula
 
-\[\frac{\textrm{desired cases}}{\textrm{all cases}}.\]
+\[\frac{\textrm{number of desired outcomes}}{\textrm{total number of outcomes}}.\]
 
-In this problem, the desired cases are those
+In this problem, the desired outcomes are those
 in which the value of each card is the same.
-There are $13 {4 \choose 3}$ such cases,
+There are $13 {4 \choose 3}$ such outcomes,
 because there are $13$ possibilities for the
 value of the cards and ${4 \choose 3}$ ways to
 choose $3$ suits from $4$ possible suits.
 
-The number of all cases is ${52 \choose 3}$,
+There are a total of ${52 \choose 3}$ outcomes,
 because we choose 3 cards from 52 cards.
 Thus, the probability of the event is
 
@@ -64,12 +61,11 @@ consists of three steps.
 We require that each step in the process is successful.
 
 Drawing the first card certainly succeeds,
-because any card will do.
-After this, the value of the cards has been fixed.
+because there are no restrictions.
 The second step succeeds with probability $3/51$,
 because there are 51 cards left and 3 of them
 have the same value as the first card.
-Finally, the third step succeeds with probability $2/50$.
+In a similar way, the third step succeeds with probability $2/50$.
 
 The probability that the entire process succeeds is
 
@@ -79,14 +75,13 @@ The probability that the entire process succeeds is
 
 An event in probability can be represented as a set
 \[A \subset X,\]
-where $X$ contains all possible outcomes,
+where $X$ contains all possible outcomes
 and $A$ is a subset of outcomes.
 For example, when drawing a dice, the outcomes are
-\[X = \{x_1,x_2,x_3,x_4,x_5,x_6\},\]
-where $x_k$ means the result $k$.
+\[X = \{1,2,3,4,5,6\}.\]
 Now, for example, the event ''the result is even''
 corresponds to the set
-\[A = \{x_2,x_4,x_6\}.\]
+\[A = \{2,4,6\}.\]
 
 Each outcome $x$ is assigned a probability $p(x)$.
 Furthermore, the probability $P(A)$ of an event
@@ -95,9 +90,9 @@ of probabilities of outcomes using the formula
 \[P(A) = \sum_{x \in A} p(x).\]
 For example, when throwing a dice,
 $p(x)=1/6$ for each outcome $x$,
-so the probability for the event
+so the probability of the event
 ''the result is even'' is
-\[p(x_2)+p(x_4)+p(x_6)=1/2.\]
+\[p(2)+p(4)+p(6)=1/2.\]
 
 The total probability of the outcomes in $X$ must
 be 1, i.e., $P(X)=1$.
@@ -107,21 +102,21 @@ we can manipulate them using standard set operations:
 
 \begin{itemize}
 \item The \key{complement} $\bar A$ means
-''$A$ doesn't happen''.
+''$A$ does not happen''.
 For example, when throwing a dice, 
-the complement of $A=\{x_2,x_4,x_6\}$ is
-$\bar A = \{x_1,x_3,x_5\}$.
+the complement of $A=\{2,4,6\}$ is
+$\bar A = \{1,3,5\}$.
 \item The \key{union} $A \cup B$ means
 ''$A$ or $B$ happen''.
 For example, the union of
-$A=\{x_2,x_5\}$
-and $B=\{x_4,x_5,x_6\}$ is
-$A \cup B = \{x_2,x_4,x_5,x_6\}$.
+$A=\{2,5\}$
+and $B=\{4,5,6\}$ is
+$A \cup B = \{2,4,5,6\}$.
 \item The \key{intersection} $A \cap B$ means
 ''$A$ and $B$ happen''.
 For example, the intersection of
-$A=\{x_2,x_5\}$ and $B=\{x_4,x_5,x_6\}$ is
-$A \cap B = \{x_5\}$.
+$A=\{2,5\}$ and $B=\{4,5,6\}$ is
+$A \cap B = \{5\}$.
 \end{itemize}
 
 \subsubsection{Complement}
@@ -131,12 +126,12 @@ $\bar A$ is calculated using the formula
 \[P(\bar A)=1-P(A).\]
 
 Sometimes, we can solve a problem easily
-using complements by solving an opposite problem.
+using complements by solving the opposite problem.
 For example, the probability of getting
 at least one six when throwing a dice ten times is
 \[1-(5/6)^{10}.\]
 
-Here $5/6$ is the probability that the result
+Here $5/6$ is the probability that the outcome
 of a single throw is not six, and
 $(5/6)^{10}$ is the probability that none of
 the ten throws is a six.
@@ -148,7 +143,7 @@ The probability of the union $A \cup B$
 is calculated using the formula
 \[P(A \cup B)=P(A)+P(B)-P(A \cap B).\]
 For example, when throwing a dice,
-the union of events
+the union of the events
 \[A=\textrm{''the result is even''}\]
 and
 \[B=\textrm{''the result is less than 4''}\]
@@ -169,16 +164,16 @@ the probability of the event $A \cup B$ is simply
 
 The \key{conditional probability}
 \[P(A | B) = \frac{P(A \cap B)}{P(B)}\]
-is the probability of an event $A$
-assuming that an event happens.
-In this case, when calculating the
+is the probability $A$
+assuming that $B$ happens.
+In this situation, when calculating the
 probability of $A$, we only consider the outcomes
 that also belong to $B$.
 
-Using the sets in the previous example,
+Using the above sets,
 \[P(A | B)= 1/3,\]
-Because the outcomes in $B$ are
-$\{x_1,x_2,x_3\}$, and one of them is even.
+Because the outcomes of $B$ are
+$\{1,2,3\}$, and one of them is even.
 This is the probability of an even result
 if we know that the result is between $1 \ldots 3$.
 
@@ -192,7 +187,7 @@ $A \cap B$ can be calculated using the formula
 \[P(A \cap B)=P(A)P(B|A).\]
 Events $A$ and $B$ are \key{independent} if
 \[P(A|B)=P(A) \hspace{10px}\textrm{and}\hspace{10px} P(B|A)=P(B),\]
-which means that the fact that $B$ happens doesn't
+which means that the fact that $B$ happens does not
 change the probability of $A$, and vice versa.
 In this case, the probability of the intersection is
 \[P(A \cap B)=P(A)P(B).\]
@@ -214,15 +209,17 @@ by a random process.
 For example, when throwing two dice,
 a possible random variable is
 \[X=\textrm{''the sum of the results''}.\]
-For example, if the results are $(4,6)$,
+For example, if the results are $[4,6]$
+(meaning that we first throw a four and then a six),
 then the value of $X$ is 10.
 
 We denote $P(X=x)$ the probability that
 the value of a random variable $X$ is $x$.
-In the previous example, $P(X=10)=3/36$,
-because the total number of results is 36,
-and the possible ways to obtain the sum 10 are
-$(4,6)$, $(5,5)$ and $(6,4)$.
+For example, when throwing two dice,
+$P(X=10)=3/36$,
+because the total number of outcomes is 36
+and there are three possible ways to obtain
+the sum 10: $[4,6]$, $[5,5]$ and $[6,4]$.
 
 \subsubsection{Expected value}
 
@@ -232,12 +229,10 @@ The \key{expected value} $E[X]$ indicates the
 average value of a random variable $X$.
 The expected value can be calculated as the sum
 \[\sum_x P(X=x)x,\]
-where $x$ goes through all possible results
-for $X$.
+where $x$ goes through all possible values of $X$.
 
 For example, when throwing a dice,
-the expected value is
-
+the expected result is
 \[1/6 \cdot 1 + 1/6 \cdot 2 + 1/6 \cdot 3 + 1/6 \cdot 4 + 1/6 \cdot 5 + 1/6 \cdot 6 = 7/2.\]
 
 A useful property of expected values is \key{linearity}.
@@ -249,10 +244,10 @@ This formula holds even if random variables
 depend on each other.
 
 For example, when throwing two dice,
-the expected value of their sum is
+the expected sum is
 \[E[X_1+X_2]=E[X_1]+E[X_2]=7/2+7/2=7.\]
 
-Let's now consider a problem where
+Let us now consider a problem where
 $n$ balls are randomly placed in $n$ boxes,
 and our task is to calculate the expected
 number of empty boxes.
@@ -297,8 +292,8 @@ empty boxes is
 \index{distribution}
 
 The \key{distribution} of a random variable $X$
-shows the probability for each value that
-the random variable may have.
+shows the probability of each value that
+$X$ may have.
 The distribution consists of values $P(X=x)$.
 For example, when throwing two dice,
 the distribution for their sum is:
@@ -311,18 +306,12 @@ $P(X=x)$ & $1/36$ & $2/36$ & $3/36$ & $4/36$ & $5/36$ & $6/36$ & $5/36$ & $4/36$
 }
 \end{center}
 
-Next, we will discuss three distributions that
-often arise in applications.
-
 \index{uniform distribution}
-~\\\\
 In a \key{uniform distribution},
-the value of a random variable is
-between $a \ldots b$, and the probability
-for each value is the same.
-For example, throwing a dice generates
-a uniform distribution where
-$P(X=x)=1/6$ when $x=1,2,\ldots,6$.
+the random variable $X$ has $n$ possible
+values $a,a+1,\ldots,b$ and the probability of each value is $1/n$.
+For example, when throwing a dice,
+$a=1$, $b=6$ and $P(X=x)=1/6$ for each value $x$.
 
 The expected value for $X$ in a uniform distribution is
 \[E[X] = \frac{a+b}{2}.\]
@@ -351,7 +340,7 @@ The expected value for $X$ in a binomial distribution is
 ~\\
 In a \key{geometric distribution},
 the probability that an attempt succeeds is $p$,
-and we do attempts until the first success happens.
+and we continue until the first success happens.
 The random variable $X$ counts the number
 of attempts needed, and the probability for
 a value $x$ is
@@ -377,13 +366,13 @@ for moving to other states.
 A Markov chain can be represented as a graph
 whose nodes are states and edges are transitions.
 
-As an example, let's consider a problem
-where we are in floor 1 in a $n$ floor building.
+As an example, let us consider a problem
+where we are in floor 1 in an $n$ floor building.
 At each step, we randomly walk either one floor
 up or one floor down, except that we always
 walk one floor up from floor 1 and one floor down
 from floor $n$.
-What is the probability that we are in floor $m$
+What is the probability of being in floor $m$
 after $k$ steps?
 
 In this problem, each floor of the building
@@ -419,7 +408,7 @@ probability that the current state is $k$.
 The formula $p_1+p_2+\cdots+p_n=1$ always holds.
 
 In the example, the initial distribution is
-$[1,0,0,0,0]$, because we always begin at floor 1.
+$[1,0,0,0,0]$, because we always begin in floor 1.
 The next distribution is $[0,1,0,0,0]$,
 because we can only move from floor 1 to floor 2.
 After this, we can either move one floor up
@@ -427,7 +416,7 @@ or one floor down, so the next distribution is
 $[1/2,0,1/2,0,0]$, etc.
 
 An efficient way to simulate the walk in
-a Markov chain is to use dynaimc programming.
+a Markov chain is to use dynamic programming.
 The idea is to maintain the probability distribution
 and at each step go through all possibilities
 how we can move.
@@ -437,7 +426,7 @@ in $O(n^2 m)$ time.
 The transitions of a Markov chain can also be
 represented as a matrix that updates the
 probability distribution.
-In this case, the matrix is
+In this example, the matrix is
 
 \[ 
  \begin{bmatrix}
@@ -481,15 +470,15 @@ $[0,1,0,0,0]$ as follows:
 \]
 
 By calculating matrix powers efficiently,
-we can calculate in $O(n^3 \log m)$ time
-the distribution after $m$ steps.
+we can calculate the distribution after $m$ steps
+in $O(n^3 \log m)$ time.
 
 \section{Randomized algorithms}
 
 \index{randomized algorithm}
 
 Sometimes we can use randomness for solving a problem,
-even if the problem is not related to random events.
+even if the problem is not related to probabilities.
 A \key{randomized algorithm} is an algorithm that
 is based on randomness.
 
@@ -516,23 +505,23 @@ can be solved using randomness.
 \index{order statistic}
 
 The $kth$ \key{order statistic} of an array
-is the element at index $k$ after sorting
+is the element at position $k$ after sorting
 the array in increasing order.
-It's easy to calculate any order statistic
+It is easy to calculate any order statistic
 in $O(n \log n)$ time by sorting the array,
-but is it really needed to sort the whole array
+but is it really needed to sort the entire array
 to just find one element?
 
 It turns out that we can find order statistics
 using a randomized algorithm without sorting the array.
 The algorithm is a Las Vegas algorithm:
-its running time is usually $O(n)$,
+its running time is usually $O(n)$
 but $O(n^2)$ in the worst case.
 
 The algorithm chooses a random element $x$
 in the array, and moves elements smaller than $x$
 to the left part of the array,
-and the other elements to the right part of the array.
+and all other elements to the right part of the array.
 This takes $O(n)$ time when there are $n$ elements.
 Assume that the left part contains $a$ elements
 and the right part contains $b$ elements.
@@ -540,8 +529,8 @@ If $a=k-1$, element $x$ is the $k$th order statistic.
 Otherwise, if $a>k-1$, we recursively find the $k$th order
 statistic for the left part,
 and if $a<k-1$, we recursively find the $r$th order
-statistic for the right part where $r=k-a-1$.
-The search continues like this, until the element
+statistic for the right part where $r=k-a$.
+The search continues in a similar way, until the element
 has been found.
 
 When each element $x$ is randomly chosen,
@@ -552,10 +541,8 @@ finding the $k$th order statistic is about
 
 The worst case for the algorithm is still $O(n^2)$,
 because it is possible that $x$ is always chosen
-in such a way that it's the smallest or largest
-element in the array.
-In this case, the size of the array decreases
-only by one at each step.
+in such a way that it is one of the smallest or largest
+elements in the array and $O(n)$ steps are needed.
 However, the probability for this is so small
 that this never happens in practice.
 
@@ -570,7 +557,7 @@ Of course, we can solve the problem
 by calculating the product $AB$ again
 (in $O(n^3)$ time using the basic algorithm),
 but one could hope that verifying the
-answer would by easier than to calculate it again.
+answer would by easier than to calculate it from scratch.
 
 It turns out that we can solve the problem
 using a Monte Carlo algorithm whose
@@ -584,11 +571,11 @@ The time complexity of the algorithm is
 $O(n^2)$, because we can calculate the matrices
 $ABX$ and $CX$ in $O(n^2)$ time.
 We can calculate the matrix $ABX$ efficiently
-using the representation $A(BX)$, so only two
+by using the representation $A(BX)$, so only two
 multiplications of $n \times n$ and $n \times 1$
 size matrices are needed.
 
-The weakness in the algorithm is
+The drawback of the algorithm is
 that there is a small chance that the algorithm
 makes a mistake when it reports that $AB=C$.
 For example, 
@@ -627,7 +614,7 @@ However, in practice, the probability that the
 algorithm makes a mistake is small,
 and we can decrease the probability by
 verifying the result using multiple random vectors $X$
-before reporting the answer $AB=C$.
+before reporting that $AB=C$.
 
 \subsubsection{Graph coloring}
 
@@ -636,7 +623,7 @@ before reporting the answer $AB=C$.
 Given a graph that contains $n$ nodes and $m$ edges,
 our task is to find a way to color the nodes
 of the graph using two colors so that
-for at least $m/2$ edges, the end nodes 
+for at least $m/2$ edges, the endpoints 
 have different colors.
 For example, in the graph
 \begin{center}
@@ -675,7 +662,7 @@ a valid coloring is as follows:
 \end{tikzpicture}
 \end{center}
 The above graph contains 7 edges, and for 5 of them,
-the end nodes have different colors,
+the endpoints have different colors,
 so the coloring is valid.
 
 The problem can be solved using a Las Vegas algorithm
@@ -685,10 +672,10 @@ In a random coloring, the color of each node is
 independently chosen so that the probability of
 both colors is $1/2$.
 
-In a random coloring, the probability that the end nodes
+In a random coloring, the probability that the endpoints
 of a single edge have different colors is $1/2$.
-Hence, the expected number of edges whose end nodes
+Hence, the expected number of edges whose endpoints
 have different colors is $1/2 \cdot m = m/2$.
 Since it is excepted that a random coloring is valid,
-we'll find a valid coloring quickly in practice.
+we will quickly find a valid coloring in practice.
 
