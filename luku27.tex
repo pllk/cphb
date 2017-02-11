@@ -10,28 +10,25 @@ but worse than $O(\log n)$.
 Still, many square root algorithms are fast in practice
 and have small constant factors.
 
-As an example, let's consider the problem of
-handling sum queries in an array.
-The required operations are:
-
-\begin{itemize}
-\item change the value at index $x$
-\item calculate the sum in the range $[a,b]$
-\end{itemize}
+As an example, let us consider the problem of
+creating a data structure that supports
+two operations in an array:
+modifying an element at a given position
+and calculating the sum of elements in the given range.
 
 We have previously solved the problem using
 a binary indexed tree and a segment tree,
 that support both operations in $O(\log n)$ time.
 However, now we will solve the problem
 in another way using a square root structure
-so that we can calculate sums in $O(\sqrt n)$ time
-and modify values in $O(1)$ time.
+that allows us to modify elements in $O(1)$ time
+and calculate sums in $O(\sqrt n)$ time.
 
 The idea is to divide the array into blocks
 of size $\sqrt n$ so that each block contains
 the sum of elements inside the block.
-The following example shows an array and the
-corresponding segments:
+For example, an array of 16 elements will be
+divided into blocks of 4 elements as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -67,9 +64,15 @@ corresponding segments:
 \end{tikzpicture}
 \end{center}
 
-When a value in the array changes,
-we have to calculate the sum of the corresponding
-block again:
+Using this structure,
+it is easy to modify the array,
+because it is only needed to calculate
+the sum of a single block again
+after each modification,
+which can be done in $O(1)$ time.
+For example, the following picture shows
+how the value of an element and
+the sum of the corresponding block change:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -107,9 +110,12 @@ block again:
 \end{tikzpicture}
 \end{center}
 
-Any sum in the array can be calculated as a combination
-of single values in the array and the sums of the
-blocks between them:
+Calculating the sum of elements in a range is
+a bit more difficult.
+It turns out that we can always divide
+the range into three parts such that 
+the sum consists of values of single elements
+and sums of blocks between them:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -152,35 +158,23 @@ blocks between them:
 \end{tikzpicture}
 \end{center}
 
-We can change a value in $O(1)$ time,
-because we only have to change the sum of a single block.
-A sum in a range consists of three parts:
+Since the number of single elements is $O(\sqrt n)$
+and also the number of blocks is $O(\sqrt n)$,
+the time complexity of the sum query is $O(\sqrt n)$.
+Thus, the parameter $\sqrt n$ balances two things:
+the array is divided into $\sqrt n$ blocks,
+each of which contains $\sqrt n$ elements.
 
-\begin{itemize}
-\item first, there are $O(\sqrt n)$ single values
-\item then, there are $O(\sqrt n)$ consecutive blocks
-\item finally, there are $O(\sqrt n)$ single values
-\end{itemize}
-
-Calculating each sum takes $O(\sqrt n)$ time,
-so the total complexity for calculating the sum
-of values in any range is $O(\sqrt n)$.
-
-The reason why we use the parameter $\sqrt n$ is that
-it balances two things:
-for example, an array of $n$ elements is divided
-into $\sqrt n$ blocks, each of which contains
-$\sqrt n$ elements.
-In practice, it is not needed to use exactly
-the parameter $\sqrt n$ in algorithms, but it may be better to
+In practice, it is not needed to use the
+exact parameter $\sqrt n$, but it may be better to
 use parameters $k$ and $n/k$ where $k$ is
 larger or smaller than $\sqrt n$.
+The optimal parameter depends on the problem and input.
 
-The best parameter depends on the problem
-and input.
-For example, if an algorithm often goes through
-blocks but rarely iterates elements inside
-blocks, it may be good to divide the array into
+For example, if an algorithm often goes
+through the blocks but rarely inspects
+single elements inside the blocks,
+it may be a good idea to divide the array into
 $k < \sqrt n$ blocks, each of which contains $n/k > \sqrt n$
 elements.
 
@@ -188,24 +182,19 @@ elements.
 
 \index{batch processing}
 
-In \key{batch processing}, the operations of an
-algorithm are divided into batches,
-and each batch will be processed separately.
-Between the batches some precalculation is done
-to process the future operations more efficiently.
+Sometimes the operations of an algorithm
+can be divided into batches so that
+each batch can be processed separately.
+Some precalculation is done
+between the batches
+in order to process the future operations more efficiently.
+If there are $O(\sqrt n)$ batches of size $O(\sqrt n)$,
+this results in a square root algorithm.
 
-In a square root algorithm, $n$ operations are
-divided into batches of size $O(\sqrt n)$,
-and the number of both batches and operations in each
-batch is $O(\sqrt n)$.
-This balances the precalculation time between
-the batches and the time needed for processing
-the batches.
-
-As an example, let's consider a problem
+As an example, let us consider a problem
 where a grid of size $k \times k$
-initially consists of white squares.
-Our task is to perform $n$ operations,
+initially consists of white squares,
+and our task is to perform $n$ operations,
 each of which is one of the following:
 \begin{itemize}
 \item
@@ -217,7 +206,8 @@ between squares $(y_1,x_1)$ and $(y_2,x_2)$
 is $|y_1-y_2|+|x_1-x_2|$
 \end{itemize}
 
-The solution is to divide the operations into
+We can solve the problem by dividing
+the operations into
 $O(\sqrt n)$ batches, each of which consists
 of $O(\sqrt n)$ operations.
 At the beginning of each batch,
@@ -227,81 +217,99 @@ This can be done in $O(k^2)$ time using breadth-first search.
 
 When processing a batch, we maintain a list of squares
 that have been painted black in the current batch.
-Now, the distance from a square to the nearest black
+The list contains $O(\sqrt n)$ elements,
+because there are $O(\sqrt n)$ operations in each batch.
+Thus, the distance from a square to the nearest black
 square is either the precalculated distance or the distance
 to a square that has been painted black in the current batch.
 
 The algorithm works in
 $O((k^2+n) \sqrt n)$ time.
-First, between the batches,
-there are $O(\sqrt n)$ searches that each take
-$O(k^2)$ time.
-Second, the total number of processed
-squares is $O(n)$, and at each square,
-we go through a list of $O(\sqrt n)$ squares
-in a batch.
+First, there are $O(\sqrt n)$ breadth-first searches
+and each search takes $O(k^2)$ time.
+Second, the total number of
+squares processed during the algorithm
+is $O(n)$, and at each square,
+we go through a list of $O(\sqrt n)$ squares.
 
 If the algorithm would perform a breadth-first search
-at each operation, the complexity would be
+at each operation, the time complexity would be
 $O(k^2 n)$.
 And if the algorithm would go through all painted
 squares at each operation,
-the complexity would be $O(n^2)$.
-The square root algorithm combines these complexities,
-and turns the factor $n$ into $\sqrt n$.
+the time complexity would be $O(n^2)$.
+Thus, the time complexity of the square root algorithm
+is a combination of these time complexities,
+but in addition, a factor $n$ is replaced by $\sqrt n$.
 
-\section{Case processing}
+\section{Subalgorithms}
 
-\index{case processing}
+Some square root algorithms consists of
+subalgorithms that are specialized for different
+input parameters.
+Typically, there are two subalgorithms:
+one algorithm is efficient when
+some parameter is smaller than $\sqrt n$,
+and another algorithm is efficient
+when the parameter is larger than $\sqrt n$.
 
-In \key{case processing}, an algorithm has
-specialized subalgorithms for different cases that
-may appear during the algorithm.
-Typically, one part is efficient for
-small parameters, and another part is efficient
-for large parameters, and the turning point is
-about $\sqrt n$.
-
-As an example, let's consider a problem where
-we are given a tree that contains $n$ nodes,
+As an example, let us consider a problem where
+we are given a tree of $n$ nodes,
 each with some color. Our task is to find two nodes
-that have the same color and the distance
-between them is as large as possible.
+that have the same color and whose distance
+is as large as possible.
 
-The problem can be solved by going through all
-colors one after another, and for each color,
-finding two nodes of that color whose distance is
-maximum.
-For a fixed color, a subalgorithm will be used
-that depends on the number of nodes of that color.
-Let's assume that the current color is $x$
-and there are $c$ nodes whose color is $x$.
-There are two cases:
+For example, in the following tree,
+the maximum distance is 4 between
+the red nodes 3 and 4:
 
-\subsubsection*{Case 1: $c \le \sqrt n$}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\node[draw, circle, fill=green!40] (1) at (1,3) {$2$};
+\node[draw, circle, fill=red!40] (2) at (4,3) {$3$};
+\node[draw, circle, fill=red!40] (3) at (1,1) {$5$};
+\node[draw, circle, fill=blue!40] (4) at (4,1) {$6$};
+\node[draw, circle, fill=red!40] (5) at (-2,1) {$4$};
+\node[draw, circle, fill=blue!40] (6) at (-2,3) {$1$};
+\path[draw,thick,-] (1) -- (2);
+\path[draw,thick,-] (1) -- (3);
+\path[draw,thick,-] (3) -- (4);
+\path[draw,thick,-] (3) -- (6);
+\path[draw,thick,-] (5) -- (6);
+\end{tikzpicture}
+\end{center}
 
+The problem can be solved by going through
+all colors and calculating
+the maximum distance of two nodes for each color
+separately.
+Assume that the current color is $x$ and
+there are $c$ nodes whose color is $x$.
+There are two subalgorithms
+that are specialized for small and large
+values of $c$:
+
+\emph{Case 1}: $c \le \sqrt n$.
 If the number of nodes is small,
 we go through all pairs of nodes whose
 color is $x$ and select the pair that
 has the maximum distance.
-For each node, we have calculate the distance
+For each node, it is needed to calculate the distance
 to $O(\sqrt n)$ other nodes (see 18.3),
 so the total time needed for processing all
-nodes in case 1 is $O(n \sqrt n)$.
+nodes is $O(n \sqrt n)$.
 
-\subsubsection*{Case 2: $c > \sqrt n$}
-
+\emph{Case 2}: $c > \sqrt n$.
 If the number of nodes is large,
-we traverse through the whole tree
+we go through the whole tree
 and calculate the maximum distance between
 two nodes with color $x$.
 The time complexity of the tree traversal is $O(n)$,
 and this will be done at most $O(\sqrt n)$ times,
-so the total time needed for case 2 is
-$O(n \sqrt n)$.\\\\
-\noindent
+so the total time needed is $O(n \sqrt n)$.
+
 The time complexity of the algorithm is $O(n \sqrt n)$,
-because both case 1 and case 2 take $O(n \sqrt n)$ time.
+because both cases take $O(n \sqrt n)$ time.
 
 \section{Mo's algorithm}
 
@@ -312,54 +320,53 @@ that require processing range queries in
 a \emph{static} array.
 Before processing the queries, the algorithm
 sorts them in a special order which guarantees
-that the algorithm runs efficiently.
+that the algorithm works efficiently.
 
 At each moment in the algorithm, there is an active
-subarray and the algorithm maintains the answer
-for a query to that subarray.
-The algorithm processes the given queries one by one,
-and always changes the active subarray
-by inserting and removing elements
-so that it corresponds to the current query.
+range and the algorithm maintains the answer
+to a query related to that range.
+The algorithm processes the queries one by one,
+and always updates the endpoints of the
+active range by inserting and removing elements.
 The time complexity of the algorithm is
 $O(n \sqrt n f(n))$ when there are $n$ queries
 and each insertion and removal of an element
 takes $O(f(n))$ time.
 
-The essential trick in Mo's algorithm is that
-the queries are processed in a special order,
-which makes the algorithm efficient.
-The array is divided into blocks of $k=O(\sqrt n)$
+The trick in Mo's algorithm is the order
+in which the queries are processed:
+The array is divided into blocks of $O(\sqrt n)$
 elements, and the queries are sorted primarily by
-the index of the block that contains the first element
-of the query, and secondarily by the index of the
-last element of the query.
+the number of the block that contains the first element
+in the range, and secondarily by the position of the
+last element in the range.
 It turns out that using this order, the algorithm
 only performs $O(n \sqrt n)$ operations,
-because the left border of the subarray moves
+because the left endpoint of the range moves
 $n$ times $O(\sqrt n)$ steps,
-and the right border of the subarray moves
-$\sqrt n$ times $O(n)$ steps. Thus, both the
-borders move a total of $O(n \sqrt n)$ steps.
+and the right endpoint of the range moves
+$\sqrt n$ times $O(n)$ steps. Thus, both
+endpoints move a total of $O(n \sqrt n)$ steps during the algorithm.
 
 \subsubsection*{Example}
 
-As an example, let's consider a problem
-where we are given a set of subarrays in an array,
-and our task is to calculate for each subarray
-the number of distinct elements in the subarray.
+As an example, consider a problem
+where we are given a set of queries,
+each of them corresponding to a range in an array,
+and our task is to calculate for each query
+the number of distinct elements in the range.
 
 In Mo's algorithm, the queries are always sorted
-in the same way, but the way the answer for the query
-is maintained depends on the problem.
+in the same way, but it depends on the problem
+how the answer to the query is maintained.
 In this problem, we can maintain an array 
 \texttt{c} where $\texttt{c}[x]$
 indicates how many times an element $x$
-occurs in the active subarray.
+occurs in the active range.
 
-When we move from a query to another query,
-the active subarray changes.
-For example, if the current subarray is
+When we move from one query to another query,
+the active range changes.
+For example, if the current range is
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -375,7 +382,7 @@ For example, if the current subarray is
 \node at (8.5, 0.5) {4};
 \end{tikzpicture}
 \end{center}
-and the next subarray is
+and the next range is
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (7,1);
@@ -392,21 +399,21 @@ and the next subarray is
 \end{tikzpicture}
 \end{center}
 there will be three steps:
-the left border moves one step to the left,
-and the right border moves two steps to the right.
+the left endpoint moves one step to the left,
+and the right endpoint moves two steps to the right.
 
 After each step, we update the
 array \texttt{c}.
-If an element $x$ is added to the subarray,
+If an element $x$ is added to the range,
 the value
 $\texttt{c}[x]$ increases by one,
-and if an element $x$ is removed from the subarray,
+and if an element $x$ is removed from the range,
 the value $\texttt{c}[x]$ decreases by one.
 If after an insertion
 $\texttt{c}[x]=1$,
-the answer for the query increases by one,
+the answer to the query will be increased by one,
 and if after a removal $\texttt{c}[x]=0$,
-the answer for the query decreases by one.
+the answer to the query will be decreased by one.
 
 In this problem, the time needed to perform
 each step is $O(1)$, so the total time complexity
