@@ -5,14 +5,15 @@
 A segment tree is a versatile data structure
 that can be used in many different situations.
 However, there are many topics related to segment trees
-that we haven't touched yet.
-Now it's time to learn some more advanced variations
-of segment trees and see their full potential.
+that we have not touched yet.
+Now it is time to discuss some more advanced variants
+of segment trees.
 
 So far, we have implemented the operations
-of a segment tree by walking \emph{from the bottom to the top},
-from the leaves to the root.
-For example, we have calculated the sum of a range $[a,b]$
+of a segment tree by walking \emph{from bottom to top}
+in the tree.
+For example, we have calculated the sum of 
+elements in a range $[a,b]$
 as follows (Chapter 9.3):
 
 \begin{lstlisting}
@@ -28,9 +29,8 @@ int sum(int a, int b) {
 }
 \end{lstlisting}
 However, in more advanced segment trees,
-it's beneficial to implement the operations
-in another way, \emph{from the top to the bottom},
-from the root to the leaves.
+it is often needed to implement the operations
+in another way, \emph{from top to bottom}.
 Using this approach, the function becomes as follows:
 
 \begin{lstlisting}
@@ -42,34 +42,38 @@ int sum(int a, int b, int k, int x, int y) {
            sum(max(x+d,a), b, 2*k+1, x+d, y);
 }
 \end{lstlisting}
-Now we can calulate the sum of the range $[a,b]$
-as follows:
+Now we can calculate the sum of
+elements in $[a,b]$ as follows:
 
 \begin{lstlisting}
 int s = sum(a, b, 1, 0, N-1);
 \end{lstlisting}
-The parameter $k$ is the current position
-in array \texttt{p}.
+
+\begin{samepage}
+The parameter $k$ indicates the current position
+in \texttt{p}.
 Initially $k$ equals 1, because we begin
 at the root of the segment tree.
-The range $[x,y]$ corresponds to $k$,
+The range $[x,y]$ corresponds to $k$
 and is initially $[0,N-1]$.
-If $[a,b]$ is outside $[x,y]$,
-the sum of the range is 0,
+When calculating the sum,
+if $[a,b]$ is outside $[x,y]$,
+the sum is 0,
 and if $[a,b]$ equals $[x,y]$,
-the sum can be found in array \texttt{p}.
+the sum can be found in \texttt{p}.
 If $[a,b]$ is completely or partially inside $[x,y]$,
 the search continues recursively to the
 left and right half of $[x,y]$.
 The size of both halves is $d=\frac{1}{2}(y-x+1)$;
 the left half is $[x,x+d-1]$
 and the right half is $[x+d,y]$.
+\end{samepage}
 
 The following picture shows how the search proceeds
-when calculating the sum of the marked elements.
+when calculating the sum of elements in $[a,b]$.
 The gray nodes indicate nodes where the recursion
-stops and the sum of the range can be found in array \texttt{p}.
-\\
+stops and the sum can be found in \texttt{p}.
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=gray!50] (5,0) rectangle (6,1);
@@ -157,63 +161,61 @@ stops and the sum of the range can be found in array \texttt{p}.
 \path[draw=red,thick,->,line width=2pt] (l) -- (g);
 
 \draw [decoration={brace}, decorate, line width=0.5mm] (14,-0.25) -- (5,-0.25);
+
+\node at (5.5,-0.75) {$a$};
+\node at (13.5,-0.75) {$b$};
 \end{tikzpicture}
 \end{center}
 Also in this implementation,
-the time complexity of a range query is $O(\log n)$,
-because the total number of processed nodes is $O(\log n)$.
+operations take $O(\log n)$ time,
+because the total number of visited nodes is $O(\log n)$.
 
 \section{Lazy propagation}
 
 \index{lazy propagation}
 \index{lazy segment tree}
 
-Using \key{lazy propagation}, we can construct
+Using \key{lazy propagation}, we can build
 a segment tree that supports both range updates
 and range queries in $O(\log n)$ time.
-The idea is to perform the updates and queries
-from the top to the bottom, and process the updates
+The idea is to perform updates and queries
+from top to bottom and perform updates
 \emph{lazily} so that they are propagated
 down the tree only when it is necessary.
 
 In a lazy segment tree, nodes contain two types of
 information.
-Like in a normal segment tree,
+Like in an ordinary segment tree,
 each node contains the sum or some other value
-of the corresponding subarray.
+related to the corresponding subarray.
 In addition, the node may contain information
 related to lazy updates, which has not been
-propagated yet to its children.
+propagated to its children.
 
-There are two possible types for range updates:
-\emph{addition} and \emph{insertion}.
-In addition, each element in the range is
-increased by some value,
-and in insertion, each element in the range
-is assigned some value.
+There are two possible types of range updates:
+each element in the range is either
+\emph{increased} by some value
+or \emph{assigned} some value.
 Both operations can be implemented using
-similar ideas, and it's possible to construct
-a tree that supports both the operations
-simultaneously.
+similar ideas, and it is even possible to construct
+a tree that supports both operations at the same time.
 
 \subsubsection{Lazy segment tree}
 
-Let's consider an example where our goal is to
-construct a segment tree that supports the following operations:
+Let us consider an example where our goal is to
+construct a segment tree that supports
+two operations: increasing each element in
+$[a,b]$ by $u$ and calculating the sum of
+elements in $[a,b]$.
 
-\begin{itemize}
-\item increase each element in $[a,b]$ by $u$
-\item calculate the sum of elements in $[a,b]$
-\end{itemize}
 We will construct a tree where each node
 contains two values $s/z$:
-$s$ denotes the sum of elements in the range,
-like in a standard segment tree,
-and $z$ denotes a lazy update,
+$s$ denotes the sum of elements in the range
+and $z$ denotes the value of a lazy update,
 which means that all elements in the range
 should be increased by $z$.
 In the following tree, $z=0$ for all nodes,
-so there are no lazy updates.
+so there are no ongoing lazy updates.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (16,1);
@@ -286,19 +288,19 @@ so there are no lazy updates.
 \end{tikzpicture}
 \end{center}
 
-When a range $[a,b]$ is increased by $u$,
+When the elements in $[a,b]$ are increased by $u$,
 we walk from the root towards the leaves
 and modify the nodes in the tree as follows:
 If the range $[x,y]$ of a node is
 completely inside the range $[a,b]$,
 we increase the $z$ value of the node by $u$ and stop.
-However, if $[x,y]$ only partially belongs to $[a,b]$,
+If $[x,y]$ only partially belongs to $[a,b]$,
 we increase the $s$ value of the node by $hu$,
 where $h$ is the size of the intersection of $[a,b]$
 and $[x,y]$, and continue our walk recursively in the tree.
 
 For example, the following picture shows the tree after
-increasing the elements in the range marked at the bottom by 2:
+increasing the elements in the range $[a,b]$ by 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=gray!50] (5,0) rectangle (6,1);
@@ -384,27 +386,33 @@ increasing the elements in the range marked at the bottom by 2:
 \path[draw=red,thick,->,line width=2pt] (l) -- (g);
 
 \draw [decoration={brace}, decorate, line width=0.5mm] (14,-0.25) -- (5,-0.25);
+
+\node at (5.5,-0.75) {$a$};
+\node at (13.5,-0.75) {$b$};
 \end{tikzpicture}
 \end{center}
 
-We also calculate the sum in a range $[a,b]$
-by walking in the tree from the root towards the leaves.
+We also calculate the sum of elements in a range $[a,b]$
+by walking in the tree from top to bottom.
 If the range $[x,y]$ of a node completely belongs
 to $[a,b]$, we add the $s$ value of the node to the sum.
 Otherwise, we continue the search recursively
 downwards in the tree.
 
-Always before processing a node,
-the value of the lazy update is propagated
-to the children of the node.
-This happens both in a range update
-and a range query.
-The idea is that the lazy update will be propagated
+Both in updates and queries,
+the value of a lazy update is always propagated
+to the children of the node
+before processing the node.
+The idea is that updates will be propagated
 downwards only when it is necessary,
-so that the operations are always efficient.
+which guarantees that the operations are always efficient.
 
 The following picture shows how the tree changes
-when we calculate the sum in the marked range:
+when we calculate the sum of elements in $[a,b]$.
+The rectangle shows the nodes whose values change,
+because a lazy update is propagated downwards,
+which is necessary to calculate the sum in $[a,b]$.
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (16,1);
@@ -486,52 +494,53 @@ when we calculate the sum in the marked range:
 \draw [decoration={brace}, decorate, line width=0.5mm] (14,-0.25) -- (10,-0.25);
 
 \draw[color=blue,thick] (8,1.5) rectangle (12,5.5);
+
+\node at (10.5,-0.75) {$a$};
+\node at (13.5,-0.75) {$b$};
 \end{tikzpicture}
 \end{center}
-The result of this query was that a lazy update was
-propagated downwards in the nodes that are inside the rectangle.
-It was necessary to propagate the lazy update,
-because some of the updated elements were inside the range.
 
-Note that sometimes it's necessary to combine lazy updates.
-This happens when a node already has a lazy update,
-and another lazy update will be added to it.
-In the above tree, it's easy to combine lazy updates
-because updates $z_1$ and $z_2$ combined equal to update $z_1+z_2$.
+Note that sometimes it is needed to combine lazy updates.
+This happens when a node that already has a lazy update
+is assigned another lazy update.
+In this problem, it is easy to combine lazy updates,
+because the combination of updates $z_1$ and $z_2$
+corresponds to an update $z_1+z_2$.
 
 \subsubsection{Polynomial update}
 
-A lazy update can be generalized so that it's
-allowed to update a range by a polynomial
+Lazy updates can be generalized so that it is
+possible to update ranges using polynomials of the form
 \[p(u) = t_k u^k + t_{k-1} u^{k-1} + \cdots + t_0.\]
 
-Here, the update for the first element in the range is $p(0)$,
-for the second element $p(1)$, etc., so the update
-at index $i$ in range $[a,b]$ is $p(i-a)$.
-For example, adding a polynomial $p(u)=u+1$
-to range $[a,b]$ means that the element at index $a$
-increases by 1, the element at index $a+1$
-increases by 2, etc.
+In this case, the update for an element $i$
+in the range $[a,b]$ is $p(i-a)$.
+For example, adding $p(u)=u+1$
+to $[a,b]$ means that the element at position $a$
+is increased by 1, the element at position $a+1$
+is increased by 2, etc.
 
-A polynomial update can be supported by
-storing $k+2$ values to each node where $k$
-equals the degree of the polynomial.
+To support polynomial updates,
+each node is assigned $k+2$ values,
+where $k$ equals the degree of the polynomial.
 The value $s$ is the sum of the elements in the range,
-and values $z_0,z_1,\ldots,z_k$ are the coefficients
+and the values $z_0,z_1,\ldots,z_k$ are the coefficients
 of a polynomial that corresponds to a lazy update.
 
-Now, the sum of $[x,y]$ is
-\[s+\sum_{u=0}^{y-x} z_k u^k + z_{k-1} u^{k-1} + \cdots + z_0,\]
-that can be efficiently calculated using sum formulas
-For example, the value $z_0$ corresponds to the sum
-$(y-x+1)z_0$, and the value $z_1 u$ corresponds to the sum
+Now, the sum of elements in a range $[x,y]$ equals
+\[s+\sum_{u=0}^{y-x} z_k u^k + z_{k-1} u^{k-1} + \cdots + z_0.\]
+
+The value of such a sum
+can be efficiently calculated using sum formulas.
+For example, the term $z_0$ corresponds to the sum
+$(y-x+1)z_0$, and the term $z_1 u$ corresponds to the sum
 \[z_1(0+1+\cdots+y-x) = z_1 \frac{(y-x)(y-x+1)}{2} .\]
 
 When propagating an update in the tree,
-the indices of the polynomial $p(u)$ change,
+the indices of $p(u)$ change,
 because in each range $[x,y]$,
 the values are
-calculated for $x=0,1,\ldots,y-x$.
+calculated for $u=0,1,\ldots,y-x$.
 However, this is not a problem, because
 $p'(u)=p(u+h)$ is a polynomial
 of equal degree as $p(u)$.
@@ -542,17 +551,17 @@ For example, if $p(u)=t_2 u^2+t_1 u-t_0$, then
 
 \index{dynamic segment tree}
 
-A regular segment tree is static,
+An ordinary segment tree is static,
 which means that each node has a fixed position
-in the array and storing the tree requires
+in the array and the tree requires
 a fixed amount of memory.
-However, if most nodes are empty, such an
-implementation wastes memory.
+However, if most nodes are not used,
+memory is wasted.
 In a \key{dynamic segment tree},
-memory is reserved only for nodes that
+memory is allocated only for nodes that
 are actually needed.
 
-The nodes can be represented as structs as follows:
+The nodes of a dynamic tree can be represented as structs:
 
 \begin{lstlisting}
 struct node {
@@ -567,7 +576,7 @@ $[x,y]$ is the corresponding range,
 and $l$ and $r$ point to the left
 and right subtree.
 
-After this, nodes can be manipulated as follows:
+After this, nodes can be created as follows:
 
 \begin{lstlisting}
 // create new node
@@ -581,19 +590,21 @@ u->s = 5;
 \index{sparse segment tree}
 
 A dynamic segment tree is useful if
-the range $[0,N-1]$ covered by the tree is \emph{sparse},
-which means that $N$ is large but only a
-small portion of the indices are used.
-While a regular segment tree uses $O(n)$ memory,
-a dynamic segment tree only uses $O(n \log N)$ memory,
-where $n$ is the number of indices used.
+the underlying array is \emph{sparse}.
+This means that the range $[0,N-1]$
+of allowed indices is large,
+but only a small portion of the indices are used
+and most elements in the array are empty.
+While an ordinary segment tree uses $O(N)$ memory,
+a dynamic segment tree only requires $O(n \log N)$ memory,
+where $n$ is the number of operations performed.
 
 A \key{sparse segment tree} is initially empty
 and its only node is $[0,N-1]$.
-When the tree changes, new nodes are added dynamically
-always when they are needed because of new indices.
-For example, if $N=16$, and the elements
-in indices 3 and 10 have been changes,
+After updates, new nodes are added dynamically
+when needed.
+For example, if $N=16$ and the elements
+in positions 3 and 10 have been modified,
 the tree contains the following nodes:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -620,17 +631,17 @@ the tree contains the following nodes:
 \end{tikzpicture}
 \end{center}
 
-Any path from the root to a leaf contains
+Any path from the root node to a leaf contains
 $O(\log N)$ nodes,
-so each change adds at most $O(\log n)$
+so each operation adds at most $O(\log N)$
 new nodes to the tree.
-Thus, after $n$ changes, the tree contains
+Thus, after $n$ operations, the tree contains
 at most $O(n \log N)$ nodes.
 
 Note that if all indices of the elements
 are known at the beginning of the algorithm,
 a dynamic segment tree is not needed,
-but we can use a regular segment tree with
+but we can use an ordinary segment tree with
 index compression (Chapter 9.4).
 However, this is not possible if the indices
 are generated during the algorithm.
@@ -638,26 +649,25 @@ are generated during the algorithm.
 \subsubsection{Persistent segment tree}
 
 \index{persistent segment tree}
-\index{version history}
 
 Using a dynamic implementation,
 it is also possible to create a
 \key{persistent segment tree} that stores
-the \key{version history} of the tree.
+the \key{modification history} of the tree.
 In such an implementation, we can
 efficiently access
-all versions of the tree that have been
+all versions of the tree that have
 existed during the algorithm.
 
-When the version history is available,
-we can access all versions of the tree
-like a regular segment tree, because their
-structure is stored.
-We can also derive new trees from the history
-and further manipulate them.
+When the modification history is available,
+we can perform queries in any previous tree
+like in an ordinary segment tree, because the
+full structure of each tree is stored.
+We can also create new trees based on previous
+trees and modify them independently.
 
 Consider the following sequence of updates,
-where red nodes change in an update
+where red nodes change
 and other nodes remain the same:
 
 \begin{center}
@@ -711,10 +721,10 @@ and other nodes remain the same:
 \end{center}
 After each update, most nodes in the tree
 remain the same,
-so an efficient way to store the version history
+so an efficient way to store the modification history
 is to represent each tree in the history as a combination
 of new nodes and subtrees of previous trees.
-In this case, the version history can be
+In this example, the modification history can be
 stored as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -762,29 +772,28 @@ stored as follows:
 \end{tikzpicture}
 \end{center}
 
-The structure of each version of the tree in the history can be
-reconstructed by following the pointers from the root.
-Each update only adds $O(\log N)$ new nodes to the tree
-when the indices are $[0,N-1]$,
-so it is possible to store the full version history
-of the tree.
+The structure of each previous tree can be
+reconstructed by following the pointers
+starting at the corresponding root node.
+Since each operation during the algorithm
+adds only $O(\log N)$ new nodes to the tree,
+it is possible to store the full modification history of the tree.
 
 \section{Data structures}
 
-Insted of a single value, a node in a segment tree
-can also contain a data structure that maintains information
-about the corresponding range.
-In this case, the operations of the tree take
+Instead of single values, nodes in a segment tree
+can also contain data structures that maintain information
+about the corresponding ranges.
+In such a tree, the operations take
 $O(f(n) \log n)$ time, where $f(n)$ is
-the time needed for retrieving or updating the
-information in a single node.
+the time needed for processing a single node during an operation.
 
 As an example, consider a segment tree that
 supports queries of the form
-''how many times does element $x$ appear
-in range $[a,b]$?''
-For example, element 1 appears three times
-in the following subarray:
+''how many times does an element $x$ appear
+in the range $[a,b]$?''
+For example, the element 1 appears three times
+in the following range:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -802,12 +811,12 @@ in the following subarray:
 \end{tikzpicture}
 \end{center}
 
-The idea is to construct a segment tree
-where each node has a data structure
-that can return the number of any element $x$
-in the range.
+The idea is to build a segment tree
+where each node is assigned a data structure
+that can calculate the number of any element $x$
+in the corresponding range.
 Using such a segment tree,
-the answer for a query can be calculated
+the answer to a query can be calculated
 by combining the results from the nodes
 that belong to the range.
 
@@ -956,28 +965,25 @@ corresponds to the above array:
 \end{tikzpicture}
 \end{center}
 
-Each node in the tree should contain
-an appropriate data structure, for example a
-\texttt{map} structure.
-In this case, the time needed for accessing
-a node is $O(\log n)$, so the total time complexity
+For example, we can build the tree so
+that each node contains a \texttt{map} structure.
+In this case, the time needed for processing each
+node is $O(\log n)$, so the total time complexity
 of a query is $O(\log^2 n)$.
-
-Data structures in nodes increase the memory usage
-of the tree.
-In this example, $O(n \log n)$ memory is needed,
-because the tree consists of $O(\log n)$ levels,
-and the map structures contain a total
-of $O(n)$ values at each level.
+The tree uses $O(n \log n)$ memory,
+because there are $O(\log n)$ levels
+and each level contains
+$O(n)$ elements.
 
 \section{Two-dimensionality}
 
 \index{two-dimensional segment tree}
 
 A \key{two-dimensional segment tree} supports
-queries about rectangles in a two-dimensional array.
-Such a segment tree can be implemented as
-nested segmenet trees: a big tree corresponds to the
+queries related to rectangular subarrays
+of a two-dimensional array.
+Such a tree can be implemented as
+nested segment trees: a big tree corresponds to the
 rows in the array, and each node contains a small tree
 that corresponds to a column.
 
@@ -1007,7 +1013,8 @@ For example, in the array
 \node[anchor=center] at (3.5, 3.5) {6};
 \end{tikzpicture}
 \end{center}
-sums of rectangles can be calculated
+the sum of any subarray
+can be calculated
 from the following segment tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.4]
@@ -1156,10 +1163,6 @@ from the following segment tree:
 
 The operations in a two-dimensional segment tree
 take $O(\log^2 n)$ time, because the big tree
-and each small tree contain $O(\log n)$ levels.
-The tree uses $O(n^2)$ memory, because each
-small tree uses $O(n)$ memory.
-
-Using a similar idea, it is also possible to create
-segment trees with more dimensions,
-but this is rarely needed.
+and each small tree consist of $O(\log n)$ levels.
+The tree requires $O(n^2)$ memory, because each
+small tree contains $O(n)$ values.
