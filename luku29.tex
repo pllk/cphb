@@ -2,9 +2,9 @@
 
 \index{geometry}
 
-In geometric problems, a usual challenge is
-to realize how to approach the problem so that
-the solution can be conveniently implemented
+In geometric problems, it is often challenging
+to find a way to approach the problem so that
+the solution to the problem can be conveniently implemented
 and the number of special cases is small.
 
 As an example, consider a problem where
@@ -51,10 +51,10 @@ $s=(a+b+c)/2$.
 This is a possible way to solve the problem,
 but there is one pitfall:
 how to divide the quadrilateral into triangles?
-It turns out that sometimes we can't pick
-arbitrary opposite vertices.
-For example, in the following quadrilateral,
-the division line is outside the quadrilateral:
+It turns out that sometimes we cannot just pick
+two arbitrary vertices.
+For example, in the following situation,
+the division line lies outside the quadrilateral:
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -80,13 +80,13 @@ However, another way to draw the line works:
 \draw[dashed,thick] (3,2) -- (1,1);
 \end{tikzpicture}
 \end{center}
-For a human, it is clear which of the lines is the correct
-choice, but for a computer the situation is difficult.
+It is clear for a human which of the lines is the correct
+choice, but the situation is difficult for a computer.
                            
 However, it turns out that we can solve the problem using
-another method which is much easier to implement
-and doesn't contain any special cases.
-There is a general formula
+another method that is much easier to implement
+and does not involve any special cases.
+Namely, there is a general formula
 \[x_1y_2-x_2y_1+x_2y_3-x_3y_2+x_3y_4-x_4y_3+x_4y_1-x_1y_4,\]
 that calculates the area of a quadrilateral
 whose vertices are
@@ -94,9 +94,9 @@ $(x_1,y_1)$,
 $(x_2,y_2)$,
 $(x_3,y_3)$ and
 $(x_4,y_4)$.
-This formula is easy to calculate, there are no special
-cases, and it turns out that we can generalize the formula
-for \emph{all} polygons.
+This formula is easy to implement, there are no special
+cases, and it turns out that we can even generalize the formula
+to \emph{all} polygons.
 
 \section{Complex numbers}
 
@@ -106,9 +106,9 @@ for \emph{all} polygons.
 
 A \key{complex number} is a number of the form $x+y i$,
 where $i = \sqrt{-1}$ is the \key{imaginary unit}.
-A geometric interpretation for a complex number is
+A geometric interpretation of a complex number is
 that it represents a two-dimensional point $(x,y)$
-or a vector from the origin to point $(x,y)$.
+or a vector from the origin to a point $(x,y)$.
 
 For example, $4+2i$ corresponds to the
 following point and vector:
@@ -129,14 +129,14 @@ following point and vector:
 \index{complex@\texttt{complex}}
 
 The complex number class \texttt{complex} in C++ is
-useful when solving geometry problems.
-Using the class, we can store points and vectors
+useful when solving geometric problems.
+Using the class we can represent points and vectors
 as complex numbers, and the class also contains tools
 that are useful in geometry.
 
 In the following code, \texttt{C} is the type of
 a coordinate, and \texttt{P} is the type of a point or vector.
-In addition, the code defines shortcuts \texttt{X} and \texttt{Y}
+In addition, the code defines the macros \texttt{X} and \texttt{Y}
 that can be used to refer to x and y coordinates.
 
 \begin{lstlisting}
@@ -164,17 +164,16 @@ P s = v+u;
 cout << s.X << " " << s.Y << "\n"; // 5 3
 \end{lstlisting}
 
-The appropriate type for \texttt{C} is
+An appropriate coordinate type is
 \texttt{long long} (integer) or \texttt{long double}
 (real number), depending on the situation.
-It is a good idea to use integers whenever possible,
-because the integer calculations are exact.
-
-If coordinates are real numbers,
-precision error should be taken into account
+Integers should be used whenever possible,
+because calculations with integers are exact.
+If real numbers are needed,
+precision errors should be taken into account
 when comparing them.
 A safe way to check if numbers $a$ and $b$ are equal
-is the comparison $|a-b|<\epsilon$,
+is to compare them using $|a-b|<\epsilon$,
 where $\epsilon$ is a small number (for example, $\epsilon=10^{-9}$).
 
 \subsubsection*{Functions}
@@ -192,7 +191,7 @@ because that distance equals the length
 of the vector $(x_2-x_1,y_2-y_1)$.
 
 The following code calculates the distance
-of points $(4,2)$ and $(3,-1)$:
+between points $(4,2)$ and $(3,-1)$:
 \begin{lstlisting}
 P a = {4,2};
 P b = {3,-1};
@@ -200,16 +199,16 @@ cout << abs(b-a) << "\n"; // 3.60555
 \end{lstlisting}
 
 The function \texttt{arg(v)} calculates the
-angle of a vector $v=(x,y)$ with respect to the x axel.
+angle of a vector $v=(x,y)$ with respect to the x axis.
 The function gives the angle in radians,
 where $r$ radians equals $180 r/\pi$ degrees.
 The angle of a vector that points to the right is 0,
-and the angle decreases clockwise and increases
+and angles decrease clockwise and increase
 counterclockwise.
 
 The function \texttt{polar(s,a)} constructs a vector
-whose length is $s$ and that points to angle $a$.
-In addition, a vector can be rotated by angle $a$
+whose length is $s$ and that points to an angle $a$.
+In addition, a vector can be rotated by an angle $a$
 by multiplying it by a vector with length 1 and angle $a$.
 
 The following code calculates the angle of
@@ -229,11 +228,12 @@ cout << arg(v) << "\n"; // 0.963648
 
 The \key{cross product} $a \times b$ of vectors
 $a=(x_1,y_1)$ and $b=(x_2,y_2)$ equals $x_1 y_2 - x_2 y_1$.
-The cross product indicates whether the vector $b$
-turns to the left (positive value) or to the right (negative value)
-when it is placed directly after the vector $a$.
+The cross product tells us whether $b$
+turns left (positive value), does not turn (zero)
+or turns to right (negative value)
+when it is placed directly after $a$.
 
-The following picture shows three examples:
+The following picture illustrates the above cases:
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -264,7 +264,7 @@ The following picture shows three examples:
 \end{center}
 
 \noindent
-For example, in the left picture
+For example, in the first picture
 $a=(4,2)$ and $b=(1,2)$.
 The following code calculates the cross product
 using the class \texttt{complex}:
@@ -275,7 +275,8 @@ P b = {1,2};
 C r = (conj(a)*b).Y; // 6
 \end{lstlisting}
 
-The function \texttt{conj} negates the y coordinate
+The above code works, because
+the function \texttt{conj} negates the y coordinate
 of a vector,
 and when the vectors $(x_1,-y_1)$ and $(x_2,y_2)$
 are multiplied together, the y coordinate
@@ -304,8 +305,9 @@ $p$ is on the left side of the line:
 \end{tikzpicture}
 \end{center}
 
-Now the cross product $(p-s_1) \times (p-s_2)$
-indicates the location of the point $p$.
+In this situation,
+the cross product $(p-s_1) \times (p-s_2)$
+tells us the location of the point $p$.
 If the cross product is positive,
 $p$ is located on the left side,
 and if the cross product is negative,
@@ -369,9 +371,10 @@ intersection point is $b=c$:
 \end{tikzpicture}
 \end{center}
 
-This case is easy to test because the
-possibilities for the common intersection point
-are $a=c$, $a=d$, $b=c$ and $b=d$.
+This case is easy to check, because
+there are only four possibilities
+for the intersection point:
+$a=c$, $a=d$, $b=c$ and $b=d$.
 
 \textit{Case 3:}
 There is exactly one intersection point
@@ -410,10 +413,10 @@ using the formula
 where $a$, $b$ and $c$ are the vertices of the triangle.
 
 Using this formula, it is possible to calculate the
-shortest distance of a point from a line.
+shortest distance between a point and a line.
 For example, in the following picture $d$ is the
-shortest distance between point $p$ and the line
-that is defined by points $s_1$ and $s_2$:
+shortest distance between the point $p$ and the line
+that is defined by the points $s_1$ and $s_2$:
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
 \draw (-2,-1)--(6,3);
@@ -461,7 +464,7 @@ the polygon.
 A convenient way to solve the problem is to
 send a ray from the point to an arbitrary direction
 and calculate the number of times it touches
-the border of the polygon.
+the boundary of the polygon.
 If the number is odd,
 the point is inside the polygon,
 and if the number is even,
@@ -488,10 +491,10 @@ For example, we could send the following rays:
 \end{samepage}
 
 The rays from $a$ touch 1 and 3 times
-the border of the polygon,
+the boundary of the polygon,
 so $a$ is inside the polygon.
 Correspondingly, the rays from $b$
-touch 0 and 2 times the border of the polygon,
+touch 0 and 2 times the boundary of the polygon,
 so $b$ is outside the polygon.
 
 \section{Polygon area}
@@ -500,10 +503,10 @@ A general formula for calculating the area
 of a polygon is
 \[\frac{1}{2} |\sum_{i=1}^{n-1} (p_i \times p_{i+1})| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|, \]
-when the vertices are
+where the vertices are
 $p_1=(x_1,y_1)$, $p_2=(x_2,y_2)$, $\ldots$, $p_n=(x_n,y_n)$
-sorted so that
-$p_i$ and $p_{i+1}$ are adjacent vertices on the border
+in such an order that
+$p_i$ and $p_{i+1}$ are adjacent vertices on the boundary
 of the polygon,
 and the first and last vertex is the same, i.e., $p_1=p_n$.
 
@@ -527,8 +530,8 @@ is
 \[\frac{|(2\cdot5-4\cdot5)+(5\cdot3-5\cdot7)+(7\cdot1-3\cdot4)+(4\cdot3-1\cdot4)+(4\cdot4-3\cdot2)|}{2} = 17/2.\]
 
 The idea in the formula is to go through trapezoids
-where one side is a side of the polygon,
-and another side is on the horizontal line $y=0$.
+whose one side is a side of the polygon,
+and another side lies on the horizontal line $y=0$.
 For example:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -547,9 +550,9 @@ For example:
 \draw (0,0) -- (10,0);
 \end{tikzpicture}
 \end{center}
-The are of such a trapezoid is
+The area of such a trapezoid is
 \[(x_{i+1}-x_{i}) \frac{y_i+y_{i+1}}{2},\]
-when the vertices of the polygon are $p_i$ and $p_{i+1}$.
+where the vertices of the polygon are $p_i$ and $p_{i+1}$.
 If $x_{i+1}>x_{i}$, the area is positive,
 and if $x_{i+1}<x_{i}$, the area is negative.
 
@@ -559,21 +562,22 @@ all such trapezoids, which yields the formula
 \[|\sum_{i=1}^{n-1} (x_{i+1}-x_{i}) \frac{y_i+y_{i+1}}{2}| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|.\]
 
-Note that the absolute value of the sum is calculated,
+Note that the absolute value of the sum is taken,
 because the value of the sum may be positive or negative
 depending on whether we walk clockwise or counterclockwise
-along the sides of the the polygon.
+along the perimeter of the polygon.
 
 \subsubsection{Pick's theorem}
 
 \index{Pick's theorem}
 
 \key{Pick's theorem} provides another way to calculate
-the area of a polygon where are vertices have integer coordinates.
+the area of a polygon provided that all vertices 
+of the polygon have integer coordinates.
 According to Pick's theorem, the area of the polygon is
 \[ a + b/2 -1,\]
 where $a$ is the number of integer points inside the polygon
-and $b$ is the number of integer points on the border of the polygon.
+and $b$ is the number of integer points on the boundary of the polygon.
 
 For example, the area of the polygon
 \begin{center}
@@ -656,7 +660,7 @@ The Euclidean distance between the points is
 and the Manhattan distance is
 \[|5-2|+|2-1|=4.\]
 The following picture shows regions that are within a distance of 1
-from the center point, using Euclidean and Manhattan distances:
+from the center point, using the Euclidean and Manhattan distances:
 \begin{center}
 \begin{tikzpicture}
 
@@ -673,18 +677,18 @@ from the center point, using Euclidean and Manhattan distances:
 
 \subsubsection{Furthest points}
 
-Some problems are easier to solve if we use the
-Manhattan distance instead of the Euclidean distance.
+Some problems are easier to solve if the
+Manhattan distance is used instead of the Euclidean distance.
 For example, consider a problem where we are given
 $n$ points $(x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n)$
 and our task is to calculate the maximum distance
 between any two points.
 
-This is a difficult problem if we should maximize
-the Euclidean distance,
-but calculating
-the maximum Manhattan distance is easy
-because it either
+This is a difficult problem if the Euclidean distance
+should be maximized,
+but it is easy to maximize the
+Manhattan distance,
+because it is either
 \[\max A - \min A \hspace{20px} \textrm{or} \hspace{20px} \max B - \min B,\]
 where
 \[A = \{x_i+y_i : i = 1,2,\ldots,n\}\]
@@ -710,8 +714,8 @@ A useful technique related to the Manhattan distance
 is to rotate all coordinates 45 degrees so that
 a point $(x,y)$ becomes $(a(x+y),a(y-x))$,
 where $a=1/\sqrt{2}$.
-The multiplier $a$ is so chosen that
-the distances of the points remain the same.
+The coefficient $a$ is chosen so that
+the distances between the points remain the same.
 
 After the rotation, the region within a distance of $d$
 from a point is a square with horizontal and vertical sides:
