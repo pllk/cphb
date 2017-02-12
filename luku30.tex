@@ -7,20 +7,20 @@ Many geometric problems can be solved using
 The idea in such algorithms is to represent
 the problem as a set of events that correspond
 to points in the plane.
-The events are processed in a sorted order
+The events are processed in increasing order
 according to their x or y coordinate.
 
 As an example, let us consider a problem
 where there is a company that has $n$ employees,
-and we know for each employee arrival and
+and we know for each employee their arrival and
 leaving times on a certain day.
 Our task is to calculate the maximum number of
 employees that were in the office at the same time.
 
 The problem can be solved by modelling the situation
 so that each employee is assigned two events that
-corresponds to the arrival and leaving times.
-After sorting the events, we can go trough them
+corresponds to their arrival and leaving times.
+After sorting the events, we can go through them
 and keep track of the number of people in the office.
 For example, the table
 \begin{center}
@@ -33,7 +33,7 @@ Kaaleppi & 14 & 16 \\
 Liisa & 5 & 13 \\
 \end{tabular}
 \end{center}
-generates the following events:
+corresponds to the following events:
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \draw (0,0) rectangle (17,-6.5);
@@ -62,8 +62,8 @@ and maintain a counter.
 Always when a person arrives, we increase
 the value of the counter by one,
 and when a person leaves,
-we decrease the value by one.
-The answer for the problem is the maximum
+we decrease the value of the counter by one.
+The answer to the problem is the maximum
 value of the counter during the algorithm.
 
 In the example, the events are processed as follows:
@@ -119,12 +119,12 @@ In the example, the events are processed as follows:
 \end{tikzpicture}
 \end{center}
 The symbols $+$ and $-$ indicate whether the
-value of the counter increases of decreases,
+value of the counter increases or decreases,
 and the value of the counter is shown below.
 The maximum value of the counter is 3
-between Uolevi's arrival and Maija's leaving.
+between Uolevi's arrival time and Maija's leaving time.
 
-The running time of the solution is $O(n \log n)$,
+The running time of the algorithm is $O(n \log n)$,
 because sorting the events takes $O(n \log n)$ time
 and the rest of the algorithm takes $O(n)$ time.
 
@@ -133,8 +133,8 @@ and the rest of the algorithm takes $O(n)$ time.
 \index{intersection point}
 
 Given a set of $n$ line segments, each of them being either
-horizontal or vertical, the problem is to efficiently
-calculate the total number of intersection points.
+horizontal or vertical, consider the problem of
+counting the total number of intersection points.
 For example, when the line segments are
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -206,12 +206,12 @@ Intersection points are calculated at event 3.
 When there is a vertical segment between points
 $y_1$ and $y_2$, we count the number of active
 horizontal segments whose y coordinate is between
-$y_1$ and $y_2$, and at this number to the total
+$y_1$ and $y_2$, and add this number to the total
 number of intersection points.
 
-An appropriate data structure for storing
+An appropriate data structure for
 y coordinates of horizontal segments is either
-a binary-indexed tree or a segment tree,
+a binary indexed tree or a segment tree,
 possibly with index compression.
 Using such structures, processing each event
 takes $O(\log n)$ time, so the total running
@@ -268,11 +268,12 @@ we should find the following points:
 \end{center}
 \end{samepage}
 
-This problem can be also solved in $O(n \log n)$ time
+This is another example of a problem
+that can be also solved in $O(n \log n)$ time
 using a sweep line algorithm.
 We go through the points from left to right
 and maintain a value $d$: the minimum distance
-between two points so far.
+between two points seen so far.
 At each point, we find the nearest point to the left.
 If the distance is less than $d$, it is the
 new minimum distance and we update
@@ -292,7 +293,7 @@ For example, in the following picture the
 region marked with dashed lines contains
 the points that can be within a distance of $d$
 from the active point:
-\\
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0)--(12,0)--(12,4)--(0,4)--(0,0);
@@ -325,27 +326,27 @@ from the active point:
 \end{center}
 
 The efficiency of the algorithm is based on the fact
-that the region limited by $d$ always contains
+that such a region always contains
 only $O(1)$ points.
 We can go through those points in $O(\log n)$ time
 by maintaining a set of points whose x coordinate
-is between $[x-d,x]$ and that are sorted according
-to the y coordinate.
+is between $[x-d,x]$, in increasing order according
+to their y coordinates.
 
 The time complexity of the algorithm is $O(n \log n)$,
-because it goes through $n$ points and
-finds for each point the nearest point to the left
+because we go through $n$ points and
+find for each point the nearest point to the left
 in $O(\log n)$ time.
 
 \section{Convex hull}
 
-The \key{convex hull} is the smallest convex polygon
-that contains all points in a given set.
+A \key{convex hull} is the smallest convex polygon
+that contains all points of a given set.
 Convexity means that a line segment between
 any two vertices of the polygon is completely
 inside the polygon.
-A good intuitive definition is that we surround
-the points using a tight rope.
+An intuitive definition for a convex hull
+is that it surrounds the given points using a tight rope.
 
 \begin{samepage}
 For example, for the points
@@ -392,9 +393,10 @@ the convex hull is as follows:
 
 \index{Andrew's algorithm}
 
-A good way to construct the convex hull
-is \key{Andrew's algorithm}
-that works in $O(n \log n)$ time.
+\key{Andrew's algorithm} is an easy algorithm
+that can be used to
+construct the convex hull for a set of points
+in $O(n \log n)$ time.
 The algorithm constructs the convex hull
 in two steps:
 first the upper hull and then the lower hull.
@@ -410,7 +412,7 @@ whether the tree last point in the hull turn left.
 If this holds, we remove the middle point from the hull.
 After this we keep checking again the three last points
 and removing points, until the three last points
-don't turn left.
+do not turn left.
 
 The following pictures show how
 Andrew's algorithm works:
