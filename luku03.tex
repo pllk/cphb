@@ -4,22 +4,22 @@
 
 \key{Sorting}
 is a fundamental algorithm design problem.
-In addition,
-many efficient algorithms
+Many efficient algorithms
 use sorting as a subroutine,
 because it is often easier to process
 data if the elements are in a sorted order.
 
-For example, the question ''does the array contain
+For example, the problem ''does the array contain
 two equal elements?'' is easy to solve using sorting.
 If the array contains two equal elements,
 they will be next to each other after sorting,
 so it is easy to find them.
-Also the question ''what is the most frequent element
+Also the problem ''what is the most frequent element
 in the array?'' can be solved similarly.
 
-There are many algorithms for sorting, that are
-also good examples of algorithm design techniques.
+There are many algorithms for sorting, and they are
+also good examples of how to apply
+different algorithm design techniques.
 The efficient general sorting algorithms
 work in $O(n \log n)$ time,
 and many algorithms that use sorting
@@ -99,15 +99,15 @@ is \key{bubble sort} where the elements
 
 Bubble sort consists of $n-1$ rounds.
 On each round, the algorithm iterates through
-the elements in the array.
+the elements of the array.
 Whenever two consecutive elements are found
 that are not in correct order,
 the algorithm swaps them.
 The algorithm can be implemented as follows
-for array
+for an array
 $\texttt{t}[1],\texttt{t}[2],\ldots,\texttt{t}[n]$:
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) {
+for (int i = 1; i <= n-1; i++) {
     for (int j = 1; j <= n-i; j++) {
         if (t[j] > t[j+1]) swap(t[j],t[j+1]);
     }
@@ -118,7 +118,7 @@ After the first round of the algorithm,
 the largest element will be in the correct position,
 and in general, after $k$ rounds, the $k$ largest
 elements will be in the correct positions.
-Thus, after $n$ rounds, the whole array
+Thus, after $n-1$ rounds, the whole array
 will be sorted.
 
 For example, in the array
@@ -267,7 +267,7 @@ algorithm that always swaps consecutive
 elements in the array.
 It turns out that the time complexity
 of such an algorithm is \emph{always}
-at least $O(n^2)$ because in the worst case,
+at least $O(n^2)$, because in the worst case,
 $O(n^2)$ swaps are required for sorting the array.
 
 A useful concept when analyzing sorting
@@ -302,7 +302,7 @@ For example, in the array
 \end{tikzpicture}
 \end{center}
 the inversions are $(6,3)$, $(6,5)$ and $(9,8)$.
-The number of inversions indicates
+The number of inversions tells us
 how much work is needed to sort the array.
 An array is completely sorted when
 there are no inversions.
@@ -332,20 +332,20 @@ that is based on recursion.
 Mergesort sorts a subarray \texttt{t}$[a,b]$ as follows:
 
 \begin{enumerate}
-\item If $a=b$, do not do anything because the subarray is already sorted.
-\item Calculate the index of the middle element: $k=\lfloor (a+b)/2 \rfloor$.
+\item If $a=b$, do not do anything, because the subarray is already sorted.
+\item Calculate the position of the middle element: $k=\lfloor (a+b)/2 \rfloor$.
 \item Recursively sort the subarray \texttt{t}$[a,k]$.
 \item Recursively sort the subarray \texttt{t}$[k+1,b]$.
 \item \emph{Merge} the sorted subarrays \texttt{t}$[a,k]$ and \texttt{t}$[k+1,b]$
 into a sorted subarray \texttt{t}$[a,b]$.
 \end{enumerate}
 
-Mergesort is an efficient algorithm because it
+Mergesort is an efficient algorithm, because it
 halves the size of the subarray at each step.
 The recursion consists of $O(\log n)$ levels,
 and processing each level takes $O(n)$ time.
 Merging the subarrays \texttt{t}$[a,k]$ and \texttt{t}$[k+1,b]$
-is possible in linear time because they are already sorted.
+is possible in linear time, because they are already sorted.
 
 For example, consider sorting the following array:
 \begin{center}
@@ -466,7 +466,7 @@ when we restrict ourselves to sorting algorithms
 that are based on comparing array elements.
 
 The lower bound for the time complexity
-can be proved by examining the sorting
+can be proved by considering sorting
 as a process where each comparison of two elements
 gives more information about the contents of the array.
 The process creates the following tree:
@@ -599,10 +599,10 @@ corresponds to the following bookkeeping array:
 \end{tikzpicture}
 \end{center}
 
-For example, the value at index 3
+For example, the value at position 3
 in the bookkeeping array is 2,
 because the element 3 appears 2 times
-in the original array (indices 2 and 6).
+in the original array (positions 2 and 6).
 
 The construction of the bookkeeping array
 takes $O(n)$ time. After this, the sorted array
@@ -621,8 +621,8 @@ be used as indices in the bookkeeping array.
 
 \index{sort@\texttt{sort}}
 
-It is almost never a good idea to implement
-an own sorting algorithm
+It is almost never a good idea to use
+a self-made sorting algorithm
 in a contest, because there are good
 implementations available in programming languages.
 For example, the C++ standard library contains
@@ -634,7 +634,7 @@ First, it saves time because there is no need to
 implement the function.
 In addition, the library implementation is
 certainly correct and efficient: it is not probable
-that a home-made sorting function would be better.
+that a self-made sorting function would be better.
 
 In this section we will see how to use the
 C++ \texttt{sort} function.
@@ -652,7 +652,7 @@ but a reverse order is possible as follows:
 \begin{lstlisting}
 sort(v.rbegin(),v.rend());
 \end{lstlisting}
-A regular array can be sorted as follows:
+An ordinary array can be sorted as follows:
 \begin{lstlisting}
 int n = 7; // array size
 int t[] = {4,2,5,3,5,8,3};
@@ -667,7 +667,7 @@ Sorting a string means that the characters
 in the string are sorted.
 For example, the string ''monkey'' becomes ''ekmnoy''.
 
-\subsubsection{Comparison operator}
+\subsubsection{Comparison operators}
 
 \index{comparison operator}
 
@@ -677,17 +677,17 @@ of the elements to be sorted.
 During the sorting, this operator will be used
 whenever it is needed to find out the order of two elements.
 
-Most C++ data types have a built-in comparison operator
+Most C++ data types have a built-in comparison operator,
 and elements of those types can be sorted automatically.
 For example, numbers are sorted according to their values
 and strings are sorted in alphabetical order.
 
 \index{pair@\texttt{pair}}
 
-Pairs (\texttt{pair}) are sorted primarily by the first
-element (\texttt{first}).
+Pairs (\texttt{pair}) are sorted primarily by their first
+elements (\texttt{first}).
 However, if the first elements of two pairs are equal,
-they are sorted by the second element (\texttt{second}):
+they are sorted by their second elements (\texttt{second}):
 \begin{lstlisting}
 vector<pair<int,int>> v;
 v.push_back({1,5});
@@ -700,7 +700,7 @@ $(1,2)$, $(1,5)$ and $(2,3)$.
 
 \index{tuple@\texttt{tuple}}
 
-Correspondingly, tuples (\texttt{tuple})
+In a similar way, tuples (\texttt{tuple})
 are sorted primarily by the first element,
 secondarily by the second element, etc.:
 \begin{lstlisting}
@@ -741,7 +741,7 @@ struct P {
 };
 \end{lstlisting}
 
-\subsubsection{Comparison function}
+\subsubsection{Comparison functions}
 
 \index{comparison function}
 
@@ -782,7 +782,7 @@ for (int i = 1; i <= n; i++) {
 The time complexity of this approach is $O(n)$,
 because in the worst case, it is needed to check
 all elements in the array.
-If the array can contain any elements,
+If the array may contain any elements,
 this is also the best possible approach, because
 there is no additional information available where
 in the array we should search for the element $x$.
@@ -791,7 +791,7 @@ However, if the array is \emph{sorted},
 the situation is different.
 In this case it is possible to perform the
 search much faster, because the order of the
-elements in the array guides us.
+elements in the array guides the search.
 The following \key{binary search} algorithm
 efficiently searches for an element in a sorted array
 in $O(\log n)$ time.
@@ -804,7 +804,7 @@ At each step, the search halves the active region in the array,
 until the target element is found, or it turns out
 that there is no such element.
 
-First, the search checks the middle element in the array.
+First, the search checks the middle element of the array.
 If the middle element is the target element,
 the search terminates.
 Otherwise, the search recursively continues
@@ -823,7 +823,7 @@ while (a <= b) {
 \end{lstlisting}
 
 The algorithm maintains a range $a \ldots b$
-that corresponds to the active region in the array.
+that corresponds to the active region of the array.
 Initially, the range is $1 \ldots n$, the whole array.
 The algorithm halves the size of the range at each step,
 so the time complexity is $O(\log n)$.
@@ -856,7 +856,7 @@ if (t[k] == x) // x was found at index k
 The variables $k$ and $b$ contain the position
 in the array and the jump length.
 If the array contains the element $x$,
-the index of the element will be in the variable $k$
+the position of $x$ will be in the variable $k$
 after the search.
 The time complexity of the algorithm is $O(\log n)$,
 because the code in the \texttt{while} loop
@@ -866,7 +866,7 @@ is performed at most twice for each jump length.
 
 In practice, it is seldom needed to implement
 binary search for searching elements in an array,
-because we can use the standard library instead.
+because we can use the standard library.
 For example, the C++ functions \texttt{lower\_bound}
 and \texttt{upper\_bound} implement binary search,
 and the data structure \texttt{set} maintains a
@@ -893,7 +893,7 @@ $\texttt{ok}(x)$ & \texttt{false} & \texttt{false}
 \end{center}
 
 \noindent
-The value $k$ can be found using binary search:
+Now, the value $k$ can be found using binary search:
 
 \begin{lstlisting}
 int x = -1;
@@ -947,7 +947,7 @@ for (int b = z; b >= 1; b /= 2) {
 int k = x+1;
 \end{lstlisting}
 
-Note that unlike in the standard binary search,
+Note that unlike in the ordinary binary search,
 here it is not allowed that consecutive values
 of the function are equal.
 In this case it would not be possible to know

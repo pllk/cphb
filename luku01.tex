@@ -6,7 +6,7 @@ Competitive programming combines two topics:
 The \key{design of algorithms} consists of problem solving
 and mathematical thinking.
 Skills for analyzing problems and solving them
-creatively is needed.
+creatively are needed.
 An algorithm for solving a problem
 has to be both correct and efficient,
 and the core of the problem is often
@@ -28,14 +28,14 @@ are graded by testing an implemented algorithm
 using a set of test cases.
 Thus, it is not enough that the idea of the
 algorithm is correct, but the implementation has
-to be correct as well.
+also to be correct.
 
 Good coding style in contests is
 straightforward and concise.
-The solutions should be written quickly,
+The programs should be written quickly,
 because there is not much time available.
 Unlike in traditional software engineering,
-the solutions are short (usually at most some
+the programs are short (usually at most some
 hundreds of lines) and it is not needed to 
 maintain them after the contest.
 
@@ -49,7 +49,7 @@ For example, in Google Code Jam 2016,
 among the best 3,000 participants,
 73 \% used C++,
 15 \% used Python and
-10 \% used Java\footnote{\url{https://www.go-hero.net/jam/16}}.
+10 \% used Java. %\footnote{\url{https://www.go-hero.net/jam/16}}
 Some participants also used several languages.
 
 Many people think that C++ is the best choice
@@ -65,11 +65,11 @@ of data structures and algorithms.
 On the other hand, it is good to
 master several languages and know
 their strengths.
-For example, if large numbers are needed
+For example, if large integers are needed
 in the problem,
-Python can be a good choice because it
-contains a built-in library for handling
-large numbers.
+Python can be a good choice, because it
+contains built-in operations for
+calculating with large integers.
 Still, most problems in programming contests
 are set so that
 using a specific programming language
@@ -99,8 +99,8 @@ int main() {
 \end{lstlisting}
 
 The \texttt{\#include} line at the beginning
-of the code is a feature in the \texttt{g++} compiler
-that allows us to include the whole standard library.
+of the code is a feature of the \texttt{g++} compiler
+that allows us to include the entire standard library.
 Thus, it is not needed to separately include
 libraries such as \texttt{iostream},
 \texttt{vector} and \texttt{algorithm},
@@ -112,7 +112,7 @@ of the standard library can be used directly
 in the code.
 Without the \texttt{using} line we should write,
 for example, \texttt{std::cout},
-but now it is enough to write \texttt{cout}.
+but now it suffices to write \texttt{cout}.
 
 The code can be compiled using the following command:
 
@@ -122,7 +122,7 @@ g++ -std=c++11 -O2 -Wall code.cpp -o code
 
 This command produces a binary file \texttt{code}
 from the source code \texttt{code.cpp}.
-The compiler obeys the C++11 standard
+The compiler follows the C++11 standard
 (\texttt{-std=c++11}),
 optimizes the code (\texttt{-O2})
 and shows warnings about possible errors (\texttt{-Wall}).
@@ -152,8 +152,8 @@ cin >> a >> b >> x;
 
 This kind of code always works,
 assuming that there is at least one space
-or one newline between each element in the input.
-For example, the above code accepts
+or newline between each element in the input.
+For example, the above code can read
 both the following inputs:
 \begin{lstlisting}
 123 456 monkey
@@ -203,7 +203,7 @@ printf("%d %d\n", a, b);
 
 Sometimes the program should read a whole line
 from the input, possibly with spaces.
-This can be accomplished using the
+This can be accomplished by using the
 \texttt{getline} function:
 
 \begin{lstlisting}
@@ -212,7 +212,7 @@ getline(cin, s);
 \end{lstlisting}
 
 If the amount of data is unknown, the following
-loop can be handy:
+loop is useful:
 \begin{lstlisting}
 while (cin >> x) {
     // code
@@ -231,11 +231,11 @@ but add the following lines to the beginning of the code:
 freopen("input.txt", "r", stdin);
 freopen("output.txt", "w", stdout);
 \end{lstlisting}
-After this, the code reads the input from the file
+After this, the program reads the input from the file
 ''input.txt'' and writes the output to the file
 ''output.txt''.
 
-\section{Handling numbers}
+\section{Working with numbers}
 
 \index{integer}
 
@@ -299,19 +299,19 @@ when $x$ is divided by $m$.
 For example, $17 \bmod 5 = 2$,
 because $17 = 3 \cdot 5 + 2$.
 
-Sometimes, the answer for a problem is a
+Sometimes, the answer to a problem is a
 very large number but it is enough to
 output it ''modulo $m$'', i.e.,
 the remainder when the answer is divided by $m$
 (for example, ''modulo $10^9+7$'').
 The idea is that even if the actual answer
 may be very large,
-it is enough to use the types
+it suffices to use the types
 \texttt{int} and \texttt{long long}.
 
 An important property of the remainder is that
 in addition, subtraction and multiplication,
-the remainder can be calculated before the operation:
+the remainder can be taken before the operation:
 
 \[
 \begin{array}{rcr}
@@ -321,7 +321,7 @@ the remainder can be calculated before the operation:
 \end{array}
 \]
 
-Thus, we can calculate the remainder after every operation
+Thus, we can take the remainder after every operation
 and the numbers will never become too large.
 
 For example, the following code calculates $n!$,
@@ -339,8 +339,8 @@ be between $0\ldots m-1$.
 However, in C++ and other languages,
 the remainder of a negative number
 is either zero or negative.
-An easy way to make sure this will
-not happen is to first calculate
+An easy way to make sure there
+are no negative remainders is to first calculate
 the remainder as usual and then add $m$
 if the result is negative:
 \begin{lstlisting}
@@ -378,7 +378,8 @@ printf("%.9f\n", x);
 
 A difficulty when using floating point numbers
 is that some numbers cannot be represented
-accurately but there will be rounding errors.
+accurately as floating point numbers,
+but there will be rounding errors.
 For example, the result of the following code
 is surprising:
 
@@ -387,14 +388,14 @@ double x = 0.3*3+0.1;
 printf("%.20f\n", x); // 0.99999999999999988898
 \end{lstlisting}
 
-Because of a rounding error,
-the value of \texttt{x} is a bit less than 1,
+Due to a rounding error,
+the value of \texttt{x} is a bit smaller than 1,
 while the correct value would be 1.
 
 It is risky to compare floating point numbers
 with the \texttt{==} operator,
 because it is possible that the values should
-be equal but they are not due to rounding errors.
+be equal but they are not because of rounding.
 A better way to compare floating point numbers
 is to assume that two numbers are equal
 if the difference between them is $\varepsilon$,
@@ -414,12 +415,12 @@ integers up to a certain limit can be still
 represented accurately.
 For example, using \texttt{double},
 it is possible to accurately represent all
-integers having absolute value at most $2^{53}$.
+integers whose absolute value is at most $2^{53}$.
 
 \section{Shortening code}
 
 Short code is ideal in competitive programming,
-because algorithms should be implemented
+because programs should be written
 as fast as possible.
 Because of this, competitive programmers often define
 shorter names for datatypes and other parts of code.
@@ -450,7 +451,7 @@ cout << a*b << "\n";
 The command \texttt{typedef}
 can also be used with more complex types.
 For example, the following code gives
-the name \texttt{vi} for a vector of integers,
+the name \texttt{vi} for a vector of integers
 and the name \texttt{pi} for a pair
 that contains two integers.
 \begin{lstlisting}
@@ -511,16 +512,16 @@ REP(i,1,n) {
 
 Mathematics plays an important role in competitive
 programming, and it is not possible to become
-a successful competitive programmer without good skills
-in mathematics.
-This section covers some important
+a successful competitive programmer without
+having good mathematical skills.
+This section discusses some important
 mathematical concepts and formulas that
 are needed later in the book.
 
 \subsubsection{Sum formulas}
 
 Each sum of the form
-\[\sum_{x=1}^n x^k = 1^k+2^k+3^k+\ldots+n^k\]
+\[\sum_{x=1}^n x^k = 1^k+2^k+3^k+\ldots+n^k,\]
 where $k$ is a positive integer,
 has a closed-form formula that is a
 polynomial of degree $k+1$.
@@ -529,13 +530,14 @@ For example,
 and
 \[\sum_{x=1}^n x^2 = 1^2+2^2+3^2+\ldots+n^2 = \frac{n(n+1)(2n+1)}{6}.\]
 
-An \key{arithmetic sum} is a sum \index{arithmetic sum}
+An \key{arithmetic progression} is a \index{arithmetic progression}
+sequence of numbers
 where the difference between any two consecutive
 numbers is constant.
 For example,
-\[3+7+11+15\]
-is an arithmetic sum with constant 4.
-An arithmetic sum can be calculated
+\[3, 7, 11, 15\]
+is an arithmetic progression with constant 4.
+The sum of an arithmetic progression can be calculated
 using the formula
 \[\frac{n(a+b)}{2}\]
 where $a$ is the first number,
@@ -547,14 +549,15 @@ The formula is based on the fact
 that the sum consists of $n$ numbers and
 the value of each number is $(a+b)/2$ on average.
 
-\index{geometric sum}
-A \key{geometric sum} is a sum
+\index{geometric progression}
+A \key{geometric progression} is a sequence
+of numbers
 where the ratio between any two consecutive
 numbers is constant.
 For example,
-\[3+6+12+24\]
-is a geometric sum with constant 2.
-A geometric sum can be calculated
+\[3,6,12,24\]
+is a geometric progression with constant 2.
+The sum of a geometric progression can be calculated
 using the formula
 \[\frac{bx-a}{x-1}\]
 where $a$ is the first number,
@@ -571,7 +574,7 @@ and solving the equation
 \[ xS-S = bx-a\]
 yields the formula.
 
-A special case of a geometric sum is the formula
+A special case of a sum of a geometric progression is the formula
 \[1+2+4+8+\ldots+2^{n-1}=2^n-1.\]
 
 \index{harmonic sum}
@@ -579,7 +582,7 @@ A special case of a geometric sum is the formula
 A \key{harmonic sum} is a sum of the form
 \[ \sum_{x=1}^n \frac{1}{x} = 1+\frac{1}{2}+\frac{1}{3}+\ldots+\frac{1}{n}.\]
 
-An upper bound for the harmonic sum is $\log_2(n)+1$.
+An upper bound for a harmonic sum is $\log_2(n)+1$.
 Namely, we can
 modify each term $1/k$ so that $k$ becomes
 the nearest power of two that does not exceed $k$.
@@ -589,7 +592,7 @@ the sum as follows:
 1+\frac{1}{2}+\frac{1}{2}+\frac{1}{4}+\frac{1}{4}+\frac{1}{4}.\]
 This upper bound consists of $\log_2(n)+1$ parts
 ($1$, $2 \cdot 1/2$, $4 \cdot 1/4$, etc.),
-and the sum of each part is at most 1.
+and the value of each part is at most 1.
 
 \subsubsection{Set theory}
 
@@ -607,7 +610,7 @@ For example, the set
 \[X=\{2,4,7\}\]
 contains elements 2, 4 and 7.
 The symbol $\emptyset$ denotes an empty set,
-and $|S|$ denotes the size of the set $S$,
+and $|S|$ denotes the size of a set $S$,
 i.e., the number of elements in the set.
 For example, in the above set, $|X|=3$.
 
@@ -654,15 +657,11 @@ $\{2\}$, $\{4\}$, $\{7\}$, $\{2,4\}$, $\{2,7\}$, $\{4,7\}$ and $\{2,4,7\}$.
 \end{center}
 
 Often used sets are
-
-\begin{itemize}[noitemsep]
-\item $\mathbb{N}$ (natural numbers),
-\item $\mathbb{Z}$ (integers),
-\item $\mathbb{Q}$ (rational numbers) and
-\item $\mathbb{R}$ (real numbers).
-\end{itemize}
-
-The set $\mathbb{N}$ of natural numbers
+$\mathbb{N}$ (natural numbers),
+$\mathbb{Z}$ (integers),
+$\mathbb{Q}$ (rational numbers) and
+$\mathbb{R}$ (real numbers).
+The set $\mathbb{N}$
 can be defined in two ways, depending
 on the situation:
 either $\mathbb{N}=\{0,1,2,\ldots\}$
@@ -707,7 +706,7 @@ $A$ & $B$ & $\lnot A$ & $\lnot B$ & $A \land B$ & $A \lor B$ & $A \Rightarrow B$
 \end{tabular}
 \end{center}
 
-The expression $\lnot A$ has the reverse value of $A$.
+The expression $\lnot A$ has the opposite value of $A$.
 The expression $A \land B$ is true if both $A$ and $B$
 are true,
 and the expression $A \lor B$ is true if $A$ or $B$ or both
@@ -729,7 +728,7 @@ Using this definition, $P(7)$ is true but $P(8)$ is false.
 \index{quantifier}
 
 A \key{quantifier} connects a logical expression
-to elements in a set.
+to the elements of a set.
 The most important quantifiers are
 $\forall$ (\key{for all}) and $\exists$ (\key{there is}).
 For example,
@@ -746,7 +745,7 @@ For example,
 \[\forall x ((x>1 \land \lnot P(x)) \Rightarrow (\exists a (\exists b (x = ab \land a > 1 \land b > 1))))\]
 means that if a number $x$ is larger than 1
 and not a prime number,
-then there exist numbers $a$ and $b$
+then there are numbers $a$ and $b$
 that are larger than $1$ and whose product is $x$.
 This proposition is true in the set of integers.
 
@@ -804,7 +803,7 @@ of the logarithm.
 According to the definition,
 $\log_k(x)=a$ exactly when $k^a=x$.
 
-A useful interpretation in algorithm design is
+A useful property of logarithms is
 that $\log_k(x)$ equals the number of times
 we have to divide $x$ by $k$ before we reach 
 the number 1.
@@ -813,9 +812,9 @@ because 5 divisions are needed:
 
 \[32 \rightarrow 16 \rightarrow 8 \rightarrow 4 \rightarrow 2 \rightarrow 1 \]
 
-Logarithms are often needed in the analysis of
+Logarithms are often used in the analysis of
 algorithms, because many efficient algorithms
-divide in half something at each step.
+halve something at each step.
 Hence, we can estimate the efficiency of such algorithms
 using logarithms.
 
@@ -837,9 +836,9 @@ The \key{natural logarithm} $\ln(x)$ of a number $x$
 is a logarithm whose base is $e \approx 2{,}71828$.
 
 Another property of logarithms is that
-the number of digits of a number $x$ in base $b$ is
+the number of digits of an integer $x$ in base $b$ is
 $\lfloor \log_b(x)+1 \rfloor$.
 For example, the representation of
-the number $123$ in base $2$ is 1111011 and
+$123$ in base $2$ is 1111011 and
 $\lfloor \log_2(123)+1 \rfloor = 7$.
 

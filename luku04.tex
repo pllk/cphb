@@ -30,7 +30,7 @@ size can be changed during the execution
 of the program.
 The most popular dynamic array in C++ is
 the \texttt{vector} structure,
-that can be used almost like a regular array.
+that can be used almost like an ordinary array.
 
 The following code creates an empty vector and
 adds three elements to it:
@@ -42,7 +42,7 @@ v.push_back(2); // [3,2]
 v.push_back(5); // [3,2,5]
 \end{lstlisting}
 
-After this, the elements can be accessed like in a regular array:
+After this, the elements can be accessed like in an ordinary array:
 
 \begin{lstlisting}
 cout << v[0] << "\n"; // 3
@@ -102,7 +102,7 @@ vector<int> v(10, 5);
 \end{lstlisting}
 
 The internal implementation of the vector
-uses a regular array.
+uses an ordinary array.
 If the size of the vector increases and
 the array becomes too small,
 a new array is allocated and all the
@@ -119,7 +119,7 @@ In addition, there is special syntax for strings
 that is not available in other data structures.
 Strings can be combined using the \texttt{+} symbol.
 The function $\texttt{substr}(k,x)$ returns the substring
-that begins at index $k$ and has length $x$,
+that begins at position $k$ and has length $x$,
 and the function $\texttt{find}(\texttt{t})$ finds the position
 of the first occurrence of a substring \texttt{t}.
 
@@ -196,14 +196,14 @@ for (auto x : s) {
 }
 \end{lstlisting}
 
-An important property of a set is
+An important property of sets
 that all the elements are \emph{distinct}.
 Thus, the function \texttt{count} always returns
 either 0 (the element is not in the set)
 or 1 (the element is in the set),
 and the function \texttt{insert} never adds
 an element to the set if it is
-already in the set.
+already there.
 The following code illustrates this:
 
 \begin{lstlisting}
@@ -214,13 +214,13 @@ s.insert(5);
 cout << s.count(5) << "\n"; // 1
 \end{lstlisting}
 
-C++ also has the structures
+C++ also contains the structures
 \texttt{multiset} and \texttt{unordered\_multiset}
 that work otherwise like \texttt{set}
 and \texttt{unordered\_set}
 but they can contain multiple instances of an element.
 For example, in the following code all three instances
-of the number 5 are added to the set:
+of the number 5 are added to a multiset:
 
 \begin{lstlisting}
 multiset<int> s;
@@ -231,7 +231,7 @@ cout << s.count(5) << "\n"; // 3
 \end{lstlisting}
 The function \texttt{erase} removes
 all instances of an element
-from a \texttt{multiset}:
+from a multiset:
 \begin{lstlisting}
 s.erase(5);
 cout << s.count(5) << "\n"; // 0
@@ -249,7 +249,7 @@ cout << s.count(5) << "\n"; // 2
 
 A \key{map} is a generalized array
 that consists of key-value-pairs.
-While the keys in a regular array are always
+While the keys in an ordinary array are always
 the consecutive integers $0,1,\ldots,n-1$,
 where $n$ is the size of the array,
 the keys in a map can be of any data type and
@@ -259,11 +259,11 @@ C++ contains two map implementations that
 correspond to the set implementations:
 the structure
 \texttt{map} is based on a balanced
-binary tree and accessing an element
+binary tree and accessing elements
 takes $O(\log n)$ time,
 while the structure
 \texttt{unordered\_map} uses a hash map
-and accessing an element takes $O(1)$ time on average.
+and accessing elements takes $O(1)$ time on average.
 
 The following code creates a map
 where the keys are strings and the values are integers:
@@ -288,15 +288,15 @@ is added to the map.
 map<string,int> m;
 cout << m["aybabtu"] << "\n"; // 0
 \end{lstlisting}
-The function \texttt{count} determines
-if a key exists in the map:
+The function \texttt{count} checks
+if a key exists in a map:
 \begin{lstlisting}
 if (m.count("aybabtu")) {
     cout << "key exists in the map";
 }
 \end{lstlisting}
 The following code prints all keys and values
-in the map:
+in a map:
 \begin{lstlisting}
 for (auto x : m) {
     cout << x.first << " " << x.second << "\n";
@@ -358,7 +358,7 @@ reverse(v.begin(), v.end());
 random_shuffle(v.begin(), v.end());
 \end{lstlisting}
 
-These functions can also be used with a regular array.
+These functions can also be used with an ordinary array.
 In this case, the functions are given pointers to the array
 instead of iterators:
 
@@ -371,8 +371,8 @@ random_shuffle(t, t+n);
 
 \subsubsection{Set iterators}
 
-Iterators are often used when accessing
-elements in a set.
+Iterators are often used to access
+elements of a set.
 The following code creates an iterator
 \texttt{it} that points to the first element in the set:
 \begin{lstlisting}
@@ -421,11 +421,11 @@ if (it == s.end()) cout << "x is missing";
 \end{lstlisting}
 
 The function $\texttt{lower\_bound}(x)$ returns
-an iterator to the smallest element in the set
+an iterator to the smallest element
 whose value is \emph{at least} $x$, and
 the function $\texttt{upper\_bound}(x)$
 returns an iterator to the smallest element
-in the set whose value is \emph{larger than} $x$.
+whose value is \emph{larger than} $x$.
 If such elements do not exist,
 the return value of the functions will be \texttt{end}.
 These functions are not supported by the
@@ -487,18 +487,18 @@ cout << s[4] << "\n"; // 0
 cout << s[5] << "\n"; // 1
 \end{lstlisting}
 
-The benefit in using a bitset is that
-it requires less memory than a regular array,
-because each element in the bitset only
+The benefit in using bitsets is that
+they require less memory than ordinary arrays,
+because each element in a bitset only
 uses one bit of memory.
 For example, 
-if $n$ bits are stored as an \texttt{int} array,
+if $n$ bits are stored in an \texttt{int} array,
 $32n$ bits of memory will be used,
 but a corresponding bitset only requires $n$ bits of memory.
-In addition, the values in a bitset
+In addition, the values of a bitset
 can be efficiently manipulated using
 bit operators, which makes it possible to
-optimize algorithms.
+optimize algorithms using bit sets.
 
 The following code shows another way to create a bitset:
 \begin{lstlisting}
@@ -530,9 +530,9 @@ cout << (a^b) << "\n"; // 1001101110
 
 A \texttt{deque} is a dynamic array
 whose size can be changed at both ends of the array.
-Like a vector, a deque contains functions
+Like a vector, a deque contains the functions
 \texttt{push\_back} and \texttt{pop\_back}, but
-it also contains additional functions
+it also contains the functions
 \texttt{push\_front} and \texttt{pop\_front}
 that are not available in a vector.
 
@@ -547,7 +547,7 @@ d.pop_front(); // [5]
 \end{lstlisting}
 
 The internal implementation of a deque
-is more complex than the implementation of a vector.
+is more complex than that of a vector.
 For this reason, a deque is slower than a vector.
 Still, the time complexity of adding and removing
 elements is $O(1)$ on average at both ends.
@@ -583,7 +583,7 @@ provides two $O(1)$ time operations:
 adding a element to the end of the queue,
 and removing the first element in the queue.
 It is only possible to access the first
-and the last element of a queue.
+and last element of a queue.
 
 The following code shows how a queue can be used:
 \begin{lstlisting}
@@ -606,7 +606,7 @@ maintains a set of elements.
 The supported operations are insertion and,
 depending on the type of the queue,
 retrieval and removal of
-either the minimum element or the maximum element.
+either the minimum or maximum element.
 The time complexity is $O(\log n)$
 for insertion and removal and $O(1)$ for retrieval.
 
@@ -623,7 +623,7 @@ As default, the elements in the C++
 priority queue are sorted in decreasing order,
 and it is possible to find and remove the
 largest element in the queue.
-The following code shows an example:
+The following code illustrates this:
 
 \begin{lstlisting}
 priority_queue<int> q;
@@ -643,7 +643,8 @@ q.pop();
 
 Using the following declaration,
 we can create a priority queue
-that supports finding and removing the minimum element:
+that allows us to find and remove
+the minimum element:
 
 \begin{lstlisting}
 priority_queue<int,vector<int>,greater<int>> q;
@@ -670,20 +671,20 @@ and 9 belong to both of the lists.
 A straightforward solution to the problem is
 to go through all pairs of numbers in $O(n^2)$ time,
 but next we will concentrate on
-more efficient solutions.
+more efficient algorithms.
 
-\subsubsection{Solution 1}
+\subsubsection{Algorithm 1}
 
-We construct a set of the numbers in $A$,
+We construct a set of the numbers that appear in $A$,
 and after this, we iterate through the numbers
 in $B$ and check for each number if it
 also belongs to $A$.
-This is efficient because the numbers in $A$
+This is efficient because the numbers of $A$
 are in a set.
 Using the \texttt{set} structure,
 the time complexity of the algorithm is $O(n \log n)$.
 
-\subsubsection{Solution 2}
+\subsubsection{Algorithm 2}
 
 It is not needed to maintain an ordered set,
 so instead of the \texttt{set} structure
@@ -693,7 +694,7 @@ more efficient, because we only have to change
 the underlying data structure.
 The time complexity of the new algorithm is $O(n)$.
 
-\subsubsection{Solution 3}
+\subsubsection{Algorithm 3}
 
 Instead of data structures, we can use sorting.
 First, we sort both lists $A$ and $B$.
@@ -707,12 +708,12 @@ so the total time complexity is $O(n \log n)$.
 
 The following table shows how efficient
 the above algorithms are when $n$ varies and
-the elements in the lists are random
+the elements of the lists are random
 integers between $1 \ldots 10^9$:
 
 \begin{center}
 \begin{tabular}{rrrr}
-$n$ & solution 1 & solution 2 & solution 3 \\
+$n$ & algorithm 1 & algorithm 2 & algorithm 3 \\
 \hline
 $10^6$ & $1{,}5$ s & $0{,}3$ s & $0{,}2$ s \\
 $2 \cdot 10^6$ & $3{,}7$ s & $0{,}8$ s & $0{,}3$ s \\
@@ -722,22 +723,22 @@ $5 \cdot 10^6$ & $10{,}0$ s & $2{,}3$ s & $0{,}9$ s \\
 \end{tabular}
 \end{center}
 
-Solutions 1 and 2 are equal except that
+Algorithm 1 and 2 are equal except that
 they use different set structures.
 In this problem, this choice has an important effect on
-the running time, because solution 2
-is 4–5 times faster than solution 1.
+the running time, because algorithm 2
+is 4–5 times faster than algorithm 1.
 
-However, the most efficient solution is solution 3
+However, the most efficient algorithm is algorithm 3
 that uses sorting.
-It only uses half of the time compared to solution 2.
+It only uses half of the time compared to algorithm 2.
 Interestingly, the time complexity of both
-solution 1 and solution 3 is $O(n \log n)$,
-but despite this, solution 3 is ten times faster.
+algorithm 1 and algorithm 3 is $O(n \log n)$,
+but despite this, algorithm 3 is ten times faster.
 This can be explained by the fact that
 sorting is a simple procedure and it is done
-only once at the beginning of solution 3,
+only once at the beginning of algorithm 3,
 and the rest of the algorithm works in linear time.
 On the other hand,
-solution 3 maintains a complex balanced binary tree
+algorithm 3 maintains a complex balanced binary tree
 during the whole algorithm.
