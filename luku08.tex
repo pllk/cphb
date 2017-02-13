@@ -102,7 +102,7 @@ On each turn, the left pointer moves one step
 forward, and the right pointer moves forward
 as long as the subarray sum is at most $x$.
 If the sum becomes exactly $x$,
-we have found a solution.
+a solution has been found.
 
 As an example, consider the following array
 with target sum $x=8$:
@@ -133,7 +133,7 @@ with target sum $x=8$:
 
 Initially, the subarray contains the elements
 1, 3 and 2, and the sum of the subarray is 6.
-The subarray cannot be larger because
+The subarray cannot be larger, because
 the next element 5 would make the sum larger than $x$.
 
 \begin{center}
@@ -166,7 +166,7 @@ the next element 5 would make the sum larger than $x$.
 \end{center}
 
 Then, the left pointer moves one step forward.
-The right pointer does not move because otherwise
+The right pointer does not move, because otherwise
 the sum would become too large.
 
 \begin{center}
@@ -260,13 +260,14 @@ or report that no such numbers exist.
 To solve the problem, we first
 sort the numbers in the array in increasing order.
 After that, we iterate through the array using
-two pointers initially located at both ends of the array.
-The left pointer begins at the first element
+two pointers.
+The left pointer starts at the first element
 and moves one step forward on each turn.
 The right pointer begins at the last element
 and always moves backward until the sum of the
-subarray is at most $x$.
-If the sum is exactly $x$, we have found a solution.
+elements is at most $x$.
+If the sum of the elements is exactly $x$,
+a solution has been found.
 
 For example, consider the following array
 with target sum $x=12$:
@@ -414,7 +415,7 @@ This can be done by performing $n$ binary searches,
 and each search takes $O(\log n)$ time.
 
 \index{3SUM-problem}
-A somewhat more difficult problem is 
+A more difficult problem is 
 the \key{3SUM-problem} that asks to
 find \emph{three} numbers in the array
 such that their sum is $x$.
@@ -427,7 +428,7 @@ Can you see how it is possible?
 
 Amortized analysis is often used for
 estimating the number of operations
-performed for a data structure.
+performed on a data structure.
 The operations may be distributed unevenly so
 that most operations occur during a
 certain phase of the algorithm, but the total
@@ -435,7 +436,7 @@ number of the operations is limited.
 
 As an example, consider the problem
 of finding for each element
-in an array the
+of an array the
 \key{nearest smaller element}, i.e.,
 the first smaller element that precedes
 the element in the array.
@@ -447,7 +448,7 @@ in $O(n)$ time using an appropriate data structure.
 An efficient solution to the problem is to
 iterate through the array from left to right,
 and maintain a chain of elements where the
-first element is the current element,
+first element is the current element
 and each following element is the nearest smaller
 element of the previous element.
 If the chain only contains one element,
@@ -581,7 +582,7 @@ its nearest smaller element is 2:
 \end{tikzpicture}
 \end{center}
 
-The algorithm continues in the same way,
+The algorithm continues in the same way
 and finds the nearest smaller element
 for each number in the array.
 But how efficient is the algorithm?
@@ -589,10 +590,10 @@ But how efficient is the algorithm?
 The efficiency of the algorithm depends on
 the total time used for manipulating the chain.
 If an element is larger than the first
-element in the chain, it is directly added
+element of the chain, it is directly added
 to the chain, which is efficient.
 However, sometimes the chain can contain several
-larger elements, and it takes time to remove them.
+larger elements and it takes time to remove them.
 Still, each element is added exactly once to the chain
 and removed at most once from the chain.
 Thus, each element causes $O(1)$ chain operations,
@@ -607,7 +608,7 @@ of the algorithm is $O(n)$.
 A \key{sliding window} is a constant-size subarray
 that moves through the array.
 At each position of the window,
-we typically want to calculate some information
+we want to calculate some information
 about the elements inside the window.
 An interesting problem is to maintain
 the \key{sliding window minimum},
