@@ -12,8 +12,8 @@ the final solution.
 For this reason, greedy algorithms
 are usually very efficient.
 
-The difficulty in designing a greedy algorithm
-is to invent a greedy strategy
+The difficulty in designing greedy algorithms
+is to find a greedy strategy
 that always produces an optimal solution
 to the problem.
 The locally optimal choices in a greedy
@@ -32,7 +32,7 @@ $\{c_1,c_2,\ldots,c_k\}$,
 and each coin can be used as many times we want.
 What is the minimum number of coins needed?
 
-For example, if the coins are euro coins (in cents)
+For example, if the coins are the euro coins (in cents)
 \[\{1,2,5,10,20,50,100,200\}\]
 and the sum of money is 520,
 we need at least four coins.
@@ -71,13 +71,13 @@ because we could replace
 coins $2+2+2$ by coins $5+1$ and
 coins $20+20+20$ by coins $50+10$.
 Moreover, an optimal solution cannot contain
-coins $2+2+1$ or $20+20+10$
+coins $2+2+1$ or $20+20+10$,
 because we could replace them by coins $5$ and $50$.
 
 Using these observations,
 we can show for each coin $x$ that
 it is not possible to optimally construct
-sum $x$ or any larger sum by only using coins
+a sum $x$ or any larger sum by only using coins
 that are smaller than $x$.
 For example, if $x=100$, the largest optimal
 sum using the smaller coins is  $50+20+20+5+2+2=99$.
@@ -113,10 +113,10 @@ correct answer.
 \section{Scheduling}
 
 Many scheduling problems can be solved
-using a greedy strategy.
+using greedy algorithms.
 A classic problem is as follows:
 Given $n$ events with their starting and ending
-times, we should plan a schedule
+times, our goal is to plan a schedule
 that includes as many events as possible.
 It is not possible to select an event partially.
 For example, consider the following events:
@@ -172,7 +172,7 @@ selects the following events:
 \end{tikzpicture}
 \end{center}
 
-However, select short events is not always
+However, selecting short events is not always
 a correct strategy, but the algorithm fails,
 for example, in the following case:
 \begin{center}
@@ -269,9 +269,9 @@ and the greedy algorithm is correct.
 \section{Tasks and deadlines}
 
 Let us now consider a problem where
-we are given $n$ tasks with durations and deadlines,
+we are given $n$ tasks with durations and deadlines
 and our task is to choose an order to perform the tasks.
-For each task, we get $d-x$ points
+For each task, we earn $d-x$ points
 where $d$ is the task's deadline
 and $x$ is the moment when we finished the task.
 What is the largest possible total score
@@ -367,7 +367,7 @@ Here $a>b$, so we should swap the tasks:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Now $X$ gives $b$ points less and $Y$ gives $a$ points more,
+Now $X$ gives $b$ points fewer and $Y$ gives $a$ points more,
 so the total score increases by $a-b > 0$.
 In an optimal solution,
 for any two consecutive tasks,
@@ -470,7 +470,7 @@ which means that the length of each
 codeword is the same.
 For example, we can compress the string
 \texttt{AABACDACA} as follows:
-\[000001001011001000\]
+\[00\,00\,01\,00\,10\,11\,00\,10\,00\]
 Using this code, the length of the compressed
 string is 18 bits.
 However, we can compress the string better
@@ -496,7 +496,7 @@ An optimal code produces a compressed string
 that is as short as possible.
 In this case, the compressed string using
 the optimal code is
-\[001100101110100,\]
+\[0\,0\,110\,0\,10\,111\,0\,10\,0,\]
 so only 15 bits are needed instead of 18 bits.
 Thus, thanks to a better code it was possible to
 save 3 bits in the compressed string.
@@ -539,12 +539,12 @@ in the string,
 and each character's codeword can be read
 by following a path from the root to
 the corresponding node.
-A move to the left correspons to bit 0,
+A move to the left corresponds to bit 0,
 and a move to the right corresponds to bit 1.
 
 Initially, each character of the string is
 represented by a node whose weight is the
-number of times the character appears in the string.
+number of times the character occurs in the string.
 Then at each step two nodes with minimum weights
 are combined by creating
 a new node whose weight is the sum of the weights
