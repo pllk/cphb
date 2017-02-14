@@ -42,14 +42,14 @@ For example, consider the range $[4,7]$ in the following array:
 In this range, the sum of elements is $4+6+1+3=16$,
 the minimum element is 1 and the maximum element is 6.
 
-
-An easy way to process range queries is
-to go through all the elements in the range.
-For example, we can calculate the sum
-in a range $[a,b]$ as follows:
+A simple way to process range queries is to
+go through all elements in the range.
+For example, the following function \texttt{rsq}
+calculates the sum of elements in any range
+$[a,b]$ of an array $t$:
 
 \begin{lstlisting}
-int sum(int a, int b) {
+int rsq(int a, int b) {
     int s = 0;
     for (int i = a; i <= b; i++) {
         s += t[i];
@@ -58,36 +58,39 @@ int sum(int a, int b) {
 }
 \end{lstlisting}
 
-The above function works in $O(n)$ time.
-However, if the array is large and there are several queries,
-such an approach is slow.
+The above function works in $O(n)$ time,
+where $n$ is the number of elements in the array.
+Thus, we can process $q$ queries in $O(nq)$
+time using the function.
+If both $n$ and $q$ are large, this approach
+is slow.
 In this chapter, we will learn how
 range queries can be processed much more efficiently.
 
 \section{Static array queries}
 
-We first focus on a simple situation where
+We first focus on a situation where
 the array is \key{static}, i.e.,
-the elements never change between the queries.
-In this case, it suffices to preprocess the
-array and construct
-a data structure that can be used for
-finding the answer for
-any possible range query efficiently.
+the elements are never modified between the queries.
+In this case, it suffices to construct
+a data structure that tells us
+the answer for any possible range query efficiently.
 
-\subsubsection{Sum query}
+\subsubsection{Sum queries}
 
-\index{prefix sum array}
+\index{sum array}
 
-Sum queries can be processed efficiently
-by constructing a \key{sum array}
-that contains the sum of elements in the range $[1,k]$
-for each $k=1,2,\ldots,n$.
-Using the sum array, the sum of elements in
-any range $[a,b]$ of the original array can
-be calculated in $O(1)$ time.
+Let $\textrm{rsq}(a,b)$ (''range sum query'') be the sum of
+elements in the range $[a,b]$ of an array.
+Our first task is to find a way to calculate any value of $\textrm{rsq}(a,b)$
+efficiently.
+It turns out that there is a simple data structure
+that we can use: a \key{sum array}.
+Such an array contains all values of the form
+$\textrm{rsq}(1,k)$ where $1 \le k \le n$,
+i.e., for each $k$ the sum of the first $k$ elements of the array.
 
-For example, for the array
+For example, consider the following array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -113,7 +116,7 @@ For example, for the array
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-the corresponding sum array is as follows:
+The corresponding sum array is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -140,30 +143,13 @@ the corresponding sum array is as follows:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-The following code constructs a sum array
-\texttt{s} for an array \texttt{t} in $O(n)$ time:
-\begin{lstlisting}
-for (int i = 1; i <= n; i++) {
-    s[i] = s[i-1]+t[i];
-}
-\end{lstlisting}
-After this, the following function processes
-any sum query in $O(1)$ time:
-\begin{lstlisting}
-int sum(int a, int b) {
-    return s[b]-s[a-1];
-}
-\end{lstlisting}
+Now we can calculate any value of
+$\textrm{rsq}(a,b)$ in $O(1)$ time, because
+\[ \textrm{rsq}(a,b) = \textrm{rsq}(1,b) - \textrm{rsq}(1,a-1).\]
+It is convenient to define $\textrm{rsq}(1,0)=0$,
+so that the above formula can be used also when $a=1$.
 
-The function calculates the sum in the range $[a,b]$
-by subtracting the sum in the range $[1,a-1]$
-from the sum in the range $[1,b]$.
-Thus, only two values of the sum array
-are needed, and the query takes $O(1)$ time.
-Note that because of the one-based indexing,
-the function also works when $a=1$ if $\texttt{s}[0]=0$. 
-
-As an example, consider the range $[4,7]$:
+For example, consider the range $[4,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -190,8 +176,8 @@ As an example, consider the range $[4,7]$:
 \end{tikzpicture}
 \end{center}
 The sum in the range is $8+6+1+4=19$.
-This can be calculated using the precalculated
-sums for the ranges $[1,3]$ and $[1,7]$:
+This sum can be calculated using
+two values in the sum array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (3,1);
@@ -251,18 +237,20 @@ where $S(X)$ denotes the sum of a rectangular
 subarray from the upper-left corner
 to the position of $X$.
 
-\subsubsection{Minimum query}
+\subsubsection{Minimum queries}
 
-It is also possible to process minimum queries
-in $O(1)$ time after preprocessing, though it is
-more difficult than processing sum queries.
+Let $\textrm{rmq}(a,b)$ (''range minimum query'') be the
+minimum element in the range $[a,b]$ of an array.
+It is possible to process also minimum queries
+in $O(1)$ time, though it is more difficult than
+processing sum queries.
 Note that minimum and maximum queries can always
-be implemented using same techniques,
+be processed using similar techniques,
 so it suffices to focus on minimum queries.
 
-The idea is to precalculate the minimum element of each range
-of size $2^k$ in the array.
-For example, in the array
+The idea is to precalculate all values $\textrm{rmq}(a,b)$
+where $b-a+1$, the length of the range, is a power of two.
+For example, for the array
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -288,74 +276,73 @@ For example, in the array
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-the following minima will be calculated:
+the following values will be calculated:
 
 \begin{center}
 \begin{tabular}{ccc}
 
 \begin{tabular}{ccc}
-range & size & min \\
+$a$ & $b$ & $\textrm{rmq}(a,b)$ \\
 \hline
-$[1,1]$ & 1 & 1 \\
-$[2,2]$ & 1 & 3 \\
-$[3,3]$ & 1 & 4 \\
-$[4,4]$ & 1 & 8 \\
-$[5,5]$ & 1 & 6 \\
-$[6,6]$ & 1 & 1 \\
-$[7,7]$ & 1 & 4 \\
-$[8,8]$ & 1 & 2 \\
+1 & 1 & 1 \\
+2 & 2 & 3 \\
+3 & 3 & 4 \\
+4 & 4 & 8 \\
+5 & 5 & 6 \\
+6 & 6 & 1 \\
+7 & 7 & 4 \\
+8 & 8 & 2 \\
 \end{tabular}
 
 &
 
 \begin{tabular}{ccc}
-range & size & min \\
+$a$ & $b$ & $\textrm{rmq}(a,b)$ \\
 \hline
-$[1,2]$ & 2 & 1 \\
-$[2,3]$ & 2 & 3 \\
-$[3,4]$ & 2 & 4 \\
-$[4,5]$ & 2 & 6 \\
-$[5,6]$ & 2 & 1 \\
-$[6,7]$ & 2 & 1 \\
-$[7,8]$ & 2 & 2 \\
+1 & 2 & 1 \\
+2 & 3 & 3 \\
+3 & 4 & 4 \\
+4 & 5 & 6 \\
+5 & 6 & 1 \\
+6 & 7 & 1 \\
+7 & 8 & 2 \\
 \\
 \end{tabular}
 
 &
 
 \begin{tabular}{ccc}
-range & size & min \\
+$a$ & $b$ & $\textrm{rmq}(a,b)$ \\
 \hline
-$[1,4]$ & 4 & 1 \\
-$[2,5]$ & 4 & 3 \\
-$[3,6]$ & 4 & 1 \\
-$[4,7]$ & 4 & 1 \\
-$[5,8]$ & 4 & 1 \\
-$[1,8]$ & 8 & 1 \\
+1 & 4 & 1 \\
+2 & 5 & 3 \\
+3 & 6 & 1 \\
+4 & 7 & 1 \\
+5 & 8 & 1 \\
+1 & 8 & 1 \\
 \\
 \\
 \end{tabular}
 
 \end{tabular}
-
 \end{center}
 
-There are $O(n \log n)$ ranges of size $2^k$,
-because for each array position,
-there are $O(\log n)$ ranges that begin at that position.
-The minima in all ranges of size $2^k$ can be calculated
-in $O(n \log n)$ time, because each range of size $2^k$
-consists of two ranges of size $2^{k-1}$ and the minima
-can be calculated recursively.
+The number of precalculated values is $O(n \log n)$,
+because there are $O(\log n)$ range lengths
+that are powers of two.
+In addition, the values can be calculated efficiently
+using the recursive formula
+\[\textrm{rmq}(a,b) = \min(\textrm{rmq}(a,a+w-1),\textrm{rmq}(a+w,b)),\]
+where $b-a+1$ is a power of two and $w=(b-a+1)/2$.
+Calculating all those values takes $O(n \log n)$ time.
 
-After this, the minimum in any range $[a,b]$
-can be calculated in $O(1)$ time as a minimum of
-two ranges of size $2^k$ where $k=\lfloor \log_2(b-a+1) \rfloor$.
-The first range begins at index $a$,
-and the second range ends at index $b$.
-The parameter $k$ is chosen so that
-the two ranges of size $2^k$
-fully cover the range $[a,b]$.
+After this, any value of $\textrm{rmq}(a,b)$ can be calculated
+in $O(1)$ time as a minimum of two precalculated values.
+Let $k$ be the largest power of two that does not exceed $b-a+1$.
+We can calculate the value of $\textrm{rmq}(a,b)$ using the formula
+\[\textrm{rmq}(a,b) = \min(\textrm{rmq}(a,a+k-1),\textrm{rmq}(b-k+1,b)).\]
+In the above formula, the range $[a,b]$ is represented
+as the union of the ranges $[a,a+k-1]$ and $[b-k+1,b]$, both of length $k$.
 
 As an example, consider the range $[2,7]$:
 \begin{center}
@@ -384,10 +371,10 @@ As an example, consider the range $[2,7]$:
 \end{tikzpicture}
 \end{center}
 The length of the range is 6,
-and $\lfloor \log_2(6) \rfloor = 2$.
-Thus, the minimum can be calculated
-from two ranges of length 4.
-The ranges are $[2,5]$ and $[4,7]$:
+and the largest power of two that does
+not exceed 6 is 4.
+Thus the range $[2,7]$ is
+the union of the ranges $[2,5]$ and $[4,7]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -439,9 +426,8 @@ The ranges are $[2,5]$ and $[4,7]$:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-Since the minimum in the range $[2,5]$ is 3
-and the minimum in the range $[4,7]$ is 1,
-we know that the minimum in the range $[2,7]$ is 1.
+Since $\textrm{rmq}(2,5)=3$ and $\textrm{rmq}(4,7)=1$,
+we can conclude that $\textrm{rmq}(2,7)=1$.
 
 \section{Binary indexed tree}
 
@@ -449,29 +435,26 @@ we know that the minimum in the range $[2,7]$ is 1.
 \index{Fenwick tree}
 
 A \key{binary indexed tree} or \key{Fenwick tree}
-can be seen as a dynamic version of a sum array.
-The tree supports two $O(\log n)$ time operations:
-calculating the sum of elements in a range,
+can be seen as a dynamic variant of a sum array.
+This data structure supports two $O(\log n)$ time operations:
+calculating the sum of elements in a range
 and modifying the value of an element.
 
-The benefit in using a binary indexed tree is
-that the elements of the underlying array
-can be efficiently updated between the queries.
-This would not be possible with a sum array,
+The advantage of a binary indexed tree is
+that it allows us to efficiently update
+the array between the sum queries.
+This would not be possible using a sum array,
 because after each update, we should build the
 whole sum array again in $O(n)$ time.
 
 \subsubsection{Structure}
 
-Given an array of $n$ elements, indexed $1 \ldots n$,
-the binary indexed tree for that array
-is an array such that the value at position $k$
-equals the sum of elements in the original array in a range
-that ends at position $k$.
-The length of the range is the largest power of two
-that divides $k$.
-For example, if $k=6$, the length of the range is $2$,
-because $2$ divides $6$ but $4$ does not divide $6$.
+A binary indexed tree can be represented as an array
+whose each value is the sum of elements in a range.
+More precisely, the value at position $x$ is $\textrm{rsq}(x-k+1,x)$,
+where $k$ is the largest power of two that divides $x$.
+For example, if $x=6$, then $k=2$, because 2 divides 6
+but 4 does not divide 6.
 
 \begin{samepage}
 For example, consider the following array:
@@ -500,7 +483,43 @@ For example, consider the following array:
 \end{tikzpicture}
 \end{center}
 \end{samepage}
+\begin{samepage}
 The corresponding binary indexed tree is as follows:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw (0,0) grid (8,1);
+
+\node at (0.5,0.5) {$1$};
+\node at (1.5,0.5) {$4$};
+\node at (2.5,0.5) {$4$};
+\node at (3.5,0.5) {$16$};
+\node at (4.5,0.5) {$6$};
+\node at (5.5,0.5) {$7$};
+\node at (6.5,0.5) {$4$};
+\node at (7.5,0.5) {$29$};
+
+\footnotesize
+\node at (0.5,1.4) {$1$};
+\node at (1.5,1.4) {$2$};
+\node at (2.5,1.4) {$3$};
+\node at (3.5,1.4) {$4$};
+\node at (4.5,1.4) {$5$};
+\node at (5.5,1.4) {$6$};
+\node at (6.5,1.4) {$7$};
+\node at (7.5,1.4) {$8$};
+\end{tikzpicture}
+\end{center}
+\end{samepage}
+
+For example, the value at position 6
+in the binary indexed tree is 7,
+because the sum of elements in the range $[5,6]$
+of the array is $6+1=7$.
+
+The following picture shows more clearly
+how each value in the binary indexed tree
+corresponds to a range in the array:
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -545,18 +564,16 @@ The corresponding binary indexed tree is as follows:
 \end{tikzpicture}
 \end{center}
 
-For example, the value at position 6
-in the binary indexed tree is 7,
-because the sum of elements in the range $[5,6]$
-in the original array is $6+1=7$.
-
 \subsubsection{Sum query}
 
-The basic operation in a binary indexed tree is
-to calculate the sum of elements in a range $[1,k]$,
-where $k$ is any position in the array.
-The sum of such a range can be calculated as a
-sum of one or more values stored in the tree.
+The values in the binary indexed tree
+can be used to efficiently calculate
+any value of $\textrm{rsq}(1,k)$:
+the sum of elements in the range $[1,k]$
+of the array.
+It turns out that any range $[1,k]$
+can be divided into $O(\log n)$ ranges
+whose sums are available in the binary indexed tree.
 
 For example, the range $[1,7]$ corresponds to
 the following values:
@@ -605,22 +622,16 @@ the following values:
 \end{center}
 
 Hence, the sum of elements in the range $[1,7]$ is $16+7+4=27$.
-The structure of the binary indexed tree allows us to calculate
-the sum of elements in any range using only $O(\log n)$
-values from the tree.
 
-Using the same technique that we previously used
-with a sum array,
-we can efficiently calculate the sum of any range
-$[a,b]$ by substracting the sum of the range $[1,a-1]$
-from the sum of the range $[1,b]$.
-Also here, only $O(\log n)$ values are needed,
-because it suffices to calculate two sums of $[1,k]$ ranges.
+To calculate the value of $\textrm{rsq}(a,b)$,
+we can use the same trick that we used with sum arrays:
+\[ \textrm{rsq}(a,b) = \textrm{rsq}(1,b) - \textrm{rsq}(1,a-1).\]
+Also in this case, only $O(\log n)$ values are needed.
 
 \subsubsection{Array update}
 
-When an element in the original array changes,
-several sums in the binary indexed tree change.
+When a value in the array is updated,
+several values in the binary indexed tree should be updated.
 For example, if the element at position 3 changes,
 the sums of the following ranges change:
 \begin{center}
@@ -667,24 +678,25 @@ the sums of the following ranges change:
 \end{tikzpicture}
 \end{center}
 
-However, it turns out that
-the number of values that need to be updated
-in the binary indexed tree is only $O(\log n)$.
+Since each array element belongs to $O(\log n)$
+ranges in the binary indexed tree,
+it suffices to update $O(\log n)$ values.
+
 
 \subsubsection{Implementation}
 
 The operations of a binary indexed tree can be implemented
 in an elegant and efficient way using bit operations.
 The key fact needed is that $k \& -k$
-isolates the last one bit in a number $k$.
+isolates the last one bit of a number $k$.
 For example, $6 \& -6=2$ because the number $6$
 corresponds to 110 and the number $2$ corresponds to 10.
 
-It turns out that when processing a range query,
-the position $k$ in the binary indexed tree should be
+It turns out that when processing a sum query,
+the position $k$ in the binary indexed tree needs to be
 decreased by $k \& -k$ at every step,
 and when updating the array,
-the position $k$ should be increased by $k \& -k$ at every step.
+the position $k$ needs to be increased by $k \& -k$ at every step.
 
 Suppose that the binary indexed tree is stored in an array \texttt{b}.
 The following function calculates
@@ -714,7 +726,7 @@ void add(int k, int x) {
 
 The time complexity of both the functions is
 $O(\log n)$, because the functions access $O(\log n)$
-values in the binary indexed tree, and each transition
+values in the binary indexed tree, and each move
 to the next position
 takes $O(1)$ time using bit operations.
 
