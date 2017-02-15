@@ -75,8 +75,8 @@ We first focus on a situation where
 the array is \key{static}, i.e.,
 the elements are never modified between the queries.
 In this case, it suffices to construct
-a data structure that tells us
-the answer for any possible query efficiently.
+a static data structure that tells us
+the answer for any possible query.
 
 \subsubsection{Sum queries}
 
@@ -249,8 +249,8 @@ Note that minimum and maximum queries can always
 be processed using similar techniques,
 so it suffices to focus on minimum queries.
 
-Let $\textrm{rmq}(a,b)$ denote the minimum element
-in the range $[a,b]$.
+Let $\textrm{rmq}(a,b)$ (''range minimum query'')
+denote the minimum element in the range $[a,b]$.
 The idea is to precalculate all values of $\textrm{rmq}(a,b)$
 where $b-a+1$, the length of the range, is a power of two.
 For example, for the array
