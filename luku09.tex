@@ -5,13 +5,16 @@
 \index{minimum query}
 \index{maximum query}
 
-A \key{range query} asks to calculate some information
-about the elements in a given range of an array.
+In this chapter, we discuss data structures
+that allow us to efficiently answer range queries.
+In a \key{range query}, we are given two indices
+to an array, and our task is to calculate some
+value based on the elements between the given indices.
 Typical range queries are:
 \begin{itemize}
-\item \key{sum query}: calculate the sum of elements in a range
-\item \key{minimum query}: find the smallest element in a range
-\item \key{maximum query}: find the largest element in a range
+\item \key{sum query}: calculate the sum of elements
+\item \key{minimum query}: find the smallest element
+\item \key{maximum query}: find the largest element
 \end{itemize}
 For example, consider the range $[4,7]$ in the following array:
 \begin{center}
@@ -44,12 +47,12 @@ the minimum element is 1 and the maximum element is 6.
 
 A simple way to process range queries is to
 go through all elements in the range.
-For example, the following function \texttt{rsq}
-calculates the sum of elements in any range
+For example, the following function \texttt{sum}
+calculates the sum of elements in a range
 $[a,b]$ of an array $t$:
 
 \begin{lstlisting}
-int rsq(int a, int b) {
+int sum(int a, int b) {
     int s = 0;
     for (int i = a; i <= b; i++) {
         s += t[i];
@@ -62,10 +65,9 @@ The above function works in $O(n)$ time,
 where $n$ is the number of elements in the array.
 Thus, we can process $q$ queries in $O(nq)$
 time using the function.
-If both $n$ and $q$ are large, this approach
-is slow.
-In this chapter, we will learn how
-range queries can be processed much more efficiently.
+However, if both $n$ and $q$ are large, this approach
+is slow, and it turns out that there are
+ways to process range queries much more efficiently.
 
 \section{Static array queries}
 
@@ -74,7 +76,7 @@ the array is \key{static}, i.e.,
 the elements are never modified between the queries.
 In this case, it suffices to construct
 a data structure that tells us
-the answer for any possible range query efficiently.
+the answer for any possible query efficiently.
 
 \subsubsection{Sum queries}
 
@@ -82,13 +84,11 @@ the answer for any possible range query efficiently.
 
 Let $\textrm{rsq}(a,b)$ (''range sum query'') be the sum of
 elements in the range $[a,b]$ of an array.
-Our first task is to find a way to calculate any value of $\textrm{rsq}(a,b)$
-efficiently.
-It turns out that there is a simple data structure
-that we can use: a \key{sum array}.
-Such an array contains all values of the form
-$\textrm{rsq}(1,k)$ where $1 \le k \le n$,
-i.e., for each $k$ the sum of the first $k$ elements of the array.
+To answer such queries efficiently,
+we can construct a data structure called
+a \key{sum array}.
+Each element in a sum array contains
+the sum of elements in the original array up to that position.
 
 For example, consider the following array:
 \begin{center}
@@ -143,7 +143,9 @@ The corresponding sum array is as follows:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-Now we can calculate any value of
+Since the sum array contains all values
+of the form $\textrm{rsq}(1,k)$ for $1 \le k \le n$,
+we can calculate any value of
 $\textrm{rsq}(a,b)$ in $O(1)$ time, because
 \[ \textrm{rsq}(a,b) = \textrm{rsq}(1,b) - \textrm{rsq}(1,a-1).\]
 It is convenient to define $\textrm{rsq}(1,0)=0$,
@@ -241,14 +243,14 @@ to the position of $X$.
 
 Let $\textrm{rmq}(a,b)$ (''range minimum query'') be the
 minimum element in the range $[a,b]$ of an array.
-It is possible to process also minimum queries
+It is possible to answer also minimum queries
 in $O(1)$ time, though it is more difficult than
 processing sum queries.
 Note that minimum and maximum queries can always
 be processed using similar techniques,
 so it suffices to focus on minimum queries.
 
-The idea is to precalculate all values $\textrm{rmq}(a,b)$
+The idea is to precalculate all values of $\textrm{rmq}(a,b)$
 where $b-a+1$, the length of the range, is a power of two.
 For example, for the array
 
@@ -442,7 +444,7 @@ and modifying the value of an element.
 
 The advantage of a binary indexed tree is
 that it allows us to efficiently update
-the array between the sum queries.
+the array elements between the sum queries.
 This would not be possible using a sum array,
 because after each update, we should build the
 whole sum array again in $O(n)$ time.
@@ -451,7 +453,8 @@ whole sum array again in $O(n)$ time.
 
 A binary indexed tree can be represented as an array
 whose each value is the sum of elements in a range.
-More precisely, the value at position $x$ is $\textrm{rsq}(x-k+1,x)$,
+More precisely, the value at position $x$ 
+is $\textrm{rsq}(x-k+1,x)$,
 where $k$ is the largest power of two that divides $x$.
 For example, if $x=6$, then $k=2$, because 2 divides 6
 but 4 does not divide 6.
@@ -568,9 +571,7 @@ corresponds to a range in the array:
 
 The values in the binary indexed tree
 can be used to efficiently calculate
-any value of $\textrm{rsq}(1,k)$:
-the sum of elements in the range $[1,k]$
-of the array.
+any value of $\textrm{rsq}(1,k)$.
 It turns out that any range $[1,k]$
 can be divided into $O(\log n)$ ranges
 whose sums are available in the binary indexed tree.
@@ -630,7 +631,7 @@ Also in this case, only $O(\log n)$ values are needed.
 
 \subsubsection{Array update}
 
-When a value in the array is updated,
+When a value in the array changes,
 several values in the binary indexed tree should be updated.
 For example, if the element at position 3 changes,
 the sums of the following ranges change:
@@ -689,8 +690,8 @@ The operations of a binary indexed tree can be implemented
 in an elegant and efficient way using bit operations.
 The key fact needed is that $k \& -k$
 isolates the last one bit of a number $k$.
-For example, $6 \& -6=2$ because the number $6$
-corresponds to 110 and the number $2$ corresponds to 10.
+For example, $26 \& -26=2$ because the number $26$
+corresponds to 11010 and the number $2$ corresponds to 10.
 
 It turns out that when processing a sum query,
 the position $k$ in the binary indexed tree needs to be
@@ -702,7 +703,7 @@ Suppose that the binary indexed tree is stored in an array \texttt{b}.
 The following function calculates
 the sum of elements in a range $[1,k]$:
 \begin{lstlisting}
-int rsq(int k) {
+int sum(int k) {
     int s = 0;
     while (k >= 1) {
         s += b[k];
@@ -1092,7 +1093,7 @@ The following function
 calculates the sum of elements in a range $[a,b]$:
 
 \begin{lstlisting}
-int rsq(int a, int b) {
+int sum(int a, int b) {
     a += N; b += N;
     int s = 0;
     while (a <= b) {
@@ -1139,13 +1140,10 @@ and the operations move one level forward in the tree at each step.
 
 \subsubsection{Other queries}
 
-A segment tree can support any queries
-as long as the results of the queries
-can be combined efficiently;
-if the results for ranges $[a,b]$ and $[c,d]$
-are known and $b$ and $c$ are two adjacent positions,
-it should be easy to compute the result
-for the range $[x,z]$.
+Segment trees can support any queries
+as long as we can divide a range into two parts,
+calculate the answer for both parts
+and then efficiently combine the answers.
 Examples of such queries are
 minimum and maximum, greatest common divisor,
 and bit operations and, or and xor.
@@ -1266,13 +1264,13 @@ by traversing a path downwards from the top node:
 
 A limitation in data structures that
 are built upon an array is that
-the elements are indexed using integers
+the elements are indexed using
 consecutive integers.
 Difficulties arise when large indices
 are needed.
 For example, if we wish to use the index $10^9$,
 the array should contain $10^9$
-elements which is not realistic.
+elements which would require too much memory.
 
 \index{index compression}
 
