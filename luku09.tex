@@ -82,12 +82,11 @@ the answer for any possible query efficiently.
 
 \index{sum array}
 
-Let $\textrm{rsq}(a,b)$ (''range sum query'') be the sum of
-elements in the range $[a,b]$ of an array.
-To answer such queries efficiently,
-we can construct a data structure called
+It turns out that we can easily process
+sum queries on a static array,
+because we can construct a data structure called
 a \key{sum array}.
-Each element in a sum array contains
+Each element in a sum array corresponds to
 the sum of elements in the original array up to that position.
 
 For example, consider the following array:
@@ -143,13 +142,15 @@ The corresponding sum array is as follows:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
+Let $\textrm{sum}(a,b)$ denote the sum of elements
+in the range $[a,b]$.
 Since the sum array contains all values
-of the form $\textrm{rsq}(1,k)$ for $1 \le k \le n$,
+of the form $\textrm{sum}(1,k)$,
 we can calculate any value of
-$\textrm{rsq}(a,b)$ in $O(1)$ time, because
-\[ \textrm{rsq}(a,b) = \textrm{rsq}(1,b) - \textrm{rsq}(1,a-1).\]
-It is convenient to define $\textrm{rsq}(1,0)=0$,
-so that the above formula can be used also when $a=1$.
+$\textrm{sum}(a,b)$ in $O(1)$ time, because
+\[ \textrm{sum}(a,b) = \textrm{sum}(1,b) - \textrm{sum}(1,a-1).\]
+By defining $\textrm{sum}(1,0)=0$,
+the above formula also holds when $a=1$.
 
 For example, consider the range $[4,7]$:
 \begin{center}
@@ -241,15 +242,15 @@ to the position of $X$.
 
 \subsubsection{Minimum queries}
 
-Let $\textrm{rmq}(a,b)$ (''range minimum query'') be the
-minimum element in the range $[a,b]$ of an array.
-It is possible to answer also minimum queries
+It is also possible to process minimum queries
 in $O(1)$ time, though it is more difficult than
-processing sum queries.
+to process sum queries.
 Note that minimum and maximum queries can always
 be processed using similar techniques,
 so it suffices to focus on minimum queries.
 
+Let $\textrm{rmq}(a,b)$ denote the minimum element
+in the range $[a,b]$.
 The idea is to precalculate all values of $\textrm{rmq}(a,b)$
 where $b-a+1$, the length of the range, is a power of two.
 For example, for the array
@@ -452,9 +453,8 @@ whole sum array again in $O(n)$ time.
 \subsubsection{Structure}
 
 A binary indexed tree can be represented as an array
-whose each value is the sum of elements in a range.
-More precisely, the value at position $x$ 
-is $\textrm{rsq}(x-k+1,x)$,
+where the value at position $x$ 
+equals the sum of elements in the range $[x-k+1,x]$,
 where $k$ is the largest power of two that divides $x$.
 For example, if $x=6$, then $k=2$, because 2 divides 6
 but 4 does not divide 6.
@@ -571,8 +571,8 @@ corresponds to a range in the array:
 
 The values in the binary indexed tree
 can be used to efficiently calculate
-any value of $\textrm{rsq}(1,k)$.
-It turns out that any range $[1,k]$
+the sum of elements in any range $[1,k]$,
+because such a range
 can be divided into $O(\log n)$ ranges
 whose sums are available in the binary indexed tree.
 
@@ -624,9 +624,9 @@ the following values:
 
 Hence, the sum of elements in the range $[1,7]$ is $16+7+4=27$.
 
-To calculate the value of $\textrm{rsq}(a,b)$,
+To calculate the sum of elements in any range $[a,b]$,
 we can use the same trick that we used with sum arrays:
-\[ \textrm{rsq}(a,b) = \textrm{rsq}(1,b) - \textrm{rsq}(1,a-1).\]
+\[ \textrm{sum}(a,b) = \textrm{sum}(1,b) - \textrm{sum}(1,a-1).\]
 Also in this case, only $O(\log n)$ values are needed.
 
 \subsubsection{Array update}
