@@ -468,9 +468,9 @@ for (int i = 0; i < n; i++) {
 \subsubsection{Counting subsets}
 
 Our last problem in this chapter is as follows:
-We are given a collection $C$ of $m$ sets,
+We are given a collection $C$ that consists of $m$ sets,
 and our task is to determine for each set
-the number of sets that are its subsets.
+the number of sets in $C$ that are its subsets.
 For example, consider the following collection:
 \[C = \{\{0\}, \{0,2\}, \{1,4\}, \{0,1,4\}, \{1,4,5\}\}\]
 For any set $x$ in $C$,
@@ -492,7 +492,7 @@ However, a more efficient solution is possible
 using dynamic programming.
 
 Let $c(x,k)$ denote the number of sets in
-$C$ that equal to a set $x$
+$C$ that equal a set $x$
 if we are allowed to remove any subset of
 $\{0,1,\ldots,k\}$ from $x$.
 For example, in the above collection,
