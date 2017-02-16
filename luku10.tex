@@ -1,6 +1,6 @@
 \chapter{Bit manipulation}
 
-All data in a program is internally stored as bits,
+All data in computer programs is internally stored as bits,
 i.e., as numbers 0 and 1.
 In this chapter, we will learn how integers
 are represented as bits, and how bit operations
@@ -14,15 +14,15 @@ bit operations in algorithm programming.
 
 Every nonnegative integer can be represented as a sum
 \[c_k 2^k + \ldots + c_2 2^2 + c_1 2^1 + c_0 2^0,\]
-where each coefficient $c_i$ is either 0 or 1,
-and the bit representation of such a number is
+where each coefficient $c_i$ is either 0 or 1.
+The bit representation of such a number is
 $c_k \cdots c_2 c_1 c_0$.
 For example, the number 43 corresponds to the sum
 \[1 \cdot 2^5 + 0 \cdot 2^4 + 1 \cdot 2^3 + 0 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0,\]
 so the bit representation of the number is 101011.
 
 In programming, the length of the bit representation
-depends on the data type chosen.
+depends on the data type of the number.
 For example, in C++ the type \texttt{int} is
 usually a 32-bit type and an \texttt{int} number
 consists of 32 bits.
@@ -44,7 +44,7 @@ integer between $2^{31}$ and $2^{31}-1$.
 The first bit in a signed representation
 is the sign of the number (0 for nonnegative numbers
 and 1 for negative numbers), and
-the remaining $n-1$ bits contain the value of the number.
+the remaining $n-1$ bits contain the magnitude of the number.
 \key{Two's complement} is used, which means that the
 opposite number of a number is calculated by first
 inverting all the bits in the number,
@@ -81,14 +81,19 @@ In a signed representation,
 the next number after $2^{n-1}-1$ is $-2^{n-1}$,
 and in an unsigned representation,
 the next number after $2^{n-1}$ is $0$.
-For example, in the following code,
-the next number after $2^{31}-1$ is $-2^{31}$:
+For example, consider the following code:
 \begin{lstlisting}
 int x = 2147483647
 cout << x << "\n"; // 2147483647
 x++;
 cout << x << "\n"; // -2147483648
 \end{lstlisting}
+
+Initially, the value of $x$ is $2^{31}-1$.
+This is the largest number that can be stored
+in an \texttt{int} variable,
+so the next number after $2^{31}-1$ is $-2^{31}$.
+
 
 \section{Bit operations}
 
@@ -183,7 +188,7 @@ $x$ & = & 29 &   00000000000000000000000000011101 \\
 \index{bit shift}
 
 The left bit shift $x < < k$ appends $k$
-zeros to the end of the number,
+zero bits to the number,
 and the right bit shift $x > > k$
 removes the $k$ last bits from the number.
 For example, $14 < < 2 = 56$,
@@ -202,7 +207,7 @@ rounded down to an integer.
 \subsubsection{Applications}
 
 A number of the form $1 < < k$ has a one bit
-in position $k$, and all other bits are zero,
+in position $k$ and all other bits are zero,
 so we can use such numbers to access single bits of numbers.
 For example, the $k$th bit of a number is one
 exactly when $x$ \& $(1 < < k)$ is not zero.
@@ -217,7 +222,7 @@ for (int i = 31; i >= 0; i--) {
 \end{lstlisting}
 
 It is also possible to modify single bits
-of numbers using a similar idea.
+of numbers using the above idea.
 For example, the expression $x$ | $(1 < < k)$
 sets the $k$th bit of $x$ to one,
 the expression
@@ -267,27 +272,27 @@ cout << __builtin_parity(x) << "\n"; // 1
 \end{lstlisting}
 \end{samepage}
 
-The functions can be used with \texttt{int} numbers,
-but there are also \texttt{long long} versions
-of the functions
-available with the prefix \texttt{ll}.
+The above functions support \texttt{int} numbers,
+but there are also \texttt{long long} functions
+available with the suffix \texttt{ll}.
 
 \section{Representing sets}
 
 Each subset of a set $\{0,1,2,\ldots,n-1\}$
-corresponds to a $n$ bit number
+corresponds to an $n$ bit number
 where the one bits indicate which elements
 are included in the subset.
-For example, the bit representation of $\{1,3,4,8\}$
-is 100011010 that equals $2^8+2^4+2^3+2^1=282$.
+For example, the set $\{1,3,4,8\}$
+corresponds to the number $2^8+2^4+2^3+2^1=282$,
+whose bit representation is 100011010.
 
-The benefit in using a bit representation is
-that the information whether an element belongs
+The benefit in using the bit representation
+is that the information whether an element belongs
 to the set requires only one bit of memory.
-In addition, we can implement set operations
-efficiently as bit operations.
+In addition, set operations can be efficiently
+implemented as bit operations.
 
-\subsubsection{Set operations}
+\subsubsection{Set implementation}
 
 In the following code, $x$
 contains a subset of $\{0,1,2,\ldots,31\}$.
@@ -309,6 +314,14 @@ for (int i = 0; i < 32; i++) {
 cout << "\n";
 \end{lstlisting}
 
+The output of the code is as follows:
+
+\begin{lstlisting}
+1 3 4 8
+\end{lstlisting}
+
+\subsubsection{Set operations}
+
 Set operations can be implemented as follows:
 \begin{itemize}
 \item $a$ \& $b$ is the intersection $a \cap b$ of $a$ and $b$
@@ -318,7 +331,7 @@ Set operations can be implemented as follows:
 $a \setminus b$ of $a$ and $b$
 \end{itemize}
 
-The following code constructs the union
+For example, the following code constructs the union
 of $\{1,3,4,8\}$ and $\{3,6,8,9\}$:
 
 \begin{lstlisting}
@@ -333,6 +346,12 @@ for (int i = 0; i < 32; i++) {
     if (z&(1<<i)) cout << i << " ";
 }
 cout << "\n";
+\end{lstlisting}
+
+The output of the code is as follows:
+
+\begin{lstlisting}
+1 3 4 6 8 9
 \end{lstlisting}
 
 \subsubsection{Iterating through subsets}
@@ -368,17 +387,18 @@ do {
 \subsubsection{From permutations to subsets}
 
 Using dynamic programming, it is often possible
-to turn an iteration over permutations into
-an iteration over subsets so that
+to change an iteration over permutations into
+an iteration over subsets, so that
 the dynamic programming state
 contains a subset of a set and possibly
 some additional information.
 
 The benefit in this is that
 $n!$, the number of permutations of an $n$ element set,
-is much larger than $2^n$, the number of subsets.
+is much larger than $2^n$, the number of subsets
+of the same set.
 For example, if $n=20$, then
-$n!=2432902008176640000$ and $2^n=1048576$.
+$n! \approx 2.4 \cdot 10^{18}$ and $2^n \approx 10^6$.
 Hence, for certain values of $n$,
 we can efficiently go through subsets but not through permutations.
 
@@ -391,36 +411,32 @@ For example, when $n=4$, there are two such permutations:
 $(1,3,0,2)$ and $(2,0,3,1)$.
 
 Let $f(x,k)$ denote the number of valid permutations
-of $x$ where the last element is $k$ and
-the difference between any two successive
+of a subset $x$ where the last element is $k$ and
+the difference between any two consecutive
 elements is larger than one.
 For example, $f(\{0,1,3\},1)=1$,
 because there is a permutation $(0,3,1)$,
 and $f(\{0,1,3\},3)=0$, because 0 and 1
 cannot be next to each other.
 
-Using $f$, the solution to the problem equals
+Using $f$, the answer to the problem equals
+\[ \sum_{i=0}^{n-1} f(\{0,1,\ldots,n-1\},i), \]
+because the permutation has to contain all
+elements $\{0,1,\ldots,n-1\}$ and the last
+element can be any element.
 
-\[ \sum_{i=0}^{n-1} f(\{0,1,\ldots,n-1\},i). \]
-
-\noindent
-The dynamic programming states can be stored as follows:
-
+The dynamic programming values can be stored as follows:
 \begin{lstlisting}
 long long d[1<<n][n];
 \end{lstlisting}
 
-\noindent
 First, $f(\{k\},k)=1$ for all values of $k$:
-
 \begin{lstlisting}
 for (int i = 0; i < n; i++) d[1<<i][i] = 1;
 \end{lstlisting}
 
-\noindent
 Then, the other values can be calculated
 as follows:
-
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
     for (int i = 0; i < n; i++) {
@@ -433,9 +449,9 @@ for (int b = 0; b < (1<<n); b++) {
 }
 \end{lstlisting}
 
-\noindent
-The variable $b$ goes through all subsets, and each
-permutation is of the form $(\ldots,j,i)$
+In the above code,
+the variable $b$ goes through all subsets and each
+permutation is of the form $(\ldots,j,i)$,
 where the difference between $i$ and $j$ is
 larger than one and $i$ and $j$ belong to $b$.
 
@@ -451,8 +467,8 @@ for (int i = 0; i < n; i++) {
 
 \subsubsection{Sums of subsets}
 
-Finally, we consider the following problem:
-Every subset $x$
+As the last example, we consider the following problem:
+Each subset $x$
 of $\{0,1,\ldots,n-1\}$
 is assigned a value $c(x)$,
 and our task is to calculate for
@@ -460,8 +476,8 @@ each subset $x$ the sum
 \[s(x)=\sum_{y \subset x} c(y).\]
 Using bit operations, the corresponding sum is
 \[s(x)=\sum_{y \& x = y} c(y).\]
-The following table shows an example of
-the functions when $n=3$:
+For example, the functions could be
+as follows when $n=3$:
 \begin{center}
 \begin{tabular}{rrr}
 $x$ & $c(x)$ & $s(x)$ \\
