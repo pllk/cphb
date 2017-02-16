@@ -427,7 +427,7 @@ element can be any element.
 
 The dynamic programming values can be stored as follows:
 \begin{lstlisting}
-long long d[1<<n][n];
+int d[1<<n][n];
 \end{lstlisting}
 
 First, $f(\{k\},k)=1$ for all values of $k$:
@@ -459,93 +459,86 @@ Finally, the number of solutions can be
 calculated as follows:
 
 \begin{lstlisting}
-long long s = 0;
+int s = 0;
 for (int i = 0; i < n; i++) {
     s += d[(1<<n)-1][i];
 }
 \end{lstlisting}
 
-\subsubsection{Sums of subsets}
+\subsubsection{Counting subsets}
 
-As the last example, we consider the following problem:
-Each subset $x$
-of $\{0,1,\ldots,n-1\}$
-is assigned a value $c(x)$,
-and our task is to calculate for
-each subset $x$ the sum
-\[s(x)=\sum_{y \subset x} c(y).\]
-Using bit operations, the corresponding sum is
-\[s(x)=\sum_{y \& x = y} c(y).\]
-For example, the functions could be
-as follows when $n=3$:
-\begin{center}
-\begin{tabular}{rrr}
-$x$ & $c(x)$ & $s(x)$ \\
-\hline
-000 & 2 & 2 \\
-001 & 0 & 2 \\
-010 & 1 & 3 \\
-011 & 3 & 6 \\
-100 & 0 & 2 \\
-101 & 4 & 6 \\
-110 & 2 & 5 \\
-111 & 0 & 12 \\
-\end{tabular}
-\end{center}
-For example, $s(110)=c(000)+c(010)+c(100)+c(110)=5$. 
+Our last problem in this chapter is as follows:
+We are given a collection $C$ of $m$ sets,
+and our task is to determine for each set
+the number of sets that are its subsets.
+For example, consider the following collection:
+\[C = \{\{0\}, \{0,2\}, \{1,4\}, \{0,1,4\}, \{1,4,5\}\}\]
+For any set $x$ in $C$,
+let $f(x)$ denote the number of sets (including $x$) in $C$
+that are subsets of $x$.
+For example, $f(\{0,1,4\})=3$, because the
+sets $\{0\}$, $\{1,4\}$ and $\{0,1,4\}$ are
+subsets of $\{0,1,4\}$.
+Using this notation, our task is to calculate the value of $f(x)$
+for every set $x$ in the collection.
 
-The problem can be solved in $O(2^n n)$ time
-by defining a function $f(x,k)$ that calculates
-the sum of $c(y)$ values such that $x$ can be
-turned into $y$ by changing zero or more one bits
-at positions $0,1,\ldots,k$ to zero bits.
-Using this function, the solution to the
-problem is $s(x)=f(x,n-1)$.
+We will assume that each set is
+a subset of $\{0,1,\ldots,n-1\}$.
+Thus, the collection can contain at most
+$2^n$ sets.
+A straightforward way to solve the problem
+is to go through all pairs of sets in the collection.
+However, a more efficient solution is possible
+using dynamic programming.
+
+Let $c(x,k)$ denote the number of sets in
+$C$ that equal to a set $x$
+if we are allowed to remove any subset of
+$\{0,1,\ldots,k\}$ from $x$.
+For example, in the above collection,
+$c(\{0,1,4\},1)=2$,
+where the corresponding sets are
+$\{1,4\}$ and $\{0,1,4\}$.
+
+It turns out that we can calculate all
+values of $c(x,k)$ in $O(2^n n)$ time.
+This solves our problem, because
+\[f(x)=c(x,n-1).\]
 
 The base cases for the function are:
 \begin{equation*}
-    f(x,0) = \begin{cases}
-               c(x)          & \textrm{if bit 0 of $x$ is 0}\\
-               c(x)+c(x \XOR 1) & \textrm{if bit 0 of $x$ is 1}\\
+    c(x,-1) = \begin{cases}
+               0 & \textrm{if $x$ does not appear in $C$}\\
+               1 & \textrm{if $x$ appears in $C$}\\
            \end{cases}
 \end{equation*}
 For larger values of $k$, the following recursion holds:
 \begin{equation*}
-    f(x,k) = \begin{cases}
-               f(x,k-1)          & \textrm{if bit $k$ of $x$ is 0}\\
-               f(x,k-1)+f(x \XOR (1 < < k),k-1)    & \textrm{if bit $k$ of $x$ is 1}\\
+    c(x,k) = \begin{cases}
+               c(x,k-1)          & \textrm{if $k \notin x$}\\
+               c(x,k-1)+c(x \setminus \{k\},k-1)    & \textrm{if $k \in x$}\\
            \end{cases}
 \end{equation*}
 
-Thus, we can calculate the values of the function
-as follows using dynamic programming.
-The code assumes that the array \texttt{c}
-contains the values for $c$,
-and it constructs an array \texttt{s}
-that contains the values for $s$.
+We can conveniently implement the algorithm by representing
+the sets using bits.
+Assume that there is an array
 \begin{lstlisting}
-for (int x = 0; x < (1<<n); x++) {
-    f[x][0] = c[x];
-    if (x&1) f[x][0] += c[x^1];
-}
-for (int k = 1; k < n; k++) {
-    for (int x = 0; x < (1<<n); x++) {
-        f[x][k] = f[x][k-1];
-        if (b&(1<<k)) f[x][k] += f[x^(1<<k)][k-1];
-    }
-    if (k == n-1) s[x] = f[x][k];
-}
+int d[1<<n];
 \end{lstlisting}
+that is initialized so that $d[x]=1$ if $x$ belongs to $C$
+and otherwise $d[x]=0$.
+We can now implement the algorithm as follows:
 
-Actually, a much shorter implementation is possible,
-because we can calculate the results directly
-into the array \texttt{s}:
 \begin{lstlisting}
-for (int x = 0; x < (1<<n); x++) s[x] = c[x];
 for (int k = 0; k < n; k++) {
-    for (int x = 0; x < (1<<n); x++) {
-        if (x&(1<<k)) s[x] += s[x^(1<<k)];
+    for (int b = 0; b < (1<<n); b++) {
+        if (b&(1<<k)) d[b] += d[b^(1<<k)];
     }
 }
 \end{lstlisting}
+The above code is based on the recursive definition
+of $c$. As a special trick, the function only uses
+the array $d$ to calculate all values of the function.
+Finally, for each set $x$ in $C$, $f(x)=d[x]$.
 
