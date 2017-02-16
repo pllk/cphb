@@ -508,8 +508,8 @@ This solves our problem, because
 The base cases for the function are:
 \begin{equation*}
     c(x,-1) = \begin{cases}
-               0 & \textrm{if $x$ does not appear in $C$}\\
-               1 & \textrm{if $x$ appears in $C$}\\
+               0 & \textrm{if $x \notin C$}\\
+               1 & \textrm{if $x \in C$}\\
            \end{cases}
 \end{equation*}
 For larger values of $k$, the following recursion holds:
