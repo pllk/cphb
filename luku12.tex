@@ -48,9 +48,8 @@ the following graph:
 \path[draw,thick,-] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-The algorithm can begin at any node in the graph,
-but we will now assume that it begins
-at node 1.
+We may begin the search at any node in the graph,
+but we will now begin the search at node 1.
 
 The search first proceeds to node 2:
 \begin{center}
@@ -305,7 +304,7 @@ to implement than depth-first search,
 because the algorithm visits nodes
 in different parts of the graph.
 A typical implementation is based on
-a queue of nodes to be processed.
+a queue that contains nodes.
 At each step, the next node in the queue
 will be processed.
 
@@ -329,7 +328,7 @@ int z[N], e[N];
 so that the array \texttt{z} indicates
 which nodes the search has already visited
 and the array \texttt{e} will contain the
-minimum distance to all nodes in the graph.
+distances to all nodes in the graph.
 The search can be implemented as follows:
 \begin{lstlisting}
 z[s] = 1; e[x] = 0;
@@ -364,7 +363,7 @@ assume that the graph is undirected.
 A graph is connected if there is a path
 between any two nodes in the graph.
 Thus, we can check if a graph is connected
-by selecting an arbitrary node and
+by choosing an arbitrary node and
 finding out if we can reach all other nodes.
 
 For example, in the graph
@@ -406,7 +405,7 @@ the following nodes:
 Since the search did not visit all the nodes,
 we can conclude that the graph is not connected.
 In a similar way, we can also find all connected components
-of a graph by iterating trough the nodes and always
+of a graph by iterating through the nodes and always
 starting a new depth-first search if the current node
 does not belong to any component yet.
 
@@ -419,6 +418,24 @@ we find a node whose neighbor (other than the
 previous node in the current path) has already been
 visited.
 For example, the graph
+\begin{center}
+\begin{tikzpicture}
+\node[draw, circle] (2) at (7,5) {$2$};
+\node[draw, circle] (1) at (3,5) {$1$};
+\node[draw, circle] (3) at (5,4) {$3$};
+\node[draw, circle] (5) at (7,3) {$5$};
+\node[draw, circle] (4) at (3,3) {$4$};
+
+\path[draw,thick,-] (1) -- (3);
+\path[draw,thick,-] (1) -- (4);
+\path[draw,thick,-] (3) -- (4);
+\path[draw,thick,-] (2) -- (5);
+\path[draw,thick,-] (2) -- (3);
+\path[draw,thick,-] (3) -- (5);
+\end{tikzpicture}
+\end{center}
+contains two cycles and we can find one
+of them as follows:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (2) at (7,5) {$2$};
@@ -440,7 +457,7 @@ For example, the graph
 
 \end{tikzpicture}
 \end{center}
-contains a cycle because when we move from
+When we move from
 node 2 to node 5 it turns out
 that the neighbor 3 has already been visited.
 Thus, the graph contains a cycle that goes through node 3,
@@ -450,7 +467,8 @@ Another way to find out whether a graph contains a cycle
 is to simply calculate the number of nodes and edges
 in every component.
 If a component contains $c$ nodes and no cycle,
-it must contain exactly $c-1$ edges.
+it must contain exactly $c-1$ edges
+(so it has to be a tree).
 If there are $c$ or more edges, the component
 surely contains a cycle.
 
@@ -489,7 +507,7 @@ For example, the graph
 \path[draw,thick,-] (5) -- (3);
 \end{tikzpicture}
 \end{center}
-is not bipartite because a search from node 1
+is not bipartite, because a search from node 1
 proceeds as follows:
 \begin{center}
 \begin{tikzpicture}
@@ -512,7 +530,7 @@ proceeds as follows:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-We notice that the color or both node 2 and node 5
+We notice that the color or both nodes 2 and 5
 is red, while they are adjacent nodes in the graph.
 Thus, the graph is not bipartite.
 

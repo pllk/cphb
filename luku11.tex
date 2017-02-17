@@ -1,12 +1,12 @@
 \chapter{Basics of graphs}
 
 Many programming problems can be solved by
-modelling the problem as a graph problem
+modeling the problem as a graph problem
 and using an appropriate graph algorithm.
 A typical example of a graph is a network
 of roads and cities in a country.
 Sometimes, though, the graph is hidden
-in the problem and it can be difficult to detect it.
+in the problem and it may be difficult to detect it.
 
 This part of the book discusses graph algorithms,
 especially focusing on topics that
@@ -15,7 +15,7 @@ In this chapter, we go through concepts
 related to graphs,
 and study different ways to represent graphs in algorithms.
 
-\section{Terminology}
+\section{Graph terminology}
 
 \index{graph}
 \index{node}
@@ -56,17 +56,51 @@ A \key{path} leads from node $a$ to node $b$
 through edges of the graph.
 The \key{length} of a path is the number of
 edges in it.
-For example, in the above graph, there
-are several paths from node 1 to node 5:
+For example, the above graph contains
+the path $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$
+from node 1 to node 5:
 
-\begin{itemize}
-\item $1 \rightarrow 2 \rightarrow 5$ (length 2)
-\item $1 \rightarrow 4 \rightarrow 5$ (length 2)
-\item $1 \rightarrow 2 \rightarrow 4 \rightarrow 5$ (length 3)
-\item $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ (length 3)
-\item $1 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (length 3)
-\item $1 \rightarrow 3 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (length 4)
-\end{itemize}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\node[draw, circle] (1) at (1,3) {$1$};
+\node[draw, circle] (2) at (4,3) {$2$};
+\node[draw, circle] (3) at (1,1) {$3$};
+\node[draw, circle] (4) at (4,1) {$4$};
+\node[draw, circle] (5) at (6,2) {$5$};
+
+\path[draw,thick,-] (1) -- (2);
+\path[draw,thick,-] (1) -- (3);
+\path[draw,thick,-] (1) -- (4);
+\path[draw,thick,-] (3) -- (4);
+\path[draw,thick,-] (2) -- (4);
+\path[draw,thick,-] (2) -- (5);
+\path[draw,thick,-] (4) -- (5);
+
+\path[draw=red,thick,->,line width=2pt] (1) -- (3);
+\path[draw=red,thick,->,line width=2pt] (3) -- (4);
+\path[draw=red,thick,->,line width=2pt] (4) -- (5);
+\end{tikzpicture}
+\end{center}
+
+\index{cycle}
+
+A path is a \key{cycle} if the first and last
+node is the same.
+For example, the above graph contains
+the cycle $1 \rightarrow 3 \rightarrow 4 \rightarrow 1$.
+A path is \key{simple} if each node appears
+at most once in the path.
+
+
+% 
+% \begin{itemize}
+% \item $1 \rightarrow 2 \rightarrow 5$ (length 2)
+% \item $1 \rightarrow 4 \rightarrow 5$ (length 2)
+% \item $1 \rightarrow 2 \rightarrow 4 \rightarrow 5$ (length 3)
+% \item $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ (length 3)
+% \item $1 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (length 3)
+% \item $1 \rightarrow 3 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (length 4)
+% \end{itemize}
 
 \subsubsection{Connectivity}
 
@@ -185,21 +219,10 @@ For example, the following graph is directed:
 \end{tikzpicture}
 \end{center}
 
-The above graph contains a path from
-node $3$ to node $5$ through the edges
-$3 \rightarrow 1 \rightarrow 2 \rightarrow 5$,
+The above graph contains
+the path $3 \rightarrow 1 \rightarrow 2 \rightarrow 5$
+from node $3$ to node $5$,
 but there is no path from node $5$ to node $3$.
-
-\index{cycle}
-\index{acyclic graph}
-
-A \key{cycle} is a path whose first and
-last node is the same.
-For example, the above graph contains
-a cycle
-$1 \rightarrow 2 \rightarrow 4 \rightarrow 1$.
-If a graph does not contain any cycles,
-it is called \key{acyclic}.
 
 \subsubsection{Edge weights}
 
@@ -207,7 +230,7 @@ it is called \key{acyclic}.
 
 In a \key{weighted} graph, each edge is assigned
 a \key{weight}.
-Often, the weights are interpreted as edge lengths.
+Often the weights are interpreted as edge lengths.
 For example, the following graph is weighted:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -268,7 +291,7 @@ so its degree is 3.
 The sum of degrees in a graph is always $2m$,
 where $m$ is the number of edges,
 because each edge
-increases the degree of two nodes by one.
+increases the degree of exactly two nodes by one.
 For this reason, the sum of degrees is always even.
 
 \index{regular graph}
@@ -358,7 +381,7 @@ is bipartite, because it can be colored as follows:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-However, the following graph is not bipartite:
+However, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -376,6 +399,29 @@ However, the following graph is not bipartite:
 \path[draw,thick,-] (1) -- (6);
 \end{tikzpicture}
 \end{center}
+is not bipartite, because it is not possible to color
+the following cycle of three nodes using two colors:
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\node[draw, circle] (1) at (1,3) {$2$};
+\node[draw, circle] (2) at (4,3) {$3$};
+\node[draw, circle] (3) at (1,1) {$5$};
+\node[draw, circle] (4) at (4,1) {$6$};
+\node[draw, circle] (5) at (-2,1) {$4$};
+\node[draw, circle] (6) at (-2,3) {$1$};
+\path[draw,thick,-] (1) -- (2);
+\path[draw,thick,-] (1) -- (3);
+\path[draw,thick,-] (3) -- (4);
+\path[draw,thick,-] (2) -- (4);
+\path[draw,thick,-] (3) -- (6);
+\path[draw,thick,-] (5) -- (6);
+\path[draw,thick,-] (1) -- (6);
+
+\path[draw=red,thick,-,line width=2pt] (1) -- (3);
+\path[draw=red,thick,-,line width=2pt] (3) -- (6);
+\path[draw=red,thick,-,line width=2pt] (6) -- (1);
+\end{tikzpicture}
+\end{center}
 
 \subsubsection{Simplicity}
 
@@ -386,7 +432,7 @@ if no edge starts and ends at the same node,
 and there are no multiple
 edges between two nodes.
 Often we assume that graphs are simple.
-For example, the graph
+For example, the following graph is \emph{not} simple:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -409,9 +455,6 @@ For example, the graph
 \path[draw,thick,-] (5) edge [loop left] (5);
 \end{tikzpicture}
 \end{center}
-is \emph{not} simple, because there is an edge that starts
-and ends at node 4, and there are two edges
-between nodes 2 and 3.
 
 \section{Graph representation}
 
@@ -420,7 +463,7 @@ in algorithms.
 The choice of a data structure
 depends on the size of the graph and
 the way the algorithm processes it.
-Next we will go through three possible representations.
+Next we will go through three common representations.
 
 \subsubsection{Adjacency list representation}
 
@@ -431,7 +474,7 @@ each node $x$ in the graph is assigned an \key{adjacency list}
 that consists of nodes
 to which there is an edge from $x$.
 Adjacency lists are the most popular
-way to represent a graph, and most algorithms can be
+way to represent graphs, and most algorithms can be
 efficiently implemented using them.
 
 A convenient way to store the adjacency lists is to declare
@@ -440,8 +483,8 @@ an array of vectors as follows:
 vector<int> v[N];
 \end{lstlisting}
 
-The constant $N$ is chosen so that there
-is space for all adjacency lists.
+The constant $N$ is chosen so that all
+adjacency lists can be stored.
 For example, the graph
 
 \begin{center}
@@ -468,7 +511,7 @@ v[4].push_back(1);
 \end{lstlisting}
 
 If the graph is undirected, it can be stored in a similar way,
-but each edge is stored in both directions.
+but each edge is added in both directions.
 
 For a weighted graph, the structure can be extended
 as follows:
@@ -507,7 +550,7 @@ v[4].push_back({1,2});
 
 The benefit in using adjacency lists is that
 we can efficiently find the nodes to which
-we can move from a certain node through an edge.
+we can move from a given node through an edge.
 For example, the following loop goes through all nodes
 to which we can move from node $s$:
 
@@ -522,7 +565,7 @@ for (auto u : v[s]) {
 \index{adjacency matrix}
 
 An \key{adjacency matrix} is a two-dimensional array
-that indicates which edges exist in the graph.
+that indicates which edges the graph contains.
 We can efficiently check from an adjacency matrix
 if there is an edge between two nodes.
 The matrix can be stored as an array
@@ -647,7 +690,7 @@ if the graph is large.
 An \key{edge list} contains all edges of a graph
 in some order.
 This is a convenient way to represent a graph
-if the algorithm processes all edges of the graph,
+if the algorithm processes all edges of the graph
 and it is not needed to find edges that start
 at a given node.
 

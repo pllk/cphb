@@ -4,7 +4,7 @@
 
 A \key{spanning tree} of a graph consists of
 the nodes of the graph and some of the
-edges of the graph so that there is a unique path
+edges of the graph so that there is a path
 between any two nodes.
 Like trees in general, spanning trees are
 connected and acyclic.
@@ -54,7 +54,7 @@ $3+5+9+3+2=22$.
 
 A \key{minimum spanning tree}
 is a spanning tree whose weight is as small as possible.
-The weight of a minimum spanning tree for the above graph
+The weight of a minimum spanning tree for the example graph
 is 20, and such a tree can be constructed as follows:
 
 \begin{center}
@@ -82,7 +82,7 @@ is 20, and such a tree can be constructed as follows:
 In a similar way, a \key{maximum spanning tree}
 is a spanning tree whose weight is as large as possible.
 The weight of a maximum spanning tree for the
-above graph is 32:
+example graph is 32:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -302,7 +302,7 @@ will find a minimum spanning tree?
 Let us see what happens if the minimum weight edge of
 the graph is not included in the spanning tree.
 For example, suppose that a spanning tree
-for the above graph would not contain the
+for the previous graph would not contain the
 minimum weight edge 5--6.
 We do not know the exact structure of such a spanning tree,
 but in any case it has to contain some edges.
@@ -377,7 +377,7 @@ for (...) {
 The loop goes through the edges in the list
 and always processes an edge $a$--$b$
 where $a$ and $b$ are two nodes.
-The code uses two functions:
+Two functions are needed:
 the function \texttt{same} determines
 if the nodes are in the same component,
 and the function \texttt{union}
@@ -386,10 +386,10 @@ joins the components that contain nodes $a$ and $b$.
 The problem is how to efficiently implement
 the functions \texttt{same} and \texttt{union}.
 One possibility is to implement the function
-\texttt{same} as graph traversal and check if
-we can reach node $b$ from node $a$.
+\texttt{same} as a graph traversal and check if
+we can get from node $a$ to node $b$.
 However, the time complexity of such a function
-would be $O(n+m)$,
+would be $O(n+m)$
 and the resulting algorithm would be slow,
 because the function \texttt{same} will be called for each edge in the graph.
 
@@ -415,7 +415,7 @@ of the set that contains a given element.
 
 In a union-find structure, one element in each set
 is the representative of the set,
-and there is a chain from any other element in the
+and there is a chain from any other element of the
 set to the representative.
 For example, assume that the sets are
 $\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$:
@@ -439,13 +439,13 @@ $\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$:
 
 \end{tikzpicture}
 \end{center}
-In this example the representatives
+In this case the representatives
 of the sets are 4, 5 and 2.
 For each element, we can find its representative
 by following the chain that begins at the element.
 For example, the element 2 is the representative
 for the element 6, because
-there is a chain $6 \rightarrow 3 \rightarrow 2$.
+we follow the chain $6 \rightarrow 3 \rightarrow 2$.
 Two elements belong to the same set exactly when
 their representatives are the same.
 
@@ -478,20 +478,21 @@ can be joined as follows:
 
 The resulting set contains the elements
 $\{1,2,3,4,6,7,8\}$.
-From this on, the element 2 will be the representative
+From this on, the element 2 is the representative
 for the entire set and the old representative 4
-will point to the element 2.
+points to the element 2.
 
-The efficiency of the structure depends on
-the way the sets are joined.
+The efficiency of the union-find structure depends on
+how the sets are joined.
 It turns out that we can follow a simple strategy:
 always connect the representative of the
 smaller set to the representative of the larger set
 (or if the sets are of equal size,
 we can make an arbitrary choice).
 Using this strategy, the length of any chain
-will be $O(\log n)$, so we can always efficiently
-find the representative of any element by following the chain.
+will be $O(\log n)$, so we can
+find the representative of any element
+efficiently by following the corresponding chain.
 
 \subsubsection{Implementation}
 
@@ -570,9 +571,9 @@ the smaller set to the larger set.
 for finding a minimum spanning tree.
 The algorithm first adds an arbitrary node
 to the tree.
-After this, the algorithm always selects an edge
-whose weight is as small as possible and
-that adds a new node to the tree.
+After this, the algorithm always chooses
+a minimum-weight edge that
+adds a new node to the tree.
 Finally, all nodes have been added to the tree
 and a minimum spanning tree has been found.
 
@@ -627,8 +628,9 @@ Initially, there are no edges between the nodes:
 \end{tikzpicture}
 \end{center}
 An arbitrary node can be the starting node,
-so let us select node 1.
-First, an edge with weight 3 connects nodes 1 and 2:
+so let us choose node 1.
+First, we add node 2 that is connected by
+an edge of weight 3:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};

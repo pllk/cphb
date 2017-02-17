@@ -8,7 +8,7 @@ Removing any edge from a tree divides it
 into two components,
 and adding any edge to a tree creates a cycle.
 Moreover, there is always a unique path between any
-two nodes in a tree.
+two nodes of a tree.
 
 For example, the following tree consists of 7 nodes and 6 edges:
 \begin{center}
@@ -33,7 +33,7 @@ For example, the following tree consists of 7 nodes and 6 edges:
 
 The \key{leaves} of a tree are the nodes
 with degree 1, i.e., with only one neighbor.
-For example, the leaves in the above tree
+For example, the leaves of the above tree
 are nodes 3, 5, 6 and 7.
 
 \index{root}
@@ -73,7 +73,7 @@ is its upper neighbor.
 Each node has exactly one parent,
 except for the root that does not have a parent.
 For example, in the above tree,
-the childern of node 4 are nodes 3 and 7,
+the children of node 4 are nodes 3 and 7,
 and the parent is node 1.
 
 \index{subtree}
@@ -89,9 +89,9 @@ consists of nodes 4, 3 and 7.
 
 Depth-first search and breadth-first search
 can be used for traversing the nodes in a tree.
-However, the traversal is easier to implement than
-in a general graph because
-there are no cycles in the tree, and it is not
+The traversal of a tree is easier to implement than
+that of a general graph, because
+there are no cycles in the tree and it is not
 possible to reach a node from multiple directions.
 
 The typical way to traverse a tree is to start
@@ -232,9 +232,9 @@ the longest path from node 1 to a leaf has length 2
 $1 \rightarrow 4 \rightarrow 7$ or $1 \rightarrow 2 \rightarrow 6$).
 After this, the algorithm calculates for each node
 $x$ the length of the longest path where $x$
-is the turning point of the path.
+is the highest point of the path.
 The longest such path can be found by choosing
-two children with longest paths two leaves.
+two children with longest paths to leaves.
 For example, in the above graph, 
 nodes 2 and 4 yield the longest path for node 1.
 
@@ -357,7 +357,7 @@ In the example graph, the distances are as follows:
 \end{center}
 \end{samepage}
 For example, the farthest node from node 4
-in the direction of node 1 is node 6, and the distance to this
+in the direction of node 1 is node 6, and the distance to that
 node is 3 using the path
 $4 \rightarrow 1 \rightarrow 2 \rightarrow 6$.
 
@@ -500,7 +500,7 @@ For example, the following tree is a binary tree:
 
 The nodes in a binary tree have three natural
 orderings that correspond to different ways to 
-recursively traverse the nodes: 
+recursively traverse the tree:
 
 \begin{itemize}
 \item \key{pre-order}: first process the root,
@@ -519,7 +519,7 @@ and in post-order $[4,6,5,2,7,3,1]$.
 
 If we know the pre-order and in-order
 of a tree, we can reconstruct the exact structure of the tree.
-For example, the tree above is the only possible tree
+For example, the above tree is the only possible tree
 with pre-order $[1,2,4,5,6,3,7]$ and
 in-order $[4,2,6,5,1,3,7]$.
 In a similar way, the post-order and in-order

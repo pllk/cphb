@@ -7,7 +7,7 @@ of a graph
 is an important problem that has many
 applications in practice.
 For example, a natural problem in a road network
-is to calculate the length of the shorthest route
+is to calculate the length of the shortest route
 between two cities, given the lengths of the roads.
 
 In an unweighted graph, the length of a path equals
@@ -15,8 +15,8 @@ the number of edges in the path and we can
 simply use breadth-first search to find
 the shortest path.
 However, in this chapter we concentrate on
-weighted graphs,
-and more sophisticated algorithms
+weighted graphs
+where more sophisticated algorithms
 are needed
 for finding shortest paths.
 
@@ -70,9 +70,8 @@ Each node in the graph is assigned a distance.
 Initially, the distance to the starting node is 0,
 and the distance to all other nodes is infinite.
 
-The algorithm searches for edges that reduce the
-distances.
-First, all edges from node 1 reduce the distances:
+The algorithm searches for edges that reduce distances.
+First, all edges from node 1 reduce distances:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -100,7 +99,7 @@ First, all edges from node 1 reduce the distances:
 \end{center}
 After this, edges
 $2 \rightarrow 5$ and $3 \rightarrow 4$
-reduce the distances:
+reduce distances:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -156,7 +155,7 @@ and we have successfully
 calculated the shortest distance
 from the starting node to all other nodes.
 
-For example, the smallest distance 3
+For example, the shortest distance 3
 from node 1 to node 5 corresponds to
 the following path:
 
@@ -201,9 +200,9 @@ there is an edge to node $x$ with weight $w$.
 
 The algorithm consists of $n-1$ rounds,
 and on each round the algorithm goes through
-all edges in the graph and tries to
+all edges of the graph and tries to
 reduce the distances.
-The algorithm builds an array \texttt{e}
+The algorithm constructs an array \texttt{e}
 that will contain the distance from $x$
 to all nodes in the graph.
 The initial value $10^9$ means infinity.
@@ -228,7 +227,7 @@ all distances are final after $n-1$ rounds,
 because each shortest path can contain at most $n-1$ edges.
 
 In practice, the final distances can usually
-be found much faster than in $n-1$ rounds.
+be found faster than in $n-1$ rounds.
 Thus, a possible way to make the algorithm more efficient
 is to stop the algorithm if no distance
 can be reduced during a round.
@@ -272,7 +271,8 @@ using the Bellman–Ford algorithm by
 running the algorithm for $n$ rounds.
 If the last round reduces any distance,
 the graph contains a negative cycle.
-Note that this algorithm searches for
+Note that this algorithm can be used to
+search for
 a negative cycle in the whole graph
 regardless of the starting node.
 
@@ -283,7 +283,7 @@ regardless of the starting node.
 The \key{SPFA algorithm} (''Shortest Path Faster Algorithm'')
 is a variant of the Bellman–Ford algorithm,
 that is often more efficient than the original algorithm.
-It does not go through all the edges on each round,
+The SPFA algorithm does not go through all the edges on each round,
 but instead, it chooses the edges to be examined
 in a more intelligent way.
 
@@ -294,11 +294,11 @@ to the queue.
 Then, the algorithm always processes the
 first node in the queue, and when an edge
 $a \rightarrow b$ reduces a distance,
-node $b$ is added to the end of the queue.
+node $b$ is added to the queue.
 
-The following implementation uses a
-\texttt{queue} structure \texttt{q}.
-In addition, the array \texttt{z} indicates
+The following implementation uses a 
+\texttt{queue} \texttt{q}.
+In addition, an array \texttt{z} indicates
 if a node is already in the queue,
 in which case the algorithm does not add
 the node to the queue again.
@@ -321,11 +321,11 @@ while (!q.empty()) {
 
 The efficiency of the SPFA algorithm depends
 on the structure of the graph:
-the algorithm is often very efficient,
+the algorithm is often efficient,
 but its worst case time complexity is still
 $O(nm)$ and it is possible to create inputs
 that make the algorithm as slow as the
-standard Bellman–Ford algorithm.
+original Bellman–Ford algorithm.
 
 \section{Dijkstra's algorithm}
 
@@ -342,7 +342,7 @@ are no negative weight edges in the graph.
 
 Like the Bellman–Ford algorithm,
 Dijkstra's algorithm maintains distances
-for the nodes and reduces them during the algorithm.
+to the nodes and reduces them during the search.
 Dijkstra's algorithm is efficient, because
 it only processes
 each edge in the graph once, using the fact
@@ -376,7 +376,7 @@ starting node is node 1:
 \end{tikzpicture}
 \end{center}
 Like in the Bellman–Ford algorithm,
-intially the distance to the starting node is 0
+initially the distance to the starting node is 0
 and the distance to all other nodes is infinite.
 
 At each step, Dijkstra's algorithm selects a node
@@ -529,7 +529,7 @@ However, Dijkstra's algorithm
 finds the path $1 \rightarrow 2 \rightarrow 4$
 by following the minimum weight edges.
 The algorithm does not take into account that
-on the lower path, the weight $-5$
+on the other path, the weight $-5$
 compensates the previous large weight $6$.
 
 \subsubsection{Implementation}
@@ -550,7 +550,7 @@ can be retrieved in logarithmic time.
 
 In the following implementation,
 the priority queue contains pairs whose first
-element is the current distance of the node and second
+element is the current distance to the node and second
 element is the identifier of the node.
 \begin{lstlisting}
 priority_queue<pair<int,int>> q;
@@ -559,12 +559,12 @@ A small difficulty is that in Dijkstra's algorithm,
 we should find the node with the \emph{minimum} distance,
 while the C++ priority queue finds the \emph{maximum}
 element as default.
-An easy solution is to use \emph{negative} distances,
+An easy trick is to use \emph{negative} distances,
 which allows us to directly use the C++ priority queue.
 
 The code keeps track of processed nodes
-in the array \texttt{z},
-and maintains estimated distances in array \texttt{e}.
+in an array \texttt{z},
+and maintains the distances in an array \texttt{e}.
 Initially, the distance to the starting node is 0,
 and the distance to all other nodes is $10^9$ (infinite).
 
@@ -587,8 +587,8 @@ while (!q.empty()) {
 
 The time complexity of the above implementation is
 $O(n+m \log m)$ because the algorithm goes through
-all nodes in the graph, and adds for each edge
-at most one estimated distance to the priority queue.
+all nodes in the graph and adds for each edge
+at most one distance to the priority queue.
 
 \section{Floyd–Warshall algorithm}
 
@@ -605,7 +605,7 @@ The algorithm maintains a two-dimensional array
 that contains distances between the nodes.
 First, the distances are calculated only using
 direct edges between the nodes.
-After this the algorithm updates the distances
+After this the algorithm reduces the distances
 by using intermediate nodes in the paths.
 
 \subsubsection{Example}
@@ -654,7 +654,7 @@ that can act as an intermediate node in paths from now on,
 and the algorithm reduces the distances in the array
 using this node.
 
-On the first round, node 1 is the intermediate node.
+On the first round, node 1 is the new intermediate node.
 There is a new path between nodes 2 and 4
 with length 14, because node 1 connects them.
 There is also a new path 
@@ -673,7 +673,7 @@ between nodes 2 and 5 with length 6.
 \end{center}
 \vspace{10pt}
 
-On the second round, node 2 is the intermediate node.
+On the second round, node 2 is the new intermediate node.
 This creates new paths between nodes 1 and 3
 and between nodes 3 and 5:
 
@@ -690,7 +690,7 @@ and between nodes 3 and 5:
 \end{center}
 \vspace{10pt}
 
-On the third round, node 3 is the intermediate round.
+On the third round, node 3 is the new intermediate round.
 There is a new path between nodes 2 and 4:
 
 \begin{center}
@@ -707,7 +707,7 @@ There is a new path between nodes 2 and 4:
 \vspace{10pt}
 
 The algorithm continues like this,
-until all nodes have been intermediate nodes.
+until all nodes have been appointed intermediate nodes.
 After the algorithm has finished, the array contains
 the minimum distances between any two nodes:
 
@@ -723,8 +723,8 @@ the minimum distances between any two nodes:
 \end{tabular}
 \end{center}
 
-For example, the array indicates that the
-shortest path between nodes 2 and 4 has length 8.
+For example, the array tells us that the
+shortest distance between nodes 2 and 4 is 8.
 This corresponds to the following path:
 
 \begin{center}
@@ -755,7 +755,7 @@ Floyd–Warshall algorithm that it is
 easy to implement.
 The following code constructs a
 distance matrix \texttt{d} where $\texttt{d}[a][b]$
-is the smallest distance between nodes $a$ and $b$.
+is the shortest distance between nodes $a$ and $b$.
 First, the algorithm initializes \texttt{d}
 using the adjacency matrix \texttt{v} of the graph
 ($10^9$ means infinity):
@@ -770,7 +770,7 @@ for (int i = 1; i <= n; i++) {
 }
 \end{lstlisting}
 
-After this, the shortest paths can be found as follows:
+After this, the shortest distances can be found as follows:
 
 \begin{lstlisting}
 for (int k = 1; k <= n; k++) {
