@@ -67,14 +67,14 @@ An acyclic graph always has a topological sort.
 However, if the graph contains a cycle,
 it is not possible to form a topological sort,
 because no node in the cycle can appear
-before other nodes in the cycle.
+before the other nodes in the cycle.
 It turns out that depth-first search can be used
 to both check if a directed graph contains a cycle
 and, if it does not contain a cycle, to construct a topological sort.
 
 \subsubsection{Algorithm}
 
-The idea is to go through the nodes in the graph
+The idea is to go through the nodes of the graph
 and always begin a depth-first search at the current node
 if it has not been processed yet.
 During the searches, the nodes have three possible states:
@@ -89,7 +89,7 @@ Initially, the state of each node is 0.
 When a search reaches a node for the first time,
 its state becomes 1.
 Finally, after all successors of the node have
-been processed, the state of the node becomes 2.
+been processed, its state becomes 2.
 
 If the graph contains a cycle, we will find out this
 during the search, because sooner or later
@@ -97,8 +97,8 @@ we will arrive at a node whose state is 1.
 In this case, it is not possible to construct a topological sort.
 
 If the graph does not contain a cycle, we can construct
-a topological sort by maintaining a list of nodes and
-adding each node to the list when the state of the node becomes 2.
+a topological sort by 
+adding each node to a list when the state of the node becomes 2.
 This list in reverse order is a topological sort.
 
 \subsubsection{Example 1}
@@ -287,17 +287,19 @@ from node 4 to node 6 in the following graph:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
+
 There are a total of three such paths:
 \begin{itemize}
 \item $4 \rightarrow 1 \rightarrow 2 \rightarrow 3 \rightarrow 6$
 \item $4 \rightarrow 5 \rightarrow 2 \rightarrow 3 \rightarrow 6$
 \item $4 \rightarrow 5 \rightarrow 3 \rightarrow 6$
 \end{itemize}
-The idea is to go through the nodes in a topological sort,
-and calculate for each node the total number of paths
-that arrive at the node from different directions.
-A topological sort for the above graph is as follows:
 
+To count the paths,
+we go through the nodes in a topological sort,
+and calculate for each node $x$ the number of paths
+from node 4 to node $x$.
+A topological sort for the above graph is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (3,0) {$1$};
@@ -316,8 +318,8 @@ A topological sort for the above graph is as follows:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-Hence, the numbers of paths are as follows:
 
+Hence, the numbers of paths are as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -344,20 +346,21 @@ Hence, the numbers of paths are as follows:
 \end{tikzpicture}
 \end{center}
 
-For example, there are two paths from node 4 to node 2,
-because we can arrive at node 2 from node 1 or node 5,
-there is one path from node 4 to node 1
-and there is one path from node 4 to node 5.
+For example, since there are two paths
+from node 4 to node 2 and
+there is one path from node 4 to node 5,
+we can conclude that there are three
+paths from node 4 to node 3.
 
 \subsubsection{Extending Dijkstra's algorithm}
 
 \index{Dijkstra's algorithm}
 
 A by-product of Dijkstra's algorithm is a directed, acyclic
-graph that shows for each node in the original graph
+graph that indicates for each node in the original graph
 the possible ways to reach the node using a shortest path
 from the starting node.
-Dynamic programming can be applied to this graph.
+Dynamic programming can be applied to that graph.
 For example, in the graph
 \begin{center}
 \begin{tikzpicture}
@@ -376,7 +379,7 @@ For example, in the graph
 \path[draw,thick,-] (2) -- node[font=\small,label=above:2] {} (3);
 \end{tikzpicture}
 \end{center}
-shortest paths from node 1 may use the following edges:
+the shortest paths from node 1 may use the following edges:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -424,14 +427,14 @@ using dynamic programming:
 
 Actually, any dynamic programming problem
 can be represented as a directed, acyclic graph.
-In such a graph, each node is a dynamic programming state,
+In such a graph, each node corresponds to a dynamic programming state
 and the edges indicate how the states depend on each other.
 
 As an example, consider the problem
-where our task is to form a sum of money $x$
+of forming a sum of money $x$
 using coins
 $\{c_1,c_2,\ldots,c_k\}$.
-In this case, we can construct a graph where
+In this problem, we can construct a graph where
 each node corresponds to a sum of money,
 and the edges show how the coins can be chosen.
 For example, for coins $\{1,3,4\}$ and $x=6$,
@@ -477,8 +480,8 @@ equals the total number of solutions.
 
 For the rest of the chapter,
 we will concentrate on \key{successor graphs}
-where the outdegree of each node is 1, which means that
-exactly one edge starts at the node.
+where the outdegree of each node is 1, i.e.,
+exactly one edge starts at each node.
 A successor graph consists of one or more
 components, each of which contains
 one cycle and some paths that lead to it.
@@ -552,9 +555,9 @@ because we will reach node 2 by walking 6 steps from node 4:
 \end{tikzpicture}
 \end{center}
 
-A straightforward way to calculate a value $f(x,k)$
+A straightforward way to calculate a value of $f(x,k)$
 is to start at node $x$ and walk $k$ steps forward, which takes $O(k)$ time.
-However, using preprocessing, any value $f(x,k)$
+However, using preprocessing, any value of $f(x,k)$
 can be calculated in only $O(\log k)$ time.
 
 The idea is to precalculate all values $f(x,k)$ where
@@ -586,17 +589,17 @@ $\cdots$ \\
 \end{tabular}
 \end{center}
 
-After this, any value $f(x,k)$ can be calculated
+After this, any value of $f(x,k)$ can be calculated
 by presenting the number of steps $k$ as a sum of powers of two.
-For example, if we want to calculate the value $f(x,11)$,
+For example, if we want to calculate the value of $f(x,11)$,
 we first form the representation $11=8+2+1$.
-Using this,
+Using that,
 \[f(x,11)=f(f(f(x,8),2),1).\]
-For example, in the above graph
+For example, in the previous graph
 \[f(4,11)=f(f(f(4,8),2),1)=5.\]
 
 Such a representation always consists of
-$O(\log k)$ parts, so calculating a value $f(x,k)$
+$O(\log k)$ parts, so calculating a value of $f(x,k)$
 takes $O(\log k)$ time.
 
 \section{Cycle detection}
@@ -607,7 +610,7 @@ takes $O(\log k)$ time.
 Consider a successor graph that only contains
 a path that ends in a cycle.
 There are two interesting questions:
-if we begin our walk at the first node,
+if we begin our walk at the starting node,
 what is the first node in the cycle
 and how many nodes does the cycle contain?
 
@@ -638,12 +641,12 @@ An easy way to detect the cycle is to walk in the
 graph and keep track of
 all nodes that have been visited. Once a node is visited
 for the second time, we can conclude
-that the node in question is the first node in the cycle.
+that the node is the first node in the cycle.
 This method works in $O(n)$ time and also uses
 $O(n)$ memory.
 
 However, there are better algorithms for cycle detection.
-The time complexity of those algorithms is still $O(n)$,
+The time complexity of such algorithms is still $O(n)$,
 but they only use $O(1)$ memory.
 This is an important improvement if $n$ is large.
 Next we will discuss Floyd's algorithm that
@@ -655,8 +658,8 @@ achieves these properties.
 
 \key{Floyd's algorithm} walks forward 
 in the graph using two pointers $a$ and $b$.
-Both pointers begin at the starting node
-of the graph.
+Both pointers begin at a node $x$ that
+is the starting node of the graph.
 Then, on each turn, the pointer $a$ walks
 one step forward and the pointer $b$
 walks two steps forward.
@@ -676,8 +679,8 @@ At this point, the pointer $a$ has walked $k$ steps
 and the pointer $b$ has walked $2k$ steps,
 so the length of the cycle divides $k$.
 Thus, the first node that belongs to the cycle
-can be found by moving the pointer $a$ to the
-starting node and advancing the pointers
+can be found by moving the pointer $a$ to node $x$
+and advancing the pointers
 step by step until they meet again:
 
 \begin{lstlisting}
