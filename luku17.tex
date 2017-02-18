@@ -188,14 +188,13 @@ in the following order:
 \end{center}
 
 The notation $x/y$ means that
-processing the node started at moment $x$
-and ended at moment $y$.
-The following list contains the nodes
-sorted according to their ending times:
+processing the node started
+at time $x$ and finished at time $y$.
+Thus, the corresponding list is as follows:
 
 \begin{tabular}{ll}
 \\
-node & ending time \\
+node & processing time \\
 \hline
 4 & 5 \\
 5 & 6 \\
@@ -218,7 +217,7 @@ forms the strongly connected components
 of the graph.
 First, the algorithm reverses every
 edge in the graph.
-This makes sure that during the second search,
+This guarantees that during the second search,
 we will always find strongly connected
 components that do not have extra nodes.
 
@@ -287,7 +286,7 @@ begins at node 3:
 \end{tikzpicture}
 \end{center}
 
-Note that since all edges were reversed,
+Note that since all edges are reversed,
 the component does not ''leak'' to other parts in the graph.
 
 \begin{samepage}
@@ -359,8 +358,7 @@ that create the remaining strongy connected components:
 
 The time complexity of the algorithm is $O(n+m)$,
 because the algorithm
-performs two depth-first searches and
-both searches take $O(n+m)$ time.
+performs two depth-first searches.
 
 \section{2SAT problem}
 
@@ -390,8 +388,17 @@ L_1 = (x_2 \lor \lnot x_1) \land
       (\lnot x_2 \lor \lnot x_3) \land
       (x_1 \lor x_4)
 \]
-is true when $x_1$ and $x_2$ are false
-and $x_3$ and $x_4$ are true.
+is true when the variables are assigned as follows:
+
+\[
+\begin{cases}
+x_1 = \textrm{false} \\
+x_2 = \textrm{false} \\
+x_3 = \textrm{true} \\
+x_4 = \textrm{true} \\
+\end{cases}
+\]
+
 However, the formula
 \[
 L_2 = (x_1 \lor x_2) \land
@@ -400,14 +407,14 @@ L_2 = (x_1 \lor x_2) \land
       (\lnot x_1 \lor \lnot x_3)
 \]
 is always false, regardless of how we
-choose the values of the variables.
+assign the values.
 The reason for this is that we cannot
-choose a value for variable $x_1$
+choose a value for $x_1$
 without creating a contradiction.
 If $x_1$ is false, both $x_2$ and $\lnot x_2$
-should hold which is impossible,
+should be true which is impossible,
 and if $x_1$ is true, both $x_3$ and $\lnot x_3$
-should hold which is also impossible.
+should be true which is also impossible.
 
 The 2SAT problem can be represented as a graph
 whose nodes correspond to
@@ -466,19 +473,21 @@ And the graph for the formula $L_2$ is:
 \end{tikzpicture}
 \end{center}
 
-The structure of the graph indicates whether
-the corresponding 2SAT problem can be solved.
-If there is a variable $x_i$ such that
-both $x_i$ and $\lnot x_i$ belong to the
-same strongly connected component,
-then there are no solutions.
-In this case, the graph contains
-a path from $x_i$ to $\lnot x_i$,
+The structure of the graph tells us whether
+it is possible to assign the values
+of the variables so
+that the formula is true.
+It turns out that this can be done
+exactly when there are no nodes
+$x_i$ and $\lnot x_i$ such that
+both nodes belong to the
+same strongly connected component.
+If there are such nodes,
+the graph contains
+a path from $x_i$ to $\lnot x_i$
 and also a path from $\lnot x_i$ to $x_i$,
-so both $x_i$ and $\lnot x_i$ should hold
+so both $x_i$ and $\lnot x_i$ should be true
 which is not possible.
-However, if the graph does not contain
-such a variable $x_i$, then there is always a solution.
 
 In the graph of the formula $L_1$
 there are no nodes $x_i$ and $\lnot x_i$
@@ -490,7 +499,7 @@ all nodes belong to the same strongly connected component,
 so there are no solutions.
 
 If a solution exists, the values for the variables
-can be found by processing the nodes of the
+can be found by going through the nodes of the
 component graph in a reverse topological sort order.
 At each step, we process a component 
 that does not contain edges that lead to an
@@ -502,7 +511,7 @@ according to the values in the component,
 and if they already have values,
 they remain unchanged.
 The process continues until all variables
-have been assigned a value.
+have been assigned values.
 
 The component graph for the formula $L_1$ is as follows:
 \begin{center}
@@ -533,8 +542,8 @@ All variables have been assigned a value,
 so the remaining components $A$ and $B$
 do not change the variables.
 
-Note that this method, works because the
-structure of the graph is special.
+Note that this method works, because the
+graph has a special structure.
 If there are paths from node $x_i$ to node $x_j$
 and from node $x_j$ to node $\lnot x_j$,
 then node $x_i$ never becomes true.
