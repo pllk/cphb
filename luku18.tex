@@ -3,9 +3,9 @@
 \index{tree query}
 
 This chapter discusses techniques for
-efficiently processing queries related
+processing queries related
 to subtrees and paths of a rooted tree.
-For example, possible queries are:
+For example, such queries are:
 
 \begin{itemize}
 \item what is the $k$th ancestor of a node?
@@ -60,7 +60,7 @@ can be efficiently calculated in $O(\log k)$ time
 after preprocessing.
 The idea is to precalculate all values $f(x,k)$
 where $k$ is a power of two.
-For example, the values for the tree above
+For example, the values for the above tree
 are as follows:
 
 \begin{center}
@@ -373,7 +373,7 @@ can be found as follows:
 \end{tikzpicture}
 \end{center}
 
-To support the queries efficiently,
+To answer the queries efficiently,
 it suffices to store the values of the
 nodes in a binary indexed tree or segment tree.
 After this, we can both update a value
@@ -394,7 +394,7 @@ the root to a node
 \end{itemize}
 
 For example, in the following tree,
-the sum of values from the root no node 7 is
+the sum of values from the root node to node 7 is
 $4+5+5=14$:
 
 \begin{center}
@@ -431,8 +431,8 @@ $4+5+5=14$:
 \end{center}
 
 We can solve this problem in a similar way as before,
-but each value in the last row of the node array is the sum of values
-on a path from the root to a node.
+but now each value in the last row of the array is the sum of values
+on a path from the root to the node.
 For example, the following array corresponds to the above tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -538,8 +538,8 @@ Thus, to support both the operations,
 we should be able to increase all values
 in a range and retrieve a single value.
 This can be done in $O(\log n)$ time
-(see Chapter 9.4) using a binary indexed tree
-or segment tree.
+using a binary indexed tree
+or segment tree (see Chapter 9.4).
 
 \section{Lowest common ancestor}
 
@@ -551,7 +551,10 @@ whose subtree contains both the nodes.
 A typical problem is to efficiently process
 queries that ask to find the lowest
 common ancestor of given two nodes.
-For example, in the tree
+
+For example, in the following tree,
+the lowest common ancestor of nodes 5 and 8
+is node 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -571,8 +574,6 @@ For example, in the tree
 \path[draw,thick,-] (7) -- (8);
 \end{tikzpicture}
 \end{center}
-the lowest common ancestor of nodes 5 and 8 is node 2,
-and the lowest common ancestor of nodes 3 and 4 is node 1.
 
 Next we will discuss two efficient techniques for
 finding the lowest common ancestor of two nodes.
@@ -588,7 +589,7 @@ and then find the smallest value of $k$
 such that the $k$th ancestor of both nodes is the same.
 
 As an example, let us find the lowest common
-ancestor of nodes $5$ and $8$ in the following tree:
+ancestor of nodes $5$ and $8$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -614,6 +615,8 @@ Node $5$ is at level $3$, while node $8$ is at level $4$.
 Thus, we first move one step upwards from node $8$ to node $6$.
 After this, it turns out that the parent of both nodes $5$
 and $6$ is node $2$, so we have found the lowest common ancestor.
+
+The following picture shows how we move in the tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -686,7 +689,8 @@ using a depth-first search:
 \end{tikzpicture}
 \end{center}
 
-However, we add each node to the node array \emph{always}
+However, in this problem,
+we add each node to the node array \emph{always}
 when the depth-first search visits the node,
 and not only at the first visit.
 Hence, a node that has $k$ children appears $k+1$ times
@@ -832,25 +836,26 @@ whose level is 2.
 Thus, the lowest common ancestor of
 nodes 5 and 8 is node 2.
 
-Using a segment tree, we can find the lowest
-common ancestor in $O(\log n)$ time.
-Since the array is static, the time complexity
-$O(1)$ is also possible, but this is rarely needed.
-In both cases, the preprocessing takes $O(n \log n)$ time.
+Thus, to find the lowest common ancestor
+of two nodes it suffices to process a range
+minimum query.
+Since the array is static,
+we can process such queries in $O(1)$ time
+after an $O(n \log n)$ time preprocessing.
 
 \subsubsection{Distances of nodes}
 
-Finally, let us consider a problem of
+Finally, let us consider the problem of
 finding the distance between
 two nodes in the tree, which equals
 the length of the path between them.
 It turns out that this problem reduces to
 finding the lowest common ancestor of the nodes.
 
-First, we choose an arbitrary node for the
-root of the tree.
+First, we root the tree arbitrarily.
 After this, the distance between nodes $a$ and $b$
-is $d(a)+d(b)-2 \cdot d(c)$,
+can be calculated using the formula
+\[d(a)+d(b)-2 \cdot d(c),\]
 where $c$ is the lowest common ancestor of $a$ and $b$
 and $d(s)$ denotes the distance from the root node
 to node $s$.
@@ -881,8 +886,8 @@ For example, in the tree
 \end{center}
 the lowest common ancestor of nodes 5 and 8 is node 2.
 A path from node 5 to node 8
-goes first upwards from node 5 to node 2,
-and then downwards from node 2 to node 8.
+first ascends from node 5 to node 2
+and then descends from node 2 to node 8.
 The distances of the nodes from the root are
 $d(5)=3$, $d(8)=4$ and $d(2)=2$,
 so the distance between nodes 5 and 8 is
