@@ -80,7 +80,7 @@ route the flow:
 \end{center}
 
 The notation $v/k$ means
-a flow of $v$ units is routed through
+that a flow of $v$ units is routed through
 an edge whose capacity is $k$ units.
 The size of the flow is $7$,
 because the source sends $3+4$ units of flow
@@ -141,14 +141,14 @@ their total weight would be less than $7$.
 \\\\
 It is not a coincidence that
 both the size of the maximum flow and 
-the minimum cut is 7 in the above example.
+the size of the minimum cut is 7 in the above example.
 It turns out that the size of the maximum flow
 and the minimum cut is
 \emph{always} the same,
 so the concepts are two sides of the same coin.
 
 Next we will discuss the Ford–Fulkerson
-algorithm that can be used for finding
+algorithm that can be used to find
 the maximum flow and minimum cut of a graph.
 The algorithm also helps us to understand
 \emph{why} they are equally large.
@@ -169,7 +169,7 @@ The algorithm uses a special representation
 of the graph where each original edge has a reverse
 edge in another direction.
 The weight of each edge indicates how much more flow
-we might route through it.
+we could route through it.
 At the beginning of the algorithm, the weight of each original edge
 equals the capacity of the edge
 and the weight of each reverse edge is zero.
@@ -254,7 +254,7 @@ For example, suppose we choose the following path:
 After choosing the path, the flow increases by $x$ units,
 where $x$ is the smallest edge weight on the path.
 In addition, the weight of each edge on the path
-decreases by $x$, and the weight of each reverse edge
+decreases by $x$ and the weight of each reverse edge
 increases by $x$.
 
 In the above path, the weights of the
@@ -415,7 +415,7 @@ Hence, the algorithm terminates and the maximum flow is 7.
 \subsubsection{Finding paths}
 
 The Ford–Fulkerson algorithm does not specify
-how paths that increase the flow should be chosen.
+how we should choose the paths that increase the flow.
 In any case, the algorithm will terminate sooner or later
 and correctly find the maximum flow.
 However, the efficiency of the algorithm depends on
@@ -426,7 +426,7 @@ Usually, this works well, but in the worst case,
 each path only increases the flow by 1
 and the algorithm is slow.
 Fortunately, we can avoid this situation
-by using one of the following algorithms:
+by using one of the following techniques:
 
 \index{Edmonds–Karp algorithm}
 
@@ -553,7 +553,7 @@ any cut in the graph.
 On the other hand, the Ford–Fulkerson algorithm
 produces a flow that is \emph{exactly} as large
 as a cut in the graph.
-Thus, the flow has to be a maximum flow,
+Thus, the flow has to be a maximum flow
 and the cut has to be a minimum cut.
 
 \section{Disjoint paths}
@@ -1006,7 +1006,7 @@ If the condition of Hall's theorem does not hold,
 the set $X$ provides an explanation \emph{why}
 we cannot form such a matching.
 Since $X$ contains more nodes than $f(X)$,
-there is no pair for all nodes in $X$.
+there are no pairs for all nodes in $X$.
 For example, in the above graph, both nodes 2 and 4
 should be connected with node 7 which is not allowed.
 
@@ -1017,14 +1017,14 @@ should be connected with node 7 which is not allowed.
 \index{minimum node cover}
 
 A \key{minimum node cover} of a graph
-is a set of nodes such that each edge of the graph
-has at least one node in the set.
+is a minimum set of nodes such that each edge of the graph
+has at least one endpoint in the set.
 In a general graph, finding a minimum node cover
 is a NP-hard problem.
-However, according to \key{Kőnig's theorem},
+However, if the graph is bipartite,
+\key{Kőnig's theorem} tells us that
 the size of a minimum node cover
-and the size of a maximum matching is always the same
-if the graph is bipartite.
+and the size of a maximum matching are always equal.
 Thus, we can calculate the size of a minimum node cover
 using a maximum flow algorithm.
 
@@ -1119,7 +1119,7 @@ set is as follows:
 
 A \key{path cover} is a set of paths in a graph
 such that each node of the graph belongs to at least one path.
-It turns out that in a directed, acyclic graph,
+It turns out that in directed, acyclic graphs,
 we can reduce the problem of finding a minimum
 path cover to the problem of finding a maximum
 flow in another graph.
@@ -1174,9 +1174,9 @@ Note that one of the paths only contains node 2,
 so it is possible that a path does not contain any edges.
 
 We can find a minimum node-disjoint path cover
-by constructing a matching graph so that each node
-in the original graph corresponds to two
-nodes in the matching graph: a left and right node.
+by constructing a matching graph where each node
+of the original graph is represented by
+two nodes: a left node and a right node.
 There is an edge from a left node to a right node
 if there is a such an edge in the original graph.
 In addition, the matching graph contains a source and a sink
