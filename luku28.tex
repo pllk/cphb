@@ -37,8 +37,8 @@ Using this approach, the function becomes as follows:
 int sum(int a, int b, int k, int x, int y) {
     if (b < x || a > y) return 0;
     if (a <= x && y <= b) return p[k];
-    int d = (y-x+1)/2;
-    return sum(a,b,2*k,x,x+d-1) + sum(a,b,2*k+1,x+d,y);
+    int d = (x+y)/2;
+    return sum(a,b,2*k,x,d) + sum(a,b,2*k+1,d+1,y);
 }
 \end{lstlisting}
 Now we can calculate the sum of
@@ -63,9 +63,9 @@ the sum can be found in \texttt{p}.
 If $[x,y]$ is partially inside $[a,b]$,
 the search continues recursively to the
 left and right half of $[x,y]$.
-The size of both halves is $d=\frac{1}{2}(y-x+1)$;
-the left half is $[x,x+d-1]$
-and the right half is $[x+d,y]$.
+The left half is $[x,d]$
+and the right half is $[d+1,y]$
+where $d=\lfloor \frac{x+y}{2} \rfloor$.
 \end{samepage}
 
 The following picture shows how the search proceeds
