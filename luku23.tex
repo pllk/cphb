@@ -182,7 +182,7 @@ For example,
 Matrix multiplication is associative,
 so $A(BC)=(AB)C$ holds,
 but it is not commutative,
-so $AB = BA$ does not hold.
+so $AB = BA$ does not usually hold.
 
 \index{identity matrix}
 
@@ -534,7 +534,7 @@ X^n \cdot
   1 \\
  \end{bmatrix}.
 \]
-The power $X^n$ can be calculated in
+The value of $X^n$ can be calculated in
 $O(k^3 \log n)$ time,
 so the value of $f(n)$ can also be calculated
 in $O(k^3 \log n)$ time.
@@ -576,7 +576,7 @@ X =
 In the first $k-1$ rows, each element is 0
 except that one element is 1.
 These rows replace $f(i)$ with $f(i+1)$,
-$f(i+1)$ with $f(i+2)$, etc.
+$f(i+1)$ with $f(i+2)$, and so on.
 The last row contains the coefficients of the recurrence
 to calculate the new value $f(i+k)$.
 
