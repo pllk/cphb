@@ -36,10 +36,9 @@ Using this approach, the function becomes as follows:
 \begin{lstlisting}
 int sum(int a, int b, int k, int x, int y) {
     if (b < x || a > y) return 0;
-    if (a == x && b == y) return p[k];
+    if (a <= x && y <= b) return p[k];
     int d = (y-x+1)/2;
-    return sum(a, min(x+d-1,b), 2*k, x, x+d-1) +
-           sum(max(x+d,a), b, 2*k+1, x+d, y);
+    return sum(a,b,2*k,x,x+d-1) + sum(a,b,2*k+1,x+d,y);
 }
 \end{lstlisting}
 Now we can calculate the sum of
@@ -57,11 +56,11 @@ at the root of the segment tree.
 The range $[x,y]$ corresponds to $k$
 and is initially $[0,N-1]$.
 When calculating the sum,
-if $[a,b]$ is outside $[x,y]$,
+if $[x,y]$ is outside $[a,b]$,
 the sum is 0,
-and if $[a,b]$ equals $[x,y]$,
+and if $[x,y]$ is completely inside $[a,b]$,
 the sum can be found in \texttt{p}.
-If $[a,b]$ is completely or partially inside $[x,y]$,
+If $[x,y]$ is partially inside $[a,b]$,
 the search continues recursively to the
 left and right half of $[x,y]$.
 The size of both halves is $d=\frac{1}{2}(y-x+1)$;
@@ -166,7 +165,7 @@ stops and the sum can be found in \texttt{p}.
 \node at (13.5,-0.75) {$b$};
 \end{tikzpicture}
 \end{center}
-Also in this implementation,
+Also using this implementation,
 operations take $O(\log n)$ time,
 because the total number of visited nodes is $O(\log n)$.
 
@@ -192,7 +191,7 @@ In addition, the node may contain information
 related to lazy updates, which has not been
 propagated to its children.
 
-There are two possible types of range updates:
+There are two types of range updates:
 each element in the range is either
 \emph{increased} by some value
 or \emph{assigned} some value.
@@ -300,7 +299,7 @@ where $h$ is the size of the intersection of $[a,b]$
 and $[x,y]$, and continue our walk recursively in the tree.
 
 For example, the following picture shows the tree after
-increasing the elements in the range $[a,b]$ by 2:
+increasing the elements in $[a,b]$ by 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=gray!50] (5,0) rectangle (6,1);
@@ -518,7 +517,7 @@ in the range $[a,b]$ is $p(i-a)$.
 For example, adding $p(u)=u+1$
 to $[a,b]$ means that the element at position $a$
 is increased by 1, the element at position $a+1$
-is increased by 2, etc.
+is increased by 2, and so on.
 
 To support polynomial updates,
 each node is assigned $k+2$ values,
@@ -653,7 +652,7 @@ are generated during the algorithm.
 Using a dynamic implementation,
 it is also possible to create a
 \key{persistent segment tree} that stores
-the \key{modification history} of the tree.
+the \emph{modification history} of the tree.
 In such an implementation, we can
 efficiently access
 all versions of the tree that have
@@ -813,7 +812,7 @@ in the following range:
 
 The idea is to build a segment tree
 where each node is assigned a data structure
-that can calculate the number of any element $x$
+that gives the number of any element $x$
 in the corresponding range.
 Using such a segment tree,
 the answer to a query can be calculated
@@ -965,7 +964,7 @@ corresponds to the above array:
 \end{tikzpicture}
 \end{center}
 
-For example, we can build the tree so
+We can build the tree so
 that each node contains a \texttt{map} structure.
 In this case, the time needed for processing each
 node is $O(\log n)$, so the total time complexity
