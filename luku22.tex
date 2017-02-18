@@ -29,7 +29,7 @@ for the number $4$:
 A combinatorial problem can often be solved
 using a recursive function.
 In this problem, we can define a function $f(n)$
-that counts the number of representations for $n$.
+that gives the number of representations for $n$.
 For example, $f(4)=8$ according to the above example.
 The values of the function
 can be recursively calculated as follows:
@@ -42,7 +42,7 @@ can be recursively calculated as follows:
 The base case is $f(1)=1$,
 because there is only one way to represent the number 1.
 When $n>1$, we go through all ways to
-select the last number in the sum.
+choose the last number in the sum.
 For example, in when $n=4$, the sum can end
 with $+1$, $+2$ or $+3$.
 In addition, we also count the representation
@@ -63,7 +63,7 @@ It turns out that the function also has a closed-form formula
 f(n)=2^{n-1},
 \]
 which is based on the fact that there are $n-1$
-possible positions for +-signs in the sum,
+possible positions for +-signs in the sum
 and we can choose any subset of them.
 
 \section{Binomial coefficients}
@@ -369,8 +369,8 @@ The following rules precisely define all
 valid parenthesis expressions:
 
 \begin{itemize}
-\item The expression \texttt{()} is valid.
-\item If a expression $A$ is valid,
+\item The empty expression is valid.
+\item If an expression $A$ is valid,
 then also the expression
 \texttt{(}$A$\texttt{)} is valid.
 \item If expressions $A$ and $B$ are valid,
@@ -397,7 +397,7 @@ such that both parts are valid
 expressions and the first part is as short as possible
 but not empty.
 For any $i$, the first part contains $i+1$ pairs
-of parentheses, and the number of expressions
+of parentheses and the number of expressions
 is the product of the following values:
 
 \begin{itemize}
@@ -559,12 +559,12 @@ that corresponds to the area of the region
 that belongs to at least one circle.
 The picture shows that we can calculate
 the area of $A \cup B$ by first summing the
-areas of $A$ and $B$, and then subtracting
+areas of $A$ and $B$ and then subtracting
 the area of $A \cap B$.
 
 The same idea can be applied when the number
 of sets is larger.
-When there are three sets, the inclusio-exclusion formula is
+When there are three sets, the inclusion-exclusion formula is
 \[ |A \cup B \cup C| = |A| + |B| + |C| - |A \cap B|  - |A \cap C|  - |B \cap C| + |A \cap B \cap C| \]
 and the corresponding picture is
 
@@ -594,7 +594,7 @@ If the intersection contains an odd number of sets,
 its size is added to the answer,
 and otherwise its size is subtracted from the answer.
 
-Note that similar formulas can also be used
+Note that there are similar formulas
 for calculating
 the size of an intersection from the sizes of
 unions. For example,
@@ -678,10 +678,10 @@ elements should be changed.
 
 \index{Burnside's lemma}
 
-\key{Burnside's lemma} counts the number of
-combinations so that
+\key{Burnside's lemma} can be used to count
+the number of combinations so that
 only one representative is counted
-for each group of symmetric combinations,
+for each group of symmetric combinations.
 Burnside's lemma states that the number of
 combinations is
 \[\sum_{k=1}^n \frac{c(k)}{n},\]
