@@ -209,7 +209,7 @@ is as follows:
 \end{tikzpicture}
 \end{center}
 
-Surprisingly enough, in this game,
+Surprisingly, in this game,
 all even-numbered states are winning states,
 and all odd-numbered states are losing states.
 
@@ -256,7 +256,7 @@ $[10,12,5]$ is $10 \oplus 12 \oplus 5 = 3$,
 so the state is a winning state.
 
 But how is the nim sum related to the nim game?
-We can explain this by studying how the nim
+We can explain this by looking at how the nim
 sum changes when the nim state changes.
 
 ~\\
@@ -395,7 +395,7 @@ The \key{Grundy number} for a game state is
 \[\textrm{mex}(\{g_1,g_2,\ldots,g_n\}),\]
 where $g_1,g_2,\ldots,g_n$ are Grundy numbers for
 states to which we can move from the state,
-and the mex function returns the smallest
+and the mex function gives the smallest
 nonnegative number that is not in the set.
 For example, $\textrm{mex}(\{0,1,3\})=2$.
 If there are no possible moves in a state,
@@ -787,10 +787,10 @@ For example, when $n=8$, the possibilities
 are $1+7$, $2+6$ and $3+5$, so
 \[f(8)=\textrm{mex}(\{f(1) \oplus f(7), f(2) \oplus f(6), f(3) \oplus f(5)\}).\]
 
-In this game, the value of $f(n)$ is based on values
+In this game, the value of $f(n)$ is based on the values
 of $f(1),\ldots,f(n-1)$.
 The base cases are $f(1)=f(2)=0$,
-because it is not possible to divide heaps
+because it is not possible to divide the heaps
 of 1 and 2 sticks.
 The first Grundy numbers are:
 \[
