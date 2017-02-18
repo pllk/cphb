@@ -73,7 +73,7 @@ The factors are
 
 The \key{sum of factors} of $n$ is
 \[\sigma(n)=\prod_{i=1}^k (1+p_i+\ldots+p_i^{\alpha_i}) = \prod_{i=1}^k \frac{p_i^{a_i+1}-1}{p_i-1},\]
-where the latter formula is based on the geometric sum formula.
+where the latter formula is based on the geometric progression formula.
 For example, the sum of factors of the number 84 is
 \[\sigma(84)=\frac{2^3-1}{2-1} \cdot \frac{3^2-1}{3-1} \cdot \frac{7^2-1}{7-1} = 7 \cdot 4 \cdot 8 = 224.\]
 
@@ -89,7 +89,7 @@ and the product of the factors is $\mu(84)=84^6=351298031616$.
 \index{perfect number}
 
 A number $n$ is \key{perfect} if $n=\sigma(n)-n$,
-i.e., $n$ equals the sum of its divisors
+i.e., $n$ equals the sum of its factors
 between $1$ and $n-1$.
 For example, the number 28 is perfect,
 because $28=1+2+4+7+14$.
@@ -355,10 +355,10 @@ For example,
 Numbers $a$ and $b$ are \key{coprime}
 if $\textrm{gcd}(a,b)=1$.
 \key{Euler's totient function} $\varphi(n)$
-returns the number of coprime numbers to $n$
+gives the number of coprime numbers to $n$
 between $1$ and $n$.
 For example, $\varphi(12)=4$,
-because the 1, 5, 7 and 11
+because 1, 5, 7 and 11
 are coprime to 12.
 
 The value of $\varphi(n)$ can be calculated
@@ -517,9 +517,9 @@ cout << x*x << "\n"; // 2537071545
 
 \index{Diophantine equation}
 
-A \key{Diophantine equation} is of the form
+A \key{Diophantine equation} is an equation of the form
 \[ ax + by = c, \]
-where $a$, $b$ and $c$ are constants,
+where $a$, $b$ and $c$ are constants
 and we should find the values of $x$ and $y$.
 Each number in the equation has to be an integer.
 For example, one solution for the equation
@@ -575,10 +575,10 @@ and by multiplying this by 4, the result is
 \[
 39 \cdot 8 + 15 \cdot (-20) = 12,
 \]
-so a solution for the equation is
+so a solution to the equation is
 $x=8$ and $y=-20$.
 
-A solution for a Diophantine equation is not unique,
+A solution to a Diophantine equation is not unique,
 but we can form an infinite number of solutions
 if we know one solution.
 If a pair $(x,y)$ is a solution, then also all pairs
@@ -603,7 +603,7 @@ where all pairs of $m_1,m_2,\ldots,m_n$ are coprime.
 
 Let $x^{-1}_m$ be the inverse of $x$ modulo $m$, and
 \[ X_k = \frac{m_1 m_2 \cdots m_n}{m_k}.\]
-Using this notation, a solution for the equations is
+Using this notation, a solution to the equations is
 \[x = a_1 X_1 {X_1}^{-1}_{m_1} + a_2 X_2 {X_2}^{-1}_{m_2} + \cdots + a_n X_n {X_n}^{-1}_{m_n}.\]
 In this solution, it holds for each number
 $k=1,2,\ldots,n$ that
