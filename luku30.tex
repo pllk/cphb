@@ -17,7 +17,7 @@ leaving times on a certain day.
 Our task is to calculate the maximum number of
 employees that were in the office at the same time.
 
-The problem can be solved by modelling the situation
+The problem can be solved by modeling the situation
 so that each employee is assigned two events that
 corresponds to their arrival and leaving times.
 After sorting the events, we can go through them
@@ -167,7 +167,7 @@ and check if they intersect.
 However, we can solve the problem more efficiently
 in $O(n \log n)$ time using a sweep line algorithm.
 
-The idea is to generate two types of events:
+The idea is to generate three types of events:
 \begin{enumerate}[noitemsep]
 \item[(1)] horizontal segment begins
 \item[(2)] horizontal segment ends
@@ -209,7 +209,7 @@ horizontal segments whose y coordinate is between
 $y_1$ and $y_2$, and add this number to the total
 number of intersection points.
 
-An appropriate data structure for
+An appropriate data structure for storing
 y coordinates of horizontal segments is either
 a binary indexed tree or a segment tree,
 possibly with index compression.
@@ -269,7 +269,7 @@ we should find the following points:
 \end{samepage}
 
 This is another example of a problem
-that can be also solved in $O(n \log n)$ time
+that can be solved in $O(n \log n)$ time
 using a sweep line algorithm.
 We go through the points from left to right
 and maintain a value $d$: the minimum distance
@@ -345,8 +345,6 @@ that contains all points of a given set.
 Convexity means that a line segment between
 any two vertices of the polygon is completely
 inside the polygon.
-An intuitive definition for a convex hull
-is that it surrounds the given points using a tight rope.
 
 \begin{samepage}
 For example, for the points
@@ -393,8 +391,8 @@ the convex hull is as follows:
 
 \index{Andrew's algorithm}
 
-\key{Andrew's algorithm} is an easy algorithm
-that can be used to
+\key{Andrew's algorithm} provides
+an easy way to
 construct the convex hull for a set of points
 in $O(n \log n)$ time.
 The algorithm constructs the convex hull
@@ -410,7 +408,7 @@ add the new point to the hull.
 After adding a point we check using cross products
 whether the tree last point in the hull turn left.
 If this holds, we remove the middle point from the hull.
-After this we keep checking again the three last points
+After this we keep checking the three last points
 and removing points, until the three last points
 do not turn left.
 
