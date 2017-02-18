@@ -1,6 +1,6 @@
 \chapter{Paths and circuits}
 
-This chapter focuses on two types of paths in a graph:
+This chapter focuses on two types of paths in graphs:
 \begin{itemize}
 \item An \key{Eulerian path} is a path that
 goes through each edge exactly once.
@@ -12,9 +12,9 @@ similar concepts at first glance,
 the computational problems related to them
 are very different.
 It turns out that there is a simple rule that
-determines whether a graph contains an Eulerian path,
-and there is also an efficient algorithm for
-finding a path if it exists.
+determines whether a graph contains an Eulerian path
+and there is also an efficient algorithm to
+find a such path if it exists.
 On the contrary, checking the existence of a Hamiltonian path is a NP-hard
 problem and no efficient algorithm is known for solving the problem.
 
@@ -154,16 +154,16 @@ so there is an Eulerian path between nodes 2 and 5,
 but the graph does not contain an Eulerian circuit.
 
 In a directed graph,
-we should focus on indegrees and outdegrees
-of the nodes in the graph.
+we focus on indegrees and outdegrees
+of the nodes of the graph.
 A directed graph contains an Eulerian path
 if all the edges belong to the same strongly
 connected component and
 \begin{itemize}
-\item each node has the same indegree and outdegree \emph{or}
-\item in one node, indegree is one larger than outdegree,
-in another node, outdegree is one larger than indegree,
-and all other nodes have the same indegree and outdegree.
+\item in each node, the indegree equals the outdegree, \emph{or}
+\item in one node, the indegree is one larger than the outdegree,
+in another node, the outdegree is one larger than the indegree,
+and all other nodes, the indegree equals the outdegree.
 \end{itemize}
 
 In the first case, each Eulerian path in the graph
@@ -223,11 +223,13 @@ from node 2 to node 5:
 \index{Hierholzer's algorithm}
 
 \key{Hierholzer's algorithm} is an efficient
-method for constructing an Eulerian circuit
-for an undirected graph.
-The algorithm assumes that all edges belong to
-the same connected component,
-and the degree of each node is even.
+method for constructing
+an Eulerian circuit.
+The algorithm consists of several rounds,
+each of which adds new edges to the circuit.
+Of course, we assume that the graph contains
+an Eulerian circuit; otherwise Hierholzer's
+algorithm cannot find it.
 
 First, the algorithm constructs a circuit that contains
 some (not necessarily all) of the edges in the graph.
@@ -236,22 +238,26 @@ step by step by adding subcircuits to it.
 The process continues until all edges have been added
 to the circuit.
 
-The algorithm extends the circuit by always choosing
+The algorithm extends the circuit by always finding
 a node $x$ that belongs to the circuit but has
-some edges that are not included in the circuit.
+an outgoing edge that is not included in the circuit.
 The algorithm constructs a new path from node $x$
-that only contains edges that are not in the circuit.
-Since the degree of each node is even,
-the path will return to the node $x$ sooner or later,
+that only contains edges that are not yet in the circuit.
+Sooner or later,
+the path will return to the node $x$,
 which creates a subcircuit.
 
-If the graph contains two odd-degree nodes,
-Hierholzer's algorithm can also be used to
-construct an Eulerian path by adding an
-extra edge between the odd-degree nodes.
-After this, we can first construct an Eulerian circuit
-and then remove the extra edge,
-which yields an Eulerian path in the original graph.
+If the graph only contains an Eulerian path,
+we can still use Hierholzer's algorithm
+to find it by adding an extra edge to the graph
+and removing the edge after the circuit
+has been constructed.
+For example, in an undirected graph,
+we add the extra edge between the two
+odd-degree nodes.
+
+Next we will see how Hierholzer's algorithm
+constructs an Eulerian circuit in an undirected graph.
 
 \subsubsection{Example}
 
@@ -282,7 +288,7 @@ Let us consider the following graph:
 \end{samepage}
 
 \begin{samepage}
-Suppose the algorithm first creates a circuit
+Suppose that the algorithm first creates a circuit
 that begins at node 1.
 A possible circuit is
 $1 \rightarrow 2 \rightarrow 3 \rightarrow 1$:
@@ -486,9 +492,9 @@ is at least $n$,
 the graph contains a Hamiltonian path.
 \end{itemize}
 
-A common feature in these theorems and other results is
-that they guarantee that a Hamiltonian path exists
-if the graph has \emph{a lot} of edges.
+A common property in these theorems and other results is
+that they guarantee the existence of a Hamiltonian
+if the graph has \emph{a large number} of edges.
 This makes sense, because the more edges the graph contains,
 the more possibilities there is to construct a Hamiltonian graph.
 
@@ -522,7 +528,7 @@ It is possible to implement this solution in $O(2^n n^2)$ time.
 A \key{De Bruijn sequence} is a string that contains
 every string of length $n$
 exactly once as a substring, for a fixed
-alphabet that consists of $k$ characters.
+alphabet of $k$ characters.
 The length of such a string is 
 $k^n+n-1$ characters.
 For example, when $n=3$ and $k=2$,
@@ -537,7 +543,7 @@ corresponds to an Eulerian circuit in a graph.
 The idea is to construct the graph so that
 each node contains a combination of $n-1$ characters
 and each edge adds one character to the string.
-The following graph corresponds to the example case:
+The following graph corresponds to the above example:
 
 \begin{center}
 \begin{tikzpicture}
@@ -559,10 +565,10 @@ The following graph corresponds to the example case:
 \end{tikzpicture}
 \end{center}
 
-An Eulerian path in this graph produces a string
+An Eulerian path in this graph corresponds to a string
 that contains all strings of length $n$.
-The string contains the characters in the starting node
-and all character in the edges.
+The string contains the characters of the starting node
+and all characters in the edges.
 The starting node has $n-1$ characters
 and there are $k^n$ characters in the edges,
 so the length of the string is $k^n+n-1$.
@@ -613,13 +619,13 @@ For example, here is an open knight's tour on a $5 \times 5$ board:
 \end{center}
 
 A knight's tour corresponds to a Hamiltonian path in a graph
-whose nodes represent the squares of the board,
+whose nodes represent the squares of the board
 and two nodes are connected with an edge if a knight
 can move between the squares according to the rules of chess.
 
 A natural way to construct a knight's tour is to use backtracking.
 The search can be made more efficient by using
-\key{heuristics} that attempts to guide the knight so that
+\key{heuristics} that attempt to guide the knight so that
 a complete tour will be found quickly.
 
 \subsubsection{Warnsdorff's rule}
