@@ -85,7 +85,7 @@ corresponds to the set
 
 Each outcome $x$ is assigned a probability $p(x)$.
 Furthermore, the probability $P(A)$ of an event
-that corresponds to a set $A$ can be calcuted as a sum
+that corresponds to a set $A$ can be calculated as a sum
 of probabilities of outcomes using the formula
 \[P(A) = \sum_{x \in A} p(x).\]
 For example, when throwing a dice,
@@ -135,7 +135,7 @@ Here $5/6$ is the probability that the outcome
 of a single throw is not six, and
 $(5/6)^{10}$ is the probability that none of
 the ten throws is a six.
-The complement of this is the answer for the problem.
+The complement of this is the answer to the problem.
 
 \subsubsection{Union}
 
@@ -164,7 +164,7 @@ the probability of the event $A \cup B$ is simply
 
 The \key{conditional probability}
 \[P(A | B) = \frac{P(A \cap B)}{P(B)}\]
-is the probability $A$
+is the probability of $A$
 assuming that $B$ happens.
 In this situation, when calculating the
 probability of $A$, we only consider the outcomes
@@ -172,7 +172,7 @@ that also belong to $B$.
 
 Using the above sets,
 \[P(A | B)= 1/3,\]
-Because the outcomes of $B$ are
+because the outcomes of $B$ are
 $\{1,2,3\}$, and one of them is even.
 This is the probability of an even result
 if we know that the result is between $1 \ldots 3$.
@@ -318,7 +318,7 @@ The expected value for $X$ in a uniform distribution is
 \index{binomial distribution}
 ~\\
 In a \key{binomial distribution}, $n$ attempts
-are done
+are made
 and the probability that a single attempt succeeds
 is $p$.
 The random variable $X$ counts the number of
@@ -413,7 +413,7 @@ The next distribution is $[0,1,0,0,0]$,
 because we can only move from floor 1 to floor 2.
 After this, we can either move one floor up
 or one floor down, so the next distribution is
-$[1/2,0,1/2,0,0]$, etc.
+$[1/2,0,1/2,0,0]$, and so on.
 
 An efficient way to simulate the walk in
 a Markov chain is to use dynamic programming.
@@ -510,7 +510,7 @@ the array in increasing order.
 It is easy to calculate any order statistic
 in $O(n \log n)$ time by sorting the array,
 but is it really needed to sort the entire array
-to just find one element?
+just to find one element?
 
 It turns out that we can find order statistics
 using a randomized algorithm without sorting the array.
@@ -675,7 +675,7 @@ both colors is $1/2$.
 In a random coloring, the probability that the endpoints
 of a single edge have different colors is $1/2$.
 Hence, the expected number of edges whose endpoints
-have different colors is $1/2 \cdot m = m/2$.
+have different colors is $m/2$.
 Since it is excepted that a random coloring is valid,
 we will quickly find a valid coloring in practice.
 
