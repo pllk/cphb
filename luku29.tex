@@ -52,9 +52,9 @@ This is a possible way to solve the problem,
 but there is one pitfall:
 how to divide the quadrilateral into triangles?
 It turns out that sometimes we cannot just pick
-two arbitrary vertices.
+two arbitrary opposite vertices.
 For example, in the following situation,
-the division line lies outside the quadrilateral:
+the division line is outside the quadrilateral:
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -135,7 +135,7 @@ as complex numbers, and the class also contains tools
 that are useful in geometry.
 
 In the following code, \texttt{C} is the type of
-a coordinate, and \texttt{P} is the type of a point or vector.
+a coordinate and \texttt{P} is the type of a point or vector.
 In addition, the code defines the macros \texttt{X} and \texttt{Y}
 that can be used to refer to x and y coordinates.
 
@@ -284,7 +284,7 @@ of the result is $x_1 y_2 - x_2 y_1$.
 
 \subsubsection{Point location}
 
-The cross product can be used for testing
+Cross products can be used for testing
 whether a point is located on the left or right
 side of a line.
 Assume that the line goes through points
