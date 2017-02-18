@@ -5,7 +5,7 @@ for string processing.
 Many string problems can be easily solved
 in $O(n^2)$ time, but the challenge is to
 find algorithms that work in $O(n)$ or $O(n \log n)$
-time and can process long strings.
+time.
 
 \index{pattern matching}
 
@@ -21,13 +21,13 @@ The pattern matching problem is easy to solve
 in $O(nm)$ time by a brute force algorithm that
 goes through all positions where the pattern may
 occur in the string.
-However, in this chapter, we will see, that there
+However, in this chapter, we will see that there
 are more efficient algorithms that require only
 $O(n+m)$ time.
 
 \index{string}
 
-\section{Terminology}
+\section{String terminology}
 
 \index{alphabet}
 
@@ -156,7 +156,7 @@ For example, consider the following trie:
 This trie corresponds to the set
 $\{\texttt{CANAL},\texttt{CANDY},\texttt{THE},\texttt{THERE}\}$.
 The character * in a node means that
-one of the string in the set ends at the node.
+one of the strings in the set ends at the node.
 This character is needed, because a string
 may be a prefix of another string.
 For example, in this trie, \texttt{THE}
@@ -169,8 +169,9 @@ We can also add a new string to the trie
 in $O(n)$ time using a similar idea.
 If needed, new nodes will be added to the trie.
 
-Using a trie, we can also find the longest prefix
-of a string that belongs to the set.
+Using a trie, we can also find
+for a given string the longest prefix
+that belongs to the set.
 In addition, by storing additional information
 in each node,
 it is possible to calculate the number of
@@ -281,7 +282,7 @@ can be calculated in $O(1)$ time using the formula
 \subsubsection*{Using hash values}
 
 We can efficiently compare strings using hash values.
-Instead of comparing the real contents of the strings,
+Instead of comparing the individual characters of the strings,
 the idea is to compare their hash values.
 If the hash values are equal,
 the strings are \emph{probably} equal,
@@ -294,7 +295,7 @@ As an example, consider the pattern matching problem:
 given a string $s$ and a pattern $p$,
 find the positions where $p$ occurs in $s$.
 A brute force algorithm goes through all positions
-where $p$ may occur, and compares the strings
+where $p$ may occur and compares the strings
 character by character.
 The time complexity of such an algorithm is $O(n^2)$.
 
@@ -428,8 +429,8 @@ constants of the form $2^x$ are used.
 \index{Z-array}
 
 The \key{Z-array} of a string
-contains for each position $k$ in the string
-the lengt of the longest substring
+gives for each position $k$ in the string
+the length of the longest substring
 that begins at position $k$ and is a prefix of the string.
 Such an array can be efficiently constructed
 using the \key{Z-algorithm}.
@@ -532,11 +533,11 @@ we can use this information to calculate
 values for elements in the range $[x,y]$.
 
 The time complexity of the Z-algorithm is $O(n)$,
-because the algorithm always compares strings
+because the algorithm only compares strings
 character by character starting at position $y+1$.
 If the characters match, the value of $y$ increases,
 and it is not needed to compare the character at
-position $y$ again,
+position $y$ again
 but the information in the Z-array can be used.
 
 For example, let us construct the following Z-array:
@@ -672,7 +673,7 @@ the current $[x,y]$ range will be $[7,11]$:
 \end{center}
 
 Now, it is possible to calculate the
-subsequent values for the Z-array
+subsequent values of the Z-array
 more efficiently,
 because we know that
 the ranges $[1,5]$ and $[7,11]$
@@ -971,9 +972,9 @@ and thus the new range $[x,y]$ is $[10,16]$:
 \end{tikzpicture}
 \end{center}
 
-After this, all subsequent values for the Z-array
+After this, all subsequent values of the Z-array
 can be calculated using the values already
-calculated to the array. All the remaining values can be
+stored in the array. All the remaining values can be
 directly retrieved from the beginning of the Z-array:
 
 \begin{center}
@@ -1059,7 +1060,7 @@ $p$\texttt{\#}$s$,
 where $p$ and $s$ are separated by a special
 character \texttt{\#} that does not occur
 in the strings.
-The Z-array of $p$\texttt{\#}$s$ indicates the positions
+The Z-array of $p$\texttt{\#}$s$ tells us the positions
 where $p$ occurs in $s$,
 because such positions contain the value $p$.
 
