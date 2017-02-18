@@ -7,17 +7,17 @@ that has a square root in its time complexity.
 A square root can be seen as a ''poor man's logarithm'':
 the complexity $O(\sqrt n)$ is better than $O(n)$
 but worse than $O(\log n)$.
-Still, many square root algorithms are fast in practice
+In any case, many square root algorithms are fast in practice
 and have small constant factors.
 
 As an example, let us consider the problem of
 creating a data structure that supports
-two operations in an array:
+two operations on an array:
 modifying an element at a given position
 and calculating the sum of elements in the given range.
 
 We have previously solved the problem using
-a binary indexed tree and a segment tree,
+a binary indexed tree and segment tree,
 that support both operations in $O(\log n)$ time.
 However, now we will solve the problem
 in another way using a square root structure
@@ -66,8 +66,8 @@ divided into blocks of 4 elements as follows:
 
 Using this structure,
 it is easy to modify the array,
-because it is only needed to calculate
-the sum of a single block again
+because it is only needed to update
+the sum of a single block
 after each modification,
 which can be done in $O(1)$ time.
 For example, the following picture shows
@@ -166,11 +166,10 @@ the array is divided into $\sqrt n$ blocks,
 each of which contains $\sqrt n$ elements.
 
 In practice, it is not needed to use the
-exact parameter $\sqrt n$, but it may be better to
+exact value of $\sqrt n$ as a parameter, but it may be better to
 use parameters $k$ and $n/k$ where $k$ is
-larger or smaller than $\sqrt n$.
+different from $\sqrt n$.
 The optimal parameter depends on the problem and input.
-
 For example, if an algorithm often goes
 through the blocks but rarely inspects
 single elements inside the blocks,
@@ -183,8 +182,8 @@ elements.
 \index{batch processing}
 
 Sometimes the operations of an algorithm
-can be divided into batches so that
-each batch can be processed separately.
+can be divided into batches,
+each of which can be processed separately.
 Some precalculation is done
 between the batches
 in order to process the future operations more efficiently.
@@ -193,7 +192,7 @@ this results in a square root algorithm.
 
 As an example, let us consider a problem
 where a grid of size $k \times k$
-initially consists of white squares,
+initially consists of white squares
 and our task is to perform $n$ operations,
 each of which is one of the following:
 \begin{itemize}
@@ -211,7 +210,7 @@ the operations into
 $O(\sqrt n)$ batches, each of which consists
 of $O(\sqrt n)$ operations.
 At the beginning of each batch,
-we calculate for each square in the grid
+we calculate for each square of the grid
 the smallest distance to a black square.
 This can be done in $O(k^2)$ time using breadth-first search.
 
@@ -219,9 +218,9 @@ When processing a batch, we maintain a list of squares
 that have been painted black in the current batch.
 The list contains $O(\sqrt n)$ elements,
 because there are $O(\sqrt n)$ operations in each batch.
-Thus, the distance from a square to the nearest black
+Now, the distance from a square to the nearest black
 square is either the precalculated distance or the distance
-to a square that has been painted black in the current batch.
+to a square that appears in the list.
 
 The algorithm works in
 $O((k^2+n) \sqrt n)$ time.
@@ -240,7 +239,7 @@ squares at each operation,
 the time complexity would be $O(n^2)$.
 Thus, the time complexity of the square root algorithm
 is a combination of these time complexities,
-but in addition, a factor $n$ is replaced by $\sqrt n$.
+but in addition, a factor of $n$ is replaced by $\sqrt n$.
 
 \section{Subalgorithms}
 
@@ -281,8 +280,8 @@ the red nodes 3 and 4:
 
 The problem can be solved by going through
 all colors and calculating
-the maximum distance of two nodes for each color
-separately.
+the maximum distance between two nodes
+separately for each color.
 Assume that the current color is $x$ and
 there are $c$ nodes whose color is $x$.
 There are two subalgorithms
@@ -309,7 +308,7 @@ and this will be done at most $O(\sqrt n)$ times,
 so the total time needed is $O(n \sqrt n)$.
 
 The time complexity of the algorithm is $O(n \sqrt n)$,
-because both cases take $O(n \sqrt n)$ time.
+because both cases take a total of $O(n \sqrt n)$ time.
 
 \section{Mo's algorithm}
 
@@ -326,10 +325,11 @@ At each moment in the algorithm, there is an active
 range and the algorithm maintains the answer
 to a query related to that range.
 The algorithm processes the queries one by one,
-and always updates the endpoints of the
+and always moves the endpoints of the
 active range by inserting and removing elements.
 The time complexity of the algorithm is
-$O(n \sqrt n f(n))$ when there are $n$ queries
+$O(n \sqrt n f(n))$ when the array contains
+$n$ elements, there are $n$ queries
 and each insertion and removal of an element
 takes $O(f(n))$ time.
 
@@ -354,14 +354,14 @@ As an example, consider a problem
 where we are given a set of queries,
 each of them corresponding to a range in an array,
 and our task is to calculate for each query
-the number of distinct elements in the range.
+the number of \emph{distinct} elements in the range.
 
 In Mo's algorithm, the queries are always sorted
 in the same way, but it depends on the problem
 how the answer to the query is maintained.
 In this problem, we can maintain an array 
 \texttt{c} where $\texttt{c}[x]$
-indicates how many times an element $x$
+indicates the number of times an element $x$
 occurs in the active range.
 
 When we move from one query to another query,
@@ -406,12 +406,12 @@ After each step, the array \texttt{c}
 needs to be updated.
 After adding an element $x$,
 we increase the value of 
-$\texttt{c}[x]$ by one
+$\texttt{c}[x]$ by one,
 and if $\texttt{c}[x]=1$ after this,
 we also increase the answer to the query by one.
 Similarly, after removing an element $x$,
 we decrease the value of 
-$\texttt{c}[x]$ by one
+$\texttt{c}[x]$ by one,
 and if $\texttt{c}[x]=0$ after this,
 we also decrease the answer to the query by one.
 
