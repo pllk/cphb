@@ -89,7 +89,7 @@ It is easy see that this flow is maximum,
 because the total capacity of the edges
 leading to the sink is $7$.
 
-\subsubsection{Minimum cuts}
+\subsubsection{Minimum cut}
 
 \index{cut}
 \index{minimum cut}
@@ -157,7 +157,7 @@ The algorithm also helps us to understand
 
 \index{Ford–Fulkerson algorithm}
 
-The \key{Ford–Fulkerson algorithm} finds
+The \key{Ford–Fulkerson algorithm} \cite{for56} finds
 the maximum flow in a graph.
 The algorithm begins with an empty flow,
 and at each step finds a path in the graph
@@ -430,7 +430,7 @@ by using one of the following techniques:
 
 \index{Edmonds–Karp algorithm}
 
-The \key{Edmonds–Karp algorithm}
+The \key{Edmonds–Karp algorithm} \cite{edm72}
 is a variant of the
 Ford–Fulkerson algorithm that
 chooses each path so that the number of edges
@@ -459,7 +459,7 @@ because depth-first search can be used for finding paths.
 Both algorithms are efficient enough for problems
 that typically appear in programming contests.
 
-\subsubsection{Minimum cut}
+\subsubsection{Minimum cuts}
 
 \index{minimum cut}
 
@@ -779,7 +779,7 @@ such that each pair is connected with an edge and
 each node belongs to at most one pair.
 
 There are polynomial algorithms for finding
-maximum matchings in general graphs,
+maximum matchings in general graphs \cite{edm65},
 but such algorithms are complex and do
 not appear in programming contests.
 However, in bipartite graphs,

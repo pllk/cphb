@@ -244,11 +244,15 @@ we can calculate the product of
 two $n \times n$ matrices
 in $O(n^3)$ time.
 There are also more efficient algorithms
-for matrix multiplication:
-at the moment, the best known time complexity
-is $O(n^{2.37})$.
-However, such special algorithms are not needed
+for matrix multiplication\footnote{The first such
+algorithm, with time complexity $O(n^{2.80735})$,
+was published in 1969 \cite{str69}, and
+the best current algorithm
+works in $O(n^{2.37286})$ time \cite{gal14}.},
+but they are mostly of theoretical interest
+and such special algorithms are not needed
 in competitive programming.
+
 
 \subsubsection{Matrix power}
 

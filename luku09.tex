@@ -242,9 +242,12 @@ to the position of $X$.
 
 \subsubsection{Minimum queries}
 
-It is also possible to process minimum queries
-in $O(1)$ time, though it is more difficult than
-to process sum queries.
+Next we will see how we can
+process range minimum queries in $O(1)$ time
+after an $O(n \log n)$ time preprocessing\footnote{There are also
+sophisticated techniques \cite{fis11} where the preprocessing time
+is only $O(n)$, but such algorithms are not needed in
+competitive programming.}.
 Note that minimum and maximum queries can always
 be processed using similar techniques,
 so it suffices to focus on minimum queries.
@@ -437,7 +440,7 @@ we can conclude that $\textrm{rmq}(2,7)=1$.
 \index{binary indexed tree}
 \index{Fenwick tree}
 
-A \key{binary indexed tree} or \key{Fenwick tree}
+A \key{binary indexed tree} or \key{Fenwick tree} \cite{fen94}
 can be seen as a dynamic variant of a sum array.
 This data structure supports two $O(\log n)$ time operations:
 calculating the sum of elements in a range

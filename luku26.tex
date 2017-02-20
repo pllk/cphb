@@ -416,12 +416,7 @@ which is convenient, because operations with 32 and 64
 bit integers are calculated modulo $2^{32}$ and $2^{64}$.
 However, this is not a good choice, because it is possible
 to construct inputs that always generate collisions when
-constants of the form $2^x$ are used.
-% \footnote{
-% J. Pachocki and Jakub Radoszweski:
-% ''Where to use and how not to use polynomial string hashing''.
-% \textit{Olympiads in Informatics}, 2013.
-% }.
+constants of the form $2^x$ are used \cite{pac13}.
 
 \section{Z-algorithm}
 
@@ -433,7 +428,7 @@ gives for each position $k$ in the string
 the length of the longest substring
 that begins at position $k$ and is a prefix of the string.
 Such an array can be efficiently constructed
-using the \key{Z-algorithm}.
+using the \key{Z-algorithm} \cite{gus97}.
 
 For example, the Z-array for the string
 \texttt{ACBACDACBACBACDA} is as follows:

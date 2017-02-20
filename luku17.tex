@@ -135,7 +135,10 @@ presented in Chapter 16.
 
 \index{Kosaraju's algorithm}
 
-\key{Kosaraju's algorithm} is an efficient
+\key{Kosaraju's algorithm}\footnote{According to \cite{aho83},
+S. R. Kosaraju invented this algorithm in 1978
+but did not publish it. In 1981, the same algorithm was rediscovered
+and published by M. Sharir \cite{sha81}.} is an efficient
 method for finding the strongly connected components
 of a directed graph.
 The algorithm performs two depth-first searches:
@@ -365,7 +368,7 @@ performs two depth-first searches.
 \index{2SAT problem}
 
 Strongly connectivity is also linked with the
-\key{2SAT problem}.
+\key{2SAT problem} \cite{asp79}.
 In this problem, we are given a logical formula
 \[
 (a_1 \lor b_1) \land (a_2 \lor b_2) \land \cdots \land (a_m \lor b_m),
@@ -556,7 +559,7 @@ and both $x_i$ and $x_j$ become false.
 A more difficult problem is the \key{3SAT problem}
 where each part of the formula is of the form
 $(a_i \lor b_i \lor c_i)$.
-This problem is NP-hard, so no efficient algorithm
+This problem is NP-hard \cite{gar79}, so no efficient algorithm
 for solving the problem is known.
 
 
