@@ -119,7 +119,7 @@ we should form the sum $x-3$ or $x-4$.
 
 Thus, the recursive formula is
 \[f(x) = \min(f(x-1),f(x-3),f(x-4))+1\]
-where the function $\min$ returns the smallest
+where the function $\min$ gives the smallest
 of its parameters.
 In the general case, for the coin set
 $\{c_1,c_2,\ldots,c_k\}$,
@@ -250,7 +250,7 @@ that are implemented using loops.
 Still, the underlying idea is the same as
 in the recursive function.
 
-\subsubsection{Constructing the solution}
+\subsubsection{Constructing a solution}
 
 Sometimes we are asked both to find the value
 of an optimal solution and also to give
@@ -319,7 +319,7 @@ we maximize or minimize something in the recursion,
 but now we will calculate sums of numbers of solutions.
 
 To solve the problem, we can define a function $f(x)$
-that returns the number of ways to construct
+that gives the number of ways to construct
 the sum $x$ using the coins.
 For example, $f(5)=6$ when the coins are $\{1,3,4\}$.
 The value of $f(x)$ can be calculated recursively
@@ -505,9 +505,9 @@ go through all previous values
 $f(1),f(2),\ldots,f(k-1)$ and select the best solution.
 The time complexity of such an algorithm is $O(n^2)$.
 Surprisingly, it is also possible to solve the
-problem in $O(n \log n)$ time, but this is more difficult.
+problem in $O(n \log n)$ time. Can you see how?
 
-\section{Path in a grid}
+\section{Paths in a grid}
 
 Our next problem is to find a path
 in an $n \times n$ grid

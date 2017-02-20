@@ -432,7 +432,7 @@ the union of the ranges $[2,5]$ and $[4,7]$:
 Since $\textrm{rmq}(2,5)=3$ and $\textrm{rmq}(4,7)=1$,
 we can conclude that $\textrm{rmq}(2,7)=1$.
 
-\section{Binary indexed tree}
+\section{Binary indexed trees}
 
 \index{binary indexed tree}
 \index{Fenwick tree}
@@ -567,7 +567,7 @@ corresponds to a range in the array:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Sum query}
+\subsubsection{Sum queries}
 
 The values in the binary indexed tree
 can be used to efficiently calculate
@@ -629,7 +629,7 @@ we can use the same trick that we used with sum arrays:
 \[ \textrm{sum}(a,b) = \textrm{sum}(1,b) - \textrm{sum}(1,a-1).\]
 Also in this case, only $O(\log n)$ values are needed.
 
-\subsubsection{Array update}
+\subsubsection{Array updates}
 
 When a value in the array changes,
 several values in the binary indexed tree should be updated.
@@ -731,7 +731,7 @@ values in the binary indexed tree, and each move
 to the next position
 takes $O(1)$ time using bit operations.
 
-\section{Segment tree}
+\section{Segment trees}
 
 \index{segment tree}
 
@@ -841,7 +841,7 @@ node is the sum of the corresponding array elements,
 and it can be calculated as the sum of
 the values of its left and right child node.
 
-\subsubsection{Range query}
+\subsubsection{Range queries}
 
 The sum of elements in a given range
 can be calculated as a sum of values in the segment tree.
@@ -922,7 +922,7 @@ of the tree are needed.
 Hence, the total number of nodes
 is only $O(\log n)$.
 
-\subsubsection{Array update}
+\subsubsection{Array updates}
 
 When an element in the array changes,
 we should update all nodes in the tree
@@ -1200,7 +1200,7 @@ element in the whole array.
 The operations can be implemented like previously,
 but instead of sums, minima are calculated.
 
-\subsubsection{Binary search in tree}
+\subsubsection{Binary search in a tree}
 
 The structure of the segment tree allows us
 to use binary search for finding elements in the array.
