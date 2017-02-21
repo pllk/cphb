@@ -196,7 +196,9 @@ from node $s$ using character $c$.
 
 \key{String hashing} is a technique that
 allows us to efficiently check whether two
-substrings in a string are equal.
+substrings in a string are equal\footnote{The technique
+was popularized by the Karp–Rabin pattern matching
+algorithm \cite{kar87}.}.
 The idea is to compare the hash values of the
 substrings instead of their individual characters.
 
@@ -428,7 +430,10 @@ gives for each position $k$ in the string
 the length of the longest substring
 that begins at position $k$ and is a prefix of the string.
 Such an array can be efficiently constructed
-using the \key{Z-algorithm} \cite{gus97}.
+using the \key{Z-algorithm}\footnote{The Z-algorithm
+was presented in \cite{gus97} as the simplest known
+method for linear-time pattern matching, and the original idea
+was attributed to \cite{mai84}.}.
 
 For example, the Z-array for the string
 \texttt{ACBACDACBACBACDA} is as follows:

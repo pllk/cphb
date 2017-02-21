@@ -85,9 +85,9 @@ as a sum where each term is a power of two.
 
 \section{Subtrees and paths}
 
-\index{node array}
+\index{tree traversal array}
 
-A \key{node array}\footnote{A similar idea is sometimes called the \key{Euler tour technique} \cite{tar84}.} contains the nodes of a rooted tree
+A \key{tree traversal array} contains the nodes of a rooted tree
 in the order in which a depth-first search
 from the root node visits them.
 For example, in the tree
@@ -155,7 +155,7 @@ a depth-first search proceeds as follows:
 
 \end{tikzpicture}
 \end{center}
-Hence, the corresponding node array is as follows:
+Hence, the corresponding tree traversal array is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (9,1);
@@ -186,8 +186,8 @@ Hence, the corresponding node array is as follows:
 \subsubsection{Subtree queries}
 
 Each subtree of a tree corresponds to a subarray
-in the node array,
-where the first element is the root node.
+in the tree traversal array such that
+the first element in the subarray is the root node.
 For example, the following subarray contains the
 nodes in the subtree of node $4$:
 \begin{center}
@@ -265,7 +265,7 @@ is $3+4+3+1=11$.
 \end{tikzpicture}
 \end{center}
 
-The idea is to construct a node array that contains
+The idea is to construct a tree traversal array that contains
 three values for each node: (1) the identifier of the node,
 (2) the size of the subtree, and (3) the value of the node.
 For example, the array for the above tree is as follows:
@@ -381,7 +381,7 @@ and calculate the sum of values in $O(\log n)$ time.
 
 \subsubsection{Path queries}
 
-Using a node array, we can also efficiently
+Using a tree traversal array, we can also efficiently
 calculate sums of values on
 paths from the root node to any other
 node in the tree.
@@ -484,7 +484,7 @@ For example, the following array corresponds to the above tree:
 When the value of a node increases by $x$,
 the sums of all nodes in its subtree increase by $x$.
 For example, if the value of node 4 increases by 1,
-the node array changes as follows:
+the array changes as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -650,7 +650,7 @@ performed in $O(\log n)$ time.
 \subsubsection{Method 2}
 
 Another way to solve the problem is based on
-a node array.
+a tree traversal array \cite{ben00}.
 Once again, the idea is to traverse the nodes
 using a depth-first search:
 
@@ -689,12 +689,13 @@ using a depth-first search:
 \end{tikzpicture}
 \end{center}
 
-However, in this problem,
-we add each node to the node array \emph{always}
+
+However, we use a bit different technique where
+we add each node to the tree traversal array \emph{always}
 when the depth-first search visits the node,
 and not only at the first visit.
 Hence, a node that has $k$ children appears $k+1$ times
-in the node array, and there are a total of $2n-1$
+in the array, and there are a total of $2n-1$
 nodes in the array.
 
 We store two values in the array:
