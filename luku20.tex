@@ -431,8 +431,6 @@ by using one of the following techniques:
 \index{Edmonds–Karp algorithm}
 
 The \key{Edmonds–Karp algorithm} \cite{edm72}
-is a variant of the
-Ford–Fulkerson algorithm that
 chooses each path so that the number of edges
 on the path is as small as possible.
 This can be done by using breadth-first search
@@ -443,7 +441,7 @@ of the algorithm is $O(m^2 n)$.
 
 \index{scaling algorithm}
 
-The \key{scaling algorithm} uses depth-first
+The \key{scaling algorithm} \cite{ahu91} uses depth-first
 search to find paths where each edge weight is
 at least a threshold value.
 Initially, the threshold value is
