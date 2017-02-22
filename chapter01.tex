@@ -10,7 +10,7 @@ creatively are needed.
 An algorithm for solving a problem
 has to be both correct and efficient,
 and the core of the problem is often
-how to invent an efficient algorithm.
+about inventing an efficient algorithm.
 
 Theoretical knowledge of algorithms
 is very important to competitive programmers.
@@ -27,12 +27,12 @@ In competitive programming, the solutions
 are graded by testing an implemented algorithm
 using a set of test cases.
 Thus, it is not enough that the idea of the
-algorithm is correct, but the implementation has
-also to be correct.
+algorithm is correct, but the implementation also
+has to be correct.
 
-Good coding style in contests is
+A good coding style in contests is
 straightforward and concise.
-The programs should be written quickly,
+Programs should be written quickly,
 because there is not much time available.
 Unlike in traditional software engineering,
 the programs are short (usually at most some
@@ -44,7 +44,7 @@ maintain them after the contest.
 \index{programming language}
 
 At the moment, the most popular programming
-languages in contests are C++, Python and Java.
+languages used in contests are C++, Python and Java.
 For example, in Google Code Jam 2016,
 among the best 3,000 participants,
 73 \% used C++,
@@ -63,7 +63,7 @@ large collection
 of data structures and algorithms.
 
 On the other hand, it is good to
-master several languages and know
+master several languages and understand
 their strengths.
 For example, if large integers are needed
 in the problem,
@@ -79,9 +79,9 @@ All example programs in this book are written in C++,
 and the standard library's
 data structures and algorithms are often used.
 The programs follow the C++11 standard,
-that can be used in most contests nowadays.
+which can be used in most contests nowadays.
 If you cannot program in C++ yet,
-now it is a good time to start learning.
+now is a good time to start learning.
 
 \subsubsection{C++ template}
 
@@ -104,14 +104,14 @@ that allows us to include the entire standard library.
 Thus, it is not needed to separately include
 libraries such as \texttt{iostream},
 \texttt{vector} and \texttt{algorithm},
-but they are available automatically.
+but rather they are available automatically.
 
-The \texttt{using} line determines
+The \texttt{using} line declares
 that the classes and functions
 of the standard library can be used directly
 in the code.
-Without the \texttt{using} line we should write,
-for example, \texttt{std::cout},
+Without the \texttt{using} line we would have
+to write, for example, \texttt{std::cout},
 but now it suffices to write \texttt{cout}.
 
 The code can be compiled using the following command:
@@ -202,7 +202,7 @@ printf("%d %d\n", a, b);
 \end{lstlisting}
 
 Sometimes the program should read a whole line
-from the input, possibly with spaces.
+from the input, possibly containing spaces.
 This can be accomplished by using the
 \texttt{getline} function:
 
@@ -242,12 +242,12 @@ After this, the program reads the input from the file
 \subsubsection{Integers}
 
 The most used integer type in competitive programming
-is \texttt{int}, that is a 32-bit type with
-value range $-2^{31} \ldots 2^{31}-1$
+is \texttt{int}, which is a 32-bit type with
+a value range of $-2^{31} \ldots 2^{31}-1$
 or about $-2 \cdot 10^9 \ldots 2 \cdot 10^9$.
 If the type \texttt{int} is not enough,
-the 64-bit type \texttt{long long} can be used,
-with value range $-2^{63} \ldots 2^{63}-1$
+the 64-bit type \texttt{long long} can be used.
+It has a value range of $-2^{63} \ldots 2^{63}-1$
 or about $-9 \cdot 10^{18} \ldots 9 \cdot 10^{18}$.
 
 The following code defines a
@@ -258,7 +258,7 @@ long long x = 123456789123456789LL;
 The suffix \texttt{LL} means that the
 type of the number is \texttt{long long}.
 
-A common error when using the type \texttt{long long}
+A common mistake when using the type \texttt{long long}
 is that the type \texttt{int} is still used somewhere
 in the code.
 For example, the following code contains
@@ -284,8 +284,8 @@ Usually contest problems are set so that the
 type \texttt{long long} is enough.
 Still, it is good to know that
 the \texttt{g++} compiler also provides
-an 128-bit type \texttt{\_\_int128\_t}
-with value range
+a 128-bit type \texttt{\_\_int128\_t}
+with a value range of
 $-2^{127} \ldots 2^{127}-1$ or $-10^{38} \ldots 10^{38}$.
 However, this type is not available in all contest systems.
 
@@ -305,7 +305,7 @@ output it ''modulo $m$'', i.e.,
 the remainder when the answer is divided by $m$
 (for example, ''modulo $10^9+7$'').
 The idea is that even if the actual answer
-may be very large,
+is very large,
 it suffices to use the types
 \texttt{int} and \texttt{long long}.
 
@@ -334,7 +334,7 @@ for (int i = 2; i <= n i++) {
 cout << x << "\n";
 \end{lstlisting}
 
-Usually the remainder should be always
+Usually the remainder should always
 be between $0\ldots m-1$.
 However, in C++ and other languages,
 the remainder of a negative number
@@ -379,7 +379,7 @@ printf("%.9f\n", x);
 A difficulty when using floating point numbers
 is that some numbers cannot be represented
 accurately as floating point numbers,
-but there will be rounding errors.
+and there will be rounding errors.
 For example, the result of the following code
 is surprising:
 
@@ -394,12 +394,12 @@ while the correct value would be 1.
 
 It is risky to compare floating point numbers
 with the \texttt{==} operator,
-because it is possible that the values should
-be equal but they are not because of rounding.
+because it is possible that the values should be
+equal but they are not because of precision errors.
 A better way to compare floating point numbers
 is to assume that two numbers are equal
-if the difference between them is $\varepsilon$,
-where $\varepsilon$ is a small number.
+if the difference between them is less than
+$\varepsilon$, where $\varepsilon$ is a small number.
 
 In practice, the numbers can be compared
 as follows ($\varepsilon=10^{-9}$):
@@ -411,7 +411,7 @@ if (abs(a-b) < 1e-9) {
 \end{lstlisting}
 
 Note that while floating point numbers are inaccurate,
-integers up to a certain limit can be still
+integers up to a certain limit can still be
 represented accurately.
 For example, using \texttt{double},
 it is possible to accurately represent all
@@ -461,12 +461,12 @@ typedef pair<int,int> pi;
 
 \subsubsection{Macros}
 \index{macro}
-Another way to shorten the code is to define
+Another way to shorten code is to define
 \key{macros}.
 A macro means that certain strings in
 the code will be changed before the compilation.
 In C++, macros are defined using the
-command \texttt{\#define}.
+\texttt{\#define} keyword.
 
 For example, we can define the following macros:
 \begin{lstlisting}
@@ -634,7 +634,7 @@ then $A \cup B = \{2,3,7,8\}$.
 \item The \key{complement} $\bar A$ consists of elements
 that are not in $A$.
 The interpretation of a complement depends on
-the \key{universal set} that contains all possible elements.
+the \key{universal set}, which contains all possible elements.
 For example, if $A=\{1,2,5,7\}$ and the universal set is
 $\{1,2,\ldots,10\}$, then $\bar A = \{3,4,6,8,9,10\}$.
 \item The \key{difference} $A \setminus B = A \cap \bar B$
@@ -656,7 +656,7 @@ $\emptyset$,
 $\{2\}$, $\{4\}$, $\{7\}$, $\{2,4\}$, $\{2,7\}$, $\{4,7\}$ and $\{2,4,7\}$.
 \end{center}
 
-Often used sets are
+Some often used sets are
 $\mathbb{N}$ (natural numbers),
 $\mathbb{Z}$ (integers),
 $\mathbb{Q}$ (rational numbers) and
@@ -693,7 +693,7 @@ $\land$ (\key{conjunction}),
 $\lor$ (\key{disjunction}),
 $\Rightarrow$ (\key{implication}) and
 $\Leftrightarrow$ (\key{equivalence}).
-The following table shows the meaning of these operators:
+The following table shows the meanings of these operators:
 
 \begin{center}
 \begin{tabular}{rr|rrrrrrr}
@@ -847,7 +847,7 @@ $\lfloor \log_2(123)+1 \rfloor = 7$.
 \subsubsection{IOI}
 
 The International Olympiad in Informatics (IOI) \cite{ioi}
-is an annual programming contests for
+is an annual programming contest for
 secondary school students.
 Each country is allowed to send a team of
 four students to the contest.
@@ -864,9 +864,9 @@ they compete as individuals.
 
 The IOI syllabus \cite{ioiy} regulates the topics
 that may appear in IOI tasks.
-This book covers almost all topics in the IOI syllabus.
+This book covers almost all the topics in the IOI syllabus.
 
-The participants for the IOI are selected through
+Participants for the IOI are selected through
 national contests.
 Before the IOI, many regional contests are organized,
 such as the Baltic Olympiad in Informatics (BOI),
@@ -896,11 +896,11 @@ in the contest, there are only 128 final slots available,
 so even advancing to the finals
 is a great achievement in some regions.
 
-In each ICPC contest, the teams have five hours time to solve
-about ten algorithm problems.
+In each ICPC contest, the teams have five hours of time to
+solve about ten algorithm problems.
 A solution to a problem is accepted only if it solves
 all test cases efficiently.
-During the contest, the teams see the results of the other teams,
+During the contest, competitors may view the results of other teams,
 but for the last hour the scoreboard is frozen and it
 is not possible to see the results of the last submissions.
 
@@ -912,8 +912,8 @@ at the ICPC, especially more mathematical skills.
 \subsubsection{Online contests}
 
 There are also many online contests that are open for everybody.
-At the moment, the most active contest site is Codeforces
-that organizes contests about weekly.
+At the moment, the most active contest site is Codeforces,
+which organizes contests about weekly.
 In Codeforces, participants are divided into two divisions:
 beginners compete in Div2 and more experienced programmers in Div1.
 Other contest sites include AtCoder, CS Academy, HackerRank and Topcoder.
