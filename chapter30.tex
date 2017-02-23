@@ -396,21 +396,20 @@ an easy way to
 construct the convex hull for a set of points
 in $O(n \log n)$ time.
 The algorithm constructs the convex hull
-in two steps:
+in two parts:
 first the upper hull and then the lower hull.
-Both steps are similar, so we can focus on
+Both parts are similar, so we can focus on
 constructing the upper hull.
 
-We sort the points primarily according to
+First, we sort the points primarily according to
 x coordinates and secondarily according to y coordinates.
-After this, we go through the points and always
-add the new point to the hull.
-After adding a point we check using cross products
-whether the tree last point in the hull turn left.
-If this holds, we remove the middle point from the hull.
-After this we keep checking the three last points
-and removing points, until the three last points
-do not turn left.
+After this, we go through the points and
+add each point to the hull.
+Always after adding a point to the hull,
+we make sure that the last line segment
+in the hull does not turn left.
+As long as this holds, we repeatedly remove the
+second last point from the hull.
 
 The following pictures show how
 Andrew's algorithm works:
