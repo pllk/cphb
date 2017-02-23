@@ -252,16 +252,16 @@ there are two possible solutions to the problem:
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
     \draw (0, 0) grid (4, 4);
-    \node at (1.5,3.5) {$K$};
-    \node at (3.5,2.5) {$K$};
-    \node at (0.5,1.5) {$K$};
-    \node at (2.5,0.5) {$K$};
+    \node at (1.5,3.5) {\symqueen};
+    \node at (3.5,2.5) {\symqueen};
+    \node at (0.5,1.5) {\symqueen};
+    \node at (2.5,0.5) {\symqueen};
 
     \draw (6, 0) grid (10, 4);
-    \node at (6+2.5,3.5) {$K$};
-    \node at (6+0.5,2.5) {$K$};
-    \node at (6+3.5,1.5) {$K$};
-    \node at (6+1.5,0.5) {$K$};
+    \node at (6+2.5,3.5) {\symqueen};
+    \node at (6+0.5,2.5) {\symqueen};
+    \node at (6+3.5,1.5) {\symqueen};
+    \node at (6+1.5,0.5) {\symqueen};
 
   \end{scope}
 \end{tikzpicture}
@@ -289,10 +289,10 @@ the backtracking algorithm are as follows:
     \draw (3, -6) grid (7, -2);
     \draw (9, -6) grid (13, -2);
 
-    \node at (-9+0.5,-3+0.5) {$Q$};
-    \node at (-3+1+0.5,-3+0.5) {$Q$};
-    \node at (3+2+0.5,-3+0.5) {$Q$};
-    \node at (9+3+0.5,-3+0.5) {$Q$};
+    \node at (-9+0.5,-3+0.5) {\symqueen};
+    \node at (-3+1+0.5,-3+0.5) {\symqueen};
+    \node at (3+2+0.5,-3+0.5) {\symqueen};
+    \node at (9+3+0.5,-3+0.5) {\symqueen};
 
     \draw (2,0) -- (-7,-2);
     \draw (2,0) -- (-1,-2);
@@ -304,14 +304,14 @@ the backtracking algorithm are as follows:
     \draw (-1, -12) grid (3, -8);
     \draw (4, -12) grid (8, -8);
     \draw[white] (11, -12) grid (15, -8);
-    \node at (-11+1+0.5,-9+0.5) {$Q$};
-    \node at (-6+1+0.5,-9+0.5) {$Q$};
-    \node at (-1+1+0.5,-9+0.5) {$Q$};
-    \node at (4+1+0.5,-9+0.5) {$Q$};
-    \node at (-11+0+0.5,-10+0.5) {$Q$};
-    \node at (-6+1+0.5,-10+0.5) {$Q$};
-    \node at (-1+2+0.5,-10+0.5) {$Q$};
-    \node at (4+3+0.5,-10+0.5) {$Q$};
+    \node at (-11+1+0.5,-9+0.5) {\symqueen};
+    \node at (-6+1+0.5,-9+0.5) {\symqueen};
+    \node at (-1+1+0.5,-9+0.5) {\symqueen};
+    \node at (4+1+0.5,-9+0.5) {\symqueen};
+    \node at (-11+0+0.5,-10+0.5) {\symqueen};
+    \node at (-6+1+0.5,-10+0.5) {\symqueen};
+    \node at (-1+2+0.5,-10+0.5) {\symqueen};
+    \node at (4+3+0.5,-10+0.5) {\symqueen};
 
     \draw (-1,-6) -- (-9,-8);
     \draw (-1,-6) -- (-4,-8);
@@ -368,7 +368,7 @@ and the arrays \texttt{r2} and \texttt{r3}
 keep track of the diagonals.
 It is not allowed to add another queen to a
 column or diagonal that already contains a queen. 
-For example, the rows and the diagonals of
+For example, the rows and diagonals of
 the $4 \times 4$ board are numbered as follows:
 
 \begin{center}
