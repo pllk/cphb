@@ -270,7 +270,11 @@ we should find the following points:
 
 This is another example of a problem
 that can be solved in $O(n \log n)$ time
-using a sweep line algorithm.
+using a sweep line algorithm\footnote{Besides this approach,
+there is also an
+$O(n \log n)$ time divide-and-conquer algorithm \cite{sha75}
+that divides the points into two sets and recursively
+solves the problem for both sets.}.
 We go through the points from left to right
 and maintain a value $d$: the minimum distance
 between two points seen so far.
