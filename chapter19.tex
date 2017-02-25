@@ -22,7 +22,9 @@ problem and no efficient algorithm is known for solving the problem.
 
 \index{Eulerian path}
 
-An \key{Eulerian path} is a path
+An \key{Eulerian path}\footnote{L. Euler (1707--1783) studied such paths in 1736
+when he solved the famous Königsberg bridge problem.
+This was the birth of graph theory.} is a path
 that goes exactly once through each edge in the graph.
 For example, the graph
 \begin{center}
@@ -222,7 +224,8 @@ from node 2 to node 5:
 
 \index{Hierholzer's algorithm}
 
-\key{Hierholzer's algorithm} is an efficient
+\key{Hierholzer's algorithm}\footnote{The algorithm was published
+in 1873 after Hierholzer's death \cite{hie73}.} is an efficient
 method for constructing
 an Eulerian circuit.
 The algorithm consists of several rounds,
@@ -395,7 +398,8 @@ so we have successfully constructed an Eulerian circuit.
 
 \index{Hamiltonian path}
 
-A \key{Hamiltonian path} is a path
+A \key{Hamiltonian path}\footnote{
+W. R. Hamilton (1805--1865) was an Irish mathematician.} is a path
 that visits each node in the graph exactly once.
 For example, the graph
 \begin{center}
@@ -481,12 +485,12 @@ Also stronger results have been achieved:
 \begin{itemize}
 \item
 \index{Dirac's theorem}
-\key{Dirac's theorem}:
+\key{Dirac's theorem} \cite{dir52}:
 If the degree of each node is at least $n/2$,
 the graph contains a Hamiltonian path.
 \item
 \index{Ore's theorem}
-\key{Ore's theorem}:
+\key{Ore's theorem} \cite{ore60}:
 If the sum of degrees of each non-adjacent pair of nodes
 is at least $n$,
 the graph contains a Hamiltonian path.
@@ -525,7 +529,7 @@ It is possible to implement this solution in $O(2^n n^2)$ time.
 
 \index{De Bruijn sequence}
 
-A \key{De Bruijn sequence} is a string that contains
+A \key{De Bruijn sequence}\footnote{N. G. de Bruijn (1918--2012) was a Dutch mathematician.} is a string that contains
 every string of length $n$
 exactly once as a substring, for a fixed
 alphabet of $k$ characters.
@@ -546,7 +550,7 @@ and each edge adds one character to the string.
 The following graph corresponds to the above example:
 
 \begin{center}
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=0.8]
 \node[draw, circle] (00) at (-3,0) {00};
 \node[draw, circle] (11) at (3,0) {11};
 \node[draw, circle] (01) at (0,2) {01};
@@ -633,7 +637,8 @@ a complete tour will be found quickly.
 \index{heuristic}
 \index{Warnsdorff's rule}
 
-\key{Warnsdorff's rule} is a simple and effective heuristic
+\key{Warnsdorff's rule}\footnote{This heuristic was proposed
+in Warnsdorff's book \cite{war23} in 1823.} is a simple and effective heuristic
 for finding a knight's tour.
 Using the rule, it is possible to efficiently construct a tour
 even on a large board.
