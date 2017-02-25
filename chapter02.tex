@@ -309,14 +309,13 @@ assuming that the time limit is one second.
 
 \begin{center}
 \begin{tabular}{ll}
-input size & required time complexity \\
+typical input size & required time complexity \\
 \hline
-$n \approx 10$ & $O(n!)$ \\
-$n \approx 20$ & $O(2^n)$ \\
-$n \approx 100$ & $O(n^3)$ \\
-$n \approx 1000$ & $O(n^2)$ \\
-$n \approx 10^5$ & $O(n \log n)$ \\
-$n \approx 10^6$ & $O(n)$ \\
+$n \le 10$ & $O(n!)$ \\
+$n \le 20$ & $O(2^n)$ \\
+$n \le 500$ & $O(n^3)$ \\
+$n \le 5000$ & $O(n^2)$ \\
+$n \le 10^6$ & $O(n \log n)$ or $O(n)$ \\
 $n$ is large & $O(1)$ or $O(\log n)$ \\
 \end{tabular}
 \end{center}
