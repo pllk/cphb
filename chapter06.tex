@@ -530,7 +530,9 @@ the string \texttt{AB} or the string \texttt{C}.
 
 \subsubsection{Huffman coding}
 
-\key{Huffman coding} \cite{huf52} is a greedy algorithm
+\key{Huffman coding}\footnote{D. A. Huffman discovered this method
+when solving a university course assignment
+and published the algorithm in 1952 \cite{huf52}.} is a greedy algorithm
 that constructs an optimal code for
 compressing a given string.
 The algorithm builds a binary tree
@@ -672,113 +674,3 @@ character & codeword \\
 \texttt{D} & 111 \\
 \end{tabular}
 \end{center}
-
-% \subsubsection{Miksi algoritmi toimii?}
-% 
-% Huffmanin koodaus on ahne algoritmi, koska se
-% yhdistää aina kaksi solmua, joiden painot ovat
-% pienimmät.
-% Miksi on varmaa, että tämä menetelmä tuottaa
-% aina optimaalisen koodin?
-% 
-% Merkitään $c(x)$ merkin $x$ esiintymiskertojen
-% määrää merkkijonossa sekä $s(x)$
-% merkkiä $x$ vastaavan koodisanan pituutta.
-% Näitä merkintöjä käyttäen merkkijonon
-% bittiesityksen pituus on
-% \[\sum_x c(x) \cdot s(x),\]
-% missä summa käy läpi kaikki merkkijonon merkit.
-% Esimerkiksi äskeisessä esimerkissä
-% bittiesityksen pituus on
-% \[5 \cdot 1 + 1 \cdot 3 + 2 \cdot 2 + 1 \cdot 3 = 15.\]
-% Hyödyllinen havainto on, että $s(x)$ on yhtä suuri kuin
-% merkkiä $x$ vastaavan solmun \emph{syvyys} puussa
-% eli matka puun huipulta solmuun.
-% 
-% Perustellaan ensin, miksi optimaalista koodia vastaa
-% aina binääripuu, jossa jokaisesta solmusta lähtee
-% alaspäin joko kaksi haaraa tai ei yhtään haaraa.
-% Tehdään vastaoletus, että jostain solmusta lähtisi
-% alaspäin vain yksi haara.
-% Esimerkiksi seuraavassa puussa tällainen tilanne on solmussa $a$:
-% \begin{center}
-% \begin{tikzpicture}[scale=0.9]
-% \node[draw, circle, minimum size=20pt] (3) at (3,1) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (2) at (4,0) {$b$};
-% \node[draw, circle, minimum size=20pt] (5) at (5,1) {$a$};
-% \node[draw, circle, minimum size=20pt] (6) at (4,2) {\phantom{$a$}};
-% 
-% \path[draw,thick,-] (2) -- (5);
-% \path[draw,thick,-] (3) -- (6);
-% \path[draw,thick,-] (5) -- (6);
-% \end{tikzpicture}
-% \end{center}
-% Tällainen solmu $a$ on kuitenkin aina turha, koska se
-% tuo vain yhden bitin lisää polkuihin, jotka kulkevat
-% solmun kautta, eikä sen avulla voi erottaa kahta
-% koodisanaa toisistaan. Niinpä kyseisen solmun voi poistaa
-% puusta, minkä seurauksena syntyy parempi koodi,
-% eli optimaalista koodia vastaavassa puussa ei voi olla
-% solmua, josta lähtee vain yksi haara.
-% 
-% Perustellaan sitten, miksi on joka vaiheessa optimaalista
-% yhdistää kaksi solmua, joiden painot ovat pienimmät.
-% Tehdään vastaoletus, että solmun $a$ paino on pienin,
-% mutta sitä ei saisi yhdistää aluksi toiseen solmuun,
-% vaan sen sijasta tulisi yhdistää solmu $b$
-% ja jokin toinen solmu:
-% \begin{center}
-% \begin{tikzpicture}[scale=0.9]
-% \node[draw, circle, minimum size=20pt] (1) at (0,0) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (2) at (-2,-1) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (3) at (2,-1) {$a$};
-% \node[draw, circle, minimum size=20pt] (4) at (-3,-2) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (5) at (-1,-2) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (8) at (-2,-3) {$b$};
-% \node[draw, circle, minimum size=20pt] (9) at (0,-3) {\phantom{$a$}};
-% 
-% \path[draw,thick,-] (1) -- (2);
-% \path[draw,thick,-] (1) -- (3);
-% \path[draw,thick,-] (2) -- (4);
-% \path[draw,thick,-] (2) -- (5);
-% \path[draw,thick,-] (5) -- (8);
-% \path[draw,thick,-] (5) -- (9);
-% \end{tikzpicture}
-% \end{center}
-% Solmuille $a$ ja $b$ pätee
-% $c(a) \le c(b)$ ja $s(a) \le s(b)$.
-% Solmut aiheuttavat bittiesityksen pituuteen lisäyksen
-% \[c(a) \cdot s(a) + c(b) \cdot s(b).\]
-% Tarkastellaan sitten toista tilannetta,
-% joka on muuten samanlainen kuin ennen,
-% mutta solmut $a$ ja $b$ on vaihdettu keskenään:
-% \begin{center}
-% \begin{tikzpicture}[scale=0.9]
-% \node[draw, circle, minimum size=20pt] (1) at (0,0) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (2) at (-2,-1) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (3) at (2,-1) {$b$};
-% \node[draw, circle, minimum size=20pt] (4) at (-3,-2) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (5) at (-1,-2) {\phantom{$a$}};
-% \node[draw, circle, minimum size=20pt] (8) at (-2,-3) {$a$};
-% \node[draw, circle, minimum size=20pt] (9) at (0,-3) {\phantom{$a$}};
-% 
-% \path[draw,thick,-] (1) -- (2);
-% \path[draw,thick,-] (1) -- (3);
-% \path[draw,thick,-] (2) -- (4);
-% \path[draw,thick,-] (2) -- (5);
-% \path[draw,thick,-] (5) -- (8);
-% \path[draw,thick,-] (5) -- (9);
-% \end{tikzpicture}
-% \end{center}
-% Osoittautuu, että tätä puuta vastaava koodi on
-% \emph{yhtä hyvä tai parempi} kuin alkuperäinen koodi, joten vastaoletus
-% on väärin ja Huffmanin koodaus
-% toimiikin oikein, jos se yhdistää aluksi solmun $a$
-% jonkin solmun kanssa.
-% Tämän perustelee seuraava epäyhtälöketju:
-% \[\begin{array}{rcl}
-% c(b) & \ge & c(a) \\
-% c(b)\cdot(s(b)-s(a)) & \ge & c(a)\cdot (s(b)-s(a)) \\
-% c(b)\cdot s(b)-c(b)\cdot s(a) & \ge & c(a)\cdot s(b)-c(a)\cdot s(a) \\
-% c(a)\cdot s(a)+c(b)\cdot s(b) & \ge & c(a)\cdot s(b)+c(b)\cdot s(a) \\
-% \end{array}\]
