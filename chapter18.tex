@@ -676,7 +676,9 @@ nodes in $O(\log n)$ time using this technique.
 \subsubsection{Method 2}
 
 Another way to solve the problem is based on
-a tree traversal array \cite{ben00}.
+a tree traversal array\footnote{This lowest common ancestor algorithm is based on \cite{ben00}.
+This technique is sometimes called the \index{Euler tour technique}
+\key{Euler tour technique} \cite{tar84}.}.
 Once again, the idea is to traverse the nodes
 using a depth-first search:
 
@@ -719,8 +721,7 @@ However, we use a bit different tree
 traversal array than before:
 we add each node to the array \emph{always}
 when the depth-first search walks through the node,
-and not only at the first visit\footnote{A similar technique is sometimes called the
-\key{Euler tour technique} \cite{tar84}.}.
+and not only at the first visit.
 Hence, a node that has $k$ children appears $k+1$ times
 in the array and there are a total of $2n-1$
 nodes in the array.
