@@ -14,7 +14,7 @@ and our task is to calculate its area.
 For example, a possible input for the problem is as follows:
 
 \begin{center}
-\begin{tikzpicture}[scale=0.44]
+\begin{tikzpicture}[scale=0.45]
 
 \draw[fill] (6,2) circle [radius=0.1];
 \draw[fill] (5,6) circle [radius=0.1];
@@ -27,7 +27,7 @@ One way to approach the problem is to divide
 the quadrilateral into two triangles by a straight
 line between two opposite vertices:
 \begin{center}
-\begin{tikzpicture}[scale=0.44]
+\begin{tikzpicture}[scale=0.45]
 
 \draw[fill] (6,2) circle [radius=0.1];
 \draw[fill] (5,6) circle [radius=0.1];
@@ -41,8 +41,8 @@ line between two opposite vertices:
 After this, it suffices to sum the areas
 of the triangles.
 The area of a triangle can be calculated,
-for example, using \key{Heron's formula}\footnote{Heron of Alexandria
-(c. 10--70) was a Greek mathematician.}
+for example, using \key{Heron's formula}
+%\footnote{Heron of Alexandria (c. 10--70) was a Greek mathematician.}
 \[ \sqrt{s (s-a) (s-b) (s-c)},\]
 where $a$, $b$ and $c$ are the lengths
 of the triangle's sides and
@@ -57,7 +57,7 @@ two arbitrary opposite vertices.
 For example, in the following situation,
 the division line is outside the quadrilateral:
 \begin{center}
-\begin{tikzpicture}[scale=0.44]
+\begin{tikzpicture}[scale=0.45]
 
 \draw[fill] (6,2) circle [radius=0.1];
 \draw[fill] (3,2) circle [radius=0.1];
@@ -70,7 +70,7 @@ the division line is outside the quadrilateral:
 \end{center}
 However, another way to draw the line works:
 \begin{center}
-\begin{tikzpicture}[scale=0.44]
+\begin{tikzpicture}[scale=0.45]
 
 \draw[fill] (6,2) circle [radius=0.1];
 \draw[fill] (3,2) circle [radius=0.1];
@@ -573,7 +573,7 @@ along the boundary of the polygon.
 
 \index{Pick's theorem}
 
-\key{Pick's theorem} \cite{pic99} provides another way to calculate
+\key{Pick's theorem} provides another way to calculate
 the area of a polygon provided that all vertices 
 of the polygon have integer coordinates.
 According to Pick's theorem, the area of the polygon is
