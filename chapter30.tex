@@ -27,10 +27,10 @@ For example, the table
 \begin{tabular}{ccc}
 person & arrival time & leaving time \\
 \hline
-Uolevi & 10 & 15 \\
-Maija & 6 & 12 \\
-Kaaleppi & 14 & 16 \\
-Liisa & 5 & 13 \\
+John & 10 & 15 \\
+Maria & 6 & 12 \\
+Peter & 14 & 16 \\
+Lisa & 5 & 13 \\
 \end{tabular}
 \end{center}
 corresponds to the following events:
@@ -51,10 +51,10 @@ corresponds to the following events:
 \draw[fill] (5,-5.5) circle [radius=0.05];
 \draw[fill] (13,-5.5) circle [radius=0.05];
 
-\node at (2,-1) {Uolevi};
-\node at (2,-2.5) {Maija};
-\node at (2,-4) {Kaaleppi};
-\node at (2,-5.5) {Liisa};
+\node at (2,-1) {John};
+\node at (2,-2.5) {Maria};
+\node at (2,-4) {Peter};
+\node at (2,-5.5) {Lisa};
 \end{tikzpicture}
 \end{center}
 We go through the events from left to right
@@ -85,10 +85,10 @@ In the example, the events are processed as follows:
 \draw[fill] (5,-5.5) circle [radius=0.05];
 \draw[fill] (13,-5.5) circle [radius=0.05];
 
-\node at (2,-1) {Uolevi};
-\node at (2,-2.5) {Maija};
-\node at (2,-4) {Kaaleppi};
-\node at (2,-5.5) {Liisa};
+\node at (2,-1) {John};
+\node at (2,-2.5) {Maria};
+\node at (2,-4) {Peter};
+\node at (2,-5.5) {Lisa};
 
 \path[draw,dashed] (10,0)--(10,-6.5);
 \path[draw,dashed] (15,0)--(15,-6.5);
@@ -122,7 +122,7 @@ The symbols $+$ and $-$ indicate whether the
 value of the counter increases or decreases,
 and the value of the counter is shown below.
 The maximum value of the counter is 3
-between Uolevi's arrival time and Maija's leaving time.
+between John's arrival time and Maria's leaving time.
 
 The running time of the algorithm is $O(n \log n)$,
 because sorting the events takes $O(n \log n)$ time
@@ -270,7 +270,11 @@ we should find the following points:
 
 This is another example of a problem
 that can be solved in $O(n \log n)$ time
-using a sweep line algorithm.
+using a sweep line algorithm\footnote{Besides this approach,
+there is also an
+$O(n \log n)$ time divide-and-conquer algorithm \cite{sha75}
+that divides the points into two sets and recursively
+solves the problem for both sets.}.
 We go through the points from left to right
 and maintain a value $d$: the minimum distance
 between two points seen so far.
@@ -396,21 +400,20 @@ an easy way to
 construct the convex hull for a set of points
 in $O(n \log n)$ time.
 The algorithm constructs the convex hull
-in two steps:
+in two parts:
 first the upper hull and then the lower hull.
-Both steps are similar, so we can focus on
+Both parts are similar, so we can focus on
 constructing the upper hull.
 
-We sort the points primarily according to
+First, we sort the points primarily according to
 x coordinates and secondarily according to y coordinates.
-After this, we go through the points and always
-add the new point to the hull.
-After adding a point we check using cross products
-whether the tree last point in the hull turn left.
-If this holds, we remove the middle point from the hull.
-After this we keep checking the three last points
-and removing points, until the three last points
-do not turn left.
+After this, we go through the points and
+add each point to the hull.
+Always after adding a point to the hull,
+we make sure that the last line segment
+in the hull does not turn left.
+As long as this holds, we repeatedly remove the
+second last point from the hull.
 
 The following pictures show how
 Andrew's algorithm works:

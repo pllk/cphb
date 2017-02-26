@@ -24,7 +24,7 @@ z = \sqrt[3]{3}.\\
 However, nobody knows if there are any three
 \emph{integers} $x$, $y$ and $z$
 that would satisfy the equation, but this
-is an open problem in number theory.
+is an open problem in number theory \cite{bec07}.
 
 In this chapter, we will focus on basic concepts
 and algorithms in number theory.
@@ -205,7 +205,9 @@ so the result of the function is $[2,2,2,3]$.
 
 \index{sieve of Eratosthenes}
 
-The \key{sieve of Eratosthenes} is a preprocessing
+The \key{sieve of Eratosthenes}
+%\footnote{Eratosthenes (c. 276 BC -- c. 194 BC) was a Greek mathematician.}
+is a preprocessing
 algorithm that builds an array using which we
 can efficiently check if a given number between $2 \ldots n$
 is prime and, if it is not, find one prime factor of the number.
@@ -327,7 +329,8 @@ The greatest common divisor and the least common multiple
 are connected as follows:
 \[\textrm{lcm}(a,b)=\frac{ab}{\textrm{gcd}(a,b)}\]
 
-\key{Euclid's algorithm} provides an efficient way
+\key{Euclid's algorithm}\footnote{Euclid was a Greek mathematician who
+lived in about 300 BC. This is perhaps the first known algorithm in history.} provides an efficient way
 to find the greatest common divisor of two numbers.
 The algorithm is based on the following formula:
 \begin{equation*}
@@ -355,6 +358,7 @@ For example,
 Numbers $a$ and $b$ are \key{coprime}
 if $\textrm{gcd}(a,b)=1$.
 \key{Euler's totient function} $\varphi(n)$
+%\footnote{Euler presented this function in 1763.}
 gives the number of coprime numbers to $n$
 between $1$ and $n$.
 For example, $\varphi(12)=4$,
@@ -432,12 +436,16 @@ int modpow(int x, int n, int m) {
 \index{Fermat's theorem}
 \index{Euler's theorem}
 
-\key{Fermat's theorem} states that
+\key{Fermat's theorem}
+%\footnote{Fermat discovered this theorem in 1640.}
+states that
 \[x^{m-1} \bmod m = 1\]
 when $m$ is prime and $x$ and $m$ are coprime.
 This also yields
 \[x^k \bmod m = x^{k \bmod (m-1)} \bmod m.\]
-More generally, \key{Euler's theorem} states that
+More generally, \key{Euler's theorem}
+%\footnote{Euler published this theorem in 1763.}
+states that
 \[x^{\varphi(m)} \bmod m = 1\]
 when $x$ and $m$ are coprime.
 Fermat's theorem follows from Euler's theorem,
@@ -517,7 +525,9 @@ cout << x*x << "\n"; // 2537071545
 
 \index{Diophantine equation}
 
-A \key{Diophantine equation} is an equation of the form
+A \key{Diophantine equation}
+%\footnote{Diophantus of Alexandria was a Greek mathematician who lived in the 3th century.}
+is an equation of the form
 \[ ax + by = c, \]
 where $a$, $b$ and $c$ are constants
 and we should find the values of $x$ and $y$.
@@ -637,7 +647,9 @@ are solutions.
 
 \index{Lagrange's theorem}
 
-\key{Lagrange's theorem} states that every positive integer
+\key{Lagrange's theorem}
+%\footnote{J.-L. Lagrange (1736--1813) was an Italian mathematician.}
+states that every positive integer
 can be represented as a sum of four squares, i.e.,
 $a^2+b^2+c^2+d^2$.
 For example, the number 123 can be represented
@@ -648,7 +660,9 @@ as the sum $8^2+5^2+5^2+3^2$.
 \index{Zeckendorf's theorem}
 \index{Fibonacci number}
 
-\key{Zeckendorf's theorem} states that every
+\key{Zeckendorf's theorem}
+%\footnote{E. Zeckendorf published the theorem in 1972 \cite{zec72}; however, this was not a new result.}
+states that every
 positive integer has a unique representation
 as a sum of Fibonacci numbers such that
 no two numbers are equal or consecutive
@@ -689,7 +703,9 @@ produces the smallest Pythagorean triple
 
 \index{Wilson's theorem}
 
-\key{Wilson's theorem} states that a number $n$
+\key{Wilson's theorem}
+%\footnote{J. Wilson (1741--1793) was an English mathematician.}
+states that a number $n$
 is prime exactly when
 \[(n-1)! \bmod n = n-1.\]
 For example, the number 11 is prime, because

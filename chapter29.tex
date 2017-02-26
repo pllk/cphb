@@ -42,6 +42,7 @@ After this, it suffices to sum the areas
 of the triangles.
 The area of a triangle can be calculated,
 for example, using \key{Heron's formula}
+%\footnote{Heron of Alexandria (c. 10--70) was a Greek mathematician.}
 \[ \sqrt{s (s-a) (s-b) (s-c)},\]
 where $a$, $b$ and $c$ are the lengths
 of the triangle's sides and
@@ -500,7 +501,8 @@ so $b$ is outside the polygon.
 \section{Polygon area}
 
 A general formula for calculating the area
-of a polygon is
+of a polygon\footnote{This formula is sometimes called the
+\index{shoelace formula} \key{shoelace formula}.} is
 \[\frac{1}{2} |\sum_{i=1}^{n-1} (p_i \times p_{i+1})| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|, \]
 where the vertices are

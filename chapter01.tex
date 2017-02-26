@@ -117,10 +117,10 @@ but now it suffices to write \texttt{cout}.
 The code can be compiled using the following command:
 
 \begin{lstlisting}
-g++ -std=c++11 -O2 -Wall code.cpp -o code
+g++ -std=c++11 -O2 -Wall code.cpp -o bin
 \end{lstlisting}
 
-This command produces a binary file \texttt{code}
+This command produces a binary file \texttt{bin}
 from the source code \texttt{code.cpp}.
 The compiler follows the C++11 standard
 (\texttt{-std=c++11}),
@@ -286,7 +286,7 @@ Still, it is good to know that
 the \texttt{g++} compiler also provides
 a 128-bit type \texttt{\_\_int128\_t}
 with a value range of
-$-2^{127} \ldots 2^{127}-1$ or $-10^{38} \ldots 10^{38}$.
+$-2^{127} \ldots 2^{127}-1$ or about $-10^{38} \ldots 10^{38}$.
 However, this type is not available in all contest systems.
 
 \subsubsection{Modular arithmetic}
@@ -624,7 +624,7 @@ For example, in the above set
 New sets can be constructed using set operations:
 \begin{itemize}
 \item The \key{intersection} $A \cap B$ consists of elements
-that are both in $A$ and $B$.
+that are in both $A$ and $B$.
 For example, if $A=\{1,2,5\}$ and $B=\{2,4\}$,
 then $A \cap B = \{2\}$.
 \item The \key{union} $A \cup B$ consists of elements
@@ -778,7 +778,9 @@ n! & = & n \cdot (n-1)! \\
 
 \index{Fibonacci number}
 
-The \key{Fibonacci numbers} arise in many situations.
+The \key{Fibonacci numbers}
+%\footnote{Fibonacci (c. 1175--1250) was an Italian mathematician.}
+arise in many situations.
 They can be defined recursively as follows:
 \[
 \begin{array}{lcl}
@@ -790,7 +792,8 @@ f(n) & = & f(n-1)+f(n-2) \\
 The first Fibonacci numbers are
 \[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, \ldots\]
 There is also a closed-form formula
-for calculating Fibonacci numbers:
+for calculating Fibonacci numbers\footnote{This formula is sometimes called
+\index{Binet's formula} \key{Binet's formula}.}:
 \[f(n)=\frac{(1 + \sqrt{5})^n - (1-\sqrt{5})^n}{2^n \sqrt{5}}.\]
 
 \subsubsection{Logarithms}
@@ -887,12 +890,13 @@ The International Collegiate Programming Contest (ICPC)
 is an annual programming contest for university students.
 Each team in the contest consists of three students,
 and unlike in the IOI, the students work together;
-there is even only one computer available for each team.
+there is only one computer available for each team.
 
 The ICPC consists of several stages, and finally the
 best teams are invited to the World Finals.
 While there are tens of thousands of participants
-in the contest, there are only 128 final slots available,
+in the contest, there are only a small number\footnote{The exact number of final
+slots varies from year to year; in 2016, there were 128 final slots.} of final slots available,
 so even advancing to the finals
 is a great achievement in some regions.
 
@@ -924,7 +928,7 @@ Google Code Jam and Yandex.Algorithm.
 Of course, companies also use those contests for recruiting:
 performing well in a contest is a good way to prove one's skills.
 
-\section{Books}
+\section{Resources}
 
 \subsubsection{Competitive programming books}
 
@@ -933,12 +937,11 @@ concentrate on competitive programming and algorithmic problem solving:
 
 \begin{itemize}
 \item S. Halim and F. Halim:
-\emph{Competitive Programming 3: The New Lower Bound of Programming Contests}, 2013
+\emph{Competitive Programming 3: The New Lower Bound of Programming Contests} \cite{hal13}
 \item S. S. Skiena and M. A. Revilla:
-\emph{Programming Challenges: The Programming Contest Training Manual},
-Springer, 2003
-\item \emph{Looking for a Challenge? The Ultimate Problem Set from
-the University of Warsaw Programming Competitions}, 2012
+\emph{Programming Challenges: The Programming Contest Training Manual} \cite{ski03}
+\item K. Diks et al.: \emph{Looking for a Challenge? The Ultimate Problem Set from
+the University of Warsaw Programming Competitions} \cite{dik12}
 \end{itemize}
 
 The first two books are intended for beginners,
@@ -952,9 +955,9 @@ Some good books are:
 
 \begin{itemize}
 \item T. H. Cormen, C. E. Leiserson, R. L. Rivest and C. Stein:
-\emph{Introduction to Algorithms}, MIT Press, 2009 (3rd edition)
+\emph{Introduction to Algorithms} \cite{cor09}
 \item J. Kleinberg and É. Tardos:
-\emph{Algorithm Design}, Pearson, 2005
+\emph{Algorithm Design} \cite{kle05}
 \item S. S. Skiena:
-\emph{The Algorithm Design Manual}, Springer, 2008 (2nd edition)
+\emph{The Algorithm Design Manual} \cite{ski08}
 \end{itemize}

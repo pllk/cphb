@@ -245,8 +245,9 @@ two $n \times n$ matrices
 in $O(n^3)$ time.
 There are also more efficient algorithms
 for matrix multiplication\footnote{The first such
-algorithm, with time complexity $O(n^{2.80735})$,
-was published in 1969 \cite{str69}, and
+algorithm was Strassen's algorithm,
+published in 1969 \cite{str69},
+whose time complexity is $O(n^{2.80735})$;
 the best current algorithm
 works in $O(n^{2.37286})$ time \cite{gal14}.},
 but they are mostly of theoretical interest
@@ -749,7 +750,9 @@ $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$.
 \index{Kirchhoff's theorem}
 \index{spanning tree}
 
-\key{Kirchhoff's theorem} provides a way
+\key{Kirchhoff's theorem}
+%\footnote{G. R. Kirchhoff (1824--1887) was a German physicist.}
+provides a way
 to calculate the number of spanning trees
 of a graph as a determinant of a special matrix.
 For example, the graph

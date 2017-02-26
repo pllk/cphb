@@ -123,7 +123,8 @@ maximum spanning trees by processing the edges in reverse order.
 
 \index{Kruskal's algorithm}
 
-In \key{Kruskal's algorithm} \cite{kru56}, the initial spanning tree
+In \key{Kruskal's algorithm}\footnote{The algorithm was published in 1956
+by J. B. Kruskal \cite{kru56}.}, the initial spanning tree
 only contains the nodes of the graph
 and does not contain any edges.
 Then the algorithm goes through the edges
@@ -409,7 +410,11 @@ belongs to more than one set.
 Two $O(\log n)$ time operations are supported:
 the \texttt{union} operation joins two sets,
 and the \texttt{find} operation finds the representative
-of the set that contains a given element.
+of the set that contains a given element\footnote{The structure presented here
+was introduced in 1971 by J. D. Hopcroft and J. D. Ullman \cite{hop71}.
+Later, in 1975, R. E. Tarjan studied a more sophisticated variant
+of the structure \cite{tar75} that is discussed in many algorithm
+textbooks nowadays.}.
 
 \subsubsection{Structure}
 
@@ -567,7 +572,10 @@ the smaller set to the larger set.
 
 \index{Prim's algorithm}
 
-\key{Prim's algorithm} \cite{pri57} is an alternative method
+\key{Prim's algorithm}\footnote{The algorithm is
+named after R. C. Prim who published it in 1957 \cite{pri57}.
+However, the same algorithm was discovered already in 1930
+by V. Jarník.} is an alternative method
 for finding a minimum spanning tree.
 The algorithm first adds an arbitrary node
 to the tree.

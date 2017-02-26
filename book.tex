@@ -1,6 +1,6 @@
 \documentclass[twoside,12pt,a4paper,english]{book}
 
-%\includeonly{luku01,kirj}
+%\includeonly{chapter01,list}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -27,6 +27,8 @@
 
 \usepackage{titlesec}
 
+\usepackage{skak}
+
 \usetikzlibrary{patterns,snakes}
 \pagestyle{plain}
 
@@ -48,6 +50,7 @@
 \author{\Large Antti Laaksonen}
 
 \makeindex
+\usepackage[totoc]{idxlayout}
 
 \titleformat{\subsubsection}
 {\normalfont\large\bfseries\sffamily}{\thesubsection}{1em}{}
@@ -64,7 +67,7 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 
-\include{johdanto}
+\include{preface}
 
 \mainmatter
 \pagenumbering{arabic}
@@ -73,41 +76,45 @@
 \newcommand{\key}[1] {\textbf{#1}}
 
 \part{Basic techniques}
-\include{luku01}
-\include{luku02}
-\include{luku03}
-\include{luku04}
-\include{luku05}
-\include{luku06}
-\include{luku07}
-\include{luku08}
-\include{luku09}
-\include{luku10}
+\include{chapter01}
+\include{chapter02}
+\include{chapter03}
+\include{chapter04}
+\include{chapter05}
+\include{chapter06}
+\include{chapter07}
+\include{chapter08}
+\include{chapter09}
+\include{chapter10}
 \part{Graph algorithms}
-\include{luku11}
-\include{luku12}
-\include{luku13}
-\include{luku14}
-\include{luku15}
-\include{luku16}
-\include{luku17}
-\include{luku18}
-\include{luku19}
-\include{luku20}
+\include{chapter11}
+\include{chapter12}
+\include{chapter13}
+\include{chapter14}
+\include{chapter15}
+\include{chapter16}
+\include{chapter17}
+\include{chapter18}
+\include{chapter19}
+\include{chapter20}
 \part{Advanced topics}
-\include{luku21}
-\include{luku22}
-\include{luku23}
-\include{luku24}
-\include{luku25}
-\include{luku26}
-\include{luku27}
-\include{luku28}
-\include{luku29}
-\include{luku30}
-\include{kirj}
+\include{chapter21}
+\include{chapter22}
+\include{chapter23}
+\include{chapter24}
+\include{chapter25}
+\include{chapter26}
+\include{chapter27}
+\include{chapter28}
+\include{chapter29}
+\include{chapter30}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\include{list}
 
 \cleardoublepage
 \printindex
 
-\end{document}la
+\end{document}

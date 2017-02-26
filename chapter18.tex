@@ -266,13 +266,17 @@ is $3+4+3+1=11$.
 \end{center}
 
 The idea is to construct a tree traversal array that contains
-three values for each node: (1) the identifier of the node,
-(2) the size of the subtree, and (3) the value of the node.
+three values for each node: the identifier of the node,
+the size of the subtree, and the value of the node.
 For example, the array for the above tree is as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,1) grid (9,-2);
+
+\node[left] at (-1,0.5) {node id};
+\node[left] at (-1,-0.5) {subtree size};
+\node[left] at (-1,-1.5) {node value};
 
 \node at (0.5,0.5) {$1$};
 \node at (1.5,0.5) {$2$};
@@ -329,6 +333,10 @@ can be found as follows:
 \fill[color=lightgray] (4,0) rectangle (5,-1);
 \fill[color=lightgray] (4,-1) rectangle (8,-2);
 \draw (0,1) grid (9,-2);
+
+\node[left] at (-1,0.5) {node id};
+\node[left] at (-1,-0.5) {subtree size};
+\node[left] at (-1,-1.5) {node value};
 
 \node at (0.5,0.5) {$1$};
 \node at (1.5,0.5) {$2$};
@@ -438,6 +446,10 @@ For example, the following array corresponds to the above tree:
 \begin{tikzpicture}[scale=0.7]
 \draw (0,1) grid (9,-2);
 
+\node[left] at (-1,0.5) {node id};
+\node[left] at (-1,-0.5) {subtree size};
+\node[left] at (-1,-1.5) {path sum};
+
 \node at (0.5,0.5) {$1$};
 \node at (1.5,0.5) {$2$};
 \node at (2.5,0.5) {$6$};
@@ -490,6 +502,10 @@ the array changes as follows:
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,-1) rectangle (8,-2);
 \draw (0,1) grid (9,-2);
+
+\node[left] at (-1,0.5) {node id};
+\node[left] at (-1,-0.5) {subtree size};
+\node[left] at (-1,-1.5) {path sum};
 
 \node at (0.5,0.5) {$1$};
 \node at (1.5,0.5) {$2$};
@@ -562,9 +578,9 @@ is node 2:
 \node[draw, circle] (3) at (-2,1) {$2$};
 \node[draw, circle] (4) at (0,1) {$3$};
 \node[draw, circle] (5) at (2,-1) {$7$};
-\node[draw, circle] (6) at (-3,-1) {$5$};
+\node[draw, circle, fill=lightgray] (6) at (-3,-1) {$5$};
 \node[draw, circle] (7) at (-1,-1) {$6$};
-\node[draw, circle] (8) at (-1,-3) {$8$};
+\node[draw, circle, fill=lightgray] (8) at (-1,-3) {$8$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
@@ -572,6 +588,9 @@ is node 2:
 \path[draw,thick,-] (3) -- (6);
 \path[draw,thick,-] (3) -- (7);
 \path[draw,thick,-] (7) -- (8);
+
+\path[draw=red,thick,->,line width=2pt] (6) edge [bend left] (3);
+\path[draw=red,thick,->,line width=2pt] (8) edge [bend right=40] (3);
 \end{tikzpicture}
 \end{center}
 
@@ -583,13 +602,17 @@ finding the lowest common ancestor of two nodes.
 One way to solve the problem is to use the fact
 that we can efficiently find the $k$th
 ancestor of any node in the tree.
-Thus, we can first make sure that
-both nodes are at the same level in the tree,
-and then find the smallest value of $k$
-such that the $k$th ancestor of both nodes is the same.
+Using this, we can divide the problem of
+finding the lowest common ancestor into two parts.
 
-As an example, let us find the lowest common
-ancestor of nodes $5$ and $8$:
+We use two pointers that initially point to the
+two nodes for which we should find the
+lowest common ancestor.
+First, we move one of the pointers upwards
+so that both nodes are at the same level in the tree.
+
+In the example case, we move from node 8 to node 6,
+after which both nodes are at the same level:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -599,8 +622,8 @@ ancestor of nodes $5$ and $8$:
 \node[draw, circle] (4) at (0,1) {$3$};
 \node[draw, circle] (5) at (2,-1) {$7$};
 \node[draw, circle,fill=lightgray] (6) at (-3,-1) {$5$};
-\node[draw, circle] (7) at (-1,-1) {$6$};
-\node[draw, circle,fill=lightgray] (8) at (-1,-3) {$8$};
+\node[draw, circle,fill=lightgray] (7) at (-1,-1) {$6$};
+\node[draw, circle] (8) at (-1,-3) {$8$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
@@ -608,26 +631,30 @@ ancestor of nodes $5$ and $8$:
 \path[draw,thick,-] (3) -- (6);
 \path[draw,thick,-] (3) -- (7);
 \path[draw,thick,-] (7) -- (8);
+
+\path[draw=red,thick,->,line width=2pt] (8) edge [bend right] (7);
 \end{tikzpicture}
 \end{center}
 
-Node $5$ is at level $3$, while node $8$ is at level $4$.
-Thus, we first move one step upwards from node $8$ to node $6$.
-After this, it turns out that the parent of both nodes $5$
-and $6$ is node $2$, so we have found the lowest common ancestor.
+After this, we determine the minimum number of steps
+needed to move both pointers upwards so that
+they will point to the same node.
+This node is the lowest common ancestor of the nodes.
 
-The following picture shows how we move in the tree:
+In the example case, it suffices to move both pointers
+one step upwards to node 2,
+which is the lowest common ancestor:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
 \node[draw, circle] (2) at (2,1) {$4$};
-\node[draw, circle] (3) at (-2,1) {$2$};
+\node[draw, circle,fill=lightgray] (3) at (-2,1) {$2$};
 \node[draw, circle] (4) at (0,1) {$3$};
 \node[draw, circle] (5) at (2,-1) {$7$};
-\node[draw, circle,fill=lightgray] (6) at (-3,-1) {$5$};
+\node[draw, circle] (6) at (-3,-1) {$5$};
 \node[draw, circle] (7) at (-1,-1) {$6$};
-\node[draw, circle,fill=lightgray] (8) at (-1,-3) {$8$};
+\node[draw, circle] (8) at (-1,-3) {$8$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
@@ -637,20 +664,21 @@ The following picture shows how we move in the tree:
 \path[draw,thick,-] (7) -- (8);
 
 \path[draw=red,thick,->,line width=2pt] (6) edge [bend left] (3);
-\path[draw=red,thick,->,line width=2pt] (8) edge [bend right] (7);
 \path[draw=red,thick,->,line width=2pt] (7) edge [bend right] (3);
 \end{tikzpicture}
 \end{center}
 
-Using this method, we can find the lowest common ancestor
-of any two nodes in $O(\log n)$ time after an $O(n \log n)$ time
-preprocessing, because both steps can be
-performed in $O(\log n)$ time.
+Since both parts of the algorithm can be performed in
+$O(\log n)$ time using precomputed information,
+we can find the lowest common ancestor of any two
+nodes in $O(\log n)$ time using this technique.
 
 \subsubsection{Method 2}
 
 Another way to solve the problem is based on
-a tree traversal array \cite{ben00}.
+a tree traversal array\footnote{This lowest common ancestor algorithm is based on \cite{ben00}.
+This technique is sometimes called the \index{Euler tour technique}
+\key{Euler tour technique} \cite{tar84}.}.
 Once again, the idea is to traverse the nodes
 using a depth-first search:
 
@@ -689,22 +717,25 @@ using a depth-first search:
 \end{tikzpicture}
 \end{center}
 
-However, we use a bit different variant of
-the tree traversal array where
+However, we use a bit different tree
+traversal array than before:
 we add each node to the array \emph{always}
-when the depth-first search visits the node,
+when the depth-first search walks through the node,
 and not only at the first visit.
 Hence, a node that has $k$ children appears $k+1$ times
-in the array, and there are a total of $2n-1$
+in the array and there are a total of $2n-1$
 nodes in the array.
 
 We store two values in the array:
-(1) the identifier of the node, and (2) the level of the 
+the identifier of the node and the level of the 
 node in the tree.
 The following array corresponds to the above tree:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
+
+\node[left] at (-1,1.5) {node id};
+\node[left] at (-1,0.5) {level};
 
 \draw (0,1) grid (15,2);
 %\node at (-1.1,1.5) {\texttt{node}};
@@ -770,6 +801,10 @@ can be found as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
+
+\node[left] at (-1,1.5) {node id};
+\node[left] at (-1,0.5) {level};
+
 \fill[color=lightgray] (2,1) rectangle (3,2);
 \fill[color=lightgray] (5,1) rectangle (6,2);
 \fill[color=lightgray] (2,0) rectangle (6,1);

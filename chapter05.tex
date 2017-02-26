@@ -436,18 +436,18 @@ the $4 \times 4$ board are numbered as follows:
 \end{tikzpicture}
 \end{center}
 
+Let $q(n)$ denote the number of ways
+to place $n$ queens to te $n \times n$ chessboard.
 The above backtracking
-algorithm tells us that
-there are 92 ways to place 8
-queens to the $8 \times 8$ chessboard.
+algorithm tells us that $q(n)=92$.
 When $n$ increases, the search quickly becomes slow,
 because the number of the solutions increases
 exponentially.
-For example, calculating the ways to
-place 16 queens to the $16 \times 16$
-chessboard already takes about a minute
-on a modern computer
-(there are 14772512 solutions).
+For example, calculating $q(16)=14772512$
+using the above algorithm already takes about a minute
+on a modern computer\footnote{There is no known way to efficiently
+calculate larger values of $q(n)$. The current record is
+$q(27)=234907967154122528$, calculated in 2016 \cite{q27}.}.
 
 \section{Pruning the search}
 
@@ -716,7 +716,8 @@ check if the sum of any of the subsets is $x$.
 The running time of such a solution is $O(2^n)$,
 because there are $2^n$ subsets.
 However, using the meet in the middle technique,
-we can achieve a more efficient $O(2^{n/2})$ time solution.
+we can achieve a more efficient $O(2^{n/2})$ time solution\footnote{This
+technique was introduced in 1974 by E. Horowitz and S. Sahni \cite{hor74}.}.
 Note that $O(2^n)$ and $O(2^{n/2})$ are different
 complexities because $2^{n/2}$ equals $\sqrt{2^n}$.
 
