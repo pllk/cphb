@@ -359,7 +359,10 @@ The expected value for $X$ in a geometric distribution is
 
 \index{Markov chain}
 
-A \key{Markov chain} is a random process
+A \key{Markov chain}
+% \footnote{A. A. Markov (1856--1922)
+% was a Russian mathematician.}
+is a random process
 that consists of states and transitions between them.
 For each state, we know the probabilities
 for moving to other states.
@@ -514,7 +517,11 @@ just to find one element?
 
 It turns out that we can find order statistics
 using a randomized algorithm without sorting the array.
-The algorithm is a Las Vegas algorithm:
+The algorithm, called \key{quickselect}\footnote{In 1961,
+C. A. R. Hoare published two algorithms that
+are efficient on average: \index{quicksort} \index{quickselect}
+\key{quicksort} \cite{hoa61a} for sorting arrays and
+\key{quickselect} \cite{hoa61b} for finding order statistics.}, is a Las Vegas algorithm:
 its running time is usually $O(n)$
 but $O(n^2)$ in the worst case.
 
@@ -560,7 +567,9 @@ but one could hope that verifying the
 answer would by easier than to calculate it from scratch.
 
 It turns out that we can solve the problem
-using a Monte Carlo algorithm whose
+using a Monte Carlo algorithm\footnote{R. M. Freivalds published
+this algorithm in 1977 \cite{fre77}, and it is sometimes
+called \index{Freivalds' algoritm} \key{Freivalds' algorithm}.} whose
 time complexity is only $O(n^2)$.
 The idea is simple: we choose a random vector
 $X$ of $n$ elements, and calculate the matrices

@@ -281,7 +281,11 @@ Still, there are many important problems for which
 no polynomial algorithm is known, i.e.,
 nobody knows how to solve them efficiently.
 \key{NP-hard} problems are an important set
-of problems, for which no polynomial algorithm is known \cite{gar79}.
+of problems, for which no polynomial algorithm
+is known\footnote{A classic book on the topic is
+M. R. Garey's and D. S. Johnson's
+\emph{Computers and Intractability: A Guide to the Theory
+of NP-Completeness} \cite{gar79}.}.
 
 \section{Estimating efficiency}
 
@@ -309,15 +313,14 @@ assuming a time limit of one second.
 
 \begin{center}
 \begin{tabular}{ll}
-input size ($n$) & required time complexity \\
+typical input size & required time complexity \\
 \hline
-$n \le 10^{18}$ & $O(1)$ or $O(\log n)$ \\
-$n \le 10^{12}$ & $O(\sqrt n)$ \\
-$n \le 10^6$ & $O(n)$ or $O(n \log n)$ \\
-$n \le 5000$ & $O(n^2)$ \\
-$n \le 500$ & $O(n^3)$ \\
-$n \le 25$ & $O(2^n)$ \\
 $n \le 10$ & $O(n!)$ \\
+$n \le 20$ & $O(2^n)$ \\
+$n \le 500$ & $O(n^3)$ \\
+$n \le 5000$ & $O(n^2)$ \\
+$n \le 10^6$ & $O(n \log n)$ or $O(n)$ \\
+$n$ is large & $O(1)$ or $O(\log n)$ \\
 \end{tabular}
 \end{center}
 
@@ -353,8 +356,8 @@ time and even in $O(n)$ time.
 
 Given an array of $n$ integers $x_1,x_2,\ldots,x_n$,
 our task is to find the
-\key{maximum subarray sum}\footnote{Bentley's
-book \emph{Programming Pearls} \cite{ben86} made this problem popular.}, i.e.,
+\key{maximum subarray sum}\footnote{J. Bentley's
+book \emph{Programming Pearls} \cite{ben86} made the problem popular.}, i.e.,
 the largest possible sum of numbers
 in a contiguous region in the array.
 The problem is interesting when there may be
@@ -444,8 +447,8 @@ and the sum of the numbers is calculated to the variable $s$.
 The variable $p$ contains the maximum sum found during the search.
 
 The time complexity of the algorithm is $O(n^3)$,
-because it consists of three nested loops and
-each loop contains $O(n)$ steps.
+because it consists of three nested loops 
+that go through the input.
 
 \subsubsection{Algorithm 2}
 
@@ -471,7 +474,9 @@ After this change, the time complexity is $O(n^2)$.
 \subsubsection{Algorithm 3}
 
 Surprisingly, it is possible to solve the problem
-in $O(n)$ time, which means that we can remove
+in $O(n)$ time\footnote{In \cite{ben86}, this linear-time algorithm
+is attributed to J. B. Kadene, and the algorithm is sometimes
+called \index{Kadene's algorithm} \key{Kadene's algorithm}.}, which means that we can remove
 one more loop.
 The idea is to calculate, for each array position,
 the maximum sum of a subarray that ends at that position.

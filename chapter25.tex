@@ -248,7 +248,8 @@ and this is always the final state.
 It turns out that we can easily classify
 any nim state by calculating
 the \key{nim sum} $x_1 \oplus x_2 \oplus \cdots \oplus x_n$,
-where $\oplus$ is the xor operation.
+where $\oplus$ is the xor operation\footnote{The optimal strategy
+for nim was published in 1901 by C. L. Bouton \cite{bou01}.}.
 The states whose nim sum is 0 are losing states,
 and all other states are winning states.
 For example, the nim sum for
@@ -367,7 +368,8 @@ so the nim sum is not 0.
 
 \index{Sprague–Grundy theorem}
 
-The \key{Sprague–Grundy theorem} generalizes the
+The \key{Sprague–Grundy theorem}\footnote{The theorem was discovered
+independently by R. Sprague \cite{spr35} and P. M. Grundy \cite{gru39}.} generalizes the
 strategy used in nim to all games that fulfil
 the following requirements:
 

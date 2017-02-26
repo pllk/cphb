@@ -326,7 +326,8 @@ of the algorithm is at least $O(n^2)$.
 It is possible to sort an array efficiently
 in $O(n \log n)$ time using algorithms
 that are not limited to swapping consecutive elements.
-One such algorithm is \key{mergesort}
+One such algorithm is \key{mergesort}\footnote{According to \cite{knu983},
+mergesort was invented by J. von Neumann in 1945.}
 that is based on recursion.
 
 Mergesort sorts a subarray \texttt{t}$[a,b]$ as follows:
@@ -538,8 +539,7 @@ but use some other information.
 An example of such an algorithm is
 \key{counting sort} that sorts an array in
 $O(n)$ time assuming that every element in the array
-is an integer between $0 \ldots c$ where $c$
-is a small constant.
+is an integer between $0 \ldots c$ and $c=O(n)$.
 
 The algorithm creates a \emph{bookkeeping} array
 whose indices are elements in the original array.

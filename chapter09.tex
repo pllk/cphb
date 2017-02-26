@@ -440,7 +440,8 @@ we can conclude that $\textrm{rmq}(2,7)=1$.
 \index{binary indexed tree}
 \index{Fenwick tree}
 
-A \key{binary indexed tree} or \key{Fenwick tree} \cite{fen94}
+A \key{binary indexed tree} or \key{Fenwick tree}\footnote{The
+binary indexed tree structure was presented by P. M. Fenwick in 1994 \cite{fen94}.}
 can be seen as a dynamic version of a prefix sum array.
 This data structure supports two $O(\log n)$ time operations:
 calculating the sum of elements in a range
@@ -738,7 +739,9 @@ takes $O(1)$ time using bit operations.
 
 \index{segment tree}
 
-A \key{segment tree} is a data structure
+A \key{segment tree}\footnote{The origin of this structure is unknown.
+The bottom-up-implementation in this chapter corresponds to
+the implementation in \cite{sta06}.} is a data structure
 that supports two operations:
 processing a range query and
 modifying an element in the array.

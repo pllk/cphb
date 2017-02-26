@@ -708,7 +708,8 @@ depends on the values of the objects.
 \index{edit distance}
 \index{Levenshtein distance}
 
-The \key{edit distance} or \key{Levenshtein distance}
+The \key{edit distance} or \key{Levenshtein distance}\footnote{The distance
+is named after V. I. Levenshtein who discussed it in connection with binary codes \cite{lev66}.}
 is the minimum number of editing operations
 needed to transform a string
 into another string.
@@ -983,9 +984,10 @@ $2^m$ distinct rows and the time complexity is
 $O(n 2^{2m})$.
 
 As a final note, there is also a surprising direct formula
-for calculating the number of tilings\footnote{Surprisingly,
-this formula was discovered independently
-by \cite{kas61} and \cite{tem61} in 1961.}:
+for calculating the number of tilings:
+% \footnote{Surprisingly,
+% this formula was discovered independently
+% by \cite{kas61} and \cite{tem61} in 1961.}:
 \[ \prod_{a=1}^{\lceil n/2 \rceil} \prod_{b=1}^{\lceil m/2 \rceil} 4 \cdot (\cos^2 \frac{\pi a}{n + 1} + \cos^2 \frac{\pi b}{m+1})\]
 This formula is very efficient, because it calculates
 the number of tilings in $O(nm)$ time,
