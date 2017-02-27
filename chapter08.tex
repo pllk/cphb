@@ -6,7 +6,7 @@ The time complexity of an algorithm
 is often easy to analyze
 just by examining the structure
 of the algorithm:
-what loops does the algorithm contain,
+what loops does the algorithm contain
 and how many times the loops are performed.
 However, sometimes a straightforward analysis
 does not give a true picture of the efficiency of the algorithm.
@@ -95,8 +95,8 @@ contains a subarray whose sum is 8:
 
 It turns out that the problem can be solved in
 $O(n)$ time by using the two pointers method.
-The idea is that
-the left and right pointer indicate the
+The idea is to use
+left and right pointers that indicate the
 first and last element of an subarray.
 On each turn, the left pointer moves one step
 forward, and the right pointer moves forward
@@ -235,7 +235,7 @@ where the sum of the elements is $x$.
 
 The time complexity of the algorithm depends on
 the number of steps the right pointer moves.
-There is no upper bound how many steps the
+There is no useful upper bound how many steps the
 pointer can move on a single turn.
 However, the pointer moves \emph{a total of}
 $O(n)$ steps during the algorithm,
@@ -252,7 +252,7 @@ the time complexity is $O(n)$.
 Another problem that can be solved using
 the two pointers method is the following problem,
 also known as the \key{2SUM problem}:
-We are given an array of $n$ numbers and
+we are given an array of $n$ numbers and
 a target sum $x$, and our task is to find two numbers
 in the array such that their sum is $x$,
 or report that no such numbers exist.
@@ -452,13 +452,13 @@ It turns out that the problem can be solved
 in $O(n)$ time using an appropriate data structure.
 
 An efficient solution to the problem is to
-iterate through the array from left to right,
+iterate through the array from left to right
 and maintain a chain of elements where the
 first element is the current element
 and each following element is the nearest smaller
 element of the previous element.
 If the chain only contains one element,
-the current element does not have the nearest smaller element.
+the current element does not have a nearest smaller element.
 At each step, elements are removed from the chain
 until the first element is smaller
 than the current element, or the chain is empty.

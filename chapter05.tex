@@ -22,6 +22,9 @@ dynamic programming, may be needed.
 
 We first consider the problem of generating
 all subsets of a set of $n$ elements.
+For example, the subsets of $\{1,2,3\}$ are
+$\emptyset$, $\{1\}$, $\{2\}$, $\{3\}$, $\{1,2\}$,
+$\{1,3\}$, $\{2,3\}$ and $\{1,2,3\}$.
 There are two common methods for this:
 we can either implement a recursive search
 or use bit operations of integers.
@@ -33,7 +36,7 @@ of a set is to use recursion.
 The following function
 generates the subsets of the set
 $\{1,2,\ldots,n\}$.
-The function maintains a vector
+The function maintains a vector \texttt{v}
 that will contain the elements of each subset.
 The search begins when the function is called
 with parameter 1.
@@ -164,6 +167,9 @@ for (int b = 0; b < (1<<n); b++) {
 
 Next we will consider the problem of generating
 all permutations of a set of $n$ elements.
+For example, the permutations of $\{1,2,3\}$ are
+$(1,2,3)$, $(1,3,2)$, $(2,1,3)$, $(2,3,1)$,
+$(3,1,2)$ and $(3,2,1)$.
 Again, there are two approaches:
 we can either use recursion or go through the
 permutations iteratively.
@@ -174,7 +180,7 @@ Like subsets, permutations can be generated
 using recursion.
 The following function goes
 through the permutations of the set $\{1,2,\ldots,n\}$.
-The function builds a vector that contains
+The function builds a vector \texttt{v} that contains
 the elements in the permutation,
 and the search begins when the function is
 called without parameters.
@@ -351,9 +357,9 @@ void search(int y) {
 \end{lstlisting}
 \end{samepage}
 The search begins by calling \texttt{search(0)}.
-The size of the board is in the variable $n$,
+The size of the board is $n$,
 and the code calculates the number of solutions
-to the variable $c$.
+to $c$.
 
 The code assumes that the rows and columns
 of the board are numbered from 0.
@@ -437,9 +443,9 @@ the $4 \times 4$ board are numbered as follows:
 \end{center}
 
 Let $q(n)$ denote the number of ways
-to place $n$ queens to te $n \times n$ chessboard.
+to place $n$ queens to an $n \times n$ chessboard.
 The above backtracking
-algorithm tells us that $q(n)=92$.
+algorithm tells us that, for example, $q(8)=92$.
 When $n$ increases, the search quickly becomes slow,
 because the number of the solutions increases
 exponentially.
@@ -460,7 +466,7 @@ to a complete solution.
 Such optimizations can have a tremendous
 effect on the efficiency of the search.
 
-Let us consider a problem
+Let us consider the problem
 of calculating the number of paths
 in an $n \times n$ grid from the upper-left corner
 to the lower-right corner so that each square
@@ -662,7 +668,7 @@ recursive calls: 69 millions
 \end{itemize}
 
 ~\\
-Now it is a good moment to stop optimizing
+Now is a good moment to stop optimizing
 the algorithm and see what we have achieved.
 The running time of the original algorithm
 was 483 seconds,
@@ -710,7 +716,7 @@ we can choose the numbers $[2,4,9]$ to get $2+4+9=15$.
 However, if $x=10$,
 it is not possible to form the sum.
 
-A standard solution for the problem is to
+An easy solution to the problem is to
 go through all subsets of the elements and
 check if the sum of any of the subsets is $x$.
 The running time of such a solution is $O(2^n)$,
@@ -731,7 +737,7 @@ Correspondingly, the second search creates
 a list $S_B$ from $B$.
 After this, it suffices to check if it is possible
 to choose one element from $S_A$ and another
-element from $S_B$ so that their sum is $x$.
+element from $S_B$ such that their sum is $x$.
 This is possible exactly when there is a way to
 form the sum $x$ using the numbers in the original list.
 
@@ -745,7 +751,7 @@ and the number $9$ from $S_B$,
 which corresponds to the solution $[2,4,9]$.
 
 The time complexity of the algorithm is $O(2^{n/2})$,
-because both lists $A$ and $B$ contain $n/2$ numbers
+because both lists $A$ and $B$ contain about $n/2$ numbers
 and it takes $O(2^{n/2})$ time to calculate the sums of
 their subsets to lists $S_A$ and $S_B$.
 After this, it is possible to check in 

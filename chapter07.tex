@@ -73,11 +73,11 @@ subproblems.
 In the coin problem, a natural recursive
 problem is as follows:
 what is the smallest number of coins
-required for constructing sum $x$?
+required for constructing a sum $x$?
 
 Let $f(x)$ be a function that gives the answer
 to the problem, i.e., $f(x)$ is the smallest
-number of coins required for constructing sum $x$.
+number of coins required for constructing a sum $x$.
 The values of the function depend on the
 values of the coins.
 For example, if the coin values are $\{1,3,4\}$,
@@ -142,8 +142,8 @@ we can directly implement a solution in C++:
 
 \begin{lstlisting}
 int f(int x) {
-    if (x == 0) return 0;
     if (x < 0) return 1e9;
+    if (x == 0) return 0;
     int u = 1e9;
     for (int i = 1; i <= k; i++) {
         u = min(u, f(x-c[i])+1);
@@ -154,7 +154,7 @@ int f(int x) {
 
 The code assumes that the available coins are
 $\texttt{c}[1], \texttt{c}[2], \ldots, \texttt{c}[k]$,
-and the value $10^9$ denotes infinity.
+and $10^9$ denotes infinity.
 This function works but it is not efficient yet,
 because it goes through a large number
 of ways to construct the sum.
@@ -191,8 +191,8 @@ implemented as follows:
 
 \begin{lstlisting}
 int f(int x) {
-    if (x == 0) return 0;
     if (x < 0) return 1e9;
+    if (x == 0) return 0;
     if (d[x]) return d[x];
     int u = 1e9;
     for (int i = 1; i <= k; i++) {
@@ -204,9 +204,9 @@ int f(int x) {
 \end{lstlisting}
 
 The function handles the base cases
-$x=0$ and $x<0$ as previously.
+$x<0$ and $x=0$ as previously.
 Then the function checks if
-$f(x)$ has already been calculated
+$f(x)$ has already been stored
 in $\texttt{d}[x]$.
 If the value of $f(x)$ is found in the array,
 the function directly returns it.
@@ -260,7 +260,7 @@ should show how to select the coins that produce
 the sum $x$ using as few coins as possible.
 
 We can construct the solution by adding another
-array to the code. The array indicates for
+array to the code. The new array indicates for
 each sum of money the first coin that should be
 chosen in an optimal solution.
 In the following code, the array \texttt{e}
@@ -320,7 +320,7 @@ but now we will calculate sums of numbers of solutions.
 
 To solve the problem, we can define a function $f(x)$
 that gives the number of ways to construct
-the sum $x$ using the coins.
+a sum $x$ using the coins.
 For example, $f(5)=6$ when the coins are $\{1,3,4\}$.
 The value of $f(x)$ can be calculated recursively
 using the formula
@@ -709,7 +709,7 @@ depends on the values of the objects.
 \index{Levenshtein distance}
 
 The \key{edit distance} or \key{Levenshtein distance}\footnote{The distance
-is named after V. I. Levenshtein who discussed it in connection with binary codes \cite{lev66}.}
+is named after V. I. Levenshtein who studied it in connection with binary codes \cite{lev66}.}
 is the minimum number of editing operations
 needed to transform a string
 into another string.
@@ -942,7 +942,7 @@ $\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$
 Let $f(k,x)$ denote the number of ways to
 construct a solution for rows $1 \ldots k$
 in the grid so that string $x$ corresponds to row $k$.
-It is possible to use dynamic programing here,
+It is possible to use dynamic programming here,
 because the state of a row is constrained
 only by the state of the previous row.
 
@@ -971,7 +971,7 @@ so that the shorter side has length $m$,
 because the factor $4^{2m}$ dominates the time complexity.
 
 It is possible to make the solution more efficient
-by using a better representation for the rows.
+by using a more compact representation for the rows.
 It turns out that it is sufficient to know which
 columns of the previous row contain the upper square
 of a vertical tile.

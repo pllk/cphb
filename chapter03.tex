@@ -664,7 +664,7 @@ string s = "monkey";
 sort(s.begin(), s.end());
 \end{lstlisting}
 Sorting a string means that the characters
-in the string are sorted.
+of the string are sorted.
 For example, the string ''monkey'' becomes ''ekmnoy''.
 
 \subsubsection{Comparison operators}
@@ -775,7 +775,7 @@ an element $x$ in the array \texttt{t}:
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
-    if (t[i] == x) // x found at index i
+    if (t[i] == x) {} // x found at index i
 }
 \end{lstlisting}
 
@@ -816,7 +816,7 @@ The above idea can be implemented as follows:
 int a = 1, b = n;
 while (a <= b) {
     int k = (a+b)/2;
-    if (t[k] == x) // x found at index k
+    if (t[k] == x) {} // x found at index k
     if (t[k] > x) b = k-1;
     else a = k+1;
 }
@@ -850,7 +850,7 @@ int k = 1;
 for (int b = n/2; b >= 1; b /= 2) {
     while (k+b <= n && t[k+b] <= x) k += b;
 }
-if (t[k] == x) // x was found at index k
+if (t[k] == x) {} // x was found at index k
 \end{lstlisting}
 
 The variables $k$ and $b$ contain the position
@@ -893,7 +893,7 @@ $\texttt{ok}(x)$ & \texttt{false} & \texttt{false}
 \end{center}
 
 \noindent
-Now, the value $k$ can be found using binary search:
+Now, the value of $k$ can be found using binary search:
 
 \begin{lstlisting}
 int x = -1;
@@ -923,7 +923,7 @@ the total time complexity is $O(n \log z)$.
 Binary search can also be used to find
 the maximum value for a function that is
 first increasing and then decreasing.
-Our task is to find a value $k$ such that
+Our task is to find a position $k$ such that
 
 \begin{itemize}
 \item

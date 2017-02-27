@@ -141,7 +141,7 @@ cout << c << "\n"; // tiva
 
 A \key{set} is a data structure that
 maintains a collection of elements.
-The basic operations in a set are element
+The basic operations of sets are element
 insertion, search and removal.
 
 C++ contains two set implementations:
@@ -149,7 +149,7 @@ C++ contains two set implementations:
 The structure \texttt{set} is based on a balanced
 binary tree and the time complexity of its
 operations is $O(\log n)$.
-The structure \texttt{unordered\_set} uses a hash table,
+The structure \texttt{unordered\_set} uses hashing,
 and the time complexity of its operations is $O(1)$ on average.
 
 The choice which set implementation to use
@@ -262,7 +262,7 @@ the structure
 binary tree and accessing elements
 takes $O(\log n)$ time,
 while the structure
-\texttt{unordered\_map} uses a hash map
+\texttt{unordered\_map} uses hashing
 and accessing elements takes $O(1)$ time on average.
 
 The following code creates a map
@@ -383,7 +383,7 @@ A shorter way to write the code is as follows:
 auto it = s.begin();
 \end{lstlisting}
 The element to which an iterator points
-can be accessed through the \texttt{*} symbol.
+can be accessed using the \texttt{*} symbol.
 For example, the following code prints
 the first element in the set:
 
@@ -530,9 +530,9 @@ cout << (a^b) << "\n"; // 1001101110
 
 A \texttt{deque} is a dynamic array
 whose size can be changed at both ends of the array.
-Like a vector, a deque contains the functions
+Like a vector, a deque provides the functions
 \texttt{push\_back} and \texttt{pop\_back}, but
-it also contains the functions
+it also provides the functions
 \texttt{push\_front} and \texttt{pop\_front}
 that are not available in a vector.
 
@@ -610,7 +610,7 @@ either the minimum or maximum element.
 The time complexity is $O(\log n)$
 for insertion and removal and $O(1)$ for retrieval.
 
-While a set structure efficiently supports 
+While an ordered set efficiently supports
 all the operations of a priority queue,
 the benefit in using a priority queue is
 that it has smaller constant factors.
