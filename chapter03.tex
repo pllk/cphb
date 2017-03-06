@@ -9,12 +9,12 @@ use sorting as a subroutine,
 because it is often easier to process
 data if the elements are in a sorted order.
 
-For example, the problem ''does the array contain
+For example, the problem ''does an array contain
 two equal elements?'' is easy to solve using sorting.
 If the array contains two equal elements,
 they will be next to each other after sorting,
 so it is easy to find them.
-Also the problem ''what is the most frequent element
+Also, the problem ''what is the most frequent element
 in the array?'' can be solved similarly.
 
 There are many algorithms for sorting, and they are
@@ -316,7 +316,7 @@ in the wrong order removes exactly one inversion
 from the array.
 Hence, if a sorting algorithm can only
 swap consecutive elements, each swap removes
-at most one inversion and the time complexity
+at most one inversion, and the time complexity
 of the algorithm is at least $O(n^2)$.
 
 \subsubsection{$O(n \log n)$ algorithms}
@@ -326,11 +326,11 @@ of the algorithm is at least $O(n^2)$.
 It is possible to sort an array efficiently
 in $O(n \log n)$ time using algorithms
 that are not limited to swapping consecutive elements.
-One such algorithm is \key{mergesort}\footnote{According to \cite{knu983},
-mergesort was invented by J. von Neumann in 1945.}
-that is based on recursion.
+One such algorithm is \key{merge sort}\footnote{According to \cite{knu983},
+merge sort was invented by J. von Neumann in 1945.},
+which is based on recursion.
 
-Mergesort sorts a subarray \texttt{t}$[a,b]$ as follows:
+Merge sort sorts the subarray \texttt{t}$[a,b]$ as follows:
 
 \begin{enumerate}
 \item If $a=b$, do not do anything, because the subarray is already sorted.
@@ -341,7 +341,7 @@ Mergesort sorts a subarray \texttt{t}$[a,b]$ as follows:
 into a sorted subarray \texttt{t}$[a,b]$.
 \end{enumerate}
 
-Mergesort is an efficient algorithm, because it
+Merge sort is an efficient algorithm, because it
 halves the size of the subarray at each step.
 The recursion consists of $O(\log n)$ levels,
 and processing each level takes $O(n)$ time.
@@ -519,8 +519,8 @@ ways to sort the array, a total of $n!$ ways.
 For this reason, the height of the tree
 must be at least
 \[ \log_2(n!) = \log_2(1)+\log_2(2)+\cdots+\log_2(n).\]
-We get an lower bound for this sum
-by choosing last $n/2$ elements and
+We get a lower bound for this sum
+by choosing the last $n/2$ elements and
 changing the value of each element to $\log_2(n/2)$.
 This yields an estimate
 \[ \log_2(n!) \ge (n/2) \cdot \log_2(n/2),\]
@@ -541,7 +541,7 @@ An example of such an algorithm is
 $O(n)$ time assuming that every element in the array
 is an integer between $0 \ldots c$ and $c=O(n)$.
 
-The algorithm creates a \emph{bookkeeping} array
+The algorithm creates a \emph{bookkeeping} array,
 whose indices are elements in the original array.
 The algorithm iterates through the original array
 and calculates how many times each element
@@ -604,7 +604,7 @@ in the bookkeeping array is 2,
 because the element 3 appears 2 times
 in the original array (positions 2 and 6).
 
-The construction of the bookkeeping array
+Construction of the bookkeeping array
 takes $O(n)$ time. After this, the sorted array
 can be created in $O(n)$ time because
 the number of occurrences of each element can be retrieved
@@ -614,7 +614,7 @@ sort is $O(n)$.
 
 Counting sort is a very efficient algorithm
 but it can only be used when the constant $c$
-is so small that the array elements can
+is small enough, so that the array elements can
 be used as indices in the bookkeeping array.
 
 \section{Sorting in C++}
@@ -630,9 +630,9 @@ the function \texttt{sort} that can be easily used for
 sorting arrays and other data structures.
 
 There are many benefits in using a library function.
-First, it saves time because there is no need to
+Firstly, it saves time because there is no need to
 implement the function.
-In addition, the library implementation is
+Secondly, the library implementation is
 certainly correct and efficient: it is not probable
 that a self-made sorting function would be better.
 
@@ -674,8 +674,8 @@ For example, the string ''monkey'' becomes ''ekmnoy''.
 The function \texttt{sort} requires that
 a \key{comparison operator} is defined for the data type
 of the elements to be sorted.
-During the sorting, this operator will be used
-whenever it is needed to find out the order of two elements.
+When sorting, this operator will be used
+whenever it is necessary to find out the order of two elements.
 
 Most C++ data types have a built-in comparison operator,
 and elements of those types can be sorted automatically.
@@ -684,10 +684,10 @@ and strings are sorted in alphabetical order.
 
 \index{pair@\texttt{pair}}
 
-Pairs (\texttt{pair}) are sorted primarily by their first
-elements (\texttt{first}).
+Pairs (\texttt{pair}) are sorted primarily according to their
+first elements (\texttt{first}).
 However, if the first elements of two pairs are equal,
-they are sorted by their second elements (\texttt{second}):
+they are sorted according to their second elements (\texttt{second}):
 \begin{lstlisting}
 vector<pair<int,int>> v;
 v.push_back({1,5});
@@ -719,14 +719,14 @@ User-defined structs do not have a comparison
 operator automatically.
 The operator should be defined inside
 the struct as a function
-\texttt{operator<}
+\texttt{operator<},
 whose parameter is another element of the same type.
 The operator should return \texttt{true}
 if the element is smaller than the parameter,
 and \texttt{false} otherwise.
 
 For example, the following struct \texttt{P}
-contains the x and y coordinate of a point.
+contains the x and y coordinates of a point.
 The comparison operator is defined so that
 the points are sorted primarily by the x coordinate
 and secondarily by the y coordinate.
