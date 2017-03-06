@@ -581,9 +581,9 @@ while (!q.empty()) {
     if (z[a]) continue;
     z[a] = 1;
     for (auto b : v[a]) {
-        if (e[a]+b.second < e[b]) {
-            e[b] = e[a]+b.second;
-            q.push({-e[b],b});
+        if (e[a]+b.second < e[b.first]) {
+            e[b.first] = e[a]+b.second;
+            q.push({-e[b.first],b.first});
         }
     }
 }
