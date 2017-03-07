@@ -479,12 +479,12 @@ For example, the following code creates
 a bitset that contains 10 elements:
 \begin{lstlisting}
 bitset<10> s;
-s[2] = 1;
-s[5] = 1;
-s[6] = 1;
-s[8] = 1;
-cout << s[4] << "\n"; // 0
-cout << s[5] << "\n"; // 1
+s[1] = 1;
+s[3] = 1;
+s[4] = 1;
+s[7] = 1;
+cout << s[4] << "\n"; // 1
+cout << s[5] << "\n"; // 0
 \end{lstlisting}
 
 The benefit in using bitsets is that
@@ -500,11 +500,11 @@ can be efficiently manipulated using
 bit operators, which makes it possible to
 optimize algorithms using bit sets.
 
-The following code shows another way to create a bitset:
+The following code shows another way to create the above bitset:
 \begin{lstlisting}
-bitset<10> s(string("0010011010"));
-cout << s[4] << "\n"; // 0
-cout << s[5] << "\n"; // 1
+bitset<10> s(string("0010011010")); // from right to left
+cout << s[4] << "\n"; // 1
+cout << s[5] << "\n"; // 0
 \end{lstlisting}
 
 The function \texttt{count} returns the number
