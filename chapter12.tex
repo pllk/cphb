@@ -331,7 +331,7 @@ and the array \texttt{e} will contain the
 distances to all nodes in the graph.
 The search can be implemented as follows:
 \begin{lstlisting}
-z[s] = 1; e[x] = 0;
+z[x] = 1; e[x] = 0;
 q.push(x);
 while (!q.empty()) {
     int s = q.front(); q.pop();
