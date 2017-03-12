@@ -371,7 +371,7 @@ builds the minimum spanning tree as follows:
 
 \begin{lstlisting}
 for (...) {
-  if (!same(a,b)) union(a,b);
+  if (!same(a,b)) unite(a,b);
 }
 \end{lstlisting}
 
@@ -381,11 +381,11 @@ where $a$ and $b$ are two nodes.
 Two functions are needed:
 the function \texttt{same} determines
 if the nodes are in the same component,
-and the function \texttt{union}
+and the function \texttt{unite}
 joins the components that contain nodes $a$ and $b$.
 
 The problem is how to efficiently implement
-the functions \texttt{same} and \texttt{union}.
+the functions \texttt{same} and \texttt{unite}.
 One possibility is to implement the function
 \texttt{same} as a graph traversal and check if
 we can get from node $a$ to node $b$.
@@ -408,7 +408,7 @@ a collection of sets.
 The sets are disjoint, so no element
 belongs to more than one set.
 Two $O(\log n)$ time operations are supported:
-the \texttt{union} operation joins two sets,
+the \texttt{unite} operation joins two sets,
 and the \texttt{find} operation finds the representative
 of the set that contains a given element\footnote{The structure presented here
 was introduced in 1971 by J. D. Hopcroft and J. D. Ullman \cite{hop71}.
@@ -541,7 +541,7 @@ bool same(int a, int b) {
 \end{lstlisting}
 
 \begin{samepage}
-The function \texttt{union} joins the sets
+The function \texttt{unite} joins the sets
 that contain elements $a$ and $b$
 (the elements has to be in different sets).
 The function first finds the representatives
@@ -549,7 +549,7 @@ of the sets and then connects the smaller
 set to the larger set.
 
 \begin{lstlisting}
-void union(int a, int b) {
+void unite(int a, int b) {
     a = find(a);
     b = find(b);
     if (s[a] < s[b]) swap(a,b);
@@ -562,9 +562,9 @@ void union(int a, int b) {
 The time complexity of the function \texttt{find}
 is $O(\log n)$ assuming that the length of each
 chain is $O(\log n)$.
-In this case, the functions \texttt{same} and \texttt{union}
+In this case, the functions \texttt{same} and \texttt{unite}
 also work in $O(\log n)$ time.
-The function \texttt{union} makes sure that the
+The function \texttt{unite} makes sure that the
 length of each chain is $O(\log n)$ by connecting
 the smaller set to the larger set.
 
