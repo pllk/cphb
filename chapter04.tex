@@ -3,7 +3,7 @@
 \index{data structure}
 
 A \key{data structure} is a way to store
-data in the memory of the computer.
+data in the memory of a computer.
 It is important to choose an appropriate
 data structure for a problem,
 because each data structure has its own
@@ -16,7 +16,7 @@ data structures in the C++ standard library.
 It is a good idea to use the standard library
 whenever possible,
 because it will save a lot of time.
-Later in the book we will learn more sophisticated
+Later in the book we will learn about more sophisticated
 data structures that are not available
 in the standard library.
 
@@ -30,7 +30,7 @@ size can be changed during the execution
 of the program.
 The most popular dynamic array in C++ is
 the \texttt{vector} structure,
-that can be used almost like an ordinary array.
+which can be used almost like an ordinary array.
 
 The following code creates an empty vector and
 adds three elements to it:
@@ -61,7 +61,7 @@ for (int i = 0; i < v.size(); i++) {
 \end{lstlisting}
 
 \begin{samepage}
-A shorter way to iterate trough a vector is as follows:
+A shorter way to iterate through a vector is as follows:
 
 \begin{lstlisting}
 for (auto x : v) {
@@ -101,7 +101,7 @@ vector<int> v(10);
 vector<int> v(10, 5);
 \end{lstlisting}
 
-The internal implementation of the vector
+The internal implementation of a vector
 uses an ordinary array.
 If the size of the vector increases and
 the array becomes too small,
@@ -144,15 +144,15 @@ maintains a collection of elements.
 The basic operations of sets are element
 insertion, search and removal.
 
-C++ contains two set implementations:
-\texttt{set} and \texttt{unordered\_set}.
+The C++ standard library contains two set
+implementations: \texttt{set} and \texttt{unordered\_set}.
 The structure \texttt{set} is based on a balanced
 binary tree and the time complexity of its
 operations is $O(\log n)$.
 The structure \texttt{unordered\_set} uses hashing,
 and the time complexity of its operations is $O(1)$ on average.
 
-The choice which set implementation to use
+The choice of which set implementation to use
 is often a matter of taste.
 The benefit in the \texttt{set} structure
 is that it maintains the order of the elements
@@ -197,7 +197,7 @@ for (auto x : s) {
 \end{lstlisting}
 
 An important property of sets is
-that all the elements are \emph{distinct}.
+that all their elements are \emph{distinct}.
 Thus, the function \texttt{count} always returns
 either 0 (the element is not in the set)
 or 1 (the element is in the set),
@@ -216,7 +216,7 @@ cout << s.count(5) << "\n"; // 1
 
 C++ also contains the structures
 \texttt{multiset} and \texttt{unordered\_multiset}
-that work otherwise like \texttt{set}
+that otherwise work like \texttt{set}
 and \texttt{unordered\_set}
 but they can contain multiple instances of an element.
 For example, in the following code all three instances
@@ -255,9 +255,9 @@ where $n$ is the size of the array,
 the keys in a map can be of any data type and
 they do not have to be consecutive values.
 
-C++ contains two map implementations that
-correspond to the set implementations:
-the structure
+The C++ standard library contains two map
+implementations that correspond to the set
+implementations: the structure
 \texttt{map} is based on a balanced
 binary tree and accessing elements
 takes $O(\log n)$ time,
@@ -295,7 +295,7 @@ if (m.count("aybabtu")) {
     cout << "key exists in the map";
 }
 \end{lstlisting}
-The following code prints all keys and values
+The following code prints all the keys and values
 in a map:
 \begin{lstlisting}
 for (auto x : m) {
@@ -312,8 +312,8 @@ operate with iterators.
 An \key{iterator} is a variable that points
 to an element in a data structure.
 
-Often used iterators are \texttt{begin}
-and \texttt{end} that define a range that contains
+The often used iterators \texttt{begin}
+and \texttt{end} define a range that contains
 all elements in a data structure.
 The iterator \texttt{begin} points to
 the first element in the data structure,
@@ -374,7 +374,7 @@ random_shuffle(t, t+n);
 Iterators are often used to access
 elements of a set.
 The following code creates an iterator
-\texttt{it} that points to the first element in the set:
+\texttt{it} that points to the first element in a set:
 \begin{lstlisting}
 set<int>::iterator it = s.begin();
 \end{lstlisting}
@@ -397,7 +397,7 @@ Iterators can be moved using the operators
 meaning that the iterator moves to the next
 or previous element in the set.
 
-The following code prints all elements in the set:
+The following code prints all the elements in the set:
 \begin{lstlisting}
 for (auto it = s.begin(); it != s.end(); it++) {
     cout << *it << "\n";
@@ -429,7 +429,7 @@ whose value is \emph{larger than} $x$.
 If such elements do not exist,
 the return value of the functions will be \texttt{end}.
 These functions are not supported by the
-\texttt{unordered\_set} structure that
+\texttt{unordered\_set} structure which
 does not maintain the order of the elements.
 
 \begin{samepage}
@@ -462,7 +462,7 @@ If \texttt{a} equals \texttt{begin},
 the corresponding element is nearest to $x$.
 If \texttt{a} equals \texttt{end},
 the last element in the set is nearest to $x$.
-If none of the previous cases holds,
+If none of the previous cases hold,
 the element nearest to $x$ is either the
 element that corresponds to $a$ or the previous element.
 \end{samepage}
@@ -534,7 +534,7 @@ Like a vector, a deque provides the functions
 \texttt{push\_back} and \texttt{pop\_back}, but
 it also provides the functions
 \texttt{push\_front} and \texttt{pop\_front}
-that are not available in a vector.
+which are not available in a vector.
 
 A deque can be used as follows:
 \begin{lstlisting}
@@ -580,7 +580,7 @@ cout << s.top(); // 2
 
 A \texttt{queue} also
 provides two $O(1)$ time operations:
-adding a element to the end of the queue,
+adding an element to the end of the queue,
 and removing the first element in the queue.
 It is only possible to access the first
 and last element of a queue.
@@ -619,7 +619,7 @@ a heap structure that is much simpler than a
 balanced binary tree needed for an ordered set.
 
 \begin{samepage}
-As default, the elements in the C++
+By default, the elements in the C++
 priority queue are sorted in decreasing order,
 and it is possible to find and remove the
 largest element in the queue.
@@ -652,7 +652,7 @@ priority_queue<int,vector<int>,greater<int>> q;
 
 \section{Comparison to sorting}
 
-Often it is possible to solve a problem
+It is often possible to solve a problem
 using either data structures or sorting.
 Sometimes there are remarkable differences
 in the actual efficiency of these approaches,
@@ -730,8 +730,8 @@ the running time, because algorithm 2
 is 4–5 times faster than algorithm 1.
 
 However, the most efficient algorithm is algorithm 3
-that uses sorting.
-It only uses half of the time compared to algorithm 2.
+which uses sorting.
+It only uses half the time compared to algorithm 2.
 Interestingly, the time complexity of both
 algorithm 1 and algorithm 3 is $O(n \log n)$,
 but despite this, algorithm 3 is ten times faster.
