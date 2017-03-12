@@ -1,6 +1,6 @@
 \documentclass[twoside,12pt,a4paper,english]{book}
 
-%\includeonly{chapter01,list}
+%\includeonly{chapter11,list}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -28,9 +28,15 @@
 \usepackage{titlesec}
 
 \usepackage{skak}
+\usepackage{inconsolata}
+
 
 \usetikzlibrary{patterns,snakes}
 \pagestyle{plain}
+
+\definecolor{keywords}{HTML}{44548A}
+\definecolor{strings}{HTML}{00999A}
+\definecolor{comments}{HTML}{990000}
 
 \lstset{language=C++,frame=single,basicstyle=\ttfamily \small,showstringspaces=false,columns=flexible}
 \lstset{
@@ -41,6 +47,11 @@
 \lstset{xleftmargin=20pt,xrightmargin=5pt}
 \lstset{aboveskip=12pt,belowskip=8pt}
 
+\lstset{
+    commentstyle=\color{comments},
+    keywordstyle=\color{keywords},
+    stringstyle=\color{strings}
+}
 
 \date{Draft \today}
 
