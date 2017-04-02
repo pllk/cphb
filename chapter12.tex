@@ -133,7 +133,7 @@ vector<int> v[N];
 \end{lstlisting}
 and also maintains an array
 \begin{lstlisting}
-int z[N];
+bool z[N];
 \end{lstlisting}
 that keeps track of the visited nodes.
 Initially, each array value is 0,
@@ -323,7 +323,8 @@ of the queue is the next node to be processed.
 
 In addition, the code uses arrays
 \begin{lstlisting}
-int z[N], e[N];
+bool z[N];
+int e[N];
 \end{lstlisting}
 so that the array \texttt{z} indicates
 which nodes the search has already visited
