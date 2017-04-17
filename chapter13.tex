@@ -204,18 +204,19 @@ The algorithm consists of $n-1$ rounds,
 and on each round the algorithm goes through
 all edges of the graph and tries to
 reduce the distances.
-The algorithm constructs an array \texttt{e}
+The algorithm constructs an array \texttt{distance}
 that will contain the distance from $x$
 to all nodes in the graph.
 The initial value $10^9$ means infinity.
 
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) e[i] = 1e9;
-e[x] = 0;
+for (int i = 1; i <= n; i++) distance[i] = 1e9;
+distance[x] = 0;
 for (int i = 1; i <= n-1; i++) {
     for (int a = 1; a <= n; a++) {
         for (auto b : v[a]) {
-            e[b.first] = min(e[b.first],e[a]+b.second);
+            distance[b.first] = min(distance[b.first],
+                                       distance[a]+b.second);
         }
     }
 }
@@ -234,7 +235,7 @@ Thus, a possible way to make the algorithm more efficient
 is to stop the algorithm if no distance
 can be reduced during a round.
 
-\subsubsection{Negative cycle}
+\subsubsection{Negative cycles}
 
 \index{negative cycle}
 
@@ -300,22 +301,22 @@ node $b$ is added to the queue.
 
 The following implementation uses a 
 \texttt{queue} \texttt{q}.
-In addition, an array \texttt{z} indicates
+In addition, an array \texttt{inqueue} indicates
 if a node is already in the queue,
 in which case the algorithm does not add
 the node to the queue again.
 
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) e[i] = 1e9;
-e[x] = 0;
+for (int i = 1; i <= n; i++) distance[i] = 1e9;
+distance[x] = 0;
 q.push(x);
 while (!q.empty()) {
     int a = q.front(); q.pop();
-    z[a] = 0;
+    inqueue[a] = false;
     for (auto b : v[a]) {
-        if (e[a]+b.second < e[b.first]) {
-            e[b.first] = e[a]+b.second;
-            if (!z[b]) {q.push(b); z[b] = 1;}
+        if (distance[a]+b.second < distance[b.first]) {
+            distance[b.first] = distance[a]+b.second;
+            if (!inqueue[b]) {q.push(b); inqueue[b] = true;}
         }
     }
 }
@@ -562,28 +563,28 @@ priority_queue<pair<int,int>> q;
 A small difficulty is that in Dijkstra's algorithm,
 we should find the node with the \emph{minimum} distance,
 while the C++ priority queue finds the \emph{maximum}
-element as default.
+element by default.
 An easy trick is to use \emph{negative} distances,
 which allows us to directly use the C++ priority queue.
 
 The code keeps track of processed nodes
-in an array \texttt{z},
-and maintains the distances in an array \texttt{e}.
+in an array \texttt{ready},
+and maintains the distances in an array \texttt{distance}.
 Initially, the distance to the starting node is 0,
 and the distance to all other nodes is $10^9$ (infinite).
 
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) e[i] = 1e9;
-e[x] = 0;
+for (int i = 1; i <= n; i++) distance[i] = 1e9;
+distance[x] = 0;
 q.push({0,x});
 while (!q.empty()) {
     int a = q.top().second; q.pop();
-    if (z[a]) continue;
-    z[a] = 1;
+    if (ready[a]) continue;
+    ready[a] = true;
     for (auto b : v[a]) {
-        if (e[a]+b.second < e[b.first]) {
-            e[b.first] = e[a]+b.second;
-            q.push({-e[b.first],b.first});
+        if (distance[a]+b.second < distance[b.first]) {
+            distance[b.first] = distance[a]+b.second;
+            q.push({-distance[b.first],b.first});
         }
     }
 }

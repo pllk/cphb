@@ -504,17 +504,17 @@ efficiently by following the corresponding chain.
 The union-find structure can be implemented
 using arrays.
 In the following implementation,
-the array \texttt{k} contains for each element
+the array \texttt{link} contains for each element
 the next element
 in the chain or the element itself if it is
 a representative,
-and the array \texttt{s} indicates for each representative
+and the array \texttt{size} indicates for each representative
 the size of the corresponding set.
 
 Initially, each element belongs to a separate set:
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) k[i] = i;
-for (int i = 1; i <= n; i++) s[i] = 1;
+for (int i = 1; i <= n; i++) link[i] = i;
+for (int i = 1; i <= n; i++) size[i] = 1;
 \end{lstlisting}
 
 The function \texttt{find} returns
@@ -524,7 +524,7 @@ the chain that begins at $x$.
 
 \begin{lstlisting}
 int find(int x) {
-    while (x != k[x]) x = k[x];
+    while (x != link[x]) x = link[x];
     return x;
 }
 \end{lstlisting}
@@ -552,9 +552,9 @@ set to the larger set.
 void unite(int a, int b) {
     a = find(a);
     b = find(b);
-    if (s[a] < s[b]) swap(a,b);
-    s[a] += s[b];
-    k[b] = a;
+    if (size[a] < size[b]) swap(a,b);
+    size[a] += size[b];
+    link[b] = a;
 }
 \end{lstlisting}
 \end{samepage}

@@ -136,7 +136,7 @@ or the length of the longest path from the node
 to a leaf.
 
 As an example, let us calculate for each node $s$
-a value $\texttt{c}[s]$: the number of nodes in its subtree.
+a value $\texttt{count}[s]$: the number of nodes in its subtree.
 The subtree contains the node itself and
 all nodes in the subtrees of its children.
 Thus, we can calculate the number of nodes
@@ -144,11 +144,11 @@ recursively using the following code:
 
 \begin{lstlisting}
 void dfs(int s, int e) {
-    c[s] = 1;
+    count[s] = 1;
     for (auto u : v[s]) {
         if (u == e) continue;
         dfs(u, s);
-        c[s] += c[u];
+        count[s] += count[u];
     }
 }
 \end{lstlisting}
