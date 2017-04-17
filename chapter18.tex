@@ -21,8 +21,10 @@ For example, such queries are:
 The $k$th \key{ancestor} of a node $x$ in a rooted tree
 is the node that we will reach if we move $k$
 levels up from $x$.
-Let $f(x,k)$ denote the $k$th ancestor of $x$.
-For example, in the following tree, $f(2,1)=1$ and $f(8,2)=4$.
+Let $f(x,k)$ denote the $k$th ancestor of a node $x$
+(or $0$ if there is no such an ancestor).
+For example, in the following tree, $f(2,1)=1$, $f(8,2)=4$
+and $f(5,2)=0$.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -73,9 +75,6 @@ $f(x,4)$ & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 $\cdots$ \\
 \end{tabular}
 \end{center}
-
-The value $0$ means that the $k$th ancestor
-of a node does not exist.
 
 The preprocessing takes $O(n \log n)$ time,
 because each node can have at most $n$ ancestors.
