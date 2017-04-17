@@ -108,7 +108,7 @@ It means that $x<y$ if either $x \neq y$ and $x$ is a prefix of $y$,
 or there is a position $k$ such that
 $x[i]=y[i]$ when $i<k$ and $x[k]<y[k]$.
 
-\section{Trie structures}
+\section{Trie structure}
 
 \index{trie}
 
@@ -218,9 +218,10 @@ based on their hash values.
 A usual way to implement string hashing
 is polynomial hashing, which means
 that the hash value is calculated using the formula
-\[(c[1] A^{n-1} + c[2] A^{n-2} + \cdots + c[n] A^0) \bmod B  ,\]
-where $c[1],c[2],\ldots,c[n]$
-are the codes of the characters in the string,
+\[(\texttt{s}[0] A^{n-1} + \texttt{s}[1] A^{n-2} + \cdots + \texttt{s}[n-1] A^0) \bmod B  ,\]
+where \texttt{s} is a string of length $n$
+(so $s[0],s[1],\ldots,s[n-1]$
+are the codes of the characters),
 and $A$ and $B$ are pre-chosen constants.
 
 For example, the codes of the characters
@@ -263,8 +264,8 @@ of the string that ends at position $k$.
 The array values can be recursively calculated as follows:
 \[
 \begin{array}{lcl}
-h[0] & = & 0 \\
-h[k] & = & (h[k-1] A + c[k]) \bmod B \\
+h[0] & = & \texttt{s}[0] \\
+h[k] & = & (h[k-1] A + \texttt{s}[k]) \bmod B \\
 \end{array}
 \]
 In addition, we construct an array $p$
@@ -279,7 +280,9 @@ Constructing these arrays takes $O(n)$ time.
 After this, the hash value of a substring
 that begins at position $a$ and ends at position $b$
 can be calculated in $O(1)$ time using the formula
-\[(h[b]-h[a-1] p[b-a+1]) \bmod B.\]
+\[(h[b]-h[a-1] p[b-a+1]) \bmod B\]
+assuming that $a>0$.
+If $a=0$, the hash value is simply $h[b]$.
 
 \subsubsection*{Using hash values}
 
@@ -477,22 +480,22 @@ For example, the Z-array for the string
 \node at (15.5, 0.5) {1};
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
-\node at (14.5, 2.5) {15};
-\node at (15.5, 2.5) {16};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
+\node at (14.5, 2.5) {14};
+\node at (15.5, 2.5) {15};
 
 \end{tikzpicture}
 \end{center}
@@ -581,30 +584,30 @@ For example, let us construct the following Z-array:
 \node at (15.5, 0.5) {?};
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
-\node at (14.5, 2.5) {15};
-\node at (15.5, 2.5) {16};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
+\node at (14.5, 2.5) {14};
+\node at (15.5, 2.5) {15};
 
 \end{tikzpicture}
 \end{center}
 
-The first interesting position is 7 where the
+The first interesting position is 6 where the
 length of the common prefix is 5.
 After calculating this value,
-the current $[x,y]$ range will be $[7,11]$:
+the current $[x,y]$ range will be $[6,10]$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -652,22 +655,22 @@ the current $[x,y]$ range will be $[7,11]$:
 
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
-\node at (14.5, 2.5) {15};
-\node at (15.5, 2.5) {16};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
+\node at (14.5, 2.5) {14};
+\node at (15.5, 2.5) {15};
 
 \end{tikzpicture}
 \end{center}
@@ -676,12 +679,12 @@ Now, it is possible to calculate the
 subsequent values of the Z-array
 more efficiently,
 because we know that
-the ranges $[1,5]$ and $[7,11]$
+the ranges $[0,4]$ and $[6,10]$
 contain the same characters.
 First, since the values at
-positions 2 and 3 are 0,
+positions 1 and 2 are 0,
 we immediately know that
-the values at positions 8 and 9
+the values at positions 7 and 8
 are also 0:
 
 \begin{center}
@@ -731,22 +734,22 @@ are also 0:
 
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
-\node at (14.5, 2.5) {15};
-\node at (15.5, 2.5) {16};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
+\node at (14.5, 2.5) {14};
+\node at (15.5, 2.5) {15};
 
 
 \draw[thick,<->] (7.5,-0.25) .. controls (7,-1.25) and (2,-1.25) .. (1.5,-0.25);
@@ -755,8 +758,8 @@ are also 0:
 \end{center}
 
 After this, we know that the value
-at position 10 will be at least 2,
-because the value at position 4 is 2:
+at position 9 will be at least 2,
+because the value at position 3 is 2:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -804,29 +807,29 @@ because the value at position 4 is 2:
 
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
-\node at (14.5, 2.5) {15};
-\node at (15.5, 2.5) {16};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
+\node at (14.5, 2.5) {14};
+\node at (15.5, 2.5) {15};
 
 \draw[thick,<->] (9.5,-0.25) .. controls (9,-1.25) and (4,-1.25) .. (3.5,-0.25);
 \end{tikzpicture}
 \end{center}
 
 Since we have no information about the characters
-after position 11, we have to begin to compare the strings
+after position 10, we have to begin to compare the strings
 character by character:
 
 \begin{center}
@@ -879,22 +882,22 @@ character by character:
 
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
-\node at (14.5, 2.5) {15};
-\node at (15.5, 2.5) {16};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
+\node at (14.5, 2.5) {14};
+\node at (15.5, 2.5) {15};
 
 %\draw[thick,<->] (11.5,-0.25) .. controls (11,-1.25) and (3,-1.25) .. (2.5,-0.25);
 \end{tikzpicture}
@@ -902,8 +905,8 @@ character by character:
 
 
 It turns out that the length of the common
-prefix at position 10 is 7,
-and thus the new range $[x,y]$ is $[10,16]$:
+prefix at position 9 is 7,
+and thus the new range $[x,y]$ is $[9,15]$:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -951,22 +954,22 @@ and thus the new range $[x,y]$ is $[10,16]$:
 
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
-\node at (14.5, 2.5) {15};
-\node at (15.5, 2.5) {16};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
+\node at (14.5, 2.5) {14};
+\node at (15.5, 2.5) {15};
 
 % \draw[thick,<->] (9.5,-0.25) .. controls (9,-1.25) and (4,-1.25) .. (3.5,-0.25);
 \end{tikzpicture}
@@ -1022,22 +1025,22 @@ directly retrieved from the beginning of the Z-array:
 
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
-\node at (14.5, 2.5) {15};
-\node at (15.5, 2.5) {16};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
+\node at (14.5, 2.5) {14};
+\node at (15.5, 2.5) {15};
 
 \end{tikzpicture}
 \end{center}
@@ -1102,24 +1105,24 @@ the Z-array is as follows:
 \node at (13.5, 0.5) {0};
 
 \footnotesize
-\node at (0.5, 2.5) {1};
-\node at (1.5, 2.5) {2};
-\node at (2.5, 2.5) {3};
-\node at (3.5, 2.5) {4};
-\node at (4.5, 2.5) {5};
-\node at (5.5, 2.5) {6};
-\node at (6.5, 2.5) {7};
-\node at (7.5, 2.5) {8};
-\node at (8.5, 2.5) {9};
-\node at (9.5, 2.5) {10};
-\node at (10.5, 2.5) {11};
-\node at (11.5, 2.5) {12};
-\node at (12.5, 2.5) {13};
-\node at (13.5, 2.5) {14};
+\node at (0.5, 2.5) {0};
+\node at (1.5, 2.5) {1};
+\node at (2.5, 2.5) {2};
+\node at (3.5, 2.5) {3};
+\node at (4.5, 2.5) {4};
+\node at (5.5, 2.5) {5};
+\node at (6.5, 2.5) {6};
+\node at (7.5, 2.5) {7};
+\node at (8.5, 2.5) {8};
+\node at (9.5, 2.5) {9};
+\node at (10.5, 2.5) {10};
+\node at (11.5, 2.5) {11};
+\node at (12.5, 2.5) {12};
+\node at (13.5, 2.5) {13};
 \end{tikzpicture}
 \end{center}
 
-The positions 6 and 11 contain the value 3,
+The positions 5 and 10 contain the value 3,
 which means that the pattern \texttt{ATT}
 occurs in the corresponding positions
 in the string \texttt{HATTIVATTI}.
