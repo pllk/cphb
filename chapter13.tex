@@ -193,12 +193,10 @@ The following implementation of the
 Bellman–Ford algorithm finds the shortest distances
 from a node $x$ to all other nodes in the graph.
 The code assumes that the graph is stored
-as adjacency lists in an array
-\begin{lstlisting}
-vector<pair<int,int>> v[N];
-\end{lstlisting}
-as pairs of the form $(x,w)$:
-there is an edge to node $x$ with weight $w$.
+as an edge list \texttt{edges}
+that consists of tuples of the form $(a,b,w)$,
+meaning that there is an edge from node $a$ to node $b$
+with weight $w$.
 
 The algorithm consists of $n-1$ rounds,
 and on each round the algorithm goes through
@@ -210,14 +208,13 @@ to all nodes in the graph.
 The constant \texttt{INF} denotes an infinite distance.
 
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) distance[i] = INF;
-distance[x] = 0;
+for (int i = 1; i <= n; i++) dist[i] = INF;
+dist[x] = 0;
 for (int i = 1; i <= n-1; i++) {
-    for (int a = 1; a <= n; a++) {
-        for (auto b : v[a]) {
-            distance[b.first] = min(distance[b.first],
-                                       distance[a]+b.second);
-        }
+    for (auto e : edges) {
+        int a, b, w;
+        tie(a, b, w) = e;
+        dist[b] = min(dist[b], dist[a]+w);
     }
 }
 \end{lstlisting}
@@ -298,29 +295,29 @@ Then, the algorithm always processes the
 first node in the queue, and when an edge
 $a \rightarrow b$ reduces a distance,
 node $b$ is added to the queue.
-
-The following implementation uses a 
-\texttt{queue} \texttt{q}.
-In addition, an array \texttt{inqueue} indicates
-if a node is already in the queue,
-in which case the algorithm does not add
-the node to the queue again.
-
-\begin{lstlisting}
-for (int i = 1; i <= n; i++) distance[i] = INF;
-distance[x] = 0;
-q.push(x);
-while (!q.empty()) {
-    int a = q.front(); q.pop();
-    inqueue[a] = false;
-    for (auto b : v[a]) {
-        if (distance[a]+b.second < distance[b.first]) {
-            distance[b.first] = distance[a]+b.second;
-            if (!inqueue[b]) {q.push(b); inqueue[b] = true;}
-        }
-    }
-}
-\end{lstlisting}
+% 
+% The following implementation uses a 
+% \texttt{queue} \texttt{q}.
+% In addition, an array \texttt{inqueue} indicates
+% if a node is already in the queue,
+% in which case the algorithm does not add
+% the node to the queue again.
+% 
+% \begin{lstlisting}
+% for (int i = 1; i <= n; i++) distance[i] = INF;
+% distance[x] = 0;
+% q.push(x);
+% while (!q.empty()) {
+%     int a = q.front(); q.pop();
+%     inqueue[a] = false;
+%     for (auto b : v[a]) {
+%         if (distance[a]+b.second < distance[b.first]) {
+%             distance[b.first] = distance[a]+b.second;
+%             if (!inqueue[b]) {q.push(b); inqueue[b] = true;}
+%         }
+%     }
+% }
+% \end{lstlisting}
 
 The efficiency of the SPFA algorithm depends
 on the structure of the graph:
@@ -542,8 +539,10 @@ compensates the previous large weight $6$.
 The following implementation of Dijkstra's algorithm
 calculates the minimum distances from a node $x$
 to all other nodes.
-The graph is stored in an array \texttt{v}
-as adjacency lists like in the Bellman–Ford algorithm.
+The graph is stored as adjacency lists
+so that \texttt{adj[$a$]} contains a pair $(b,w)$
+always when there is an edge from node $a$ to node $b$
+with weight $w$.
 
 An efficient implementation of Dijkstra's algorithm
 requires that it is possible to efficiently find the
@@ -553,42 +552,40 @@ that contains the nodes ordered by their distances.
 Using a priority queue, the next node to be processed
 can be retrieved in logarithmic time.
 
-In the following implementation,
-the priority queue contains pairs whose first
-element is the current distance to the node and second
-element is the identifier of the node.
-\begin{lstlisting}
-priority_queue<pair<int,int>> q;
-\end{lstlisting}
-A small difficulty is that in Dijkstra's algorithm,
-we should find the node with the \emph{minimum} distance,
-while the C++ priority queue finds the \emph{maximum}
-element by default.
-An easy trick is to use \emph{negative} distances,
-which allows us to directly use the C++ priority queue.
-
-The code keeps track of processed nodes
-in an array \texttt{ready},
-and maintains the distances in an array \texttt{distance}.
-Initially, the distance to the starting node is 0,
-and the distance to all other nodes is infinite.
+The following implementation uses a priority queue
+\texttt{q} that contains pairs of the form $(-d,x)$:
+the current distance to node $x$ is $d$.
+The array $\texttt{dist}$ contains the distance to
+each node, and the array $\texttt{ready}$ indicates
+whether a node has been processed.
+Initially the distance to $0$ to $x$ and $\infty$ to all other nodes.
 
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) distance[i] = INF;
-distance[x] = 0;
+for (int i = 1; i <= n; i++) dist[i] = INF;
+dist[x] = 0;
 q.push({0,x});
 while (!q.empty()) {
     int a = q.top().second; q.pop();
     if (ready[a]) continue;
     ready[a] = true;
-    for (auto b : v[a]) {
-        if (distance[a]+b.second < distance[b.first]) {
-            distance[b.first] = distance[a]+b.second;
-            q.push({-distance[b.first],b.first});
+    for (auto u : v[a]) {
+        int b = u.first, w = u.second;
+        if (dist[a]+w < dist[b]) {
+            dist[b] = dist[a]+w;
+            q.push({-dist[b],b});
         }
     }
 }
 \end{lstlisting}
+
+Note that the priority queue contains \emph{negative}
+distances to nodes.
+The reason for this is that the C++ priority queue finds the \emph{maximum}
+element by default while we would like to find \emph{minimum} elements.
+By using negative distances,
+we can directly use the default version of the C++ priority queue\footnote{Of
+course, we could also declare the priority queue as in Chapter 4.5
+and use positive distances, but the implementation would be a bit longer.}.
 
 The time complexity of the above implementation is
 $O(n+m \log m)$ because the algorithm goes through
@@ -761,17 +758,17 @@ The advantage of the
 Floyd–Warshall algorithm that it is
 easy to implement.
 The following code constructs a
-distance matrix \texttt{d} where $\texttt{d}[a][b]$
+distance matrix where $\texttt{dist}[a][b]$
 is the shortest distance between nodes $a$ and $b$.
-First, the algorithm initializes \texttt{d}
-using the adjacency matrix \texttt{v} of the graph:
+First, the algorithm initializes \texttt{dist}
+using the adjacency matrix \texttt{mat} of the graph:
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n; j++) {
-        if (i == j) d[i][j] = 0;
-        else if (v[i][j]) d[i][j] = v[i][j];
-        else d[i][j] = INF;
+        if (i == j) dist[i][j] = 0;
+        else if (mat[i][j]) dist[i][j] = mat[i][j];
+        else dist[i][j] = INF;
     }
 }
 \end{lstlisting}
@@ -782,7 +779,7 @@ After this, the shortest distances can be found as follows:
 for (int k = 1; k <= n; k++) {
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= n; j++) {
-            d[i][j] = min(d[i][j], d[i][k]+d[k][j]);
+            dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
         }
     }
 }
@@ -790,7 +787,7 @@ for (int k = 1; k <= n; k++) {
 
 The time complexity of the algorithm is $O(n^3)$,
 because it contains three nested loops
-that go through the nodes in the graph.
+that go through the nodes of the graph.
 
 Since the implementation of the Floyd–Warshall
 algorithm is simple, the algorithm can be

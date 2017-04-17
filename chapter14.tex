@@ -101,7 +101,7 @@ The following recursive function can be used:
 \begin{lstlisting}
 void dfs(int s, int e) {
     // process node s
-    for (auto u : v[s]) {
+    for (auto u : adj[s]) {
         if (u != e) dfs(u, s);
     }
 }
@@ -145,7 +145,7 @@ recursively using the following code:
 \begin{lstlisting}
 void dfs(int s, int e) {
     count[s] = 1;
-    for (auto u : v[s]) {
+    for (auto u : adj[s]) {
         if (u == e) continue;
         dfs(u, s);
         count[s] += count[u];
