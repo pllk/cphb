@@ -1130,3 +1130,23 @@ in the string \texttt{HATTIVATTI}.
 The time complexity of the resulting algorithm
 is $O(n)$, because it suffices to construct
 the Z-array and go through its values.
+
+\subsubsection{Implementation}
+
+Here is a short implementation of the Z-algorithm
+that returns a vector that corresponds to the Z-array.
+
+\begin{lstlisting}
+vector<int> z(string s) {
+    int n = s.size();
+    vector<int> z(n);
+    int x = 0, y = 0;
+    for (int i = 1; i < n; i++) {
+        z[i] = max(0,min(z[i-x],y-i+1));
+        while (i+z[i] < n && s[z[i]] == s[i+z[i]]) {
+            x = i; y = i+z[i]; z[i]++;
+        }
+    }
+    return z;
+}
+\end{lstlisting}
