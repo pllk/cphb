@@ -142,9 +142,9 @@ we can directly implement a solution in C++:
 
 \begin{lstlisting}
 int f(int x) {
-    if (x < 0) return 1e9;
+    if (x < 0) return INF;
     if (x == 0) return 0;
-    int u = 1e9;
+    int u = INF;
     for (int i = 1; i <= k; i++) {
         u = min(u, f(x-c[i])+1);
     }
@@ -154,7 +154,7 @@ int f(int x) {
 
 The code assumes that the available coins are
 $\texttt{c}[1], \texttt{c}[2], \ldots, \texttt{c}[k]$,
-and $10^9$ denotes infinity.
+and the constant \texttt{INF} denotes infinity.
 This function works but it is not efficient yet,
 because it goes through a large number
 of ways to construct the sum.
@@ -191,10 +191,10 @@ implemented as follows:
 
 \begin{lstlisting}
 int f(int x) {
-    if (x < 0) return 1e9;
+    if (x < 0) return INF;
     if (x == 0) return 0;
     if (d[x]) return d[x];
-    int u = 1e9;
+    int u = INF;
     for (int i = 1; i <= k; i++) {
         u = min(u, f(x-c[i])+1);
     }
@@ -233,7 +233,7 @@ instead of a recursive function:
 \begin{lstlisting}
 d[0] = 0;
 for (int i = 1; i <= x; i++) {
-    int u = 1e9;
+    int u = INF;
     for (int j = 1; j <= k; j++) {
         if (i-c[j] < 0) continue;
         u = min(u, d[i-c[j]]+1);
@@ -269,7 +269,7 @@ is used for this:
 \begin{lstlisting}
 d[0] = 0;
 for (int i = 1; i <= x; i++) {
-    d[i] = 1e9;
+    d[i] = INF;
     for (int j = 1; j <= k; j++) {
         if (i-c[j] < 0) continue;
         int u = d[i-c[j]]+1;
