@@ -354,12 +354,12 @@ However, by designing a better algorithm, it
 is possible to solve the problem in $O(n^2)$
 time and even in $O(n)$ time.
 
-Given an array of $n$ integers $x_1,x_2,\ldots,x_n$,
-our task is to find the
-\key{maximum subarray sum}\footnote{J. Bentley's
-book \emph{Programming Pearls} \cite{ben86} made the problem popular.}, i.e.,
+Given an array of $n$ numbers,
+our task is to calculate the
+\key{maximum subarray sum}, i.e.,
 the largest possible sum of numbers
-in a contiguous region in the array.
+in a contiguous region in the array\footnote{J. Bentley's
+book \emph{Programming Pearls} \cite{ben86} made the problem popular.}.
 The problem is interesting when there may be
 negative numbers in the array.
 For example, in the array
@@ -375,16 +375,6 @@ For example, in the array
 \node at (5.5,0.5) {$2$};
 \node at (6.5,0.5) {$-5$};
 \node at (7.5,0.5) {$2$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
@@ -402,23 +392,15 @@ the following subarray produces the maximum sum $10$:
 \node at (5.5,0.5) {$2$};
 \node at (6.5,0.5) {$-5$};
 \node at (7.5,0.5) {$2$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 \end{samepage}
 
 \subsubsection{Algorithm 1}
 
-A straightforward algorithm to solve the problem
+Let us assume that the numbers are stored in
+an array \texttt{x}.
+A straightforward way to solve the problem
 is to go through all possible ways of
 selecting a subarray, calculate the sum of
 the numbers in each subarray and maintain
@@ -427,8 +409,8 @@ The following code implements this algorithm:
 
 \begin{lstlisting}
 int p = 0;
-for (int a = 1; a <= n; a++) {
-    for (int b = a; b <= n; b++) {
+for (int a = 0; a < n; a++) {
+    for (int b = a; b < n; b++) {
         int s = 0;
         for (int c = a; c <= b; c++) {
             s += x[c];
@@ -439,8 +421,6 @@ for (int a = 1; a <= n; a++) {
 cout << p << "\n";
 \end{lstlisting}
 
-The code assumes that the numbers are stored in an array \texttt{x}
-with indices $1 \ldots n$.
 The variables $a$ and $b$ determine the first and last
 number in the subarray,
 and the sum of the numbers is calculated to the variable $s$.
@@ -460,9 +440,9 @@ The result is the following code:
 
 \begin{lstlisting}
 int p = 0;
-for (int a = 1; a <= n; a++) {
+for (int a = 0; a < n; a++) {
     int s = 0;
-    for (int b = a; b <= n; b++) {
+    for (int b = a; b < n; b++) {
         s += x[b];
         p = max(p,s);
     }
@@ -502,7 +482,7 @@ for each ending position from left to right.
 The following code implements the algorithm:
 \begin{lstlisting}
 int p = 0, s = 0;
-for (int k = 1; k <= n; k++) {
+for (int k = 0; k < n; k++) {
     s = max(x[k],s+x[k]);
     p = max(p,s);
 }

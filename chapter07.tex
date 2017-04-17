@@ -122,7 +122,7 @@ Thus, the recursive formula is
 where the function $\min$ gives the smallest
 of its parameters.
 In the general case, for the coin set
-$\{c_1,c_2,\ldots,c_k\}$,
+$\{c_0,c_1,\ldots,c_{k-1}\}$,
 the recursive formula is
 \[f(x) = \min(f(x-c_1),f(x-c_2),\ldots,f(x-c_k))+1.\]
 The base case for the function is
@@ -153,7 +153,7 @@ int f(int x) {
 \end{lstlisting}
 
 The code assumes that the available coins are
-$\texttt{c}[1], \texttt{c}[2], \ldots, \texttt{c}[k]$,
+stored in an array $\texttt{c}$,
 and the constant \texttt{INF} denotes infinity.
 This function works but it is not efficient yet,
 because it goes through a large number
@@ -324,7 +324,7 @@ a sum $x$ using the coins.
 For example, $f(5)=6$ when the coins are $\{1,3,4\}$.
 The value of $f(x)$ can be calculated recursively
 using the formula
-\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_k),\]
+\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_{k}),\]
 because to form the sum $x$, we have to first
 choose some coin $c_i$ and then form the sum $x-c_i$.
 The base cases are $f(0)=1$, because there is exactly
@@ -393,7 +393,7 @@ possibilities of dynamic programming.
 \index{longest increasing subsequence}
 
 Given an array that contains $n$
-numbers $x_1,x_2,\ldots,x_n$,
+numbers,
 our task is to find the
 \key{longest increasing subsequence}
 of the array.
@@ -416,14 +416,14 @@ For example, in the array
 \node at (7.5,0.5) {$3$};
 
 \footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+\node at (0.5,1.4) {$0$};
+\node at (1.5,1.4) {$1$};
+\node at (2.5,1.4) {$2$};
+\node at (3.5,1.4) {$3$};
+\node at (4.5,1.4) {$4$};
+\node at (5.5,1.4) {$5$};
+\node at (6.5,1.4) {$6$};
+\node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
 the longest increasing subsequence
@@ -449,14 +449,14 @@ contains 4 elements:
 \draw[thick,->] (4.6,-0.25) .. controls (5.0,-1.00) and (6.0,-1.00) .. (6.5,-0.25);
 
 \footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+\node at (0.5,1.4) {$0$};
+\node at (1.5,1.4) {$1$};
+\node at (2.5,1.4) {$2$};
+\node at (3.5,1.4) {$3$};
+\node at (4.5,1.4) {$4$};
+\node at (5.5,1.4) {$5$};
+\node at (6.5,1.4) {$6$};
+\node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
 
@@ -465,19 +465,19 @@ longest increasing subsequence
 that ends at position $k$.
 Using this function, the answer to the problem
 is the largest of the values
-$f(1),f(2),\ldots,f(n)$.
+$f(0),f(1),\ldots,f(n-1)$.
 For example, in the above array
 the values of the function are as follows:
 \[
 \begin{array}{lcl}
+f(0) & = & 1 \\
 f(1) & = & 1 \\
-f(2) & = & 1 \\
-f(3) & = & 2 \\
-f(4) & = & 1 \\
-f(5) & = & 3 \\
-f(6) & = & 2 \\
-f(7) & = & 4 \\
-f(8) & = & 2 \\
+f(2) & = & 2 \\
+f(3) & = & 1 \\
+f(4) & = & 3 \\
+f(5) & = & 2 \\
+f(6) & = & 4 \\
+f(7) & = & 2 \\
 \end{array}
 \]
 
@@ -486,11 +486,12 @@ there are two possibilities how the subsequence
 that ends at position $k$ is constructed:
 \begin{enumerate}
 \item The subsequence
-only contains the element $x_k$. In this case $f(k)=1$.
+only contains the element at position $k$. In this case $f(k)=1$.
 \item The subsequence is constructed
-by adding the element $x_k$ to
+by adding the element at position $k$ to
 a subsequence that ends at position $i$
-where $i<k$ and $x_i<x_k$. In this case $f(k)=f(i)+1$.
+where $i<k$ and the element at position $i$
+is smaller than the element at position $k$. In this case $f(k)=f(i)+1$.
 \end{enumerate}
 
 For example, in the above example $f(7)=4$,

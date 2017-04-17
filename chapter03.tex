@@ -49,15 +49,15 @@ For example, the array
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$6$};
 
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 will be as follows after sorting:
@@ -73,15 +73,15 @@ will be as follows after sorting:
 \node at (6.5,0.5) {$8$};
 \node at (7.5,0.5) {$9$};
 
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -97,18 +97,17 @@ A famous $O(n^2)$ time sorting algorithm
 is \key{bubble sort} where the elements
 ''bubble'' in the array according to their values.
 
-Bubble sort consists of $n-1$ rounds.
+Bubble sort consists of $n$ rounds.
 On each round, the algorithm iterates through
 the elements of the array.
 Whenever two consecutive elements are found
 that are not in correct order,
 the algorithm swaps them.
 The algorithm can be implemented as follows
-for an array
-$\texttt{t}[1],\texttt{t}[2],\ldots,\texttt{t}[n]$:
+for an array \texttt{x}:
 \begin{lstlisting}
-for (int i = 1; i <= n-1; i++) {
-    for (int j = 1; j <= n-i; j++) {
+for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n-1; j++) {
         if (t[j] > t[j+1]) swap(t[j],t[j+1]);
     }
 }
@@ -118,7 +117,7 @@ After the first round of the algorithm,
 the largest element will be in the correct position,
 and in general, after $k$ rounds, the $k$ largest
 elements will be in the correct positions.
-Thus, after $n-1$ rounds, the whole array
+Thus, after $n$ rounds, the whole array
 will be sorted.
 
 For example, in the array
@@ -135,16 +134,16 @@ For example, in the array
 \node at (5.5,0.5) {$2$};
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$6$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -165,16 +164,16 @@ as follows:
 \node at (7.5,0.5) {$6$};
 
 \draw[thick,<->] (3.5,-0.25) .. controls (3.25,-1.00) and (2.75,-1.00) .. (2.5,-0.25);
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -191,17 +190,16 @@ as follows:
 \node at (7.5,0.5) {$6$};
 
 \draw[thick,<->] (5.5,-0.25) .. controls (5.25,-1.00) and (4.75,-1.00) .. (4.5,-0.25);
-
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -218,17 +216,16 @@ as follows:
 \node at (7.5,0.5) {$6$};
 
 \draw[thick,<->] (6.5,-0.25) .. controls (6.25,-1.00) and (5.75,-1.00) .. (5.5,-0.25);
-
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -245,16 +242,16 @@ as follows:
 \node at (7.5,0.5) {$9$};
 
 \draw[thick,<->] (7.5,-0.25) .. controls (7.25,-1.00) and (6.75,-1.00) .. (6.5,-0.25);
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -289,16 +286,16 @@ For example, in the array
 \node at (5.5,0.5) {$5$};
 \node at (6.5,0.5) {$9$};
 \node at (7.5,0.5) {$8$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 the inversions are $(6,3)$, $(6,5)$ and $(9,8)$.
@@ -360,16 +357,16 @@ For example, consider sorting the following array:
 \node at (5.5,0.5) {$2$};
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$9$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -389,16 +386,16 @@ as follows:
 \node at (6.5,0.5) {$2$};
 \node at (7.5,0.5) {$5$};
 \node at (8.5,0.5) {$9$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (5.5,1.4) {$5$};
-\node at (6.5,1.4) {$6$};
-\node at (7.5,1.4) {$7$};
-\node at (8.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (5.5,1.4) {$5$};
+% \node at (6.5,1.4) {$6$};
+% \node at (7.5,1.4) {$7$};
+% \node at (8.5,1.4) {$8$};
 
 \end{tikzpicture}
 \end{center}
@@ -419,16 +416,16 @@ as follows:
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$8$};
 \node at (8.5,0.5) {$9$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (5.5,1.4) {$5$};
-\node at (6.5,1.4) {$6$};
-\node at (7.5,1.4) {$7$};
-\node at (8.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (5.5,1.4) {$5$};
+% \node at (6.5,1.4) {$6$};
+% \node at (7.5,1.4) {$7$};
+% \node at (8.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -445,16 +442,16 @@ subarrays and creates the final sorted array:
 \node at (5.5,0.5) {$6$};
 \node at (6.5,0.5) {$8$};
 \node at (7.5,0.5) {$9$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -546,6 +543,7 @@ whose indices are elements in the original array.
 The algorithm iterates through the original array
 and calculates how many times each element
 appears in the array.
+\newpage
 
 For example, the array
 \begin{center}
@@ -559,16 +557,16 @@ For example, the array
 \node at (5.5,0.5) {$3$};
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$9$};
-
-\footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+% 
+% \footnotesize
+% \node at (0.5,1.4) {$1$};
+% \node at (1.5,1.4) {$2$};
+% \node at (2.5,1.4) {$3$};
+% \node at (3.5,1.4) {$4$};
+% \node at (4.5,1.4) {$5$};
+% \node at (5.5,1.4) {$6$};
+% \node at (6.5,1.4) {$7$};
+% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 corresponds to the following bookkeeping array:
@@ -658,6 +656,7 @@ int n = 7; // array size
 int t[] = {4,2,5,3,5,8,3};
 sort(t,t+n);
 \end{lstlisting}
+\newpage
 The following code sorts the string \texttt{s}:
 \begin{lstlisting}
 string s = "monkey";
@@ -776,7 +775,7 @@ For example, the following code searches for
 an element $x$ in the array \texttt{t}:
 
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) {
+for (int i = 0; i < n; i++) {
     if (t[i] == x) {} // x found at index i
 }
 \end{lstlisting}
@@ -815,7 +814,7 @@ depending on the value of the middle element.
 
 The above idea can be implemented as follows:
 \begin{lstlisting}
-int a = 1, b = n;
+int a = 0, b = n-1;
 while (a <= b) {
     int k = (a+b)/2;
     if (t[k] == x) {} // x found at index k
@@ -848,9 +847,9 @@ been found or we know that it does not appear in the array.
 
 The following code implements the above idea:
 \begin{lstlisting}
-int k = 1;
+int k = 0;
 for (int b = n/2; b >= 1; b /= 2) {
-    while (k+b <= n && t[k+b] <= x) k += b;
+    while (k+b < n && t[k+b] <= x) k += b;
 }
 if (t[k] == x) {} // x was found at index k
 \end{lstlisting}
