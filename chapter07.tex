@@ -122,7 +122,7 @@ Thus, the recursive formula is
 where the function $\min$ gives the smallest
 of its parameters.
 In the general case, for the coin set
-$\{c_0,c_1,\ldots,c_{k-1}\}$,
+$\{c_1,c_2,\ldots,c_k\}$,
 the recursive formula is
 \[f(x) = \min(f(x-c_1),f(x-c_2),\ldots,f(x-c_k))+1.\]
 The base case for the function is
@@ -392,6 +392,7 @@ possibilities of dynamic programming.
 
 \index{longest increasing subsequence}
 
+Let us consider the following problem:
 Given an array that contains $n$
 numbers,
 our task is to find the
@@ -399,7 +400,7 @@ our task is to find the
 of the array.
 This is a sequence of array elements
 that goes from left to right,
-and each element in the sequence is larger
+and each element of the sequence is larger
 than the previous element.
 For example, in the array
 
@@ -487,23 +488,24 @@ that ends at position $k$ is constructed:
 \begin{enumerate}
 \item The subsequence
 only contains the element at position $k$. In this case $f(k)=1$.
-\item The subsequence is constructed
-by adding the element at position $k$ to
-a subsequence that ends at position $i$
-where $i<k$ and the element at position $i$
-is smaller than the element at position $k$. In this case $f(k)=f(i)+1$.
+\item The subsequence contains a subsequence
+that ends at position $i$ where $i<k$,
+followed by the element at position $k$.
+The element at position $i$ must be smaller
+than the element at position $k$.
+In this case $f(k)=f(i)+1$.
 \end{enumerate}
 
-For example, in the above example $f(7)=4$,
+For example, in the above example $f(6)=4$,
 because the subsequence $[2,5,7]$ of length 3
-ends at position 5, and by adding the element
-at position 7 to this subsequence,
+ends at position 4, and by adding the element
+at position 6 to this subsequence,
 we get the optimal subsequence $[2,5,7,8]$ of length 4.
 
 An easy way to calculate the
 value of $f(k)$ is to
 go through all previous values
-$f(1),f(2),\ldots,f(k-1)$ and select the best solution.
+$f(0),f(1),\ldots,f(k-1)$ and select the best solution.
 The time complexity of such an algorithm is $O(n^2)$.
 Surprisingly, it is also possible to solve the
 problem in $O(n \log n)$ time. Can you see how?
@@ -517,7 +519,7 @@ the lower-right corner such that
 we only move down and right.
 Each square contains a number,
 and the path should be constructed so
-that the sum of numbers along
+that the sum of the numbers along
 the path is as large as possible.
 
 The following picture shows an optimal
@@ -563,7 +565,7 @@ path in a grid:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-The sum of numbers on the path is 67,
+The sum of the numbers on the path is 67,
 and this is the largest possible sum on a path
 from the
 upper-left corner to the lower-right corner.
