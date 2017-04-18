@@ -776,7 +776,9 @@ an element $x$ in the array \texttt{t}:
 
 \begin{lstlisting}
 for (int i = 0; i < n; i++) {
-    if (t[i] == x) {} // x found at index i
+    if (t[i] == x) {
+        // x found at index i
+    }
 }
 \end{lstlisting}
 
@@ -817,7 +819,9 @@ The above idea can be implemented as follows:
 int a = 0, b = n-1;
 while (a <= b) {
     int k = (a+b)/2;
-    if (t[k] == x) {} // x found at index k
+    if (t[k] == x) {
+        // x found at index k
+    }
     if (t[k] > x) b = k-1;
     else a = k+1;
 }
@@ -851,7 +855,9 @@ int k = 0;
 for (int b = n/2; b >= 1; b /= 2) {
     while (k+b < n && t[k+b] <= x) k += b;
 }
-if (t[k] == x) {} // x was found at index k
+if (t[k] == x) {
+    // x found at index k
+}
 \end{lstlisting}
 
 The variables $k$ and $b$ contain the position
@@ -863,18 +869,52 @@ The time complexity of the algorithm is $O(\log n)$,
 because the code in the \texttt{while} loop
 is performed at most twice for each jump length.
 
+\subsubsection{C++ implementation}
+
+The C++ standard library contains the following functions
+that are based on binary search and work in logarithmic time:
+
+\begin{itemize}
+\item \texttt{lower\_bound} returns a pointer to the
+first array element whose value is at least $x$.
+\item \texttt{upper\_bound} returns a pointer to the
+first array element whose value is larger than $x$.
+\item \texttt{equal\_range} returns both above pointers.
+\end{itemize}
+
+The functions assume that the array is sorted.
+If there is no such element, the pointer points to
+the element after the last array element.
+For example, the following code finds out whether
+\texttt{t} contains an element with value $x$:
+
+\begin{lstlisting}
+auto k = lower_bound(t,t+n,x)-t;
+if (k < n) {
+    // x found at index k
+}
+\end{lstlisting}
+
+The following code counts the number of elements
+whose value is $x$:
+
+\begin{lstlisting}
+auto a = lower_bound(t, t+n, x);
+auto b = upper_bound(t, t+n, x);
+cout << b-a << "\n";
+\end{lstlisting}
+
+Using \texttt{equal\_range}, the code becomes shorter:
+
+\begin{lstlisting}
+auto r = equal_range(t, t+n, x);
+cout << r.second-r.first << "\n";
+\end{lstlisting}
+
 \subsubsection{Finding the smallest solution}
 
-In practice, it is seldom needed to implement
-binary search for searching elements in an array,
-because we can use the standard library.
-For example, the C++ functions \texttt{lower\_bound}
-and \texttt{upper\_bound} implement binary search,
-and the data structure \texttt{set} maintains a
-set of elements with $O(\log n)$ time operations.
-
-However, an important use for binary search is
-to find the position where the value of a function changes.
+An important use for binary search is
+to find the position where the value of a \emph{function} changes.
 Suppose that we wish to find the smallest value $k$
 that is a valid solution for a problem.
 We are given a function $\texttt{ok}(x)$
