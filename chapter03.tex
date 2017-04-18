@@ -104,7 +104,7 @@ Whenever two consecutive elements are found
 that are not in correct order,
 the algorithm swaps them.
 The algorithm can be implemented as follows
-for an array \texttt{x}:
+for an array \texttt{t}:
 \begin{lstlisting}
 for (int i = 0; i < n; i++) {
     for (int j = 0; j < n-1; j++) {
@@ -260,7 +260,7 @@ as follows:
 \index{inversion}
 
 Bubble sort is an example of a sorting
-algorithm that always swaps consecutive
+algorithm that always swaps \emph{consecutive}
 elements in the array.
 It turns out that the time complexity
 of such an algorithm is \emph{always}
@@ -600,7 +600,7 @@ corresponds to the following bookkeeping array:
 For example, the value at position 3
 in the bookkeeping array is 2,
 because the element 3 appears 2 times
-in the original array (positions 2 and 6).
+in the original array.
 
 Construction of the bookkeeping array
 takes $O(n)$ time. After this, the sorted array
@@ -783,7 +783,7 @@ for (int i = 0; i < n; i++) {
 The time complexity of this approach is $O(n)$,
 because in the worst case, it is needed to check
 all elements in the array.
-If the array may contain any elements,
+If the order of the elements is arbitrary,
 this is also the best possible approach, because
 there is no additional information available where
 in the array we should search for the element $x$.
@@ -825,7 +825,7 @@ while (a <= b) {
 
 The algorithm maintains a range $a \ldots b$
 that corresponds to the active region of the array.
-Initially, the range is $1 \ldots n$, the whole array.
+Initially, the range is $0 \ldots n-1$, the whole array.
 The algorithm halves the size of the range at each step,
 so the time complexity is $O(\log n)$.
 
