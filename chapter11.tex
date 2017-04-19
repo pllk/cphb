@@ -751,7 +751,9 @@ For example, the graph
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-can be represented as follows:
+can be represented as follows\footnote{In some older compilers, the function
+\texttt{make\_tuple} must be used instead of the braces (for example,
+\texttt{make\_tuple(1,2,5)} instead of \texttt{\{1,2,5\}}.}:
 \begin{lstlisting}
 edges.push_back({1,2,5});
 edges.push_back({2,3,7});
