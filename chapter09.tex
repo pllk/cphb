@@ -82,7 +82,7 @@ the answer for any possible query.
 
 \index{prefix sum array}
 
-It turns out that we can easily process
+We can easily process
 sum queries on a static array,
 because we can use a data structure called
 a \key{prefix sum array}.
@@ -145,12 +145,12 @@ The corresponding prefix sum array is as follows:
 Let $\textrm{sum}(a,b)$ denote the sum of elements
 in the range $[a,b]$.
 Since the prefix sum array contains all values
-of the form $\textrm{sum}(0,k)$,
+of $\textrm{sum}(0,k)$,
 we can calculate any value of
 $\textrm{sum}(a,b)$ in $O(1)$ time, because
 \[ \textrm{sum}(a,b) = \textrm{sum}(0,b) - \textrm{sum}(0,a-1).\]
 By defining $\textrm{sum}(0,-1)=0$,
-the above formula also holds when $a=1$.
+the above formula also holds when $a=0$.
 
 For example, consider the range $[3,6]$:
 \begin{center}
@@ -442,7 +442,7 @@ we can conclude that $\textrm{rmq}(1,6)=1$.
 \index{binary indexed tree}
 \index{Fenwick tree}
 
-A \key{binary indexed tree} or \key{Fenwick tree}\footnote{The
+A \key{binary indexed tree} or a \key{Fenwick tree}\footnote{The
 binary indexed tree structure was presented by P. M. Fenwick in 1994 \cite{fen94}.}
 can be seen as a dynamic version of a prefix sum array.
 This data structure supports two $O(\log n)$ time operations:
@@ -450,18 +450,18 @@ calculating the sum of elements in a range
 and modifying the value of an element.
 
 The advantage of a binary indexed tree is
-that it allows us to efficiently update
-the array elements between the sum queries.
+that it allows us to efficiently \emph{update}
+array elements between sum queries.
 This would not be possible using a prefix sum array,
-because after each update, we should build the
-whole array again in $O(n)$ time.
+because after each update, it would be necessary to build the
+whole prefix sum array again in $O(n)$ time.
 
 \subsubsection{Structure}
 
 In this section we assume that one-based indexing
-is used in all arrays.
-A binary indexed tree can be represented as an array
-where the value at position $x$ 
+is used, because it makes the implementation easier.
+A binary indexed tree is as an array
+whose value at position $x$ 
 equals the sum of elements in the range $[x-k+1,x]$
 of the original array,
 where $k$ is the largest power of two that divides $x$.
@@ -578,9 +578,9 @@ corresponds to a range in the array:
 
 \subsubsection{Sum queries}
 
-The values in the binary indexed tree
+The values in a binary indexed tree
 can be used to efficiently calculate
-the sum of elements in any range $[1,k]$,
+the sum of array elements in any range $[1,k]$,
 because such a range
 can be divided into $O(\log n)$ ranges
 whose sums are available in the binary indexed tree.
@@ -745,7 +745,7 @@ takes $O(1)$ time using bit operations.
 \index{segment tree}
 
 A \key{segment tree}\footnote{Quite similar structures were used
-in the late 1970's to solve geometric problems \cite{ben80}.
+in late 1970's to solve geometric problems \cite{ben80}.
 The bottom-up-implementation in this chapter corresponds to
 that in \cite{sta06}.} is a data structure
 that supports two operations:
@@ -1153,7 +1153,7 @@ and the operations move one level forward in the tree at each step.
 
 Segment trees can support any queries
 as long as we can divide a range into two parts,
-calculate the answer for both parts
+calculate the answer separately for both parts
 and then efficiently combine the answers.
 Examples of such queries are
 minimum and maximum, greatest common divisor,
@@ -1207,7 +1207,7 @@ In this segment tree, every node in the tree
 contains the smallest element in the corresponding
 range of the array.
 The top node of the tree contains the smallest
-element in the whole array.
+element of the whole array.
 The operations can be implemented like previously,
 but instead of sums, minima are calculated.
 
@@ -1351,14 +1351,14 @@ For example, consider the following array:
 
 
 \footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+\node at (0.5,1.4) {$0$};
+\node at (1.5,1.4) {$1$};
+\node at (2.5,1.4) {$2$};
+\node at (3.5,1.4) {$3$};
+\node at (4.5,1.4) {$4$};
+\node at (5.5,1.4) {$5$};
+\node at (6.5,1.4) {$6$};
+\node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
 
@@ -1378,28 +1378,28 @@ The difference array for the above array is as follows:
 
 
 \footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+\node at (0.5,1.4) {$0$};
+\node at (1.5,1.4) {$1$};
+\node at (2.5,1.4) {$2$};
+\node at (3.5,1.4) {$3$};
+\node at (4.5,1.4) {$4$};
+\node at (5.5,1.4) {$5$};
+\node at (6.5,1.4) {$6$};
+\node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
 
-For example, the value 5 at position 6 in the original array
-corresponds to the sum $3-2+4=5$.
+For example, the value 2 at position 6 in the original array
+corresponds to the sum $3-2+4-3=2$.
 
 The advantage of the difference array is
 that we can update a range
 in the original array by changing just
 two elements in the difference array.
 For example, if we want to 
-increase the elements in the range $2 \ldots 5$ by 5,
-it suffices to increase the value at position 2 by 5
-and decrease the value at position 6 by 5.
+increase the elements in the range $1 \ldots 4$ by 5,
+it suffices to increase the value at position 1 by 5
+and decrease the value at position 5 by 5.
 The result is as follows:
 
 \begin{center}
@@ -1416,14 +1416,14 @@ The result is as follows:
 \node at (7.5,0.5) {$0$};
 
 \footnotesize
-\node at (0.5,1.4) {$1$};
-\node at (1.5,1.4) {$2$};
-\node at (2.5,1.4) {$3$};
-\node at (3.5,1.4) {$4$};
-\node at (4.5,1.4) {$5$};
-\node at (5.5,1.4) {$6$};
-\node at (6.5,1.4) {$7$};
-\node at (7.5,1.4) {$8$};
+\node at (0.5,1.4) {$0$};
+\node at (1.5,1.4) {$1$};
+\node at (2.5,1.4) {$2$};
+\node at (3.5,1.4) {$3$};
+\node at (4.5,1.4) {$4$};
+\node at (5.5,1.4) {$5$};
+\node at (6.5,1.4) {$6$};
+\node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
 
