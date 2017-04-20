@@ -112,8 +112,8 @@ Another way to calculate binomial coefficients is as follows:
 
 There are $n!$ permutations of $n$ elements.
 We go through all permutations and always
-select the first $k$ elements of the permutation
-to the subset.
+include the first $k$ elements of the permutation
+in the subset.
 Since the order of the elements in the subset
 and outside the subset does not matter,
 the result is divided by $k!$ and $(n-k)!$
@@ -124,10 +124,9 @@ For binomial coefficients,
 \[
 {n \choose k}  =  {n \choose n-k},
 \]
-because we can either select $k$
-elements that belong to the subset
-or $n-k$ elements that
-do not belong to the subset.
+because we actually divide a set of $n$ elements into
+two subsets: the first contains $k$ elements
+and the second contains $n-k$ elements.
 
 The sum of binomial coefficients is
 \[
