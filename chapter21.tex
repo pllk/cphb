@@ -37,11 +37,11 @@ are integers, if not otherwise stated.
 \index{factor}
 \index{divisor}
 
-A number $a$ is a \key{factor} or \key{divisor} of a number $b$
+A number $a$ is called a \key{factor} or a \key{divisor} of a number $b$
 if $a$ divides $b$.
 If $a$ is a factor of $b$,
 we write $a \mid b$, and otherwise we write $a \nmid b$.
-For example, the factors of the number 24 are
+For example, the factors of 24 are
 1, 2, 3, 4, 6, 8, 12 and 24.
 
 \index{prime}
@@ -49,15 +49,14 @@ For example, the factors of the number 24 are
 
 A number $n>1$ is a \key{prime}
 if its only positive factors are 1 and $n$.
-For example, the numbers 7, 19 and 41 are primes.
-The number 35 is not a prime, because it can be
-divided into the factors $5 \cdot 7 = 35$.
+For example, 7, 19 and 41 are primes,
+but 35 is not a prime, because $5 \cdot 7 = 35$.
 For each number $n>1$, there is a unique
 \key{prime factorization}
 \[ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k},\]
-where $p_1,p_2,\ldots,p_k$ are primes and
+where $p_1,p_2,\ldots,p_k$ are distinct primes and
 $\alpha_1,\alpha_2,\ldots,\alpha_k$ are positive numbers.
-For example, the prime factorization for the number 84 is
+For example, the prime factorization for 84 is
 \[84 = 2^2 \cdot 3^1 \cdot 7^1.\]
 
 The \key{number of factors} of a number $n$ is
@@ -66,7 +65,7 @@ because for each prime $p_i$, there are
 $\alpha_i+1$ ways to choose how many times
 it appears in the factor.
 For example, the number of factors
-of the number 84 is
+of 84 is
 $\tau(84)=3 \cdot 2 \cdot 2 = 12$.
 The factors are
 1, 2, 3, 4, 6, 7, 12, 14, 21, 28, 42 and 84.
@@ -74,14 +73,14 @@ The factors are
 The \key{sum of factors} of $n$ is
 \[\sigma(n)=\prod_{i=1}^k (1+p_i+\ldots+p_i^{\alpha_i}) = \prod_{i=1}^k \frac{p_i^{a_i+1}-1}{p_i-1},\]
 where the latter formula is based on the geometric progression formula.
-For example, the sum of factors of the number 84 is
+For example, the sum of factors of 84 is
 \[\sigma(84)=\frac{2^3-1}{2-1} \cdot \frac{3^2-1}{3-1} \cdot \frac{7^2-1}{7-1} = 7 \cdot 4 \cdot 8 = 224.\]
 
 The \key{product of factors} of $n$ is
 \[\mu(n)=n^{\tau(n)/2},\]
 because we can form $\tau(n)/2$ pairs from the factors,
 each with product $n$.
-For example, the factors of the number 84
+For example, the factors of 84
 produce the pairs
 $1 \cdot 84$, $2 \cdot 42$, $3 \cdot 28$, etc.,
 and the product of the factors is $\mu(84)=84^6=351298031616$.
@@ -91,7 +90,7 @@ and the product of the factors is $\mu(84)=84^6=351298031616$.
 A number $n$ is \key{perfect} if $n=\sigma(n)-n$,
 i.e., $n$ equals the sum of its factors
 between $1$ and $n-1$.
-For example, the number 28 is perfect,
+For example, 28 is a perfect number,
 because $28=1+2+4+7+14$.
 
 \subsubsection{Number of primes}
@@ -471,7 +470,7 @@ because $36 \bmod 17 = 2$ and $6^{-1} \bmod 17 = 3$.
 However, a modular inverse does not always exist.
 For example, if $x=2$ and $m=4$, the equation
 \[ x x^{-1} \bmod m = 1 \]
-cannot be solved, because all multiples of the number 2
+cannot be solved, because all multiples of 2
 are even and the remainder can never be 1 when $m=4$.
 It turns out that the value of $x^{-1} \bmod m$
 can be calculated exactly when $x$ and $m$ are coprime.
@@ -487,7 +486,7 @@ x^{-1} = x^{m-2}.
 \]
 For example, if $x=6$ and $m=17$, then
 \[x^{-1}=6^{17-2} \bmod 17 = 3.\]
-Using this formula, we can calculate the modular inverse
+Using this formula, we can calculate modular inverses
 efficiently using the modular exponentation algorithm.
 
 The above formula can be derived using Euler's theorem.
@@ -684,7 +683,7 @@ For example, $(3,4,5)$ is a Pythagorean triple.
 If $(a,b,c)$ is a Pythagorean triple,
 all triples of the form $(ka,kb,kc)$
 are also Pythagorean triples where $k>1$.
-A Pythagorean triple is \key{primitive} if
+A Pythagorean triple is \emph{primitive} if
 $a$, $b$ and $c$ are coprime,
 and all Pythagorean triples can be constructed
 from primitive triples using a multiplier $k$.
