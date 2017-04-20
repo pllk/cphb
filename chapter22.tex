@@ -842,7 +842,8 @@ that removes $n-2$ leaves from the tree.
 At each step, the leaf with the smallest label is removed,
 and the label of its only neighbor is added to the code.
 
-For example, the Prüfer code for
+For example, let us calculate the Prüfer code
+of the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (2,3) {$1$};
@@ -851,17 +852,62 @@ For example, the Prüfer code for
 \node[draw, circle] (4) at (4,1) {$4$};
 \node[draw, circle] (5) at (5.5,2) {$5$};
 
-%\path[draw,thick,-] (1) -- (2);
-%\path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
 \path[draw,thick,-] (3) -- (4);
 \path[draw,thick,-] (2) -- (4);
 \path[draw,thick,-] (2) -- (5);
-%\path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-is $[4,4,2]$, because we first remove
-node 1, then node 3 and finally node 5.
+
+First we remove node 1 and add node 4 to the code:
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+%\node[draw, circle] (1) at (2,3) {$1$};
+\node[draw, circle] (2) at (4,3) {$2$};
+\node[draw, circle] (3) at (2,1) {$3$};
+\node[draw, circle] (4) at (4,1) {$4$};
+\node[draw, circle] (5) at (5.5,2) {$5$};
+
+%\path[draw,thick,-] (1) -- (4);
+\path[draw,thick,-] (3) -- (4);
+\path[draw,thick,-] (2) -- (4);
+\path[draw,thick,-] (2) -- (5);
+\end{tikzpicture}
+\end{center}
+
+Then we remove node 3 and add node 4 to the code:
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+%\node[draw, circle] (1) at (2,3) {$1$};
+\node[draw, circle] (2) at (4,3) {$2$};
+%\node[draw, circle] (3) at (2,1) {$3$};
+\node[draw, circle] (4) at (4,1) {$4$};
+\node[draw, circle] (5) at (5.5,2) {$5$};
+
+%\path[draw,thick,-] (1) -- (4);
+%\path[draw,thick,-] (3) -- (4);
+\path[draw,thick,-] (2) -- (4);
+\path[draw,thick,-] (2) -- (5);
+\end{tikzpicture}
+\end{center}
+
+Finally we remove node 4 and add node 2 to the code:
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+%\node[draw, circle] (1) at (2,3) {$1$};
+\node[draw, circle] (2) at (4,3) {$2$};
+%\node[draw, circle] (3) at (2,1) {$3$};
+%\node[draw, circle] (4) at (4,1) {$4$};
+\node[draw, circle] (5) at (5.5,2) {$5$};
+
+%\path[draw,thick,-] (1) -- (4);
+%\path[draw,thick,-] (3) -- (4);
+%\path[draw,thick,-] (2) -- (4);
+\path[draw,thick,-] (2) -- (5);
+\end{tikzpicture}
+\end{center}
+
+Thus, the Prüfer code of the graph is $[4,4,2]$.
 
 We can construct a Prüfer code for any tree,
 and more importantly,
