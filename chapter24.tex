@@ -18,9 +18,9 @@ each outcome is $1/6$.
 For example, we can calculate the following probabilities:
 
 \begin{itemize}[noitemsep]
-\item $P(\textrm{''the result is 4''})=1/6$
-\item $P(\textrm{''the result is not 6''})=5/6$
-\item $P(\textrm{''the result is even''})=1/2$
+\item $P(\textrm{''the outcome is 4''})=1/6$
+\item $P(\textrm{''the outcome is not 6''})=5/6$
+\item $P(\textrm{''the outcome is even''})=1/2$
 \end{itemize}
 
 \section{Calculation}
@@ -79,7 +79,7 @@ where $X$ contains all possible outcomes
 and $A$ is a subset of outcomes.
 For example, when drawing a dice, the outcomes are
 \[X = \{1,2,3,4,5,6\}.\]
-Now, for example, the event ''the result is even''
+Now, for example, the event ''the outcome is even''
 corresponds to the set
 \[A = \{2,4,6\}.\]
 
@@ -91,7 +91,7 @@ of probabilities of outcomes using the formula
 For example, when throwing a dice,
 $p(x)=1/6$ for each outcome $x$,
 so the probability of the event
-''the result is even'' is
+''the outcome is even'' is
 \[p(2)+p(4)+p(6)=1/2.\]
 
 The total probability of the outcomes in $X$ must
@@ -144,11 +144,11 @@ is calculated using the formula
 \[P(A \cup B)=P(A)+P(B)-P(A \cap B).\]
 For example, when throwing a dice,
 the union of the events
-\[A=\textrm{''the result is even''}\]
+\[A=\textrm{''the outcome is even''}\]
 and
-\[B=\textrm{''the result is less than 4''}\]
+\[B=\textrm{''the outcome is less than 4''}\]
 is
-\[A \cup B=\textrm{''the result is even or less than 4''},\]
+\[A \cup B=\textrm{''the outcome is even or less than 4''},\]
 and its probability is
 \[P(A \cup B) = P(A)+P(B)-P(A \cap B)=1/2+1/2-1/6=5/6.\]
 
@@ -174,8 +174,8 @@ Using the above sets,
 \[P(A | B)= 1/3,\]
 because the outcomes of $B$ are
 $\{1,2,3\}$, and one of them is even.
-This is the probability of an even result
-if we know that the result is between $1 \ldots 3$.
+This is the probability of an even outcome
+if we know that the outcome is between $1 \ldots 3$.
 
 \subsubsection{Intersection}
 
@@ -208,8 +208,8 @@ A \key{random variable} is a value that is generated
 by a random process.
 For example, when throwing two dice,
 a possible random variable is
-\[X=\textrm{''the sum of the results''}.\]
-For example, if the results are $[4,6]$
+\[X=\textrm{''the sum of the outcomes''}.\]
+For example, if the outcomes are $[4,6]$
 (meaning that we first throw a four and then a six),
 then the value of $X$ is 10.
 
@@ -232,7 +232,7 @@ The expected value can be calculated as the sum
 where $x$ goes through all possible values of $X$.
 
 For example, when throwing a dice,
-the expected result is
+the expected outcome is
 \[1/6 \cdot 1 + 1/6 \cdot 2 + 1/6 \cdot 3 + 1/6 \cdot 4 + 1/6 \cdot 5 + 1/6 \cdot 6 = 7/2.\]
 
 A useful property of expected values is \key{linearity}.
