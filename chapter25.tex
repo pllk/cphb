@@ -26,13 +26,13 @@ On each move, the player has to remove
 and the player who removes the last stick wins the game.
 
 For example, if $n=10$, the game may proceed as follows:
-\begin{enumerate}[noitemsep]
+\begin{itemize}[noitemsep]
 \item Player $A$ removes 2 sticks (8 sticks left).
 \item Player $B$ removes 3 sticks (5 sticks left).
 \item Player $A$ removes 1 stick (4 sticks left).
 \item Player $B$ removes 2 sticks (2 sticks left).
 \item Player $A$ removes 2 sticks and wins.
-\end{enumerate}
+\end{itemize}
 
 This game consists of states $0,1,2,\ldots,n$,
 where the number of the state corresponds to
@@ -66,7 +66,7 @@ is a winning state for the opponent.
 More generally, if there is a move that leads
 from the current state to a losing state,
 the current state is a winning state,
-and otherwise it is a losing state.
+and otherwise the current state is a losing state.
 Using this observation, we can classify all states
 of a game starting with losing states where
 there are no possible moves.
@@ -118,7 +118,7 @@ can be classified as follows
 It is easy to analyze this game:
 a state $k$ is a losing state if $k$ is
 divisible by 4, and otherwise it
-is winning state.
+is a winning state.
 An optimal way to play the game is
 to always choose a move after which
 the number of sticks in the heap
@@ -247,7 +247,7 @@ and this is always the final state.
 
 It turns out that we can easily classify
 any nim state by calculating
-the \key{nim sum} $x_1 \oplus x_2 \oplus \cdots \oplus x_n$,
+the \key{nim sum} $s = x_1 \oplus x_2 \oplus \cdots \oplus x_n$,
 where $\oplus$ is the xor operation\footnote{The optimal strategy
 for nim was published in 1901 by C. L. Bouton \cite{bou01}.}.
 The states whose nim sum is 0 are losing states,
@@ -312,11 +312,11 @@ one bit in the nim sum:
 
 \begin{center}
 \begin{tabular}{r|r}
-10 & \texttt{10\textcircled{1}0} \\
+10 & \texttt{10\underline{1}0} \\
 12 & \texttt{1100} \\
 5 & \texttt{0101} \\
 \hline
-3 & \texttt{00\textcircled{1}1} \\
+3 & \texttt{00\underline{1}1} \\
 \end{tabular}
 \end{center}
 
@@ -340,7 +340,8 @@ which is a losing state:
 
 \index{misère game}
 
-In a \key{misère game}, the goal is opposite,
+In a \key{misère game}, the goal of the game
+is opposite,
 so the player who removes the last stick
 loses the game.
 It turns out that a misère nim game can be
@@ -368,8 +369,8 @@ so the nim sum is not 0.
 
 \index{Sprague–Grundy theorem}
 
-The \key{Sprague–Grundy theorem}\footnote{The theorem was discovered
-independently by R. Sprague \cite{spr35} and P. M. Grundy \cite{gru39}.} generalizes the
+The \key{Sprague–Grundy theorem}\footnote{The theorem was
+independently discovered by R. Sprague \cite{spr35} and P. M. Grundy \cite{gru39}.} generalizes the
 strategy used in nim to all games that fulfil
 the following requirements:
 
@@ -755,7 +756,7 @@ The Grundy numbers for the mazes are as follows:
 In the initial state, the nim sum of the Grundy numbers
 is $2 \oplus 3 \oplus 3 = 2$, so
 the first player can win the game.
-An optimal move is to move two steps up
+One optimal move is to move two steps up
 in the first maze, which produces the nim sum
 $0 \oplus 3 \oplus 3 = 0$.
 
