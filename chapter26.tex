@@ -114,7 +114,7 @@ $x[i]=y[i]$ when $i<k$ and $x[k]<y[k]$.
 
 A \key{trie} is a tree structure that
 maintains a set of strings.
-Each string in a trie corresponds to
+Each string is stored as
 a chain of characters starting at
 the root node.
 If two strings have a common prefix,
@@ -157,9 +157,9 @@ This trie corresponds to the set
 $\{\texttt{CANAL},\texttt{CANDY},\texttt{THE},\texttt{THERE}\}$.
 The character * in a node means that
 one of the strings in the set ends at the node.
-This character is needed, because a string
+Such a character is needed, because a string
 may be a prefix of another string.
-For example, in this trie, \texttt{THE}
+For example, in the above trie, \texttt{THE}
 is a prefix of \texttt{THERE}.
 
 We can check if a trie contains a string
@@ -196,11 +196,11 @@ from node $s$ using character $c$.
 
 \key{String hashing} is a technique that
 allows us to efficiently check whether two
-substrings in a string are equal\footnote{The technique
+strings are equal\footnote{The technique
 was popularized by the Karp–Rabin pattern matching
 algorithm \cite{kar87}.}.
 The idea is to compare the hash values of the
-substrings instead of their individual characters.
+strings instead of their individual characters.
 
 \subsubsection*{Calculating hash values}
 
@@ -216,7 +216,7 @@ which makes it possible to compare strings
 based on their hash values.
 
 A usual way to implement string hashing
-is polynomial hashing, which means
+is \key{polynomial hashing}, which means
 that the hash value is calculated using the formula
 \[(\texttt{s}[0] A^{n-1} + \texttt{s}[1] A^{n-2} + \cdots + \texttt{s}[n-1] A^0) \bmod B  ,\]
 where \texttt{s} is a string of length $n$
@@ -246,16 +246,14 @@ in the string \texttt{ALLEY} are:
 \end{center}
 
 Thus, if $A=3$ and $B=97$, the hash value
-for the string \texttt{ALLEY} is
-
+of the string \texttt{ALLEY} is
 \[(65 \cdot 3^4 + 76 \cdot 3^3 + 76 \cdot 3^2 + 69 \cdot 3^1 + 89 \cdot 3^0) \bmod 97 = 52.\]
 
 \subsubsection*{Preprocessing}
 
-To efficiently calculate hash values of substrings,
-we need to preprocess the string.
 It turns out that using polynomial hashing,
 we can calculate the hash value of any substring
+of a string
 in $O(1)$ time after an $O(n)$ time preprocessing.
 
 The idea is to construct an array $h$ such that
@@ -305,10 +303,10 @@ character by character.
 The time complexity of such an algorithm is $O(n^2)$.
 
 We can make the brute force algorithm more efficient
-using hashing, because the algorithm compares
+by using hashing, because the algorithm compares
 substrings of strings.
 Using hashing, each comparison only takes $O(1)$ time,
-because only hash values of the strings are compared.
+because only hash values of substrings are compared.
 This results in an algorithm with time complexity $O(n)$,
 which is the best possible time complexity for this problem.
 
@@ -349,7 +347,7 @@ B & = & 972663749 \\
 
 Using such constants,
 the \texttt{long long} type can be used
-when calculating the hash values,
+when calculating hash values,
 because the products $AB$ and $BB$ will fit in \texttt{long long}.
 But is it enough to have about $10^9$ different hash values?
 
@@ -429,16 +427,16 @@ constants of the form $2^x$ are used \cite{pac13}.
 \index{Z-array}
 
 The \key{Z-array} of a string
-gives for each position $k$ in the string
+contains for each position of the string
 the length of the longest substring
-that begins at position $k$ and is a prefix of the string.
+that begins at that position and is a prefix of the string.
 Such an array can be efficiently constructed
 using the \key{Z-algorithm}\footnote{The Z-algorithm
 was presented in \cite{gus97} as the simplest known
 method for linear-time pattern matching, and the original idea
 was attributed to \cite{mai84}.}.
 
-For example, the Z-array for the string
+For example, the Z-array of the string
 \texttt{ACBACDACBACBACDA} is as follows:
 
 \begin{center}
@@ -500,7 +498,7 @@ For example, the Z-array for the string
 \end{tikzpicture}
 \end{center}
 
-For example, the value at position 7 in the
+For example, the value at position 6 of the
 above Z-array is 5,
 because the substring \texttt{ACBAC} of length 5
 is a prefix of the string,
@@ -530,10 +528,10 @@ is only $O(n)$.
 The idea is to maintain a range $[x,y]$ such that
 the substring from $x$ to $y$ is a prefix of
 the string and $y$ is as large as possible.
-Since the Z-array already contains information
-about the characters in the range $[x,y]$,
+Since the characters in the ranges $[0,y-x]$
+and $[x,y]$ are the same,
 we can use this information to calculate
-values for elements in the range $[x,y]$.
+the Z-array values in the range $[x,y]$.
 
 The time complexity of the Z-algorithm is $O(n)$,
 because the algorithm only compares strings
@@ -1047,7 +1045,7 @@ directly retrieved from the beginning of the Z-array:
 
 \subsubsection{Using the Z-array}
 
-As an example, let us once again consider
+As an example, let us consider again
 the pattern matching problem,
 where our task is to find the positions
 where a pattern $p$ occurs in a string $s$.
@@ -1065,7 +1063,7 @@ character \texttt{\#} that does not occur
 in the strings.
 The Z-array of $p$\texttt{\#}$s$ tells us the positions
 where $p$ occurs in $s$,
-because such positions contain the value $p$.
+because such positions contain the length of $p$.
 
 For example, if $s=$\texttt{HATTIVATTI} and $p=$\texttt{ATT},
 the Z-array is as follows:
@@ -1128,7 +1126,7 @@ occurs in the corresponding positions
 in the string \texttt{HATTIVATTI}.
 
 The time complexity of the resulting algorithm
-is $O(n)$, because it suffices to construct
+is linear, because it suffices to construct
 the Z-array and go through its values.
 
 \subsubsection{Implementation}
