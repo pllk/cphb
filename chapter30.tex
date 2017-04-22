@@ -5,13 +5,13 @@
 Many geometric problems can be solved using
 \key{sweep line} algorithms.
 The idea in such algorithms is to represent
-the problem as a set of events that correspond
+an instance of the problem as a set of events that correspond
 to points in the plane.
 The events are processed in increasing order
 according to their x or y coordinate.
 
-As an example, let us consider a problem
-where there is a company that has $n$ employees,
+As an example, let us consider the following problem:
+There is a company that has $n$ employees,
 and we know for each employee their arrival and
 leaving times on a certain day.
 Our task is to calculate the maximum number of
@@ -162,12 +162,15 @@ there are three intersection points:
 \end{center}
 
 It is easy to solve the problem in $O(n^2)$ time,
-because we can go through all possible pairs of segments
+because we can go through all possible pairs of line segments
 and check if they intersect.
 However, we can solve the problem more efficiently
-in $O(n \log n)$ time using a sweep line algorithm.
+in $O(n \log n)$ time using a sweep line algorithm
+and a range query data structure.
 
-The idea is to generate three types of events:
+The idea is to process the endpoints of the line
+segments from left to right and 
+focus on three types of events:
 \begin{enumerate}[noitemsep]
 \item[(1)] horizontal segment begins
 \item[(2)] horizontal segment ends
@@ -209,11 +212,10 @@ horizontal segments whose y coordinate is between
 $y_1$ and $y_2$, and add this number to the total
 number of intersection points.
 
-An appropriate data structure for storing
-y coordinates of horizontal segments is either
-a binary indexed tree or a segment tree,
+To store y coordinates of horizontal segments,
+we can use a binary indexed or a segment tree,
 possibly with index compression.
-Using such structures, processing each event
+Using such a structure, processing each event
 takes $O(\log n)$ time, so the total running
 time of the algorithm is $O(n \log n)$.
 
@@ -222,7 +224,7 @@ time of the algorithm is $O(n \log n)$.
 \index{closest pair}
 
 Given a set of $n$ points, our next problem is
-to find two points whose distance is minimum.
+to find two points whose Euclidean distance is minimum.
 For example, if the points are
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -412,7 +414,7 @@ add each point to the hull.
 Always after adding a point to the hull,
 we make sure that the last line segment
 in the hull does not turn left.
-As long as this holds, we repeatedly remove the
+As long as this does not hold, we repeatedly remove the
 second last point from the hull.
 
 The following pictures show how
