@@ -6,7 +6,7 @@ A segment tree is a versatile data structure
 that can be used in many different situations.
 However, there are many topics related to segment trees
 that we have not touched yet.
-Now it is time to discuss some more advanced variants
+Now is time to discuss some more advanced variants
 of segment trees.
 
 So far, we have implemented the operations
@@ -165,7 +165,8 @@ stops and the sum can be found in \texttt{p}.
 \node at (13.5,-0.75) {$b$};
 \end{tikzpicture}
 \end{center}
-Also using this implementation,
+
+Also in this implementation,
 operations take $O(\log n)$ time,
 because the total number of visited nodes is $O(\log n)$.
 
@@ -175,7 +176,7 @@ because the total number of visited nodes is $O(\log n)$.
 \index{lazy segment tree}
 
 Using \key{lazy propagation}, we can build
-a segment tree that supports both range updates
+a segment tree that supports \emph{both} range updates
 and range queries in $O(\log n)$ time.
 The idea is to perform updates and queries
 from top to bottom and perform updates
@@ -204,7 +205,7 @@ a tree that supports both operations at the same time.
 Let us consider an example where our goal is to
 construct a segment tree that supports
 two operations: increasing each element in
-$[a,b]$ by $u$ and calculating the sum of
+$[a,b]$ by a constant and calculating the sum of
 elements in $[a,b]$.
 
 We will construct a tree where each node
@@ -564,13 +565,13 @@ The nodes of a dynamic tree can be represented as structs:
 
 \begin{lstlisting}
 struct node {
-    int s;
+    int v;
     int x, y;
     node *l, *r;
-    node(int s, int x, int y) : s(s), x(x), y(y) {}
+    node(int v, int x, int y) : v(v), x(x), y(y) {}
 };
 \end{lstlisting}
-Here $s$ is the value of the node,
+Here $v$ is the value of the node,
 $[x,y]$ is the corresponding range,
 and $l$ and $r$ point to the left
 and right subtree.
@@ -581,7 +582,7 @@ After this, nodes can be created as follows:
 // create new node
 node *u = new node(0, 0, 15);
 // change value
-u->s = 5;
+u->v = 5;
 \end{lstlisting}
 
 \subsubsection{Sparse segment trees}
@@ -600,7 +601,7 @@ where $n$ is the number of operations performed.
 
 A \key{sparse segment tree} is initially empty
 and its only node is $[0,N-1]$.
-After updates, new nodes are added dynamically
+After updates, new nodes are dynamically added
 when needed.
 For example, if $N=16$ and the elements
 in positions 3 and 10 have been modified,
@@ -718,7 +719,7 @@ and other nodes remain the same:
 \node at (3+10,-3) {step 3};
 \end{tikzpicture}
 \end{center}
-After each update, most nodes in the tree
+After each update, most nodes of the tree
 remain the same,
 so an efficient way to store the modification history
 is to represent each tree in the history as a combination
@@ -781,7 +782,7 @@ it is possible to store the full modification history of the tree.
 \section{Data structures}
 
 Instead of single values, nodes in a segment tree
-can also contain data structures that maintain information
+can also contain \emph{data structures} that maintain information
 about the corresponding ranges.
 In such a tree, the operations take
 $O(f(n) \log n)$ time, where $f(n)$ is
@@ -812,7 +813,7 @@ in the following range:
 
 The idea is to build a segment tree
 where each node is assigned a data structure
-that gives the number of any element $x$
+that efficiently gives the number of any element $x$
 in the corresponding range.
 Using such a segment tree,
 the answer to a query can be calculated
@@ -1160,7 +1161,7 @@ from the following segment tree:
 \end{tikzpicture}
 \end{center}
 
-The operations in a two-dimensional segment tree
+The operations of a two-dimensional segment tree
 take $O(\log^2 n)$ time, because the big tree
 and each small tree consist of $O(\log n)$ levels.
 The tree requires $O(n^2)$ memory, because each
