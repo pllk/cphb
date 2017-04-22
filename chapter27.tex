@@ -7,24 +7,22 @@ that has a square root in its time complexity.
 A square root can be seen as a ''poor man's logarithm'':
 the complexity $O(\sqrt n)$ is better than $O(n)$
 but worse than $O(\log n)$.
-In any case, many square root algorithms are fast in practice
-and have small constant factors.
+In any case, many square root algorithms are fast and usable in practice.
 
 As an example, let us consider the problem of
 creating a data structure that supports
 two operations on an array:
 modifying an element at a given position
 and calculating the sum of elements in the given range.
-
 We have previously solved the problem using
-a binary indexed tree and segment tree,
+binary indexed and segment trees,
 that support both operations in $O(\log n)$ time.
 However, now we will solve the problem
 in another way using a square root structure
 that allows us to modify elements in $O(1)$ time
 and calculate sums in $O(\sqrt n)$ time.
 
-The idea is to divide the array into blocks
+The idea is to divide the array into \emph{blocks}
 of size $\sqrt n$ so that each block contains
 the sum of elements inside the block.
 For example, an array of 16 elements will be
@@ -64,8 +62,8 @@ divided into blocks of 4 elements as follows:
 \end{tikzpicture}
 \end{center}
 
-Using this structure,
-it is easy to modify the array,
+In this structure,
+it is easy to modify array elements,
 because it is only needed to update
 the sum of a single block
 after each modification,
@@ -159,9 +157,9 @@ and sums of blocks between them:
 \end{center}
 
 Since the number of single elements is $O(\sqrt n)$
-and also the number of blocks is $O(\sqrt n)$,
+and the number of blocks is also $O(\sqrt n)$,
 the time complexity of the sum query is $O(\sqrt n)$.
-Thus, the parameter $\sqrt n$ balances two things:
+In this case, the parameter $\sqrt n$ balances two things:
 the array is divided into $\sqrt n$ blocks,
 each of which contains $\sqrt n$ elements.
 
@@ -182,8 +180,9 @@ elements.
 \index{batch processing}
 
 Sometimes the operations of an algorithm
-can be divided into batches,
-each of which can be processed separately.
+can be divided into \emph{batches}.
+Each batch contains a sequence of operations
+which will be processed one after another.
 Some precalculation is done
 between the batches
 in order to process the future operations more efficiently.
@@ -227,8 +226,8 @@ $O((k^2+n) \sqrt n)$ time.
 First, there are $O(\sqrt n)$ breadth-first searches
 and each search takes $O(k^2)$ time.
 Second, the total number of
-squares processed during the algorithm
-is $O(n)$, and at each square,
+distances calculated during the algorithm
+is $O(n)$, and when calculating each distance,
 we go through a list of $O(\sqrt n)$ squares.
 
 If the algorithm would perform a breadth-first search
@@ -243,8 +242,8 @@ but in addition, a factor of $n$ is replaced by $\sqrt n$.
 
 \section{Subalgorithms}
 
-Some square root algorithms consists of
-subalgorithms that are specialized for different
+Some square root algorithms consist of
+\emph{subalgorithms} that are specialized for different
 input parameters.
 Typically, there are two subalgorithms:
 one algorithm is efficient when
@@ -319,6 +318,8 @@ is named after Mo Tao, a Chinese competitive programmer, but
 the technique has appeared earlier in the literature.} can be used in many problems
 that require processing range queries in 
 a \emph{static} array.
+Since the array is static, the queries can be
+processed in any order.
 Before processing the queries, the algorithm
 sorts them in a special order which guarantees
 that the algorithm works efficiently.
@@ -344,9 +345,9 @@ in the range, and secondarily by the position of the
 last element in the range.
 It turns out that using this order, the algorithm
 only performs $O(n \sqrt n)$ operations,
-because the left endpoint of the range moves
+because the left endpoint moves
 $n$ times $O(\sqrt n)$ steps,
-and the right endpoint of the range moves
+and the right endpoint moves
 $\sqrt n$ times $O(n)$ steps. Thus, both
 endpoints move a total of $O(n \sqrt n)$ steps during the algorithm.
 
@@ -362,7 +363,7 @@ In Mo's algorithm, the queries are always sorted
 in the same way, but it depends on the problem
 how the answer to the query is maintained.
 In this problem, we can maintain an array 
-\texttt{c} where $\texttt{c}[x]$
+\texttt{count} where $\texttt{count}[x]$
 indicates the number of times an element $x$
 occurs in the active range.
 
@@ -404,18 +405,18 @@ there will be three steps:
 the left endpoint moves one step to the right,
 and the right endpoint moves two steps to the right.
 
-After each step, the array \texttt{c}
+After each step, the array \texttt{count}
 needs to be updated.
 After adding an element $x$,
 we increase the value of 
-$\texttt{c}[x]$ by one,
-and if $\texttt{c}[x]=1$ after this,
-we also increase the answer to the query by one.
+$\texttt{count}[x]$ by 1,
+and if $\texttt{count}[x]=1$ after this,
+we also increase the answer to the query by 1.
 Similarly, after removing an element $x$,
 we decrease the value of 
-$\texttt{c}[x]$ by one,
-and if $\texttt{c}[x]=0$ after this,
-we also decrease the answer to the query by one.
+$\texttt{count}[x]$ by 1,
+and if $\texttt{count}[x]=0$ after this,
+we also decrease the answer to the query by 1.
 
 In this problem, the time needed to perform
 each step is $O(1)$, so the total time complexity
