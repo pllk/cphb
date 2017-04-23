@@ -508,6 +508,36 @@ REP(i,1,n) {
 }
 \end{lstlisting}
 
+Sometimes macros cause bugs that may be difficult
+to detect. For example, consider the following macro
+that calculates the square of a number:
+\begin{lstlisting}
+#define SQ(a) a*a
+\end{lstlisting}
+This macro \emph{does not} always work as expected.
+For example, the code
+\begin{lstlisting}
+cout << SQ(3+3) << "\n";
+\end{lstlisting}
+corresponds to the code
+\begin{lstlisting}
+cout << 3+3*3+3 << "\n"; // 15
+\end{lstlisting}
+
+A better version of the macro is as follows:
+\begin{lstlisting}
+#define SQ(a) (a)*(a)
+\end{lstlisting}
+Now the code
+\begin{lstlisting}
+cout << SQ(3+3) << "\n";
+\end{lstlisting}
+corresponds to the code
+\begin{lstlisting}
+cout << (3+3)*(3+3) << "\n"; // 36
+\end{lstlisting}
+
+
 \section{Mathematics}
 
 Mathematics plays an important role in competitive
