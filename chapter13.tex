@@ -580,12 +580,15 @@ while (!q.empty()) {
 
 Note that the priority queue contains \emph{negative}
 distances to nodes.
-The reason for this is that the C++ priority queue finds the \emph{maximum}
-element by default while we would like to find \emph{minimum} elements.
+The reason for this is that the C++ priority queue finds maximum
+elements by default while we want to find minimum elements.
 By using negative distances,
 we can directly use the default version of the C++ priority queue\footnote{Of
 course, we could also declare the priority queue as in Chapter 4.5
 and use positive distances, but the implementation would be a bit longer.}.
+Also note that there may be several instances of the same
+node in the priority queue; however, only the instance with the
+minimum distance will be processed.
 
 The time complexity of the above implementation is
 $O(n+m \log m)$ because the algorithm goes through
