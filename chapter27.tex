@@ -175,139 +175,150 @@ it may be a good idea to divide the array into
 $k < \sqrt n$ blocks, each of which contains $n/k > \sqrt n$
 elements.
 
-\section{Batch processing}
+\section{Combining algorithms}
 
-\index{batch processing}
+In this section we discuss two square root algorithms
+that are based on combining two algorithms into one algorithm.
+In both cases, we could use either of the algorithms
+alone and solve the problem in $O(n^2)$ time.
+However, by combining the algorithms, the running
+time becomes $O(n \sqrt n)$.
 
-Sometimes the operations of an algorithm
-can be divided into \emph{batches}.
-Each batch contains a sequence of operations
-which will be processed one after another.
-Some precalculation is done
-between the batches
-in order to process the future operations more efficiently.
-If there are $O(\sqrt n)$ batches of size $O(\sqrt n)$,
-this results in a square root algorithm.
+\subsubsection{Case processing}
 
-As an example, let us consider a problem
-where a grid of size $k \times k$
-initially consists of white squares
-and our task is to perform $n$ operations,
-each of which is one of the following:
-\begin{itemize}
-\item
-paint square $(y,x)$ black
-\item
-find the nearest black square to
-square $(y,x)$ where the distance
-between squares $(y_1,x_1)$ and $(y_2,x_2)$
-is $|y_1-y_2|+|x_1-x_2|$
-\end{itemize}
+Suppose that we are given a two-dimensional
+grid that contains $n$ cells.
+Each cell is assigned a letter,
+and our task is to find two cells
+with the same letter whose distance is minimum,
+where the distance between cells
+$(x_1,y_1)$ and $(x_2,y_2)$ is $|x_1-x_2|+|y_1-y_2|$.
+For example, consider the following grid:
 
-We can solve the problem by dividing
-the operations into
-$O(\sqrt n)$ batches, each of which consists
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\node at (0.5,0.5) {A};
+\node at (0.5,1.5) {B};
+\node at (0.5,2.5) {C};
+\node at (0.5,3.5) {A};
+\node at (1.5,0.5) {C};
+\node at (1.5,1.5) {D};
+\node at (1.5,2.5) {E};
+\node at (1.5,3.5) {F};
+\node at (2.5,0.5) {B};
+\node at (2.5,1.5) {A};
+\node at (2.5,2.5) {G};
+\node at (2.5,3.5) {B};
+\node at (3.5,0.5) {D};
+\node at (3.5,1.5) {F};
+\node at (3.5,2.5) {E};
+\node at (3.5,3.5) {A};
+\draw (0,0) grid (4,4);
+\end{tikzpicture}
+\end{center}
+In this case, the minimum distance is 2 between the two 'E' letters.
+
+Let us consider the problem of calculating the minimum distance
+between two cells with a \emph{fixed} letter $c$.
+There are two algorithms for this:
+
+\emph{Algorithm 1:} Go through all pairs of cells with letter $c$,
+and calculate the minimum distance between such cells.
+This will take $O(k^2)$ time where $k$ is the number of cells with letter $c$.
+
+\emph{Algorithm 2:} Perform a breadth-first search that simultaneously
+starts at each cell with letter $c$. The minimum distance between
+two cells with letter $c$ will be calculated in $O(n)$ time.
+
+Now we can go through all letters that appear in the grid
+and use either of the above algorithms.
+If we always used Algorithm 1, the running time would be $O(n^2)$,
+because all cells may have the same letters and $k=n$.
+Also if we always used Algorithm 2, the running time would be $O(n^2)$,
+because all cells may have different letters and there would
+be $n$ searches.
+
+However, we can \emph{combine} the two algorithms and
+use different algorithms for different letters
+depending on how many times each letter appears in the grid.
+Assume that a letter $c$ appears $k$ times.
+If $k \le \sqrt n$, we use Algorithm 1, and if $k > \sqrt n$,
+we use Algorithm 2.
+It turns out that by doing this, the total running time
+of the algorithm is only $O(n \sqrt n)$.
+
+First, suppose that we use Algorithm 1 for a letter $c$.
+Since $c$ appears at most $\sqrt n$ times in the grid,
+we compare each cell with letter $c$ $O(\sqrt n)$ times
+with other cells.
+Thus, the time used for processing all such cells is $O(n \sqrt n)$.
+Then, suppose that we use Algorithm 2 for a letter $c$.
+There are at most $\sqrt n$ such letters,
+so processing those letters also takes $O(n \sqrt n)$ time.
+
+\subsubsection{Batch processing}
+
+Consider again a two-dimensional grid that contains $n$ cells.
+Initially, each cell except one is white.
+We perform $n-1$ operations, each of which is given a white cell.
+Each operation fist calculates the minimum distance
+between the white cell and any black cell, and
+then paints the white cell black.
+
+For example, consider the following operation:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\fill[color=black] (1,1) rectangle (2,2);
+\fill[color=black] (3,1) rectangle (4,2);
+\fill[color=black] (0,3) rectangle (1,4);
+\node at (2.5,3.5) {*};
+\draw (0,0) grid (4,4);
+\end{tikzpicture}
+\end{center}
+
+There are three black cells and the cell marked with *
+will be painted black next.
+Before painting the cell, the minimum distance
+to a black cell is calculated.
+In this case the minimum distance is 2
+to the right cell.
+
+There are two algorithms for solving the problem:
+
+\emph{Algorithm 1:} After each operation, use breadth-first search
+to calculate for each white cell the distance to the nearest black cell.
+Each search takes $O(n)$ time, so the total running time is $O(n^2)$.
+
+\emph{Algorithm 2:} Maintain a list of cells that have been
+painted black, go through this list at each operation
+and then add a new cell to the list.
+The size of the list is $O(n)$, so the algorithm
+takes $O(n^2)$ time.
+
+We can combine the above algorithms by
+dividing the operations into
+$O(\sqrt n)$ \emph{batches}, each of which consists
 of $O(\sqrt n)$ operations.
 At the beginning of each batch,
-we calculate for each square of the grid
-the smallest distance to a black square.
-This can be done in $O(k^2)$ time using breadth-first search.
-
-When processing a batch, we maintain a list of squares
+we calculate for each white cell the minimum distance
+to a black cell using breadth-first search.
+Then, when processing a batch, we maintain a list of cells
 that have been painted black in the current batch.
 The list contains $O(\sqrt n)$ elements,
 because there are $O(\sqrt n)$ operations in each batch.
-Now, the distance from a square to the nearest black
-square is either the precalculated distance or the distance
-to a square that appears in the list.
+Now, the distance between a white cell and the nearest black
+cell is either the precalculated distance or the distance
+to a cell that appears in the list.
 
-The algorithm works in
-$O((k^2+n) \sqrt n)$ time.
+The resulting algorithm works in
+$O(n \sqrt n)$ time.
 First, there are $O(\sqrt n)$ breadth-first searches
-and each search takes $O(k^2)$ time.
+and each search takes $O(n)$ time.
 Second, the total number of
 distances calculated during the algorithm
 is $O(n)$, and when calculating each distance,
 we go through a list of $O(\sqrt n)$ squares.
-
-If the algorithm would perform a breadth-first search
-at each operation, the time complexity would be
-$O(k^2 n)$.
-And if the algorithm would go through all painted
-squares at each operation,
-the time complexity would be $O(n^2)$.
-Thus, the time complexity of the square root algorithm
-is a combination of these time complexities,
-but in addition, a factor of $n$ is replaced by $\sqrt n$.
-
-\section{Subalgorithms}
-
-Some square root algorithms consist of
-\emph{subalgorithms} that are specialized for different
-input parameters.
-Typically, there are two subalgorithms:
-one algorithm is efficient when
-some parameter is smaller than $\sqrt n$,
-and another algorithm is efficient
-when the parameter is larger than $\sqrt n$.
-
-As an example, let us consider a problem where
-we are given a tree of $n$ nodes,
-each with some color. Our task is to find two nodes
-that have the same color and whose distance
-is as large as possible.
-
-For example, in the following tree,
-the maximum distance is 4 between
-the red nodes 3 and 4:
-
-\begin{center}
-\begin{tikzpicture}[scale=0.9]
-\node[draw, circle, fill=green!40] (1) at (1,3) {$2$};
-\node[draw, circle, fill=red!40] (2) at (4,3) {$3$};
-\node[draw, circle, fill=red!40] (3) at (1,1) {$5$};
-\node[draw, circle, fill=blue!40] (4) at (4,1) {$6$};
-\node[draw, circle, fill=red!40] (5) at (-2,1) {$4$};
-\node[draw, circle, fill=blue!40] (6) at (-2,3) {$1$};
-\path[draw,thick,-] (1) -- (2);
-\path[draw,thick,-] (1) -- (3);
-\path[draw,thick,-] (3) -- (4);
-\path[draw,thick,-] (3) -- (6);
-\path[draw,thick,-] (5) -- (6);
-\end{tikzpicture}
-\end{center}
-
-The problem can be solved by going through
-all colors and calculating
-the maximum distance between two nodes
-separately for each color.
-Assume that the current color is $x$ and
-there are $c$ nodes whose color is $x$.
-There are two subalgorithms
-that are specialized for small and large
-values of $c$:
-
-\emph{Case 1}: $c \le \sqrt n$.
-If the number of nodes is small,
-we go through all pairs of nodes whose
-color is $x$ and select the pair that
-has the maximum distance.
-For each node, it is needed to calculate the distance
-to $O(\sqrt n)$ other nodes (see Chapter 18.3),
-so the total time needed for processing all
-nodes is $O(n \sqrt n)$.
-
-\emph{Case 2}: $c > \sqrt n$.
-If the number of nodes is large,
-we go through the whole tree
-and calculate the maximum distance between
-two nodes with color $x$.
-The time complexity of the tree traversal is $O(n)$,
-and this will be done at most $O(\sqrt n)$ times,
-so the total time needed is $O(n \sqrt n)$.
-
-The time complexity of the algorithm is $O(n \sqrt n)$,
-because both cases take a total of $O(n \sqrt n)$ time.
 
 \section{Integer partitions}
 
