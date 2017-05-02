@@ -309,6 +309,106 @@ so the total time needed is $O(n \sqrt n)$.
 The time complexity of the algorithm is $O(n \sqrt n)$,
 because both cases take a total of $O(n \sqrt n)$ time.
 
+\section{Integer partitions}
+
+Some square root algorithms are based on
+the following observation:
+if a positive integer $n$ is represented as
+a sum of positive integers,
+such a sum contains only $O(\sqrt n)$ \emph{distinct} numbers.
+The reason for this is that a sum with
+the maximum amount of distinct numbers has to be of the form
+\[1+2+3+ \cdots = n.\]
+The sum of the numbers $1,2,\ldots,k$ is
+\[\frac{k(k+1)}{2},\]
+so the maximum amount of distinct numbers is $k = O(\sqrt n)$.
+Next we will discuss two problems that can be solved
+efficiently using this observation.
+
+\subsubsection{Knapsack}
+
+Suppose that we are given a list of integer weights
+whose sum is $n$.
+Our task is to find out all sums that can be formed using
+a subset of the weights. For example, if the weights are
+$\{1,3,3\}$, the possible sums are as follows:
+
+\begin{itemize}[noitemsep]
+\item $0$ (empty set)
+\item $1$
+\item $3$
+\item $1+3=4$
+\item $3+3=6$
+\item $1+3+3=7$
+\end{itemize}
+
+Using the standard knapsack approach (see Chapter 7.4),
+the problem can be solved as follows:
+we define a function $f(k,s)$ whose value is 1
+if the sum $s$ can be formed using the first $k$ weights,
+and 0 otherwise.
+All values of this function can be calculated
+in $O(n^2)$ time using dynamic programming.
+
+However, we can make the algorithm more efficient
+by using the fact that the sum of the weights is $n$,
+which means that there are at most $O(\sqrt n)$
+distinct weights.
+Thus, we can process the weights in groups
+such that all weights in each group are equal.
+It turns out that we can process each group
+in $O(n)$ time, which yields an $O(n \sqrt n)$ time algorithm.
+
+The idea is to use an array that records the sums of weights
+that can be formed using the groups processed so far.
+The array contains $n$ elements: element $k$ is 1 if the sum
+$k$ can be formed and 0 otherwise.
+To process a group of weights, we can easily scan the array
+from left to right and record the new sums of weights that
+can be formed using this group and the previous groups.
+
+\subsubsection{String construction}
+
+Given a string and a dictionary of words,
+consider the problem of counting the number of ways
+the string can be constructed using the dictionary words.
+For example,
+if the string is \texttt{ABAB} and the dictionary is
+$\{\texttt{A},\texttt{B},\texttt{AB}\}$,
+there are 4 ways:
+$\texttt{A}+\texttt{B}+\texttt{A}+\texttt{B}$,
+$\texttt{AB}+\texttt{A}+\texttt{B}$,
+$\texttt{A}+\texttt{B}+\texttt{AB}$ and
+$\texttt{AB}+\texttt{AB}$.
+
+Assume that the length of the string is $n$
+and the total length of the dictionary words is $m$.
+A natural way to solve the problem is to use dynamic
+programming: we can define a function $f$ such that
+$f(k)$ denotes the number of ways to construct a prefix
+of length $k$ of the string using the dictionary words.
+Using this function, $f(n)$ gives the answer to the problem.
+
+There are several ways to calculate the values of $f$.
+One method is to store the dictionary words
+in a trie and go through all ways to select the
+last word in each prefix, which results in an $O(n^2)$ time algorithm.
+However, instead of using a trie, we can also use string hashing
+and always go through the dictionary words and compare their
+hash values.
+
+The most straightforward implementation of this idea
+yields an $O(nm)$ time algorithm,
+because the dictionary may contain $m$ words.
+However, we can make the algorithm more efficient
+by considering the dictionary words grouped by their lengths.
+Each group can be processed in constant time,
+because all hash values of dictionary words may be stored in a set.
+Since the total length of the words is $m$,
+there are at most $O(\sqrt m)$ distinct word lengths
+and at most $O(\sqrt m)$ groups.
+Thus, the running time of the algorithm is only $O(n \sqrt m)$.
+
 \section{Mo's algorithm}
 
 \index{Mo's algorithm}
