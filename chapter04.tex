@@ -469,7 +469,7 @@ element that corresponds to $a$ or the previous element.
 
 \section{Other structures}
 
-\subsubsection{Bitsets}
+\subsubsection{Bitset}
 
 \index{bitset}
 
@@ -524,7 +524,7 @@ cout << (a|b) << "\n"; // 1011111110
 cout << (a^b) << "\n"; // 1001101110
 \end{lstlisting}
 
-\subsubsection{Deques}
+\subsubsection{Deque}
 
 \index{deque}
 
@@ -552,7 +552,7 @@ For this reason, a deque is slower than a vector.
 Still, the time complexity of adding and removing
 elements is $O(1)$ on average at both ends.
 
-\subsubsection{Stacks}
+\subsubsection{Stack}
 
 \index{stack}
 
@@ -574,7 +574,7 @@ cout << s.top(); // 5
 s.pop();
 cout << s.top(); // 2
 \end{lstlisting}
-\subsubsection{Queues}
+\subsubsection{Queue}
 
 \index{queue}
 
@@ -596,7 +596,7 @@ s.pop();
 cout << s.front(); // 2
 \end{lstlisting}
 
-\subsubsection{Priority queues}
+\subsubsection{Priority queue}
 
 \index{priority queue}
 \index{heap}
@@ -641,10 +641,10 @@ q.pop();
 \end{lstlisting}
 \end{samepage}
 
-Using the following declaration,
-we can create a priority queue
-that allows us to find and remove
-the minimum element:
+The following declaration
+creates a priority queue
+that supports finding and removing
+minimum elements:
 
 \begin{lstlisting}
 priority_queue<int,vector<int>,greater<int>> q;
