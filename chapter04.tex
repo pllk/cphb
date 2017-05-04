@@ -650,6 +650,56 @@ minimum elements:
 priority_queue<int,vector<int>,greater<int>> q;
 \end{lstlisting}
 
+\subsubsection{Policy-based data structures}
+
+The \texttt{g++} compiler also supports
+some data structures that are not part
+of the C++ standard library.
+Such structures are called \emph{policy-based}
+data structures.
+To use these structures, the following lines
+must be added to the code:
+\begin{lstlisting}
+#include <ext/pb_ds/assoc_container.hpp>
+using namespace __gnu_pbds; 
+\end{lstlisting}
+After this, we can define a data structure \texttt{indexed\_set} that
+is like \texttt{set} but can be indexed like an array.
+The definition for \texttt{int} values is as follows:
+\begin{lstlisting}
+typedef tree<int,null_type,less<int>,rb_tree_tag,
+             tree_order_statistics_node_update> indexed_set; 
+\end{lstlisting}
+Now we can create a set as follows:
+\begin{lstlisting}
+indexed_set s;
+s.insert(2);
+s.insert(3);
+s.insert(7);
+s.insert(9);
+\end{lstlisting}
+The speciality in this set is that we have access to
+the indices that the elements would have in a sorted array.
+The function $\texttt{find\_by\_order}$ returns
+an iterator to the element at a given position:
+\begin{lstlisting}
+auto x = s.find_by_order(2);
+cout << *x << "\n"; // 7
+\end{lstlisting}
+And the function $\texttt{order\_of\_key}$
+returns the position of a given element:
+\begin{lstlisting}
+cout << s.order_of_key(7) << "\n"; // 2
+\end{lstlisting}
+If the element does not appear in the set,
+we get the position that the element would have
+in the set:
+\begin{lstlisting}
+cout << s.order_of_key(6) << "\n"; // 2
+cout << s.order_of_key(8) << "\n"; // 3
+\end{lstlisting}
+Both the functions work in logarithmic time.
+
 \section{Comparison to sorting}
 
 It is often possible to solve a problem
