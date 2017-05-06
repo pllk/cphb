@@ -928,4 +928,203 @@ $d(5)=3$, $d(8)=4$ and $d(2)=2$,
 so the distance between nodes 5 and 8 is
 $3+4-2\cdot2=3$.
 
+\section{Offline queries}
 
+So far, we have discussed \emph{online} queries
+where the queries have a fixed order and we
+answer each query before processing the next query.
+In this section we focus on \emph{offline} queries
+where we are given a list of all queries and we
+can process them in any order.
+Processing offline queries may be easier than
+processing online queries, and in many problems
+it suffices to process offline queries.
+
+\subsubsection{Merging data structures}
+
+A common method to process offline tree
+queries is to traverse the tree
+recursively and maintain data structures for
+processing the queries.
+At each node $s$, we create a data structure
+$\texttt{d}[s]$ that is based on the
+data structures of the children of $s$.
+Then, using this data structure,
+all queries related to $s$ are processed.
+
+As an example, consider the following problem:
+We are given a tree where each node has some value.
+Our task is to process queries of the form
+''calculate the number of nodes with value $x$
+in the subtree of node $s$''.
+
+In the following tree, the
+blue numbers denote the values of the nodes.
+For example,
+the subtree of node $4$ contains two nodes
+whose value is 3.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\node[draw, circle] (1) at (0,3) {$1$};
+\node[draw, circle] (2) at (-3,1) {$2$};
+\node[draw, circle] (3) at (-1,1) {$3$};
+\node[draw, circle] (4) at (1,1) {$4$};
+\node[draw, circle] (5) at (3,1) {$5$};
+\node[draw, circle] (6) at (-3,-1) {$6$};
+\node[draw, circle] (7) at (-0.5,-1) {$7$};
+\node[draw, circle] (8) at (1,-1) {$8$};
+\node[draw, circle] (9) at (2.5,-1) {$9$};
+
+\path[draw,thick,-] (1) -- (2);
+\path[draw,thick,-] (1) -- (3);
+\path[draw,thick,-] (1) -- (4);
+\path[draw,thick,-] (1) -- (5);
+\path[draw,thick,-] (2) -- (6);
+\path[draw,thick,-] (4) -- (7);
+\path[draw,thick,-] (4) -- (8);
+\path[draw,thick,-] (4) -- (9);
+
+\node[color=blue] at (0,3+0.65) {2};
+\node[color=blue] at (-3-0.65,1) {3};
+\node[color=blue] at (-1-0.65,1) {5};
+\node[color=blue] at (1+0.65,1) {3};
+\node[color=blue] at (3+0.65,1) {1};
+\node[color=blue] at (-3,-1-0.65) {4};
+\node[color=blue] at (-0.5,-1-0.65) {4};
+\node[color=blue] at (1,-1-0.65) {3};
+\node[color=blue] at (2.5,-1-0.65) {1};
+\end{tikzpicture}
+\end{center}
+
+In this problem, we can use map structures
+to answer the queries.
+For example, the maps for node 4 and
+its children are as follows:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+
+\node[draw, rectangle] (a) at (4,5.5)
+{
+\footnotesize
+\begin{tabular}{rrr}
+4 \\
+\hline
+1 \\
+\end{tabular}};
+
+\node[draw, rectangle] (b) at (8,5.5)
+{
+\footnotesize
+\begin{tabular}{rrr}
+3 \\
+\hline
+1 \\
+\end{tabular}};
+
+
+\node[draw, rectangle] (c) at (12,5.5)
+{
+\footnotesize
+\begin{tabular}{rr}
+1 \\
+\hline
+1 \\
+\end{tabular}};
+
+\node[draw, rectangle] (d) at (8,8.5)
+{
+\footnotesize
+\begin{tabular}{rrr}
+1 & 3 & 4 \\
+\hline
+1 & 2 & 1 \\
+\end{tabular}};
+\path[draw,thick,-] (a) -- (d);
+\path[draw,thick,-] (b) -- (d);
+\path[draw,thick,-] (c) -- (d);
+\end{tikzpicture}
+\end{center}
+
+It would be too slow to create
+all data structures from scratch.
+Instead, at each node $s$,
+we create a data structure $\texttt{d}[s]$ 
+that initially only contains the value of $s$.
+After this, we go through the children of $s$ and
+\emph{merge} $\texttt{d}[s]$ and
+all structures of the form
+$\texttt{d}[u]$ where $u$ is a child of $s$.
+
+For example, in the above tree, the map
+for node $4$ is created by merging the following maps:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+
+\node[draw, rectangle] (a) at (4,5.5)
+{
+\footnotesize
+\begin{tabular}{rrr}
+4 \\
+\hline
+1 \\
+\end{tabular}};
+
+\node[draw, rectangle] (b) at (7,5.5)
+{
+\footnotesize
+\begin{tabular}{rrr}
+3 \\
+\hline
+1 \\
+\end{tabular}};
+
+\node[draw, rectangle] (c) at (10,5.5)
+{
+\footnotesize
+\begin{tabular}{rr}
+1 \\
+\hline
+1 \\
+\end{tabular}};
+
+\node[draw, rectangle] (d) at (1,5.5)
+{
+\footnotesize
+\begin{tabular}{rr}
+3 \\
+\hline
+1 \\
+\end{tabular}};
+
+\end{tikzpicture}
+\end{center}
+
+Here the first map is the initial data structure
+for node 4,
+and the other three maps correspond to nodes 7, 8 and 9.
+
+The merging at node $s$ can be done as follows:
+We go through the children of $s$
+and at each child $u$ merge $\texttt{d}[s]$
+and $\texttt{d}[u]$.
+We always copy the contents from $\texttt{d}[u]$
+to $\texttt{d}[s]$.
+However, before this, we \emph{swap}
+the contents of $\texttt{d}[s]$ and $\texttt{d}[u]$
+if $\texttt{d}[s]$ is smaller than $\texttt{d}[u]$.
+By doing this, each value is copied only $O(\log n)$
+times during the tree traversal,
+which ensures that the algorithm is efficient.
+
+To swap the contents of two data structures $a$ and $b$
+efficiently, we can just use the following code:
+\begin{lstlisting}
+swap(a,b);
+\end{lstlisting}
+It is guaranteed that the above code works in constant time
+when $a$ and $b$ are C++ standard library data structures.
+
+\subsubsection{Lowest common ancestors}
