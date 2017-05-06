@@ -928,24 +928,27 @@ $d(5)=3$, $d(8)=4$ and $d(2)=2$,
 so the distance between nodes 5 and 8 is
 $3+4-2\cdot2=3$.
 
-\section{Offline queries}
+\section{Offline algorithms}
 
-So far, we have discussed \emph{online} queries
-where the queries have a fixed order and we
-answer each query before processing the next query.
-In this section we focus on \emph{offline} queries
-where we are given a list of all queries and we
-can process them in any order.
-Processing offline queries may be easier than
-processing online queries, and in many problems
-it suffices to process offline queries.
+So far, we have discussed \emph{online} algorithms
+that are able to efficiently process queries
+one after another in a given order.
+In particular, we may require that the algorithm
+processes each query before receiving the next query.
+
+However, in many problems, the online
+property is not necessary.
+In this section, we focus on \emph{offline} algorithms
+that are given a collection of queries that can be
+processed in any order.
+It is often easier to design an offline algorithm
+compared to an online algorithm.
 
 \subsubsection{Merging data structures}
 
-A common method to process offline tree
-queries is to traverse the tree
-recursively and maintain data structures for
-processing the queries.
+One method to construct an offline algorithm
+is to traverse the tree recursively
+and maintain data structures for processing queries.
 At each node $s$, we create a data structure
 $\texttt{d}[s]$ that is based on the
 data structures of the children of $s$.
@@ -957,10 +960,7 @@ We are given a tree where each node has some value.
 Our task is to process queries of the form
 ''calculate the number of nodes with value $x$
 in the subtree of node $s$''.
-
-In the following tree, the
-blue numbers denote the values of the nodes.
-For example,
+For example, in the following tree,
 the subtree of node $4$ contains two nodes
 whose value is 3.
 
