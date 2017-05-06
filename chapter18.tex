@@ -1047,14 +1047,23 @@ its children are as follows:
 \end{tikzpicture}
 \end{center}
 
-It would be too slow to create
+If we create such a data structure for each node,
+we can easily process all given queries,
+because we can handle all queries related
+to a node immediately after creating its
+data structure. For example, the above
+map structure for node 4
+tells us that its subtree
+contains two nodes whose value is 3.
+
+However, it would be too slow to create
 all data structures from scratch.
 Instead, at each node $s$,
-we create a data structure $\texttt{d}[s]$ 
-that initially only contains the value of $s$.
+we create an initial data structure $\texttt{d}[s]$ 
+that only contains the value of $s$.
 After this, we go through the children of $s$ and
 \emph{merge} $\texttt{d}[s]$ and
-all structures of the form
+all data structures
 $\texttt{d}[u]$ where $u$ is a child of $s$.
 
 For example, in the above tree, the map
@@ -1128,3 +1137,10 @@ It is guaranteed that the above code works in constant time
 when $a$ and $b$ are C++ standard library data structures.
 
 \subsubsection{Lowest common ancestors}
+
+It turns out that we can also process a collection of
+lowest common ancestor queries using an offline algorithm\footnote{This
+algorithm was discovered by R. E. Tarjan in 1979 \cite{tar79}.}.
+This algorithm is based on the union-find data structure
+(see 15.2), and it is easier to implement than the
+previous algorithms presented in this chapter.
