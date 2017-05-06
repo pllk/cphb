@@ -931,24 +931,24 @@ $3+4-2\cdot2=3$.
 \section{Offline algorithms}
 
 So far, we have discussed \emph{online} algorithms
-that are able to efficiently process queries
-one after another in a given order.
-In particular, we may require that the algorithm
-processes each query before receiving the next query.
+for tree queries.
+Those algorithms are able to process
+queries one after another so that
+each query is answered before receiving the next query.
 
 However, in many problems, the online
 property is not necessary.
-In this section, we focus on \emph{offline} algorithms
-that are given a set of queries that can be
-processed in any order.
+In this section, we focus on \emph{offline} algorithms.
+Those algorithms are given a set of queries which can
+be answered in any order.
 It is often easier to design an offline algorithm
 compared to an online algorithm.
 
 \subsubsection{Merging data structures}
 
 One method to construct an offline algorithm
-is to traverse the tree recursively
-and maintain data structures for processing queries.
+is to perform a depth-first tree traversal
+and maintain data structures in nodes.
 At each node $s$, we create a data structure
 $\texttt{d}[s]$ that is based on the
 data structures of the children of $s$.
