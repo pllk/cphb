@@ -19,7 +19,7 @@ is a straightforward graph traversal technique.
 The algorithm begins at a starting node,
 and proceeds to all other nodes that are
 reachable from the starting node using
-the edges in the graph.
+the edges of the graph.
 
 Depth-first search always follows a single
 path in the graph as long as it finds
@@ -48,8 +48,8 @@ the following graph:
 \path[draw,thick,-] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-We may begin the search at any node in the graph,
-but we will now begin the search at node 1.
+We may begin the search at any node of the graph;
+now we will begin the search at node 1.
 
 The search first proceeds to node 2:
 \begin{center}
@@ -91,7 +91,7 @@ After this, nodes 3 and 5 will be visited:
 \end{center}
 The neighbors of node 5 are 2 and 3,
 but the search has already visited both of them,
-so it is time to return to previous nodes.
+so it is time to return to the previous nodes.
 Also the neighbors of nodes 3 and 2
 have been visited, so we next move
 from node 1 to node 4:
@@ -174,7 +174,7 @@ have been visited.
 
 \subsubsection*{Example}
 
-Let us consider how the algorithm processes
+Let us consider how breadth-first search processes
 the following graph:
 
 \begin{center}
@@ -186,7 +186,6 @@ the following graph:
 \node[draw, circle] (5) at (3,3) {$5$};
 \node[draw, circle] (6) at (5,3) {$6$};
 
-
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (2) -- (3);
 \path[draw,thick,-] (1) -- (4);
@@ -195,7 +194,7 @@ the following graph:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Suppose again that the search begins at node 1.
+Suppose that the search begins at node 1.
 First, we process all nodes that can be reached
 from node 1 using a single edge:
 \begin{center}
@@ -276,7 +275,7 @@ Finally, we visit node 6:
 \end{tikzpicture}
 \end{center}
 Now we have calculated the distances
-from the starting node to all nodes in the graph.
+from the starting node to all nodes of the graph.
 The distances are as follows:
 
 \begin{tabular}{ll}
@@ -294,7 +293,7 @@ node & distance \\
 
 Like in depth-first search,
 the time complexity of breadth-first search
-is $O(n+m)$ where $n$ is the number of nodes
+is $O(n+m)$, where $n$ is the number of nodes
 and $m$ is the number of edges.
 
 \subsubsection*{Implementation}
@@ -318,15 +317,15 @@ int dist[N];
 \end{lstlisting}
 
 The queue \texttt{q}
-contains the nodes in increasing order
-of their distance.
+contains nodes to be processed
+in increasing order of their distance.
 New nodes are always added to the end
 of the queue, and the node at the beginning
 of the queue is the next node to be processed.
 The array \texttt{vis} indicates
 which nodes the search has already visited,
 and the array \texttt{dist} will contain the
-distances to all nodes in the graph.
+distances from the starting node to all nodes of the graph.
 
 The search can be implemented as follows,
 starting at node $x$:
@@ -349,9 +348,9 @@ while (!q.empty()) {
 \section{Applications}
 
 Using the graph traversal algorithms,
-we can check many properties of the graph.
-Usually, either depth-first search or
-bredth-first search can be used,
+we can check many properties of graphs.
+Usually, both depth-first search and
+bredth-first search may be used,
 but in practice, depth-first search
 is a better choice, because it is
 easier to implement.
@@ -363,9 +362,9 @@ assume that the graph is undirected.
 \index{connected graph}
 
 A graph is connected if there is a path
-between any two nodes in the graph.
+between any two nodes of the graph.
 Thus, we can check if a graph is connected
-by choosing an arbitrary node and
+by starting at an arbitrary node and
 finding out if we can reach all other nodes.
 
 For example, in the graph
@@ -459,9 +458,8 @@ of them as follows:
 
 \end{tikzpicture}
 \end{center}
-When we move from
-node 2 to node 5 it turns out
-that the neighbor 3 has already been visited.
+After moving from node 2 to node 5 we notice that
+the neighbor 3 of node 5 has already been visited.
 Thus, the graph contains a cycle that goes through node 3,
 for example, $3 \rightarrow 2 \rightarrow 5 \rightarrow 3$.
 

@@ -52,16 +52,15 @@ and $f(5,2)=0$.
 An easy way to calculate the value of $f(x,k)$
 is to perform a sequence of $k$ moves in the tree.
 However, the time complexity of this method
-is $O(n)$, because the tree may contain
-a chain of $O(n)$ nodes.
+is $O(k)$, which may be slow, because a tree of $n$
+nodes may have a chain of $n$ nodes.
 
-Fortunately, it turns out that
-using a technique similar to that
+Fortunately, using a technique similar to that
 used in Chapter 16.3, any value of $f(x,k)$
 can be efficiently calculated in $O(\log k)$ time
 after preprocessing.
 The idea is to precalculate all values $f(x,k)$
-where $k$ is a power of two.
+where $k \le n$ is a power of two.
 For example, the values for the above tree
 are as follows:
 
@@ -77,7 +76,7 @@ $\cdots$ \\
 \end{center}
 
 The preprocessing takes $O(n \log n)$ time,
-because each node can have at most $n$ ancestors.
+because $O(\log n)$ values are calculated for each node.
 After this, any value of $f(x,k)$ can be calculated
 in $O(\log k)$ time by representing $k$
 as a sum where each term is a power of two.
@@ -185,10 +184,10 @@ Hence, the corresponding tree traversal array is as follows:
 \subsubsection{Subtree queries}
 
 Each subtree of a tree corresponds to a subarray
-in the tree traversal array such that
-the first element in the subarray is the root node.
+of the tree traversal array such that
+the first element of the subarray is the root node.
 For example, the following subarray contains the
-nodes in the subtree of node $4$:
+nodes of the subtree of node $4$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (8,1);
@@ -382,7 +381,7 @@ can be found as follows:
 
 To answer the queries efficiently,
 it suffices to store the values of the
-nodes in a binary indexed tree or segment tree.
+nodes in a binary indexed or segment tree.
 After this, we can both update a value
 and calculate the sum of values in $O(\log n)$ time.
 
@@ -390,9 +389,9 @@ and calculate the sum of values in $O(\log n)$ time.
 
 Using a tree traversal array, we can also efficiently
 calculate sums of values on
-paths from the root node to any other
-node in the tree.
-Let us next consider a problem where our task
+paths from the root node to any
+node of the tree.
+Let us consider a problem where our task
 is to support the following queries:
 \begin{itemize}
 \item change the value of a node
@@ -553,7 +552,7 @@ Thus, to support both the operations,
 we should be able to increase all values
 in a range and retrieve a single value.
 This can be done in $O(\log n)$ time
-using a binary indexed tree
+using a binary indexed
 or segment tree (see Chapter 9.4).
 
 \section{Lowest common ancestor}
@@ -561,11 +560,11 @@ or segment tree (see Chapter 9.4).
 \index{lowest common ancestor}
 
 The \key{lowest common ancestor}
-of two nodes in the tree is the lowest node
+of two nodes of a rooted tree is the lowest node
 whose subtree contains both the nodes.
 A typical problem is to efficiently process
 queries that ask to find the lowest
-common ancestor of given two nodes.
+common ancestor of two nodes.
 
 For example, in the following tree,
 the lowest common ancestor of nodes 5 and 8
@@ -605,13 +604,13 @@ Using this, we can divide the problem of
 finding the lowest common ancestor into two parts.
 
 We use two pointers that initially point to the
-two nodes for which we should find the
-lowest common ancestor.
+two nodes whose lowest common ancestor we should find.
 First, we move one of the pointers upwards
-so that both nodes are at the same level in the tree.
+so that both pointers point to nodes at the same level.
 
-In the example case, we move from node 8 to node 6,
-after which both nodes are at the same level:
+In the example case, we move the second pointer one
+level up so that it points to node 6
+which is at the same level with node 5:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -638,7 +637,8 @@ after which both nodes are at the same level:
 After this, we determine the minimum number of steps
 needed to move both pointers upwards so that
 they will point to the same node.
-This node is the lowest common ancestor of the nodes.
+The node to which the pointers point after this
+is the lowest common ancestor.
 
 In the example case, it suffices to move both pointers
 one step upwards to node 2,
@@ -670,12 +670,12 @@ which is the lowest common ancestor:
 Since both parts of the algorithm can be performed in
 $O(\log n)$ time using precomputed information,
 we can find the lowest common ancestor of any two
-nodes in $O(\log n)$ time using this technique.
+nodes in $O(\log n)$ time.
 
 \subsubsection{Method 2}
 
 Another way to solve the problem is based on
-a tree traversal array\footnote{This lowest common ancestor algorithm is based on \cite{ben00}.
+a tree traversal array\footnote{This lowest common ancestor algorithm was presented in \cite{ben00}.
 This technique is sometimes called the \index{Euler tour technique}
 \key{Euler tour technique} \cite{tar84}.}.
 Once again, the idea is to traverse the nodes
@@ -716,7 +716,7 @@ using a depth-first search:
 \end{tikzpicture}
 \end{center}
 
-However, we use a bit different tree
+However, we use a different tree
 traversal array than before:
 we add each node to the array \emph{always}
 when the depth-first search walks through the node,
@@ -792,8 +792,8 @@ The following array corresponds to the above tree:
 \end{tikzpicture}
 \end{center}
 
-Using this array, we can find the lowest common ancestor
-of nodes $a$ and $b$ by finding the node with lowest level
+Now we can find the lowest common ancestor
+of nodes $a$ and $b$ by finding the node with the \emph{lowest} level
 between nodes $a$ and $b$ in the array.
 For example, the lowest common ancestor of nodes $5$ and $8$
 can be found as follows:
@@ -881,8 +881,8 @@ after an $O(n \log n)$ time preprocessing.
 \subsubsection{Distances of nodes}
 
 Finally, let us consider the problem of
-finding the distance between
-two nodes in the tree, which equals
+calculating the distance between
+two nodes of a tree, which equals
 the length of the path between them.
 It turns out that this problem reduces to
 finding the lowest common ancestor of the nodes.
@@ -892,7 +892,7 @@ After this, the distance between nodes $a$ and $b$
 can be calculated using the formula
 \[d(a)+d(b)-2 \cdot d(c),\]
 where $c$ is the lowest common ancestor of $a$ and $b$
-and $d(s)$ denotes the distance from the root node
+and $d(s)$ denotes the distance from the root
 to node $s$.
 For example, in the tree
 
@@ -1149,11 +1149,11 @@ algorithms discussed earlier in this chapter.
 
 The algorithm is given as input a set of pairs of nodes,
 and it determines for each such pair the
-lowest common ancestor.
+lowest common ancestor of the nodes.
 The algorithm performs a depth-first tree traversal
 and maintains disjoint sets of nodes.
 Initially, each node belongs to a separate set.
-For each set, we also maintain the highest node in the
+For each set, we also store the highest node in the
 tree that belongs to the set.
 
 When the algorithm visits a node $x$,
@@ -1164,11 +1164,11 @@ If $y$ has already been visited,
 the algorithm reports that the 
 lowest common ancestor of $x$ and $y$
 is the highest node in the set of $y$.
-Then, after processing the subtree of $x$,
-the algorithm combines the sets of $x$ and its parent.
+Then, after processing node $x$,
+the algorithm joins the sets of $x$ and its parent.
 
-For example, assume that we would like the lowest
-common ancestor of node pairs $(5,8)$
+For example, assume that we wish to find the lowest
+common ancestors of node pairs $(5,8)$
 and $(2,7)$ in the following tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.85]

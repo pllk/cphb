@@ -1,6 +1,6 @@
 \chapter{Flows and cuts}
 
-In this chapter, we will focus on the following
+In this chapter, we focus on the following
 two problems:
 
 \begin{itemize}
@@ -14,8 +14,8 @@ that separates two nodes of the graph?
 
 The input for both these problems is a directed,
 weighted graph that contains two special nodes:
-the \key{source} is a node with no incoming edges,
-and the \key{sink} is a node with no outgoing edges.
+the \emph{source} is a node with no incoming edges,
+and the \emph{sink} is a node with no outgoing edges.
 
 As an example, we will use the following graph
 where node 1 is the source and node 6
@@ -55,7 +55,7 @@ In each intermediate node,
 the incoming and outgoing
 flow has to be equal.
 
-For example, the size of the maximum flow
+For example, the maximum size of a flow
 in the example graph is 7.
 The following picture shows how we can
 route the flow:
@@ -102,7 +102,7 @@ to the sink after the removal
 and the total weight of the removed edges
 is minimum.
 
-The size of the minimum cut in the example graph is 7.
+The minimum size of a cut in the example graph is 7.
 It suffices to remove the edges $2 \rightarrow 3$
 and $4 \rightarrow 5$:
 
@@ -140,11 +140,12 @@ way to remove edges from the graph such that
 their total weight would be less than $7$.
 \\\\
 It is not a coincidence that
-both the size of the maximum flow and 
-the size of the minimum cut is 7 in the above example.
-It turns out that the size of the maximum flow
-and the minimum cut is
-\emph{always} the same,
+the maximum size of a flow
+and the minimum size of a cut
+are the same in the above example.
+It turns out that a maximum flow
+and a minimum cut are
+\emph{always} equally large,
 so the concepts are two sides of the same coin.
 
 Next we will discuss the Ford–Fulkerson
@@ -160,10 +161,10 @@ The algorithm also helps us to understand
 The \key{Ford–Fulkerson algorithm} \cite{for56} finds
 the maximum flow in a graph.
 The algorithm begins with an empty flow,
-and at each step finds a path in the graph
-that generates more flow.
+and at each step finds a path from the source
+to the sink that generates more flow.
 Finally, when the algorithm cannot increase the flow
-anymore, it terminates and the maximum flow has been found.
+anymore, the maximum flow has been found.
 
 The algorithm uses a special representation
 of the graph where each original edge has a reverse
@@ -293,7 +294,7 @@ and the new graph is as follows:
 
 The idea is that increasing the flow decreases the amount of
 flow that can go through the edges in the future.
-On the other hand, it is possible to modify the
+On the other hand, it is possible to cancel
 flow later using the reverse edges of the graph
 if it turns out that
 it would be beneficial to route the flow in another way.
@@ -435,7 +436,7 @@ chooses each path so that the number of edges
 on the path is as small as possible.
 This can be done by using breadth-first search
 instead of depth-first search for finding paths.
-It turns out that this guarantees that
+It can be proven that this guarantees that
 the flow increases quickly, and the time complexity
 of the algorithm is $O(m^2 n)$.
 
@@ -445,8 +446,8 @@ The \key{scaling algorithm} \cite{ahu91} uses depth-first
 search to find paths where each edge weight is
 at least a threshold value.
 Initially, the threshold value is
-the sum of capacities of the edges that
-start at the source.
+some large number, for example the sum of all
+edge weights of the graph.
 Always when a path cannot be found,
 the threshold value is divided by 2.
 The time complexity of the algorithm is $O(m^2 \log c)$,
@@ -463,7 +464,7 @@ that typically appear in programming contests.
 
 It turns out that once the Ford–Fulkerson algorithm
 has found a maximum flow,
-it has also found a minimum cut.
+it has also determined a minimum cut.
 Let $A$ be the set of nodes
 that can be reached from the source
 using positive-weight edges.
@@ -509,14 +510,14 @@ Why is the flow produced by the algorithm maximum
 and why is the cut minimum?
 The reason is that a graph cannot
 contain a flow whose size is larger
-than the weight of any cut in the graph.
+than the weight of any cut of the graph.
 Hence, always when a flow and a cut are equally large,
 they are a maximum flow and a minimum cut.
 
-Let us consider any cut in the graph
+Let us consider any cut of the graph
 such that the source belongs to $A$,
 the sink belongs to $B$
-and there are edges between the sets:
+and there are some edges between the sets:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -645,8 +646,8 @@ to the sink.
 In this problem, every node,
 except for the source and sink,
 may appear in at most one path.
-The number of node-disjoint paths is
-often smaller than the number of
+The number of node-disjoint paths
+may be smaller than the number of
 edge-disjoint paths.
 
 For example, in the previous graph,
@@ -682,9 +683,9 @@ Since each node can appear in at most one path,
 we have to limit the flow that goes through the nodes.
 A standard method for this is to divide each node into
 two nodes such that the first node has the incoming edges
-of the original node and the second node has the outgoing
-edges of the original node.
-In addition, there is a new edge from the first node
+of the original node, the second node has the outgoing
+edges of the original node, and
+there is a new edge from the first node
 to the second node.
 
 In our example, the graph becomes as follows:
@@ -772,7 +773,7 @@ from the source to the sink is 1.
 \index{maximum matching}
 
 The \key{maximum matching} problem asks to find
-a maximum-size set of node pairs in a graph
+a maximum-size set of node pairs of a graph
 such that each pair is connected with an edge and
 each node belongs to at most one pair.
 
@@ -787,10 +788,11 @@ maximum flow problem.
 
 \subsubsection{Finding maximum matchings}
 
-The nodes in a bipartite graph can be always
+The nodes of a bipartite graph can be always
 divided into two groups such that all edges
 of the graph go from the left group to the right group.
-For example, consider the following bipartite graph:
+For example, in the following bipartite graph,
+the groups are $\{1,2,3,4\}$ and $\{5,6,7,8\}$.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -811,8 +813,7 @@ For example, consider the following bipartite graph:
 \path[draw,thick,-] (4) -- (7);
 \end{tikzpicture}
 \end{center}
-
-In this graph, the size of a maximum matching is 3:
+The size of a maximum matching of the graph is 3:
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -840,7 +841,7 @@ In this graph, the size of a maximum matching is 3:
 We can reduce the bipartite maximum matching problem
 to the maximum flow problem by adding two new nodes
 to the graph: a source and a sink.
-In addition, we add edges from the source
+We also add edges from the source
 to each left node and from each right node to the sink.
 After this, the maximum flow of the graph
 equals the maximum matching of the original graph.
@@ -996,7 +997,7 @@ Next, let $X=\{2,4\}$ which yields $f(X)=\{7\}$:
 In this case, $|X|=2$ and $|f(X)|=1$,
 so the condition of Hall's theorem does not hold.
 This means that it is not possible to form
-a perfect matching in the graph.
+a perfect matching for the graph.
 This result is not surprising, because we already
 know that the maximum matching of the graph is 3 and not 4.
 
@@ -1115,7 +1116,7 @@ set is as follows:
 
 \index{path cover}
 
-A \key{path cover} is a set of paths in a graph
+A \key{path cover} is a set of paths of a graph
 such that each node of the graph belongs to at least one path.
 It turns out that in directed, acyclic graphs,
 we can reduce the problem of finding a minimum
@@ -1172,19 +1173,20 @@ Note that one of the paths only contains node 2,
 so it is possible that a path does not contain any edges.
 
 We can find a minimum node-disjoint path cover
-by constructing a matching graph where each node
+by constructing a \emph{matching graph} where each node
 of the original graph is represented by
 two nodes: a left node and a right node.
 There is an edge from a left node to a right node
 if there is a such an edge in the original graph.
-In addition, the matching graph contains a source and a sink
-such that there are edges from the source to all
+In addition, the matching graph contains a source and a sink,
+and there are edges from the source to all
 left nodes and from all right nodes to the sink.
 
-A maximum matching in the resulting graph corresponds
+A maximum matching of the resulting graph corresponds
 to a minimum node-disjoint path cover in
 the original graph.
-For example, the following graph contains
+For example, the following matching graph
+for the above graph contains
 a maximum matching of size 4:
 
 \begin{center}
@@ -1252,7 +1254,7 @@ A \key{general path cover} is a path cover
 where a node can belong to more than one path.
 A minimum general path cover may be smaller
 than a minimum node-disjoint path cover,
-because a node can used multiple times in paths.
+because a node can be used multiple times in paths.
 Consider again the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -1273,7 +1275,7 @@ Consider again the following graph:
 \end{tikzpicture}
 \end{center}
 
-The minimum general path cover in this graph
+The minimum general path cover of this graph
 consists of two paths.
 For example, the first path may be as follows:
 \begin{center}

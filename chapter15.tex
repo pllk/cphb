@@ -46,7 +46,7 @@ A possible spanning tree for the graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-The weight of a spanning tree is the sum of the edge weights.
+The weight of a spanning tree is the sum of its edge weights.
 For example, the weight of the above spanning tree is
 $3+5+9+3+2=22$.
 
@@ -103,9 +103,8 @@ example graph is 32:
 \end{tikzpicture}
 \end{center}
 
-Note that there may be several
-minimum and maximum spanning trees
-for a graph,
+Note that a graph may have several
+minimum and maximum spanning trees,
 so the trees are not unique.
 
 This chapter discusses algorithms
@@ -166,7 +165,7 @@ following graph:
 \end{samepage}
 
 \begin{samepage}
-The first step in the algorithm is to sort the
+The first step of the algorithm is to sort the
 edges in increasing order of their weights.
 The result is the following list:
 
@@ -211,7 +210,7 @@ Initially, each node is in its own component:
 \end{tikzpicture}
 \end{center}
 The first edge to be added to the tree is
-the edge 5--6 that creates the component $\{5,6\}$
+the edge 5--6 that creates a component $\{5,6\}$
 by joining the components $\{5\}$ and $\{6\}$:
 
 \begin{center}
@@ -301,7 +300,7 @@ Why does the greedy strategy guarantee that we
 will find a minimum spanning tree?
 
 Let us see what happens if the minimum weight edge of
-the graph is not included in the spanning tree.
+the graph is \emph{not} included in the spanning tree.
 For example, suppose that a spanning tree
 for the previous graph would not contain the
 minimum weight edge 5--6.
@@ -362,8 +361,8 @@ always produces a minimum spanning tree.
 \subsubsection{Implementation}
 
 When implementing Kruskal's algorithm,
-the edge list representation of the graph
-is convenient.
+it is convenient to use
+the edge list representation of the graph.
 The first phase of the algorithm sorts the
 edges in the list in $O(m \log m)$ time.
 After this, the second phase of the algorithm
@@ -380,9 +379,9 @@ and always processes an edge $a$--$b$
 where $a$ and $b$ are two nodes.
 Two functions are needed:
 the function \texttt{same} determines
-if the nodes are in the same component,
+if $a$ and $b$ are in the same component,
 and the function \texttt{unite}
-joins the components that contain nodes $a$ and $b$.
+joins the components that contain $a$ and $b$.
 
 The problem is how to efficiently implement
 the functions \texttt{same} and \texttt{unite}.
@@ -446,7 +445,7 @@ $\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$:
 \end{center}
 In this case the representatives
 of the sets are 4, 5 and 2.
-For each element, we can find its representative
+We can find the representative of any element
 by following the chain that begins at the element.
 For example, the element 2 is the representative
 for the element 6, because
@@ -456,7 +455,7 @@ their representatives are the same.
 
 Two sets can be joined by connecting the
 representative of one set to the
-representative of another set.
+representative of the other set.
 For example, the sets
 $\{1,4,7\}$ and $\{2,3,6,8\}$
 can be joined as follows:
@@ -491,7 +490,7 @@ The efficiency of the union-find structure depends on
 how the sets are joined.
 It turns out that we can follow a simple strategy:
 always connect the representative of the
-smaller set to the representative of the larger set
+\emph{smaller} set to the representative of the \emph{larger} set
 (or if the sets are of equal size,
 we can make an arbitrary choice).
 Using this strategy, the length of any chain

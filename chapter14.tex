@@ -79,7 +79,7 @@ and the parent is node 1.
 \index{subtree}
 
 The structure of a rooted tree is \emph{recursive}:
-each node in the tree is the root of a \key{subtree}
+each node of the tree acts as the root of a \key{subtree}
 that contains the node itself and all other nodes
 that can be reached by traversing down the tree.
 For example, in the above tree, the subtree of node 4
@@ -88,7 +88,7 @@ consists of nodes 4, 3 and 7.
 \section{Tree traversal}
 
 Depth-first search and breadth-first search
-can be used for traversing the nodes in a tree.
+can be used for traversing the nodes of a tree.
 The traversal of a tree is easier to implement than
 that of a general graph, because
 there are no cycles in the tree and it is not
@@ -129,8 +129,7 @@ to proceed to any direction in the tree.
 Dynamic programming can be used to calculate
 some information during a tree traversal.
 Using dynamic programming, we can, for example,
-calculate in $O(n)$ time for each node
-in a rooted tree the
+calculate in $O(n)$ time for each node of a rooted tree the
 number of nodes in its subtree
 or the length of the longest path from the node
 to a leaf.
@@ -158,8 +157,8 @@ void dfs(int s, int e) {
 \index{diameter}
 
 The \key{diameter} of a tree
-is the length of the longest path
-between two nodes in the tree.
+is the maximum length of a path
+between two nodes of the tree.
 For example, in the tree
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -194,12 +193,11 @@ to calculate the diameter.
 First, we root the tree arbitrarily.
 After this, we use dynamic programming
 to calculate for each node $x$
-the length of the longest path that begins at some leaf,
+the maximum length of a path that begins at some leaf,
 ascends to $x$ and then descends to another leaf.
-The length of the
-longest such path equals the diameter of the tree.
+The maximum length of such a path equals the diameter of the tree.
 
-In the example graph, the longest path begins at node 7,
+In the example graph, a longest path begins at node 7,
 ascends to node 1, and then descends to node 6:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -225,18 +223,18 @@ ascends to node 1, and then descends to node 6:
 \end{center}
 
 The algorithm first calculates for each node $x$
-the length of the longest path from $x$ to a leaf.
+the maximum length of a path from $x$ to a leaf.
 For example, in the above tree,
-the longest path from node 1 to a leaf has length 2
+a longest path from node 1 to a leaf has length 2
 (the path can be $1 \rightarrow 4 \rightarrow 3$,
 $1 \rightarrow 4 \rightarrow 7$ or $1 \rightarrow 2 \rightarrow 6$).
 After this, the algorithm calculates for each node
-$x$ the length of the longest path where $x$
+$x$ the maximum length of a path where $x$
 is the highest point of the path.
-The longest such path can be found by choosing
+Such a path can be found by choosing
 two children with longest paths to leaves.
 For example, in the above graph, 
-nodes 2 and 4 yield the longest path for node 1.
+nodes 2 and 4 yield a longest path for node 1.
 
 \subsubsection{Algorithm 2}
 
@@ -319,7 +317,7 @@ a starting node of a path that corresponds to the diameter.
 \section{Distances between nodes}
 
 A more difficult problem is to calculate
-for each node in the tree and for each direction,
+for each node of the tree and for each direction,
 the maximum distance to a node in that direction.
 It turns out that this can be calculated in
 $O(n)$ time using dynamic programming.
@@ -498,7 +496,7 @@ For example, the following tree is a binary tree:
 \index{in-order}
 \index{post-order}
 
-The nodes in a binary tree have three natural
+The nodes of a binary tree have three natural
 orderings that correspond to different ways to 
 recursively traverse the tree:
 

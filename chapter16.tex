@@ -20,7 +20,7 @@ on the special properties of the graphs.
 \index{topological sorting}
 \index{cycle}
 
-A \key{topological sort} is a ordering
+A \key{topological sort} is an ordering
 of the nodes of a directed graph
 such that if there is a path from node $a$ to node $b$,
 then node $a$ appears before node $b$ in the ordering.
@@ -67,8 +67,8 @@ $[4,1,5,2,3,6]$:
 An acyclic graph always has a topological sort.
 However, if the graph contains a cycle,
 it is not possible to form a topological sort,
-because no node in the cycle can appear
-before the other nodes in the cycle.
+because no node of the cycle can appear
+before the other nodes of the cycle in the ordering.
 It turns out that depth-first search can be used
 to both check if a directed graph contains a cycle
 and, if it does not contain a cycle, to construct a topological sort.
@@ -92,7 +92,7 @@ its state becomes 1.
 Finally, after all successors of the node have
 been processed, its state becomes 2.
 
-If the graph contains a cycle, we will find out this
+If the graph contains a cycle, we will find this out
 during the search, because sooner or later
 we will arrive at a node whose state is 1.
 In this case, it is not possible to construct a topological sort.
@@ -200,7 +200,7 @@ $[4,5,1,2,3,6]$:
 \end{center}
 
 Note that a topological sort is not unique,
-but there can be several topological sorts for a graph.
+and there can be several topological sorts for a graph.
 
 \subsubsection{Example 2}
 
@@ -248,7 +248,8 @@ The search proceeds as follows:
 \end{center}
 The search reaches node 2 whose state is 1,
 which means the graph contains a cycle.
-In this example, the cycle is $2 \rightarrow 3 \rightarrow 5 \rightarrow 2$.
+In this example, there is a cycle
+$2 \rightarrow 3 \rightarrow 5 \rightarrow 2$.
 
 \section{Dynamic programming}
 
@@ -268,7 +269,7 @@ to an ending node:
 \subsubsection{Counting the number of paths}
 
 As an example, let us calculate the number of paths
-from node 4 to node 6 in the following graph:
+from node 1 to node 6 in the following graph:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -281,25 +282,30 @@ from node 4 to node 6 in the following graph:
 
 \path[draw,thick,->,>=latex] (1) -- (2);
 \path[draw,thick,->,>=latex] (2) -- (3);
-\path[draw,thick,->,>=latex] (4) -- (1);
+\path[draw,thick,->,>=latex] (1) -- (4);
 \path[draw,thick,->,>=latex] (4) -- (5);
 \path[draw,thick,->,>=latex] (5) -- (2);
 \path[draw,thick,->,>=latex] (5) -- (3);
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-
 There are a total of three such paths:
 \begin{itemize}
-\item $4 \rightarrow 1 \rightarrow 2 \rightarrow 3 \rightarrow 6$
-\item $4 \rightarrow 5 \rightarrow 2 \rightarrow 3 \rightarrow 6$
-\item $4 \rightarrow 5 \rightarrow 3 \rightarrow 6$
+\item $1 \rightarrow 2 \rightarrow 3 \rightarrow 6$
+\item $1 \rightarrow 4 \rightarrow 5 \rightarrow 2 \rightarrow 3 \rightarrow 6$
+\item $1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$
 \end{itemize}
 
-To count the paths,
-we go through the nodes in a topological sort,
-and calculate for each node $x$ the number of paths
-from node 4 to node $x$.
+Let $p(x)$ denote the number of paths from
+node 1 to node $x$.
+As a base case, $p(1)=1$.
+Then, to calculate other values of $p(x)$,
+we may use the recursion
+\[p(x) = p(a_1)+p(a_2)+\cdots+p(a_k)\]
+where $a_1,a_2,\ldots,a_k$ are the nodes from which there
+is an edge to $x$.
+Since the graph is acyclic, the values of $p(x)$
+can be calculated in the order of a topological sort.
 A topological sort for the above graph is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -319,7 +325,6 @@ A topological sort for the above graph is as follows:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-
 Hence, the numbers of paths are as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -332,7 +337,7 @@ Hence, the numbers of paths are as follows:
 
 \path[draw,thick,->,>=latex] (1) -- (2);
 \path[draw,thick,->,>=latex] (2) -- (3);
-\path[draw,thick,->,>=latex] (4) -- (1);
+\path[draw,thick,->,>=latex] (1) -- (4);
 \path[draw,thick,->,>=latex] (4) -- (5);
 \path[draw,thick,->,>=latex] (5) -- (2);
 \path[draw,thick,->,>=latex] (5) -- (3);
@@ -347,18 +352,18 @@ Hence, the numbers of paths are as follows:
 \end{tikzpicture}
 \end{center}
 
-For example, since there are two paths
-from node 4 to node 2 and
-there is one path from node 4 to node 5,
-we can conclude that there are three
-paths from node 4 to node 3.
+For example, to calculate the value of $p(3)$,
+we may use the formula $p(2)+p(5)$,
+because there are edges from nodes 2 and 5
+to node 3.
+Since $p(2)=2$ and $p(5)=1$, we conclude that $p(3)=3$.
 
 \subsubsection{Extending Dijkstra's algorithm}
 
 \index{Dijkstra's algorithm}
 
 A by-product of Dijkstra's algorithm is a directed, acyclic
-graph that indicates for each node in the original graph
+graph that indicates for each node of the original graph
 the possible ways to reach the node using a shortest path
 from the starting node.
 Dynamic programming can be applied to that graph.
@@ -470,7 +475,7 @@ the graph is as follows:
 
 Using this representation,
 the shortest path from node 0 to node $x$
-corresponds to a solution with minimum number of coins,
+corresponds to a solution with the minimum number of coins,
 and the total number of paths from node 0 to node $x$
 equals the total number of solutions.
 
@@ -480,8 +485,9 @@ equals the total number of solutions.
 \index{functional graph}
 
 For the rest of the chapter,
-we will concentrate on \key{successor graphs}
-where the outdegree of each node is 1, i.e.,
+we will focus on \key{successor graphs}.
+In those graphs,
+the outdegree of each node is 1, i.e.,
 exactly one edge starts at each node.
 A successor graph consists of one or more
 components, each of which contains
@@ -491,11 +497,10 @@ Successor graphs are sometimes called
 \key{functional graphs}.
 The reason for this is that any successor graph
 corresponds to a function $f$ that defines
-the edges in the graph.
-The parameter for the function is a node in the graph,
-and the function gives the successor of the node.
+the edges of the graph.
+The parameter for the function is a node of the graph,
+and the function gives the successor of that node.
 
-\begin{samepage}
 For example, the function
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
@@ -504,7 +509,6 @@ $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
 $f(x)$ & 3 & 5 & 7 & 6 & 2 & 2 & 1 & 6 & 3 \\
 \end{tabular}
 \end{center}
-\end{samepage}
 defines the following graph:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -530,8 +534,8 @@ defines the following graph:
 \end{tikzpicture}
 \end{center}
 
-Since each node in a successor graph has a
-unique successor, we can define a function $f(x,k)$
+Since each node of a successor graph has a
+unique successor, we can also define a function $f(x,k)$
 that gives the node that we will reach if
 we begin at node $x$ and walk $k$ steps forward.
 For example, in the above graph $f(4,6)=2$,
@@ -574,7 +578,7 @@ we can use the following recursion:
            \end{cases}
 \end{equation*}
 
-Precalculating values $f(x,k)$ takes $O(n \log u)$ time,
+Precalculating the values takes $O(n \log u)$ time,
 because $O(\log u)$ values are calculated for each node.
 In the above graph, the first values are as follows:
 
@@ -610,7 +614,7 @@ takes $O(\log k)$ time.
 
 Consider a successor graph that only contains
 a path that ends in a cycle.
-There are two interesting questions:
+We may ask the following questions:
 if we begin our walk at the starting node,
 what is the first node in the cycle
 and how many nodes does the cycle contain?

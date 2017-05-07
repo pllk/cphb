@@ -22,8 +22,7 @@ and study different ways to represent graphs in algorithms.
 \index{edge}
 
 A \key{graph} consists of \key{nodes}
-and \key{edges} between them.
-In this book,
+and \key{edges}. In this book,
 the variable $n$ denotes the number of nodes
 in a graph, and the variable $m$ denotes
 the number of edges.
@@ -57,7 +56,7 @@ through edges of the graph.
 The \key{length} of a path is the number of
 edges in it.
 For example, the above graph contains
-the path $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$
+a path $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$
 from node 1 to node 5:
 
 \begin{center}
@@ -87,7 +86,7 @@ from node 1 to node 5:
 A path is a \key{cycle} if the first and last
 node is the same.
 For example, the above graph contains
-the cycle $1 \rightarrow 3 \rightarrow 4 \rightarrow 1$.
+a cycle $1 \rightarrow 3 \rightarrow 4 \rightarrow 1$.
 A path is \key{simple} if each node appears
 at most once in the path.
 
@@ -106,7 +105,7 @@ at most once in the path.
 
 \index{connected graph}
 
-A graph is \key{connected} if there is path
+A graph is \key{connected} if there is a path
 between any two nodes.
 For example, the following graph is connected:
 \begin{center}
@@ -175,7 +174,7 @@ $\{8\}$.
 A \key{tree} is a connected graph
 that consists of $n$ nodes and $n-1$ edges.
 There is a unique path
-between any two nodes in a tree.
+between any two nodes of a tree.
 For example, the following graph is a tree:
 
 \begin{center}
@@ -220,7 +219,7 @@ For example, the following graph is directed:
 \end{center}
 
 The above graph contains
-the path $3 \rightarrow 1 \rightarrow 2 \rightarrow 5$
+a path $3 \rightarrow 1 \rightarrow 2 \rightarrow 5$
 from node $3$ to node $5$,
 but there is no path from node $5$ to node $3$.
 
@@ -230,7 +229,7 @@ but there is no path from node $5$ to node $3$.
 
 In a \key{weighted} graph, each edge is assigned
 a \key{weight}.
-Often the weights are interpreted as edge lengths.
+The weights are often interpreted as edge lengths.
 For example, the following graph is weighted:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -249,10 +248,10 @@ For example, the following graph is weighted:
 \end{center}
 
 The length of a path in a weighted graph
-is the sum of edge weights on the path.
+is the sum of the edge weights on the path.
 For example, in the above graph,
 the length of the path
-$1 \rightarrow 2 \rightarrow 5$ is $12$
+$1 \rightarrow 2 \rightarrow 5$ is $12$,
 and the length of the path
 $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ is $11$.
 The latter path is the \key{shortest} path from node $1$ to node $5$.
@@ -313,7 +312,7 @@ that end at the node,
 and the \key{outdegree} of a node
 is the number of edges that start at the node.
 For example, in the following graph,
-the indegree of node 2 is 2
+the indegree of node 2 is 2,
 and the outdegree of node 2 is 1.
 
 \begin{center}
@@ -548,7 +547,7 @@ adj[3].push_back({4,5});
 adj[4].push_back({1,2});
 \end{lstlisting}
 
-The benefit in using adjacency lists is that
+The benefit of using adjacency lists is that
 we can efficiently find the nodes to which
 we can move from a given node through an edge.
 For example, the following loop goes through all nodes
@@ -677,7 +676,7 @@ corresponds to the following matrix:
 \end{center}
 \end{samepage}
 
-The drawback in the adjacency matrix representation
+The drawback of the adjacency matrix representation
 is that there are $n^2$ elements in the matrix
 and usually most of them are zero.
 For this reason, the representation cannot be used
@@ -753,7 +752,7 @@ For example, the graph
 \begin{samepage}
 can be represented as follows\footnote{In some older compilers, the function
 \texttt{make\_tuple} must be used instead of the braces (for example,
-\texttt{make\_tuple(1,2,5)} instead of \texttt{\{1,2,5\}}.}:
+\texttt{make\_tuple(1,2,5)} instead of \texttt{\{1,2,5\}}).}:
 \begin{lstlisting}
 edges.push_back({1,2,5});
 edges.push_back({2,3,7});

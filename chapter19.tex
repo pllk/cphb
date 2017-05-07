@@ -7,16 +7,17 @@ goes through each edge exactly once.
 \item A \key{Hamiltonian path} is a path
 that visits each node exactly once.
 \end{itemize}
+
 While Eulerian and Hamiltonian paths look like
 similar concepts at first glance,
 the computational problems related to them
 are very different.
 It turns out that there is a simple rule that
-determines whether a graph contains an Eulerian path
+determines whether a graph contains an Eulerian path,
 and there is also an efficient algorithm to
 find such a path if it exists.
 On the contrary, checking the existence of a Hamiltonian path is a NP-hard
-problem and no efficient algorithm is known for solving the problem.
+problem, and no efficient algorithm is known for solving the problem.
 
 \section{Eulerian paths}
 
@@ -25,7 +26,7 @@ problem and no efficient algorithm is known for solving the problem.
 An \key{Eulerian path}\footnote{L. Euler studied such paths in 1736
 when he solved the famous Königsberg bridge problem.
 This was the birth of graph theory.} is a path
-that goes exactly once through each edge in the graph.
+that goes exactly once through each edge of the graph.
 For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -116,7 +117,7 @@ has an Eulerian circuit that starts and ends at node 1:
 \subsubsection{Existence}
 
 The existence of Eulerian paths and circuits
-depends on the degrees of the nodes in the graph.
+depends on the degrees of the nodes of the graph.
 First, an undirected graph has an Eulerian path if all the edges
 belong to the same connected component and
 \begin{itemize}
@@ -125,7 +126,7 @@ belong to the same connected component and
 and the degree of all other nodes is even.
 \end{itemize}
 
-In the first case, each Eulerian path in the graph
+In the first case, each Eulerian path of the graph
 is also an Eulerian circuit.
 In the second case, the odd-degree nodes are the starting
 and ending nodes of an Eulerian path which is not an Eulerian circuit.
@@ -165,10 +166,10 @@ connected component and
 \item in each node, the indegree equals the outdegree, \emph{or}
 \item in one node, the indegree is one larger than the outdegree,
 in another node, the outdegree is one larger than the indegree,
-and all other nodes, the indegree equals the outdegree.
+and in all other nodes, the indegree equals the outdegree.
 \end{itemize}
 
-In the first case, each Eulerian path in the graph
+In the first case, each Eulerian path of the graph
 is also an Eulerian circuit,
 and in the second case, the graph contains an Eulerian path
 that begins at the node whose outdegree is larger
@@ -235,7 +236,7 @@ an Eulerian circuit; otherwise Hierholzer's
 algorithm cannot find it.
 
 First, the algorithm constructs a circuit that contains
-some (not necessarily all) of the edges in the graph.
+some (not necessarily all) of the edges of the graph.
 After this, the algorithm extends the circuit
 step by step by adding subcircuits to it.
 The process continues until all edges have been added
@@ -260,7 +261,7 @@ we add the extra edge between the two
 odd-degree nodes.
 
 Next we will see how Hierholzer's algorithm
-constructs an Eulerian circuit in an undirected graph.
+constructs an Eulerian circuit for an undirected graph.
 
 \subsubsection{Example}
 
@@ -401,7 +402,7 @@ so we have successfully constructed an Eulerian circuit.
 A \key{Hamiltonian path}
 %\footnote{W. R. Hamilton (1805--1865) was an Irish mathematician.}
 is a path
-that visits each node in the graph exactly once.
+that visits each node of the graph exactly once.
 For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -474,9 +475,9 @@ that begins and ends at node 1:
 \subsubsection{Existence}
 
 No efficient method is known for testing if a graph
-contains a Hamiltonian path, but the problem is NP-hard.
-Still, in some special cases we can be certain
-that the graph contains a Hamiltonian path.
+contains a Hamiltonian path, and the problem is NP-hard.
+Still, in some special cases, we can be certain
+that a graph contains a Hamiltonian path.
 
 A simple observation is that if the graph is complete,
 i.e., there is an edge between all pairs of nodes,
@@ -507,7 +508,7 @@ the more possibilities there is to construct a Hamiltonian path.
 
 Since there is no efficient way to check if a Hamiltonian
 path exists, it is clear that there is also no method
-for constructing the path efficiently, because otherwise
+to efficiently construct the path, because otherwise
 we could just try to construct the path and see
 whether it exists.
 
@@ -523,7 +524,7 @@ The idea is to define a function $f(s,x)$,
 where $s$ is a subset of nodes and $x$
 is one of the nodes in the subset.
 The function indicates whether there is a Hamiltonian path
-that visits the nodes in $s$ and ends at node $x$.
+that visits the nodes of $s$ and ends at node $x$.
 It is possible to implement this solution in $O(2^n n^2)$ time.
 
 \section{De Bruijn sequences}
@@ -547,8 +548,8 @@ combinations of three bits:
 
 It turns out that each De Bruijn sequence
 corresponds to an Eulerian path in a graph.
-The idea is to construct the graph so that
-each node contains a combination of $n-1$ characters
+The idea is to construct the graph where
+each node contains a string of $n-1$ characters
 and each edge adds one character to the string.
 The following graph corresponds to the above example:
 
@@ -575,7 +576,7 @@ The following graph corresponds to the above example:
 An Eulerian path in this graph corresponds to a string
 that contains all strings of length $n$.
 The string contains the characters of the starting node
-and all characters in the edges.
+and all characters of the edges.
 The starting node has $n-1$ characters
 and there are $k^n$ characters in the edges,
 so the length of the string is $k^n+n-1$.
@@ -588,9 +589,9 @@ A \key{knight's tour} is a sequence of moves
 of a knight on an $n \times n$ chessboard
 following the rules of chess such that the knight
 visits each square exactly once.
-A tour is \emph{closed} if the knight finally
-returns to the starting square and
-otherwise it is \emph{open}.
+A knight's tour is called a \emph{closed} tour
+if the knight finally returns to the starting square and
+otherwise it is called an \emph{open} tour.
 
 For example, here is an open knight's tour on a $5 \times 5$ board:
 
@@ -626,13 +627,13 @@ For example, here is an open knight's tour on a $5 \times 5$ board:
 \end{center}
 
 A knight's tour corresponds to a Hamiltonian path in a graph
-whose nodes represent the squares of the board
+whose nodes represent the squares of the board,
 and two nodes are connected with an edge if a knight
 can move between the squares according to the rules of chess.
 
 A natural way to construct a knight's tour is to use backtracking.
 The search can be made more efficient by using
-\key{heuristics} that attempt to guide the knight so that
+\emph{heuristics} that attempt to guide the knight so that
 a complete tour will be found quickly.
 
 \subsubsection{Warnsdorf's rule}
@@ -651,7 +652,7 @@ The idea is to always move the knight so that it ends up
 in a square where the number of possible moves is as
 \emph{small} as possible.
 
-For example, in the following situation there are five
+For example, in the following situation, there are five
 possible squares to which the knight can move:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]

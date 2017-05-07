@@ -2,19 +2,19 @@
 
 \index{shortest path}
 
-Finding the shortest path between two nodes
+Finding a shortest path between two nodes
 of a graph
 is an important problem that has many
-applications in practice.
-For example, a natural problem in a road network
-is to calculate the length of the shortest route
+practical applications.
+For example, a natural problem related to a road network
+is to calculate the shortest possible length of a route
 between two cities, given the lengths of the roads.
 
 In an unweighted graph, the length of a path equals
-the number of edges in the path and we can
+the number of its edges, and we can
 simply use breadth-first search to find
-the shortest path.
-However, in this chapter we concentrate on
+a shortest path.
+However, in this chapter we focus on
 weighted graphs
 where more sophisticated algorithms
 are needed
@@ -26,9 +26,9 @@ for finding shortest paths.
 
 The \key{Bellman–Ford algorithm}\footnote{The algorithm is named after
 R. E. Bellman and L. R. Ford who published it independently
-in 1958 and 1956, respectively \cite{bel58,for56a}.} finds the
+in 1958 and 1956, respectively \cite{bel58,for56a}.} finds
 shortest paths from a starting node to all
-other nodes in the graph.
+nodes of the graph.
 The algorithm can process all kinds of graphs,
 provided that the graph does not contain a
 cycle with negative length.
@@ -36,7 +36,7 @@ If the graph contains a negative cycle,
 the algorithm can detect this.
 
 The algorithm keeps track of distances
-from the starting node to other nodes.
+from the starting node to all nodes of the graph.
 Initially, the distance to the starting node is 0
 and the distance to all other nodes in infinite.
 The algorithm reduces the distances by finding
@@ -68,7 +68,7 @@ works in the following graph:
 \path[draw,thick,-] (1) -- node[font=\small,label=above:7] {} (4);
 \end{tikzpicture}
 \end{center}
-Each node in the graph is assigned a distance.
+Each node of the graph is assigned a distance.
 Initially, the distance to the starting node is 0,
 and the distance to all other nodes is infinite.
 
@@ -152,10 +152,10 @@ Finally, there is one more change:
 \end{center}
 
 After this, no edge can reduce any distance.
-This means that the distances are final
+This means that the distances are final,
 and we have successfully
-calculated the shortest distance
-from the starting node to all other nodes.
+calculated the shortest distances
+from the starting node to all nodes of the graph.
 
 For example, the shortest distance 3
 from node 1 to node 5 corresponds to
@@ -190,8 +190,8 @@ the following path:
 \subsubsection{Implementation}
 
 The following implementation of the
-Bellman–Ford algorithm finds the shortest distances
-from a node $x$ to all other nodes in the graph.
+Bellman–Ford algorithm determines the shortest distances
+from a node $x$ to all nodes of the graph.
 The code assumes that the graph is stored
 as an edge list \texttt{edges}
 that consists of tuples of the form $(a,b,w)$,
@@ -203,8 +203,8 @@ and on each round the algorithm goes through
 all edges of the graph and tries to
 reduce the distances.
 The algorithm constructs an array \texttt{dist}
-that will contain the distance from $x$
-to all nodes in the graph.
+that will contain the distances from $x$
+to all nodes of the graph.
 The constant \texttt{INF} denotes an infinite distance.
 
 \begin{lstlisting}
@@ -236,7 +236,7 @@ can be reduced during a round.
 
 \index{negative cycle}
 
-The Bellman–Ford algorithm can be also used to
+The Bellman–Ford algorithm can also be used to
 check if the graph contains a cycle with negative length.
 For example, the graph
 
@@ -260,8 +260,8 @@ $2 \rightarrow 3 \rightarrow 4 \rightarrow 2$
 with length $-4$.
 
 If the graph contains a negative cycle,
-we can shorten a path that contains the cycle
-infinitely many times by repeating the cycle
+we can shorten infinitely many times
+any path that contains the cycle by repeating the cycle
 again and again.
 Thus, the concept of a shortest path
 is not meaningful in this situation.
@@ -333,10 +333,10 @@ original Bellman–Ford algorithm.
 
 \key{Dijkstra's algorithm}\footnote{E. W. Dijkstra published the algorithm in 1959 \cite{dij59};
 however, his original paper does not mention how to implement the algorithm efficiently.}
-finds the shortest
-paths from the starting node to all other nodes,
+finds shortest
+paths from the starting node to all nodes of the graph,
 like the Bellman–Ford algorithm.
-The benefit in Dijsktra's algorithm is that
+The benefit of Dijsktra's algorithm is that
 it is more efficient and can be used for
 processing large graphs.
 However, the algorithm requires that there
@@ -415,7 +415,8 @@ and reduces the distances using them:
 \path[draw=red,thick,->,line width=2pt] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-The edges from node 1 reduced distances to
+In this case,
+the edges from node 1 reduced the distances of
 nodes 2, 4 and 5, whose distances are now 5, 9 and 1.
 
 The next node to be processed is node 5 with distance 1:
@@ -538,7 +539,7 @@ compensates the previous large weight $6$.
 
 The following implementation of Dijkstra's algorithm
 calculates the minimum distances from a node $x$
-to all other nodes.
+to other nodes of the graph.
 The graph is stored as adjacency lists
 so that \texttt{adj[$a$]} contains a pair $(b,w)$
 always when there is an edge from node $a$ to node $b$
@@ -552,13 +553,14 @@ that contains the nodes ordered by their distances.
 Using a priority queue, the next node to be processed
 can be retrieved in logarithmic time.
 
-The following implementation uses a priority queue
-\texttt{q} that contains pairs of the form $(-d,x)$:
-the current distance to node $x$ is $d$.
+In the following code,
+the priority queue
+\texttt{q} contains pairs of the form $(-d,x)$,
+meaning that the current distance to node $x$ is $d$.
 The array $\texttt{dist}$ contains the distance to
 each node, and the array $\texttt{ready}$ indicates
 whether a node has been processed.
-Initially the distance to $0$ to $x$ and $\infty$ to all other nodes.
+Initially the distance is $0$ to $x$ and $\infty$ to all other nodes.
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) dist[i] = INF;
@@ -580,8 +582,9 @@ while (!q.empty()) {
 
 Note that the priority queue contains \emph{negative}
 distances to nodes.
-The reason for this is that the C++ priority queue finds maximum
-elements by default while we want to find minimum elements.
+The reason for this is that the
+default version of the C++ priority queue finds maximum
+elements, while we want to find minimum elements.
 By using negative distances,
 we can directly use the default version of the C++ priority queue\footnote{Of
 course, we could also declare the priority queue as in Chapter 4.5
@@ -591,8 +594,8 @@ node in the priority queue; however, only the instance with the
 minimum distance will be processed.
 
 The time complexity of the above implementation is
-$O(n+m \log m)$ because the algorithm goes through
-all nodes in the graph and adds for each edge
+$O(n+m \log m)$, because the algorithm goes through
+all nodes of the graph and adds for each edge
 at most one distance to the priority queue.
 
 \section{Floyd–Warshall algorithm}
@@ -602,9 +605,9 @@ at most one distance to the priority queue.
 The \key{Floyd–Warshall algorithm}\footnote{The algorithm
 is named after R. W. Floyd and S. Warshall
 who published it independently in 1962 \cite{flo62,war62}.}
-is an alternative way to approach the problem
+provides an alternative way to approach the problem
 of finding shortest paths.
-Unlike the other algorithms in this chapter,
+Unlike the other algorithms of this chapter,
 it finds all shortest paths between the nodes
 in a single run.
 
@@ -775,9 +778,7 @@ for (int i = 1; i <= n; i++) {
     }
 }
 \end{lstlisting}
-
 After this, the shortest distances can be found as follows:
-
 \begin{lstlisting}
 for (int k = 1; k <= n; k++) {
     for (int i = 1; i <= n; i++) {
