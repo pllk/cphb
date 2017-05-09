@@ -132,8 +132,8 @@ whose elements are calculated using the formula
 AB[i,j] = \sum_{k=1}^n A[i,k] \cdot B[k,j].
 \]
 
-The idea is that each element in $AB$
-is a sum of products of elements in $A$ and $B$
+The idea is that each element of $AB$
+is a sum of products of elements of $A$ and $B$
 according to the following picture:
 
 \begin{center}
@@ -248,10 +248,10 @@ for matrix multiplication\footnote{The first such
 algorithm was Strassen's algorithm,
 published in 1969 \cite{str69},
 whose time complexity is $O(n^{2.80735})$;
-the best current algorithm
-works in $O(n^{2.37286})$ time \cite{gal14}.},
+the best current algorithm \cite{gal14}
+works in $O(n^{2.37286})$ time.},
 but they are mostly of theoretical interest
-and such special algorithms are not needed
+and such algorithms are not necessary
 in competitive programming.
 
 
@@ -424,15 +424,15 @@ For example,
 \index{linear recurrence}
 
 A \key{linear recurrence}
-can be represented as a function $f(n)$
-such that the initial values are
+is a function $f(n)$
+whose initial values are
 $f(0),f(1),\ldots,f(k-1)$
-and the larger values
+and larger values
 are calculated recursively using the formula
 \[f(n) = c_1 f(n-1) + c_2 f(n-2) + \ldots + c_k f (n-k),\]
 where $c_1,c_2,\ldots,c_k$ are constant coefficients.
 
-We can use dynamic programming to calculate
+Dynamic programming can be used to calculate
 any value of $f(n)$ in $O(kn)$ time by calculating
 all values of $f(0),f(1),\ldots,f(n)$ one after another.
 However, if $k$ is small, it is possible to calculate
@@ -455,7 +455,8 @@ f(n) & = & f(n-1)+f(n-2) \\
 In this case, $k=2$ and $c_1=c_2=1$.
 
 \begin{samepage}
-The idea is to represent the
+To efficiently calculate Fibonacci numbers,
+we represent the
 Fibonacci formula as a
 square matrix $X$ of size $2 \times 2$,
 for which the following holds:
@@ -670,8 +671,9 @@ $2 \rightarrow 6 \rightarrow 3 \rightarrow 2 \rightarrow 5$.
 \subsubsection{Shortest paths}
 
 Using a similar idea in a weighted graph,
-we can calculate for each pair of nodes the shortest
-path between them that contains exactly $n$ edges.
+we can calculate for each pair of nodes the minimum
+length of a path
+between them that contains exactly $n$ edges.
 To calculate this, we have to define matrix multiplication
 in a new way, so that we do not calculate the numbers
 of paths but minimize the lengths of paths.
@@ -740,9 +742,10 @@ V^4= \begin{bmatrix}
   \infty & \infty & 12 & 13 & 11 & \infty \\
  \end{bmatrix},
 \]
-we can conclude that the shortest path of 4 edges
-from node 2 to node 5 has length 8.
-This path is
+we can conclude that the minimum length of a path
+of 4 edges
+from node 2 to node 5 is 8.
+Such a path is
 $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$.
 
 \subsubsection{Kirchhoff's theorem}
@@ -819,7 +822,8 @@ L= \begin{bmatrix}
  \end{bmatrix}
 \]
 
-The number of spanning trees equals
+It can be shown that
+the number of spanning trees equals
 the determinant of a matrix that is obtained
 when we remove any row and any column from $L$.
 For example, if we remove the first row
@@ -835,8 +839,8 @@ and column, the result is
 The determinant is always the same,
 regardless of which row and column we remove from $L$.
 
-Note that a special case of Kirchhoff's theorem
-is Cayley's formula in Chapter 22.5,
+Note that Cayley's formula in Chapter 22.5 is
+a special case of Kirchhoff's theorem,
 because in a complete graph of $n$ nodes
 
 \[ \det(

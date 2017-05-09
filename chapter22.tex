@@ -8,7 +8,7 @@ Usually, the goal is to find a way to
 count the combinations efficiently
 without generating each combination separately.
 
-As an example, let us consider the problem
+As an example, consider the problem
 of counting the number of ways to
 represent an integer $n$ as a sum of positive integers.
 For example, there are 8 representations
@@ -35,27 +35,28 @@ The values of the function
 can be recursively calculated as follows:
 \begin{equation*}
     f(n) = \begin{cases}
-               1               & n = 1\\
-               f(1)+f(2)+\ldots+f(n-1)+1 & n > 1\\
+               1               & n = 0\\
+               f(0)+f(1)+\cdots+f(n-1) & n > 0\\
            \end{cases}
 \end{equation*}
-The base case is $f(1)=1$,
-because there is only one way to represent the number 1.
-When $n>1$, we go through all ways to
-choose the last number in the sum.
-For example, in when $n=4$, the sum can end
-with $+1$, $+2$ or $+3$.
-In addition, we also count the representation
-that only contains $n$.
+The base case is $f(0)=1$,
+because the empty sum represents the number 0.
+Then, if $n>0$, we consider all ways to
+choose the first number of the sum.
+If the first number is $k$,
+there are $f(n-k)$ representations
+for the remaining part of the sum.
+Thus, we calculate the sum of all values
+of the form $f(n-k)$ where $k<n$.
 
 The first values for the function are:
 \[
 \begin{array}{lcl}
+f(0) & = & 1 \\
 f(1) & = & 1 \\
 f(2) & = & 2 \\
 f(3) & = & 4 \\
 f(4) & = & 8 \\
-f(5) & = & 16 \\
 \end{array}
 \]
 It turns out that the function also has a closed-form formula
@@ -134,7 +135,8 @@ The sum of binomial coefficients is
 \]
 
 The reason for the name ''binomial coefficient''
-is that
+can be seen when the binomial $(a+b)$ is raised to
+the $n$th power:
 
 \[ (a+b)^n =
 {n \choose 0} a^n b^0 + 
@@ -314,13 +316,14 @@ there are 6 solutions:
 In this scenario, we can assume that
 $k$ balls are initially placed in boxes
 and there is an empty box between each
-two such boxes.
+pair of two adjacent boxes.
 The remaining task is to choose the
-positions for
-$n-k-(k-1)=n-2k+1$ empty boxes.
-There are $k+1$ positions,
-so the number of solutions is
-${n-2k+1+k+1-1 \choose n-2k+1} = {n-k+1 \choose n-2k+1}$.
+positions for the remaining empty boxes.
+There are $n-2k+1$ such boxes and
+$k+1$ positions for them.
+Thus, using the formula of scenario 2,
+the number of solutions is
+${n-k+1 \choose n-2k+1}$.
 
 \subsubsection{Multinomial coefficients}
 
@@ -348,10 +351,10 @@ number of valid
 parenthesis expressions that consist of
 $n$ left parentheses and $n$ right parentheses.
 
-For example, $C_3=5$, because using three
-left parentheses and three right parentheses,
+For example, $C_3=5$, because
 we can construct the following parenthesis
-expressions:
+expressions using three
+left parentheses and three right parentheses:
 
 \begin{itemize}[noitemsep]
 \item \texttt{()()()}
@@ -370,7 +373,7 @@ The following rules precisely define all
 valid parenthesis expressions:
 
 \begin{itemize}
-\item The empty expression is valid.
+\item An empty parenthesis expression is valid.
 \item If an expression $A$ is valid,
 then also the expression
 \texttt{(}$A$\texttt{)} is valid.
@@ -402,11 +405,11 @@ of parentheses and the number of expressions
 is the product of the following values:
 
 \begin{itemize}
-\item $C_{i}$: number of ways to construct an expression
-using the parentheses in the first part,
+\item $C_{i}$: the number of ways to construct an expression
+using the parentheses of the first part,
 not counting the outermost parentheses
-\item $C_{n-i-1}$: number of ways to construct an
-expression using the parentheses in the second part
+\item $C_{n-i-1}$: the number of ways to construct an
+expression using the parentheses of the second part
 \end{itemize}
 In addition, the base case is $C_0=1$,
 because we can construct an empty parenthesis
@@ -656,7 +659,7 @@ recursive formula:
            \end{cases}
 \end{equation*}
 
-The formula can be derived by going through
+The formula can be derived by considering
 the possibilities how the element 1 changes
 in the derangement.
 There are $n-1$ ways to choose an element $x$
@@ -695,8 +698,7 @@ remain unchanged when the $k$th way is applied.
 
 As an example, let us calculate the number of
 necklaces of $n$ pearls,
-where the color of each pearl is
-one of $1,2,\ldots,m$.
+where each pearl has $m$ possible colors.
 Two necklaces are symmetric if they are
 similar after rotating them.
 For example, the necklace
@@ -749,7 +751,7 @@ pearl has the same color remain the same.
 
 More generally, when the number of steps is $k$,
 a total of
-\[m^{\textrm{gcd}(k,n)},\]
+\[m^{\textrm{gcd}(k,n)}\]
 necklaces remain the same,
 where $\textrm{gcd}(k,n)$ is the greatest common
 divisor of $k$ and $n$.

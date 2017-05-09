@@ -8,12 +8,12 @@ no matter what the opponent does,
 if such a strategy exists.
 
 It turns out that there is a general strategy
-for all such games,
+for such games,
 and we can analyze the games using the \key{nim theory}.
 First, we will analyze simple games where
 players remove sticks from heaps,
 and after this, we will generalize the strategy
-used in those games to all other games.
+used in those games to other games.
 
 \section{Game states}
 
@@ -252,7 +252,7 @@ where $\oplus$ is the xor operation\footnote{The optimal strategy
 for nim was published in 1901 by C. L. Bouton \cite{bou01}.}.
 The states whose nim sum is 0 are losing states,
 and all other states are winning states.
-For example, the nim sum for
+For example, the nim sum of
 $[10,12,5]$ is $10 \oplus 12 \oplus 5 = 3$,
 so the state is a winning state.
 
@@ -260,8 +260,6 @@ But how is the nim sum related to the nim game?
 We can explain this by looking at how the nim
 sum changes when the nim state changes.
 
-~\\
-\noindent
 \textit{Losing states:}
 The final state $[0,0,\ldots,0]$ is a losing state,
 and its nim sum is 0, as expected.
@@ -270,8 +268,6 @@ a winning state, because when a single value $x_k$ changes,
 the nim sum also changes, so the nim sum
 is different from 0 after the move.
 
-~\\
-\noindent
 \textit{Winning states:}
 We can move to a losing state if
 there is any heap $k$ for which $x_k \oplus s < x_k$.
@@ -280,10 +276,8 @@ heap $k$ so that it will contain $x_k \oplus s$ sticks,
 which will lead to a losing state.
 There is always such a heap, where $x_k$
 has a one bit at the position of the leftmost
-one bit in $s$.
+one bit of $s$.
 
-~\\
-\noindent
 As an example, consider the state $[10,12,5]$.
 This state is a winning state,
 because its nim sum is 3.
@@ -291,7 +285,6 @@ Thus, there has to be a move which
 leads to a losing state.
 Next we will find out such a move.
 
-\begin{samepage}
 The nim sum of the state is as follows:
 
 \begin{center}
@@ -303,12 +296,11 @@ The nim sum of the state is as follows:
 3 & \texttt{0011} \\
 \end{tabular}
 \end{center}
-\end{samepage}
 
 In this case, the heap with 10 sticks
 is the only heap that has a one bit
 at the position of the leftmost
-one bit in the nim sum:
+one bit of the nim sum:
 
 \begin{center}
 \begin{tabular}{r|r}
@@ -344,11 +336,11 @@ In a \key{misère game}, the goal of the game
 is opposite,
 so the player who removes the last stick
 loses the game.
-It turns out that a misère nim game can be
+It turns out that the misère nim game can be
 optimally played almost like the standard nim game.
 
 The idea is to first play the misère game
-like a standard game, but change the strategy
+like the standard game, but change the strategy
 at the end of the game.
 The new strategy will be introduced in a situation
 where each heap would contain at most one stick
@@ -386,7 +378,7 @@ the states and allowed moves, and there is no randomness in the game.
 The idea is to calculate for each game state
 a Grundy number that corresponds to the number of
 sticks in a nim heap.
-When we know the Grundy numbers for all states,
+When we know the Grundy numbers of all states,
 we can play the game like the nim game.
 
 \subsubsection{Grundy numbers}
@@ -394,10 +386,10 @@ we can play the game like the nim game.
 \index{Grundy number}
 \index{mex function}
 
-The \key{Grundy number} for a game state is
+The \key{Grundy number} of a game state is
 \[\textrm{mex}(\{g_1,g_2,\ldots,g_n\}),\]
-where $g_1,g_2,\ldots,g_n$ are Grundy numbers for
-states to which we can move from the state,
+where $g_1,g_2,\ldots,g_n$ are the Grundy numbers of the
+states to which we can move,
 and the mex function gives the smallest
 nonnegative number that is not in the set.
 For example, $\textrm{mex}(\{0,1,3\})=2$.
@@ -457,9 +449,7 @@ and if the Grundy number is $x>0$, we can move
 to states whose Grundy numbers include all numbers
 $0,1,\ldots,x-1$.
 
-~\\
-\noindent
-As an example, let us consider a game where
+As an example, consider a game where
 the players move a figure in a maze.
 Each square in the maze is either floor or wall.
 On each turn, the player has to move
@@ -468,7 +458,6 @@ of steps left or up.
 The winner of the game is the player who
 makes the last move.
 
-\begin{samepage}
 The following picture shows a possible initial state
 of the game, where @ denotes the figure and *
 denotes a square where it can move.
@@ -495,11 +484,10 @@ denotes a square where it can move.
   \end{scope}
 \end{tikzpicture}
 \end{center}
-\end{samepage}
 
 The states of the game are all floor squares
-in the maze.
-In this situation, the Grundy numbers
+of the maze.
+In the above maze, the Grundy numbers
 are as follows:
 
 \begin{center}
@@ -577,11 +565,9 @@ is the nim sum of the Grundy numbers of the subgames.
 The game can be played like a nim game by calculating
 all Grundy numbers for subgames and then their nim sum.
 
-~\\
-\noindent
 As an example, consider a game that consists
 of three mazes.
-In this game, on each turn the player chooses one
+In this game, on each turn, the player chooses one
 of the mazes and then moves the figure in the maze.
 Assume that the initial state of the game is as follows:
 
@@ -762,7 +748,7 @@ $0 \oplus 3 \oplus 3 = 0$.
 
 \subsubsection{Grundy's game}
 
-Sometimes a move in the game divides the game
+Sometimes a move in a game divides the game
 into subgames that are independent of each other.
 In this case, the Grundy number of the game is
 

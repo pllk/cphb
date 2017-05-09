@@ -9,7 +9,7 @@ because many questions involving integers
 are very difficult to solve even if they
 seem simple at first glance.
 
-As an example, let us consider the following equation:
+As an example, consider the following equation:
 \[x^3 + y^3 + z^3 = 33\]
 It is easy to find three real numbers $x$, $y$ and $z$
 that satisfy the equation.
@@ -21,10 +21,10 @@ y = \sqrt[3]{3}, \\
 z = \sqrt[3]{3}.\\
 \end{array}
 \]
-However, nobody knows if there are any three
+However, it is an open problem in number theory
+if there are any three
 \emph{integers} $x$, $y$ and $z$
-that would satisfy the equation, but this
-is an open problem in number theory \cite{bec07}.
+that would satisfy the equation \cite{bec07}.
 
 In this chapter, we will focus on basic concepts
 and algorithms in number theory.
@@ -51,7 +51,7 @@ A number $n>1$ is a \key{prime}
 if its only positive factors are 1 and $n$.
 For example, 7, 19 and 41 are primes,
 but 35 is not a prime, because $5 \cdot 7 = 35$.
-For each number $n>1$, there is a unique
+For every number $n>1$, there is a unique
 \key{prime factorization}
 \[ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k},\]
 where $p_1,p_2,\ldots,p_k$ are distinct primes and
@@ -87,7 +87,7 @@ and the product of the factors is $\mu(84)=84^6=351298031616$.
 
 \index{perfect number}
 
-A number $n$ is \key{perfect} if $n=\sigma(n)-n$,
+A number $n$ is called a \key{perfect number} if $n=\sigma(n)-n$,
 i.e., $n$ equals the sum of its factors
 between $1$ and $n-1$.
 For example, 28 is a perfect number,
@@ -211,13 +211,13 @@ algorithm that builds an array using which we
 can efficiently check if a given number between $2 \ldots n$
 is prime and, if it is not, find one prime factor of the number.
 
-The algorithm builds an array $\texttt{a}$
+The algorithm builds an array $\texttt{sieve}$
 whose positions $2,3,\ldots,n$ are used.
-The value $\texttt{a}[k]=0$ means
+The value $\texttt{sieve}[k]=0$ means
 that $k$ is prime,
-and the value $\texttt{a}[k] \neq 0$
+and the value $\texttt{sieve}[k] \neq 0$
 means that $k$ is not a prime and one
-of its prime factors is $\texttt{a}[k]$.
+of its prime factors is $\texttt{sieve}[k]$.
 
 The algorithm iterates through the numbers
 $2 \ldots n$ one by one.
@@ -279,31 +279,30 @@ For example, if $n=20$, the array is as follows:
 
 The following code implements the sieve of
 Eratosthenes.
-The code assumes that each element in
-\texttt{a} is initially zero.
+The code assumes that each element of
+\texttt{sieve} is initially zero.
 
 \begin{lstlisting}
 for (int x = 2; x <= n; x++) {
-    if (a[x]) continue;
+    if (sieve[x]) continue;
     for (int u = 2*x; u <= n; u += x) {
-        a[u] = x;
+        sieve[u] = x;
     }
 }
 \end{lstlisting}
 
-The inner loop of the algorithm will be executed
-$n/x$ times for any $x$.
+The inner loop of the algorithm is executed
+$n/x$ times for each value of $x$.
 Thus, an upper bound for the running time
 of the algorithm is the harmonic sum
+\[\sum_{x=2}^n n/x = n/2 + n/3 + n/4 + \cdots + n/n = O(n \log n).\]
 
 \index{harmonic sum}
 
-\[\sum_{x=2}^n n/x = n/2 + n/3 + n/4 + \cdots + n/n = O(n \log n).\]
-
-In fact, the algorithm is even more efficient,
+In fact, the algorithm is more efficient,
 because the inner loop will be executed only if
 the number $x$ is prime.
-It can be shown that the time complexity of the
+It can be shown that the running time of the
 algorithm is only $O(n \log \log n)$,
 a complexity very near to $O(n)$. 
 
@@ -338,11 +337,21 @@ The algorithm is based on the following formula:
                \textrm{gcd}(b,a \bmod b) & b \neq 0\\
            \end{cases}
 \end{equation*}
+
 For example,
 \[\textrm{gcd}(24,36) = \textrm{gcd}(36,24)
 = \textrm{gcd}(24,12) = \textrm{gcd}(12,0)=12.\]
-The time complexity of Euclid's algorithm
-is $O(\log n)$, where $n=\min(a,b)$.
+
+The algorithm can be implemented as follows:
+\begin{lstlisting}
+int gcd(int a, int b) {
+    if (b == 0) return a;
+    return gcd(b, a%b);
+}
+\end{lstlisting}
+
+It can be shown that Euclid's algorithm works
+in $O(\log n)$ time, where $n=\min(a,b)$.
 The worst case for the algorithm is
 the case when $a$ and $b$ are consecutive Fibonacci numbers.
 For example,
@@ -376,8 +385,8 @@ Note that $\varphi(n)=n-1$ if $n$ is prime.
 \index{modular arithmetic}
 
 In \key{modular arithmetic},
-the set of available numbers is limited so
-that only numbers $0,1,2,\ldots,m-1$ may be used,
+the set of numbers is limited so
+that only numbers $0,1,2,\ldots,m-1$ are used,
 where $m$ is a constant.
 Each number $x$ is
 represented by the number $x \bmod m$:
@@ -385,9 +394,9 @@ the remainder after dividing $x$ by $m$.
 For example, if $m=17$, then $75$
 is represented by $75 \bmod 17 = 7$.
 
-Often we can take the remainder before doing
+Often we can take remainders before doing
 calculations.
-In particular, the following formulas can be used:
+In particular, the following formulas hold:
 \[
 \begin{array}{rcl}
 (x+y) \bmod m & = & (x \bmod m + y \bmod m) \bmod m \\
@@ -484,12 +493,12 @@ If $m$ is prime, the formula becomes
 \[
 x^{-1} = x^{m-2}.
 \]
-For example, if $x=6$ and $m=17$, then
-\[x^{-1}=6^{17-2} \bmod 17 = 3.\]
-Using this formula, we can calculate modular inverses
-efficiently using the modular exponentation algorithm.
+For example,
+\[6^{-1} \bmod 17 =6^{17-2} \bmod 17 = 3.\]
 
-The above formula can be derived using Euler's theorem.
+This formula allows us to efficiently calculate
+modular inverses using the modular exponentation algorithm.
+The formula can be derived using Euler's theorem.
 First, the modular inverse should satisfy the following equation:
 \[
 x x^{-1} \bmod m = 1.
@@ -522,6 +531,8 @@ cout << x*x << "\n"; // 2537071545
 
 \section{Solving equations}
 
+\subsubsection*{Diophantine equations}
+
 \index{Diophantine equation}
 
 A \key{Diophantine equation}
@@ -529,12 +540,12 @@ A \key{Diophantine equation}
 is an equation of the form
 \[ ax + by = c, \]
 where $a$, $b$ and $c$ are constants
-and we should find the values of $x$ and $y$.
+and the values of $x$ and $y$ should be found.
 Each number in the equation has to be an integer.
 For example, one solution for the equation
 $5x+2y=11$ is $x=3$ and $y=-2$.
 
-\index{Euclid's algorithm}
+\index{extended Euclid's algorithm}
 
 We can efficiently solve a Diophantine equation
 by using Euclid's algorithm.
@@ -548,11 +559,7 @@ ax + by = \textrm{gcd}(a,b)
 A Diophantine equation can be solved if
 $c$ is divisible by
 $\textrm{gcd}(a,b)$,
-and otherwise the equation cannot be solved.
-
-\index{extended Euclid's algorithm}
-
-\subsubsection*{Extended Euclid's algorithm}
+and otherwise it cannot be solved.
 
 As an example, let us find numbers $x$ and $y$
 that satisfy the following equation:
@@ -588,7 +595,7 @@ so a solution to the equation is
 $x=8$ and $y=-20$.
 
 A solution to a Diophantine equation is not unique,
-but we can form an infinite number of solutions
+because we can form an infinite number of solutions
 if we know one solution.
 If a pair $(x,y)$ is a solution, then also all pairs
 \[(x+\frac{kb}{\textrm{gcd}(a,b)},y-\frac{ka}{\textrm{gcd}(a,b)})\]
@@ -621,7 +628,7 @@ because
 \[X_k {X_k}^{-1}_{m_k} \bmod m_k = 1.\]
 Since all other terms in the sum are divisible by $m_k$,
 they have no effect on the remainder,
-and the remainder by $m_k$ for the whole sum is $a_k$.
+and $x \bmod m_k = a_k$.
 
 For example, a solution for
 \[

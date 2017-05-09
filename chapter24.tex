@@ -13,8 +13,7 @@ where the three dots describe the event.
 
 For example, when throwing a dice,
 the outcome is an integer between $1$ and $6$,
-and it is assumed that the probability of
-each outcome is $1/6$.
+and the probability of each outcome is $1/6$.
 For example, we can calculate the following probabilities:
 
 \begin{itemize}[noitemsep]
@@ -56,9 +55,9 @@ Thus, the probability of the event is
 
 Another way to calculate the probability is
 to simulate the process that generates the event.
-In this case, we draw three cards, so the process
+In this example, we draw three cards, so the process
 consists of three steps.
-We require that each step in the process is successful.
+We require that each step of the process is successful.
 
 Drawing the first card certainly succeeds,
 because there are no restrictions.
@@ -73,7 +72,7 @@ The probability that the entire process succeeds is
 
 \section{Events}
 
-An event in probability can be represented as a set
+An event in probability theory can be represented as a set
 \[A \subset X,\]
 where $X$ contains all possible outcomes
 and $A$ is a subset of outcomes.
@@ -85,7 +84,7 @@ corresponds to the set
 
 Each outcome $x$ is assigned a probability $p(x)$.
 Furthermore, the probability $P(A)$ of an event
-that corresponds to a set $A$ can be calculated as a sum
+$A$ can be calculated as a sum
 of probabilities of outcomes using the formula
 \[P(A) = \sum_{x \in A} p(x).\]
 For example, when throwing a dice,
@@ -97,7 +96,7 @@ so the probability of the event
 The total probability of the outcomes in $X$ must
 be 1, i.e., $P(X)=1$.
 
-Since the events in probability are sets,
+Since the events in probability theory are sets,
 we can manipulate them using standard set operations:
 
 \begin{itemize}
@@ -166,7 +165,7 @@ The \key{conditional probability}
 \[P(A | B) = \frac{P(A \cap B)}{P(B)}\]
 is the probability of $A$
 assuming that $B$ happens.
-In this situation, when calculating the
+Hence, when calculating the
 probability of $A$, we only consider the outcomes
 that also belong to $B$.
 
@@ -313,17 +312,17 @@ values $a,a+1,\ldots,b$ and the probability of each value is $1/n$.
 For example, when throwing a dice,
 $a=1$, $b=6$ and $P(X=x)=1/6$ for each value $x$.
 
-The expected value for $X$ in a uniform distribution is
+The expected value of $X$ in a uniform distribution is
 \[E[X] = \frac{a+b}{2}.\]
+
 \index{binomial distribution}
-~\\
 In a \key{binomial distribution}, $n$ attempts
 are made
 and the probability that a single attempt succeeds
 is $p$.
 The random variable $X$ counts the number of
 successful attempts,
-and the probability for a value $x$ is
+and the probability of a value $x$ is
 \[P(X=x)=p^x (1-p)^{n-x} {n \choose x},\]
 where $p^x$ and $(1-p)^{n-x}$ correspond to
 successful and unsuccessful attemps,
@@ -334,25 +333,25 @@ For example, when throwing a dice ten times,
 the probability of throwing a six exactly
 three times is $(1/6)^3 (5/6)^7 {10 \choose 3}$.
 
-The expected value for $X$ in a binomial distribution is
+The expected value of $X$ in a binomial distribution is
 \[E[X] = pn.\]
+
 \index{geometric distribution}
-~\\
 In a \key{geometric distribution},
 the probability that an attempt succeeds is $p$,
 and we continue until the first success happens.
 The random variable $X$ counts the number
-of attempts needed, and the probability for
+of attempts needed, and the probability of
 a value $x$ is
 \[P(X=x)=(1-p)^{x-1} p,\]
-where $(1-p)^{x-1}$ corresponds to unsuccessful attemps
+where $(1-p)^{x-1}$ corresponds to the unsuccessful attemps
 and $p$ corresponds to the first successful attempt.
 
 For example, if we throw a dice until we throw a six,
 the probability that the number of throws
 is exactly 4 is $(5/6)^3 1/6$.
 
-The expected value for $X$ in a geometric distribution is
+The expected value of $X$ in a geometric distribution is
 \[E[X]=\frac{1}{p}.\]
 
 \section{Markov chains}
@@ -369,7 +368,7 @@ for moving to other states.
 A Markov chain can be represented as a graph
 whose nodes are states and edges are transitions.
 
-As an example, let us consider a problem
+As an example, consider a problem
 where we are in floor 1 in an $n$ floor building.
 At each step, we randomly walk either one floor
 up or one floor down, except that we always
@@ -420,11 +419,11 @@ $[1/2,0,1/2,0,0]$, and so on.
 
 An efficient way to simulate the walk in
 a Markov chain is to use dynamic programming.
-The idea is to maintain the probability distribution
+The idea is to maintain the probability distribution,
 and at each step go through all possibilities
 how we can move.
-Using this method, we can simulate $m$ steps
-in $O(n^2 m)$ time.
+Using this method, we can simulate
+a walk of $m$ steps in $O(n^2 m)$ time.
 
 The transitions of a Markov chain can also be
 represented as a matrix that updates the
@@ -511,7 +510,7 @@ The $kth$ \key{order statistic} of an array
 is the element at position $k$ after sorting
 the array in increasing order.
 It is easy to calculate any order statistic
-in $O(n \log n)$ time by sorting the array,
+in $O(n \log n)$ time by first sorting the array,
 but is it really needed to sort the entire array
 just to find one element?
 
@@ -526,16 +525,16 @@ its running time is usually $O(n)$
 but $O(n^2)$ in the worst case.
 
 The algorithm chooses a random element $x$
-in the array, and moves elements smaller than $x$
+of the array, and moves elements smaller than $x$
 to the left part of the array,
 and all other elements to the right part of the array.
 This takes $O(n)$ time when there are $n$ elements.
 Assume that the left part contains $a$ elements
 and the right part contains $b$ elements.
-If $a=k-1$, element $x$ is the $k$th order statistic.
-Otherwise, if $a>k-1$, we recursively find the $k$th order
+If $a=k$, element $x$ is the $k$th order statistic.
+Otherwise, if $a>k$, we recursively find the $k$th order
 statistic for the left part,
-and if $a<k-1$, we recursively find the $r$th order
+and if $a<k$, we recursively find the $r$th order
 statistic for the right part where $r=k-a$.
 The search continues in a similar way, until the element
 has been found.
@@ -544,9 +543,9 @@ When each element $x$ is randomly chosen,
 the size of the array about halves at each step,
 so the time complexity for
 finding the $k$th order statistic is about
-\[n+n/2+n/4+n/8+\cdots=O(n).\]
+\[n+n/2+n/4+n/8+\cdots \le 2n = O(n).\]
 
-The worst case for the algorithm is still $O(n^2)$,
+The worst case of the algorithm requires still $O(n^2)$ time,
 because it is possible that $x$ is always chosen
 in such a way that it is one of the smallest or largest
 elements in the array and $O(n)$ steps are needed.
