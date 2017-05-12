@@ -9,7 +9,7 @@ the complexity $O(\sqrt n)$ is better than $O(n)$
 but worse than $O(\log n)$.
 In any case, many square root algorithms are fast and usable in practice.
 
-As an example, let us consider the problem of
+As an example, consider the problem of
 creating a data structure that supports
 two operations on an array:
 modifying an element at a given position
@@ -108,10 +108,8 @@ the sum of the corresponding block change:
 \end{tikzpicture}
 \end{center}
 
-Calculating the sum of elements in a range is
-a bit more difficult.
-It turns out that we can always divide
-the range into three parts such that 
+Then, to calculate the sum of elements in a range,
+we divide the range into three parts such that 
 the sum consists of values of single elements
 and sums of blocks between them:
 
@@ -158,14 +156,15 @@ and sums of blocks between them:
 
 Since the number of single elements is $O(\sqrt n)$
 and the number of blocks is also $O(\sqrt n)$,
-the time complexity of the sum query is $O(\sqrt n)$.
-In this case, the parameter $\sqrt n$ balances two things:
+the sum query takes $O(\sqrt n)$ time.
+The purpose of the block size $\sqrt n$ is
+that it \emph{balances} two things:
 the array is divided into $\sqrt n$ blocks,
 each of which contains $\sqrt n$ elements.
 
-In practice, it is not needed to use the
-exact value of $\sqrt n$ as a parameter, but it may be better to
-use parameters $k$ and $n/k$ where $k$ is
+In practice, it is not necessary to use the
+exact value of $\sqrt n$ as a parameter,
+and instead we may use parameters $k$ and $n/k$ where $k$ is
 different from $\sqrt n$.
 The optimal parameter depends on the problem and input.
 For example, if an algorithm often goes
@@ -180,9 +179,10 @@ elements.
 In this section we discuss two square root algorithms
 that are based on combining two algorithms into one algorithm.
 In both cases, we could use either of the algorithms
-alone and solve the problem in $O(n^2)$ time.
+without the other
+and solve the problem in $O(n^2)$ time.
 However, by combining the algorithms, the running
-time becomes $O(n \sqrt n)$.
+time is only $O(n \sqrt n)$.
 
 \subsubsection{Case processing}
 
@@ -218,9 +218,11 @@ For example, consider the following grid:
 \end{center}
 In this case, the minimum distance is 2 between the two 'E' letters.
 
-Let us consider the problem of calculating the minimum distance
+We can solve the problem by considering each letter separately.
+Using this approach, the new problem is to calculate
+the minimum distance
 between two cells with a \emph{fixed} letter $c$.
-There are two algorithms for this:
+We focus on two algorithms for this:
 
 \emph{Algorithm 1:} Go through all pairs of cells with letter $c$,
 and calculate the minimum distance between such cells.
@@ -230,13 +232,14 @@ This will take $O(k^2)$ time where $k$ is the number of cells with letter $c$.
 starts at each cell with letter $c$. The minimum distance between
 two cells with letter $c$ will be calculated in $O(n)$ time.
 
-Now we can go through all letters that appear in the grid
-and use either of the above algorithms.
-If we always used Algorithm 1, the running time would be $O(n^2)$,
-because all cells may have the same letters and $k=n$.
-Also if we always used Algorithm 2, the running time would be $O(n^2)$,
-because all cells may have different letters and there would
-be $n$ searches.
+One way to solve the problem is to choose either of the
+algorithms and use it for all letters.
+If we use Algorithm 1, the running time is $O(n^2)$,
+because all cells may contain the same letter,
+and in this case $k=n$.
+Also if we use Algorithm 2, the running time is $O(n^2)$,
+because all cells may have different letters,
+and in this case $n$ searches are needed.
 
 However, we can \emph{combine} the two algorithms and
 use different algorithms for different letters
@@ -258,12 +261,12 @@ so processing those letters also takes $O(n \sqrt n)$ time.
 
 \subsubsection{Batch processing}
 
-Consider again a two-dimensional grid that contains $n$ cells.
+Our next problem also deals with
+a two-dimensional grid that contains $n$ cells.
 Initially, each cell except one is white.
-We perform $n-1$ operations, each of which is given a white cell.
-Each operation fist calculates the minimum distance
-between the white cell and any black cell, and
-then paints the white cell black.
+We perform $n-1$ operations, each of which first
+calculates the minimum distance from a given white cell
+to a black cell, and then paints the white cell black.
 
 For example, consider the following operation:
 
@@ -277,48 +280,58 @@ For example, consider the following operation:
 \end{tikzpicture}
 \end{center}
 
-There are three black cells and the cell marked with *
-will be painted black next.
-Before painting the cell, the minimum distance
-to a black cell is calculated.
-In this case the minimum distance is 2
-to the right cell.
+First, we calculate the minimum distance
+from  the white cell marked with * to a black cell.
+The minimum distance is 2, because we can move
+to steps left to a black cell.
+Then, we paint the white cell black:
 
-There are two algorithms for solving the problem:
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\fill[color=black] (1,1) rectangle (2,2);
+\fill[color=black] (3,1) rectangle (4,2);
+\fill[color=black] (0,3) rectangle (1,4);
+\fill[color=black] (2,3) rectangle (3,4);
+\draw (0,0) grid (4,4);
+\end{tikzpicture}
+\end{center}
 
-\emph{Algorithm 1:} After each operation, use breadth-first search
-to calculate for each white cell the distance to the nearest black cell.
-Each search takes $O(n)$ time, so the total running time is $O(n^2)$.
+Consider the following two algorithms:
+
+\emph{Algorithm 1:} Use breadth-first search
+to calculate
+for each white cell the distance to the nearest black cell.
+This takes $O(n)$ time, and after the search,
+we can find the minimum distance from any white cell
+to a black cell in $O(1)$ time.
 
 \emph{Algorithm 2:} Maintain a list of cells that have been
 painted black, go through this list at each operation
 and then add a new cell to the list.
-The size of the list is $O(n)$, so the algorithm
-takes $O(n^2)$ time.
+An operation takes $O(k)$ time where $k$ is the length of the list.
 
-We can combine the above algorithms by
+We combine the above algorithms by
 dividing the operations into
 $O(\sqrt n)$ \emph{batches}, each of which consists
 of $O(\sqrt n)$ operations.
 At the beginning of each batch,
-we calculate for each white cell the minimum distance
-to a black cell using breadth-first search.
-Then, when processing a batch, we maintain a list of cells
-that have been painted black in the current batch.
-The list contains $O(\sqrt n)$ elements,
-because there are $O(\sqrt n)$ operations in each batch.
-Now, the distance between a white cell and the nearest black
-cell is either the precalculated distance or the distance
-to a cell that appears in the list.
+we perform Algorithm 1.
+Then, we use Algorithm 2 to process the batches.
+We clear the list of Algorithm 2 between
+the batches.
+At each operation,
+the minimum distance to a black cell
+is either the distance calculated by Algorithm 1
+or the distance calculated by Algorithm 2.
 
 The resulting algorithm works in
 $O(n \sqrt n)$ time.
-First, there are $O(\sqrt n)$ breadth-first searches
-and each search takes $O(n)$ time.
-Second, the total number of
-distances calculated during the algorithm
-is $O(n)$, and when calculating each distance,
-we go through a list of $O(\sqrt n)$ squares.
+First, Algorithm 1 is performed $O(\sqrt n)$ times,
+and each search works in $O(n)$ time.
+Second, when using Algorithm 2 in a batch,
+the list contains $O(\sqrt n)$ cells
+(because we clear the list between the batches)
+and each operation takes $O(\sqrt n)$ time.
 
 \section{Integer partitions}
 
@@ -326,13 +339,16 @@ Some square root algorithms are based on
 the following observation:
 if a positive integer $n$ is represented as
 a sum of positive integers,
-such a sum contains only $O(\sqrt n)$ \emph{distinct} numbers.
-The reason for this is that a sum with
-the maximum amount of distinct numbers has to be of the form
-\[1+2+3+ \cdots = n.\]
-The sum of the numbers $1,2,\ldots,k$ is
-\[\frac{k(k+1)}{2},\]
-so the maximum amount of distinct numbers is $k = O(\sqrt n)$.
+such a sum always contains at most
+$O(\sqrt n)$ \emph{distinct} numbers.
+
+The reason for this is that to construct
+a sum that contains a maximum number of distinct
+numbers, we should choose \emph{small} numbers.
+If we choose the numbers $1,2,\ldots,k$,
+the resulting sum is
+\[\frac{k(k+1)}{2} \le n.\]
+Thus, the maximum amount of distinct numbers is $k = O(\sqrt n)$.
 Next we will discuss two problems that can be solved
 efficiently using this observation.
 
@@ -374,51 +390,48 @@ The idea is to use an array that records the sums of weights
 that can be formed using the groups processed so far.
 The array contains $n$ elements: element $k$ is 1 if the sum
 $k$ can be formed and 0 otherwise.
-To process a group of weights, we can easily scan the array
+To process a group of weights, we scan the array
 from left to right and record the new sums of weights that
 can be formed using this group and the previous groups.
 
 \subsubsection{String construction}
 
-Given a string and a dictionary of words,
+Given a string \texttt{s} and a dictionary $D$ of strings,
 consider the problem of counting the number of ways
-the string can be constructed using the dictionary words.
+\texttt{s} can be formed as a concatenation of strings in $D$.
 For example,
-if the string is \texttt{ABAB} and the dictionary is
+if \texttt{s} is \texttt{ABAB} and $D$ is
 $\{\texttt{A},\texttt{B},\texttt{AB}\}$,
 there are 4 ways:
-$\texttt{A}+\texttt{B}+\texttt{A}+\texttt{B}$,
-$\texttt{AB}+\texttt{A}+\texttt{B}$,
-$\texttt{A}+\texttt{B}+\texttt{AB}$ and
-$\texttt{AB}+\texttt{AB}$.
 
-Assume that the length of the string is $n$
-and the total length of the dictionary words is $m$.
-A natural way to solve the problem is to use dynamic
-programming: we can define a function $f$ such that
-$f(k)$ denotes the number of ways to construct a prefix
-of length $k$ of the string using the dictionary words.
-Using this function, $f(n)$ gives the answer to the problem.
+\begin{itemize}[noitemsep]
+\item $\texttt{A}+\texttt{B}+\texttt{A}+\texttt{B}$
+\item $\texttt{AB}+\texttt{A}+\texttt{B}$
+\item $\texttt{A}+\texttt{B}+\texttt{AB}$
+\item $\texttt{AB}+\texttt{AB}$
+\end{itemize}
 
-There are several ways to calculate the values of $f$.
-One method is to store the dictionary words
-in a trie and go through all ways to select the
-last word in each prefix, which results in an $O(n^2)$ time algorithm.
-However, instead of using a trie, we can also use string hashing
-and always go through the dictionary words and compare their
-hash values.
+Assume that the length of \texttt{s} is $n$
+and the total length of the strings in $D$ is $m$.
+We can solve the problem using dynamic programming:
+Let $f(k)$ denote the number of ways to construct the prefix
+$\texttt{s}[0 \ldots k]$ using the strings in $D$.
+Now $f(n-1)$ gives the answer to the problem,
+and we can solve the problem in $O(n^2)$ time
+using a trie structure.
 
-The most straightforward implementation of this idea
-yields an $O(nm)$ time algorithm,
-because the dictionary may contain $m$ words.
-However, we can make the algorithm more efficient
-by considering the dictionary words grouped by their lengths.
-Each group can be processed in constant time,
-because all hash values of dictionary words may be stored in a set.
-Since the total length of the words is $m$,
-there are at most $O(\sqrt m)$ distinct word lengths
-and at most $O(\sqrt m)$ groups.
-Thus, the running time of the algorithm is only $O(n \sqrt m)$.
+However, we can solve the problem more efficiently
+by using string hashing and the fact that there
+are at most $O(\sqrt m)$ distinct string lengths in $D$.
+First, we construct a set $H$ that contains all
+hash values of the strings in $D$.
+Then, when calculating a value of $f(k)$,
+we consider each integer $p$
+such that there is a string of length $p$ in $D$,
+calculate the hash value of $\texttt{s}[k-p+1 \ldots k]$
+and check if it belongs to $H$.
+Since there are at most $O(\sqrt m)$ distinct word lengths,
+this results in an algorithm whose running time is $O(n \sqrt m)$.
 
 \section{Mo's algorithm}
 
@@ -429,38 +442,49 @@ is named after Mo Tao, a Chinese competitive programmer, but
 the technique has appeared earlier in the literature \cite{ken06}.}
 can be used in many problems
 that require processing range queries in 
-a \emph{static} array.
-Since the array is static, the queries can be
-processed in any order.
-Before processing the queries, the algorithm
-sorts them in a special order which guarantees
+a \emph{static} array, i.e., the array values
+do not change between the queries.
+In each query, we are given a range $[a,b]$,
+and we should calculate a value based on the
+array elements between positions $a$ and $b$.
+Since the array is static,
+the queries can be processed in any order,
+and Mo's algorithm
+processes the queries in a special order which guarantees
 that the algorithm works efficiently.
 
-At each moment in the algorithm, there is an active
-range and the algorithm maintains the answer
-to a query related to that range.
+Mo's algorithm maintains an \emph{active range}
+of the array, and the answer to a query
+concerning the active range is known at each moment.
 The algorithm processes the queries one by one,
 and always moves the endpoints of the
 active range by inserting and removing elements.
 The time complexity of the algorithm is
-$O(n \sqrt n f(n))$ when the array contains
+$O(n \sqrt n f(n))$ where the array contains
 $n$ elements, there are $n$ queries
 and each insertion and removal of an element
 takes $O(f(n))$ time.
 
 The trick in Mo's algorithm is the order
 in which the queries are processed:
-The array is divided into blocks of $O(\sqrt n)$
-elements, and the queries are sorted primarily by
-the number of the block that contains the first element
-in the range, and secondarily by the position of the
-last element in the range.
-It turns out that using this order, the algorithm
+The array is divided into blocks of $k=O(\sqrt n)$
+elements, and a query $[a_1,b_1]$
+is processed before a query $[a_2,b_2]$
+if either 
+\begin{itemize}
+\item $\lfloor a_1/k \rfloor < \lfloor a_2/k \rfloor$ or
+\item $\lfloor a_1/k \rfloor = \lfloor a_2/k \rfloor$ and $b_1 < b_2$.
+\end{itemize}
+
+Thus, all queries whose left endpoints are
+in a certain block are processed one after another
+sorted according to their right endpoints.
+Using this order, the algorithm
 only performs $O(n \sqrt n)$ operations,
 because the left endpoint moves
-$n$ times $O(\sqrt n)$ steps,
+$O(n)$ times $O(\sqrt n)$ steps,
 and the right endpoint moves
-$\sqrt n$ times $O(n)$ steps. Thus, both
+$O(\sqrt n)$ times $O(n)$ steps. Thus, both
 endpoints move a total of $O(n \sqrt n)$ steps during the algorithm.
 
 \subsubsection*{Example}
