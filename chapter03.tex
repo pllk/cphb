@@ -890,7 +890,7 @@ For example, the following code finds out whether
 
 \begin{lstlisting}
 auto k = lower_bound(t,t+n,x)-t;
-if (k < n) {
+if (k < n && t[k] == x) {
     // x found at index k
 }
 \end{lstlisting}
