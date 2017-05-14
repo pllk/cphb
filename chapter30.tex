@@ -8,9 +8,9 @@ The idea in such algorithms is to represent
 an instance of the problem as a set of events that correspond
 to points in the plane.
 The events are processed in increasing order
-according to their x or y coordinate.
+according to their x or y coordinates.
 
-As an example, let us consider the following problem:
+As an example, consider the following problem:
 There is a company that has $n$ employees,
 and we know for each employee their arrival and
 leaving times on a certain day.
@@ -19,8 +19,8 @@ employees that were in the office at the same time.
 
 The problem can be solved by modeling the situation
 so that each employee is assigned two events that
-corresponds to their arrival and leaving times.
-After sorting the events, we can go through them
+correspond to their arrival and leaving times.
+After sorting the events, we go through them
 and keep track of the number of people in the office.
 For example, the table
 \begin{center}
@@ -122,7 +122,7 @@ The symbols $+$ and $-$ indicate whether the
 value of the counter increases or decreases,
 and the value of the counter is shown below.
 The maximum value of the counter is 3
-between John's arrival time and Maria's leaving time.
+between John's arrival and Maria's leaving.
 
 The running time of the algorithm is $O(n \log n)$,
 because sorting the events takes $O(n \log n)$ time
@@ -213,9 +213,9 @@ $y_1$ and $y_2$, and add this number to the total
 number of intersection points.
 
 To store y coordinates of horizontal segments,
-we can use a binary indexed or a segment tree,
+we can use a binary indexed or segment tree,
 possibly with index compression.
-Using such a structure, processing each event
+When such structures are used, processing each event
 takes $O(\log n)$ time, so the total running
 time of the algorithm is $O(n \log n)$.
 
@@ -295,7 +295,7 @@ Thus, it suffices to only consider points
 that are located in those ranges,
 which makes the algorithm efficient.
 
-For example, in the following picture the
+For example, in the following picture, the
 region marked with dashed lines contains
 the points that can be within a distance of $d$
 from the active point:
@@ -332,7 +332,7 @@ from the active point:
 \end{center}
 
 The efficiency of the algorithm is based on the fact
-that such a region always contains
+that the region always contains
 only $O(1)$ points.
 We can go through those points in $O(\log n)$ time
 by maintaining a set of points whose x coordinate
@@ -401,8 +401,9 @@ the convex hull is as follows:
 an easy way to
 construct the convex hull for a set of points
 in $O(n \log n)$ time.
-The algorithm constructs the convex hull
-in two parts:
+The algorithm first locates the leftmost
+and rightmost points, and then
+constructs the convex hull in two parts:
 first the upper hull and then the lower hull.
 Both parts are similar, so we can focus on
 constructing the upper hull.
@@ -414,7 +415,7 @@ add each point to the hull.
 Always after adding a point to the hull,
 we make sure that the last line segment
 in the hull does not turn left.
-As long as this does not hold, we repeatedly remove the
+As long as it turns left, we repeatedly remove the
 second last point from the hull.
 
 The following pictures show how
