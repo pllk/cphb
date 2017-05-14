@@ -95,7 +95,7 @@ $(x_2,y_2)$,
 $(x_3,y_3)$ and
 $(x_4,y_4)$.
 This formula is easy to implement, there are no special
-cases, and it turns out that we can even generalize the formula
+cases, and we can even generalize the formula
 to \emph{all} polygons.
 
 \section{Complex numbers}
@@ -128,7 +128,7 @@ following point and vector:
 
 \index{complex@\texttt{complex}}
 
-The complex number class \texttt{complex} in C++ is
+The C++ complex number class \texttt{complex} is
 useful when solving geometric problems.
 Using the class we can represent points and vectors
 as complex numbers, and the class contains tools
@@ -136,7 +136,7 @@ that are useful in geometry.
 
 In the following code, \texttt{C} is the type of
 a coordinate and \texttt{P} is the type of a point or a vector.
-In addition, the code defines the macros \texttt{X} and \texttt{Y}
+In addition, the code defines macros \texttt{X} and \texttt{Y}
 that can be used to refer to x and y coordinates.
 
 \begin{lstlisting}
@@ -209,7 +209,7 @@ counterclockwise.
 
 The function $\texttt{polar}(s,a)$ constructs a vector
 whose length is $s$ and that points to an angle $a$.
-In addition, a vector can be rotated by an angle $a$
+Moreover, a vector can be rotated by an angle $a$
 by multiplying it by a vector with length 1 and angle $a$.
 
 The following code calculates the angle of
@@ -274,7 +274,7 @@ using the class \texttt{complex}:
 \begin{lstlisting}
 P a = {4,2};
 P b = {1,2};
-C r = (conj(a)*b).Y; // 6
+C p = (conj(a)*b).Y; // 6
 \end{lstlisting}
 
 The above code works, because
@@ -307,8 +307,7 @@ $p$ is on the left side of the line:
 \end{tikzpicture}
 \end{center}
 
-In this situation,
-the cross product $(p-s_1) \times (p-s_2)$
+The cross product $(p-s_1) \times (p-s_2)$
 tells us the location of the point $p$.
 If the cross product is positive,
 $p$ is located on the left side,
@@ -322,7 +321,7 @@ points $s_1$, $s_2$ and $p$ are on the same line.
 \index{line segment intersection}
 
 Consider the problem of checking
-whether two given line segments
+whether two line segments
 $ab$ and $cd$ intersect. The possible cases are:
 
 \textit{Case 1:}
@@ -409,7 +408,7 @@ Hence, we can use cross products to check this.
 
 \subsubsection{Point distance from a line}
 
-Another feature of the cross product is that
+Another feature of cross products is that
 the area of a triangle can be calculated
 using the formula
 \[\frac{| (a-c) \times (b-c) |}{2},\]
@@ -502,11 +501,11 @@ so $b$ is outside the polygon.
 \section{Polygon area}
 
 A general formula for calculating the area
-of a polygon\footnote{This formula is sometimes called the
-\index{shoelace formula} \key{shoelace formula}.} is
+of a polygon, sometimes called the \key{shoelace formula},
+is as follows: \index{shoelace formula}
 \[\frac{1}{2} |\sum_{i=1}^{n-1} (p_i \times p_{i+1})| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|, \]
-where the vertices are
+Here the vertices are
 $p_1=(x_1,y_1)$, $p_2=(x_2,y_2)$, $\ldots$, $p_n=(x_n,y_n)$
 in such an order that
 $p_i$ and $p_{i+1}$ are adjacent vertices on the boundary
@@ -702,7 +701,6 @@ For example, consider the following set of points:
 \node at (3,0.5) {$D$};
 \end{tikzpicture}
 \end{center}
-
 The maximum Manhattan distance is 5
 between points $B$ and $C$:
 \begin{center}
@@ -744,7 +742,6 @@ the result is:
 \node at (4,-2.5) {$D$};
 \end{tikzpicture}
 \end{center}
-
 And the maximum distance is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
