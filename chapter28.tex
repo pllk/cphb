@@ -3,7 +3,7 @@
 \index{segment tree}
 
 A segment tree is a versatile data structure
-that can be used in many different situations.
+that can be used in a large number of problems.
 However, there are many topics related to segment trees
 that we have not touched yet.
 Now is time to discuss some more advanced variants
@@ -28,6 +28,7 @@ int sum(int a, int b) {
     return s;
 }
 \end{lstlisting}
+
 However, in more advanced segment trees,
 it is often needed to implement the operations
 in another way, \emph{from top to bottom}.
@@ -41,14 +42,12 @@ int sum(int a, int b, int k, int x, int y) {
     return sum(a,b,2*k,x,d) + sum(a,b,2*k+1,d+1,y);
 }
 \end{lstlisting}
+
 Now we can calculate the sum of
 elements in $[a,b]$ as follows:
-
 \begin{lstlisting}
 int s = sum(a, b, 1, 0, N-1);
 \end{lstlisting}
-
-\begin{samepage}
 The parameter $k$ indicates the current position
 in \texttt{p}.
 Initially $k$ equals 1, because we begin
@@ -66,7 +65,6 @@ left and right half of $[x,y]$.
 The left half is $[x,d]$
 and the right half is $[d+1,y]$
 where $d=\lfloor \frac{x+y}{2} \rfloor$.
-\end{samepage}
 
 The following picture shows how the search proceeds
 when calculating the sum of elements in $[a,b]$.
@@ -290,7 +288,7 @@ so there are no ongoing lazy updates.
 
 When the elements in $[a,b]$ are increased by $u$,
 we walk from the root towards the leaves
-and modify the nodes in the tree as follows:
+and modify the nodes of the tree as follows:
 If the range $[x,y]$ of a node is
 completely inside the range $[a,b]$,
 we increase the $z$ value of the node by $u$ and stop.
@@ -513,10 +511,11 @@ Lazy updates can be generalized so that it is
 possible to update ranges using polynomials of the form
 \[p(u) = t_k u^k + t_{k-1} u^{k-1} + \cdots + t_0.\]
 
-In this case, the update for an element $i$
+In this case, the update for an element
+at position $i$
 in the range $[a,b]$ is $p(i-a)$.
-For example, adding $p(u)=u+1$
-to $[a,b]$ means that the element at position $a$
+For example, adding the polynomial $p(u)=u+1$
+to the range $[a,b]$ means that the element at position $a$
 is increased by 1, the element at position $a+1$
 is increased by 2, and so on.
 
@@ -555,11 +554,10 @@ An ordinary segment tree is static,
 which means that each node has a fixed position
 in the array and the tree requires
 a fixed amount of memory.
-However, if most nodes are not used,
-memory is wasted.
 In a \key{dynamic segment tree},
 memory is allocated only for nodes that
-are actually needed.
+are actually accessed during the algorithm,
+which can save a large amount of memory.
 
 The nodes of a dynamic tree can be represented as structs:
 
@@ -589,20 +587,20 @@ u->v = 5;
 
 \index{sparse segment tree}
 
-A dynamic segment tree is useful if
-the underlying array is \emph{sparse}.
-This means that the range $[0,N-1]$
+A dynamic segment tree is useful when
+the underlying array is \emph{sparse},
+i.e., the range $[0,N-1]$
 of allowed indices is large,
-but only a small portion of the indices are used
-and most elements in the array are empty.
+but most array values are zeros.
 While an ordinary segment tree uses $O(N)$ memory,
-a dynamic segment tree only requires $O(n \log N)$ memory,
+a dynamic segment tree only uses $O(n \log N)$ memory,
 where $n$ is the number of operations performed.
 
-A \key{sparse segment tree} is initially empty
-and its only node is $[0,N-1]$.
+A \key{sparse segment tree} initially has
+only one node $[0,N-1]$ whose value is zero,
+which means that every array value is zero.
 After updates, new nodes are dynamically added
-when needed.
+to the tree.
 For example, if $N=16$ and the elements
 in positions 3 and 10 have been modified,
 the tree contains the following nodes:
@@ -640,10 +638,10 @@ at most $O(n \log N)$ nodes.
 
 Note that if all indices of the elements
 are known at the beginning of the algorithm,
-a dynamic segment tree is not needed,
+a dynamic segment tree is not necessary,
 but we can use an ordinary segment tree with
 index compression (Chapter 9.4).
-However, this is not possible if the indices
+However, this is not possible when the indices
 are generated during the algorithm.
 
 \subsubsection{Persistent segment trees}
@@ -811,11 +809,11 @@ in the following range:
 \end{tikzpicture}
 \end{center}
 
-The idea is to build a segment tree
+To support such queries, we build a segment tree
 where each node is assigned a data structure
-that efficiently gives the number of any element $x$
-in the corresponding range.
-Using such a segment tree,
+that can be asked how many times any element $x$
+appears in the corresponding range.
+Using this tree,
 the answer to a query can be calculated
 by combining the results from the nodes
 that belong to the range.
@@ -984,7 +982,7 @@ queries related to rectangular subarrays
 of a two-dimensional array.
 Such a tree can be implemented as
 nested segment trees: a big tree corresponds to the
-rows in the array, and each node contains a small tree
+rows of the array, and each node contains a small tree
 that corresponds to a column.
 
 For example, in the array
