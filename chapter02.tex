@@ -305,7 +305,7 @@ This should take at least some tens of seconds,
 so the algorithm seems to be too slow for solving the problem.
 
 On the other hand, given the input size,
-we can try to guess
+we can try to \emph{guess}
 the required time complexity of the algorithm
 that solves the problem.
 The following table contains some useful estimates
@@ -325,7 +325,7 @@ $n$ is large & $O(1)$ or $O(\log n)$ \\
 \end{center}
 
 For example, if the input size is $n=10^5$,
-it should probably be expected that the time
+it is probably expected that the time
 complexity of the algorithm is $O(n)$ or $O(n \log n)$.
 This information makes it easier to design the algorithm,
 because it rules out approaches that would yield
@@ -335,7 +335,7 @@ an algorithm with a worse time complexity.
 
 Still, it is important to remember that a
 time complexity is only an estimate of efficiency,
-because it hides the \key{constant factors}.
+because it hides the \emph{constant factors}.
 For example, an algorithm that runs in $O(n)$ time
 may perform $n/2$ or $5n$ operations.
 This has an important effect on the actual
@@ -357,8 +357,9 @@ time and even in $O(n)$ time.
 Given an array of $n$ numbers,
 our task is to calculate the
 \key{maximum subarray sum}, i.e.,
-the largest possible sum of numbers
-in a contiguous region in the array\footnote{J. Bentley's
+the largest possible sum of 
+a sequence of consecutive numbers
+in the array\footnote{J. Bentley's
 book \emph{Programming Pearls} \cite{ben86} made the problem popular.}.
 The problem is interesting when there may be
 negative numbers in the array.
@@ -398,8 +399,8 @@ the following subarray produces the maximum sum $10$:
 
 \subsubsection{Algorithm 1}
 
-Let us assume that the numbers are stored in
-an array \texttt{x}.
+Assume that the numbers are stored in
+an array \texttt{t}.
 A straightforward way to solve the problem
 is to go through all possible ways of
 selecting a subarray, calculate the sum of
@@ -408,23 +409,23 @@ the maximum sum.
 The following code implements this algorithm:
 
 \begin{lstlisting}
-int p = 0;
+int best = 0;
 for (int a = 0; a < n; a++) {
     for (int b = a; b < n; b++) {
-        int s = 0;
-        for (int c = a; c <= b; c++) {
-            s += x[c];
+        int sum = 0;
+        for (int k = a; k <= b; k++) {
+            sum += t[k];
         }
-        p = max(p,s);
+        best = max(best,sum);
     }
 }
-cout << p << "\n";
+cout << best << "\n";
 \end{lstlisting}
 
-The variables $a$ and $b$ determine the first and last
+The variables \texttt{a} and \texttt{b} determine the first and last
 number in the subarray,
-and the sum of the numbers is calculated to the variable $s$.
-The variable $p$ contains the maximum sum found during the search.
+and the sum of the numbers is calculated to the variable \texttt{sum}.
+The variable \texttt{best} contains the maximum sum found during the search.
 
 The time complexity of the algorithm is $O(n^3)$,
 because it consists of three nested loops 
@@ -432,22 +433,22 @@ that go through the input.
 
 \subsubsection{Algorithm 2}
 
-It is easy to make the first algorithm more efficient
+It is easy to make Algorithm 1 more efficient
 by removing one loop from it.
 This is possible by calculating the sum at the same
 time when the right end of the subarray moves.
 The result is the following code:
 
 \begin{lstlisting}
-int p = 0;
+int best = 0;
 for (int a = 0; a < n; a++) {
-    int s = 0;
+    int sum = 0;
     for (int b = a; b < n; b++) {
-        s += x[b];
-        p = max(p,s);
+        sum += t[b];
+        best = max(best,sum);
     }
 }
-cout << p << "\n";
+cout << best << "\n";
 \end{lstlisting}
 After this change, the time complexity is $O(n^2)$.
 
@@ -456,8 +457,8 @@ After this change, the time complexity is $O(n^2)$.
 Surprisingly, it is possible to solve the problem
 in $O(n)$ time\footnote{In \cite{ben86}, this linear-time algorithm
 is attributed to J. B. Kadene, and the algorithm is sometimes
-called \index{Kadene's algorithm} \key{Kadene's algorithm}.}, which means that we can remove
-one more loop.
+called \index{Kadene's algorithm} \key{Kadene's algorithm}.}, which means
+that just one loop is enough.
 The idea is to calculate, for each array position,
 the maximum sum of a subarray that ends at that position.
 After this, the answer for the problem is the
@@ -472,21 +473,22 @@ There are two possibilities:
 at position $k-1$, followed by the element at position $k$.
 \end{enumerate}
 
-Our goal is to find a subarray with maximum sum,
-so in case 2 the subarray that ends at position $k-1$
+In the latter case, since we want to
+find a subarray with maximum sum,
+the subarray that ends at position $k-1$
 should also have the maximum sum.
 Thus, we can solve the problem efficiently
-when we calculate the maximum subarray sum
+by calculating the maximum subarray sum
 for each ending position from left to right.
 
 The following code implements the algorithm:
 \begin{lstlisting}
-int p = 0, s = 0;
+int best = 0, sum = 0;
 for (int k = 0; k < n; k++) {
-    s = max(x[k],s+x[k]);
-    p = max(p,s);
+    sum = max(t[k],sum+t[k]);
+    best = max(best,sum);
 }
-cout << p << "\n";
+cout << best << "\n";
 \end{lstlisting}
 
 The algorithm only contains one loop
@@ -510,7 +512,7 @@ measured.
 
 \begin{center}
 \begin{tabular}{rrrr}
-array size $n$ & algorithm 1 & algorithm 2 & algorithm 3 \\
+array size $n$ & Algorithm 1 & Algorithm 2 & Algorithm 3 \\
 \hline
 $10^2$ & $0{,}0$ s & $0{,}0$ s & $0{,}0$ s \\
 $10^3$ & $0{,}1$ s & $0{,}0$ s & $0{,}0$ s \\
