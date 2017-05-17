@@ -299,7 +299,7 @@ For example, in the array
 \end{tikzpicture}
 \end{center}
 the inversions are $(6,3)$, $(6,5)$ and $(9,8)$.
-The number of inversions tells us
+The number of inversions indicates
 how much work is needed to sort the array.
 An array is completely sorted when
 there are no inversions.
@@ -327,22 +327,22 @@ One such algorithm is \key{merge sort}\footnote{According to \cite{knu983},
 merge sort was invented by J. von Neumann in 1945.},
 which is based on recursion.
 
-Merge sort sorts the subarray \texttt{t}$[a,b]$ as follows:
+Merge sort sorts a subarray \texttt{t}$[a \ldots b]$ as follows:
 
 \begin{enumerate}
 \item If $a=b$, do not do anything, because the subarray is already sorted.
 \item Calculate the position of the middle element: $k=\lfloor (a+b)/2 \rfloor$.
-\item Recursively sort the subarray \texttt{t}$[a,k]$.
-\item Recursively sort the subarray \texttt{t}$[k+1,b]$.
-\item \emph{Merge} the sorted subarrays \texttt{t}$[a,k]$ and \texttt{t}$[k+1,b]$
-into a sorted subarray \texttt{t}$[a,b]$.
+\item Recursively sort the subarray \texttt{t}$[a \ldots k]$.
+\item Recursively sort the subarray \texttt{t}$[k+1 \ldots b]$.
+\item \emph{Merge} the sorted subarrays \texttt{t}$[a \ldots k]$ and \texttt{t}$[k+1 \ldots b]$
+into a sorted subarray \texttt{t}$[a \ldots b]$.
 \end{enumerate}
 
 Merge sort is an efficient algorithm, because it
 halves the size of the subarray at each step.
 The recursion consists of $O(\log n)$ levels,
 and processing each level takes $O(n)$ time.
-Merging the subarrays \texttt{t}$[a,k]$ and \texttt{t}$[k+1,b]$
+Merging the subarrays \texttt{t}$[a \ldots k]$ and \texttt{t}$[k+1 \ldots b]$
 is possible in linear time, because they are already sorted.
 
 For example, consider sorting the following array:
@@ -539,7 +539,7 @@ $O(n)$ time assuming that every element in the array
 is an integer between $0 \ldots c$ and $c=O(n)$.
 
 The algorithm creates a \emph{bookkeeping} array,
-whose indices are elements in the original array.
+whose indices are elements of the original array.
 The algorithm iterates through the original array
 and calculates how many times each element
 appears in the array.
@@ -620,7 +620,7 @@ be used as indices in the bookkeeping array.
 \index{sort@\texttt{sort}}
 
 It is almost never a good idea to use
-a self-made sorting algorithm
+a home-made sorting algorithm
 in a contest, because there are good
 implementations available in programming languages.
 For example, the C++ standard library contains
@@ -749,19 +749,19 @@ struct P {
 It is also possible to give an external
 \key{comparison function} to the \texttt{sort} function
 as a callback function.
-For example, the following comparison function
+For example, the following comparison function \texttt{comp}
 sorts strings primarily by length and secondarily
 by alphabetical order:
 
 \begin{lstlisting}
-bool cmp(string a, string b) {
+bool comp(string a, string b) {
     if (a.size() != b.size()) return a.size() < b.size();
     return a < b;
 }
 \end{lstlisting}
 Now a vector of strings can be sorted as follows:
 \begin{lstlisting}
-sort(v.begin(), v.end(), cmp);
+sort(v.begin(), v.end(), comp);
 \end{lstlisting}
 
 \section{Binary search}
@@ -770,9 +770,9 @@ sort(v.begin(), v.end(), cmp);
 
 A general method for searching for an element
 in an array is to use a \texttt{for} loop
-that iterates through the elements in the array.
+that iterates through the elements of the array.
 For example, the following code searches for
-an element $x$ in the array \texttt{t}:
+an element $x$ in an array \texttt{t}:
 
 \begin{lstlisting}
 for (int i = 0; i < n; i++) {
@@ -783,8 +783,8 @@ for (int i = 0; i < n; i++) {
 \end{lstlisting}
 
 The time complexity of this approach is $O(n)$,
-because in the worst case, it is needed to check
-all elements in the array.
+because in the worst case, it is necessary to check
+all elements of the array.
 If the order of the elements is arbitrary,
 this is also the best possible approach, because
 there is no additional information available where
@@ -801,17 +801,19 @@ in $O(\log n)$ time.
 
 \subsubsection{Method 1}
 
-The traditional way to implement binary search
+The usual way to implement binary search
 resembles looking for a word in a dictionary.
-At each step, the search halves the active region in the array, 
-until the target element is found, or it turns out
-that there is no such element.
+The search maintains an active region in the array,
+which initially contains all array elements.
+Then, a number of steps is performed,
+each of which halves the size of the region.
 
-First, the search checks the middle element of the array.
+At each step, the search checks the middle element
+of the active region.
 If the middle element is the target element,
 the search terminates.
 Otherwise, the search recursively continues
-to the left or right half of the array,
+to the left or right half of the region,
 depending on the value of the middle element.
 
 The above idea can be implemented as follows:
@@ -827,17 +829,16 @@ while (a <= b) {
 }
 \end{lstlisting}
 
-The algorithm maintains a range $a \ldots b$
-that corresponds to the active region of the array.
-Initially, the range is $0 \ldots n-1$, the whole array.
-The algorithm halves the size of the range at each step,
+In this implementation, the active region is $a \ldots b$,
+and initially the region is $0 \ldots n-1$.
+The algorithm halves the size of the region at each step,
 so the time complexity is $O(\log n)$.
 
 \subsubsection{Method 2}
 
-An alternative method for implementing binary search
+An alternative method to implement binary search
 is based on an efficient way to iterate through
-the elements in the array.
+the elements of the array.
 The idea is to make jumps and slow the speed
 when we get closer to the target element.
 
@@ -860,16 +861,13 @@ if (t[k] == x) {
 }
 \end{lstlisting}
 
-The variables $k$ and $b$ contain the position
-in the array and the jump length.
-If the array contains the element $x$,
-the position of $x$ will be in the variable $k$
-after the search.
+During the search, the variable $b$
+contains the current jump length.
 The time complexity of the algorithm is $O(\log n)$,
 because the code in the \texttt{while} loop
 is performed at most twice for each jump length.
 
-\subsubsection{C++ implementation}
+\subsubsection{C++ functions}
 
 The C++ standard library contains the following functions
 that are based on binary search and work in logarithmic time:
@@ -895,7 +893,7 @@ if (k < n && t[k] == x) {
 }
 \end{lstlisting}
 
-The following code counts the number of elements
+Then, the following code counts the number of elements
 whose value is $x$:
 
 \begin{lstlisting}
