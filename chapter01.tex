@@ -13,7 +13,7 @@ and the core of the problem is often
 about inventing an efficient algorithm.
 
 Theoretical knowledge of algorithms
-is very important to competitive programmers.
+is important to competitive programmers.
 Typically, a solution to a problem is
 a combination of well-known techniques and
 new insights.
@@ -117,11 +117,11 @@ but now it suffices to write \texttt{cout}.
 The code can be compiled using the following command:
 
 \begin{lstlisting}
-g++ -std=c++11 -O2 -Wall code.cpp -o bin
+g++ -std=c++11 -O2 -Wall test.cpp -o test
 \end{lstlisting}
 
-This command produces a binary file \texttt{bin}
-from the source code \texttt{code.cpp}.
+This command produces a binary file \texttt{test}
+from the source code \texttt{test.cpp}.
 The compiler follows the C++11 standard
 (\texttt{-std=c++11}),
 optimizes the code (\texttt{-O2})
@@ -176,7 +176,7 @@ The following lines at the beginning of the code
 make input and output more efficient:
 
 \begin{lstlisting}
-ios_base::sync_with_stdio(0);
+ios::sync_with_stdio(0);
 cin.tie(0);
 \end{lstlisting}
 
@@ -334,7 +334,7 @@ for (int i = 2; i <= n i++) {
 cout << x%m << "\n";
 \end{lstlisting}
 
-Usually the remainder should always
+Usually we want the remainder to always
 be between $0\ldots m-1$.
 However, in C++ and other languages,
 the remainder of a negative number
@@ -571,7 +571,7 @@ For example,
 is an arithmetic progression with constant 4.
 The sum of an arithmetic progression can be calculated
 using the formula
-\[\frac{n(a+b)}{2}\]
+\[\underbrace{a + \cdots + b}_{n \,\, \textrm{numbers}} = \frac{n(a+b)}{2}\]
 where $a$ is the first number,
 $b$ is the last number and
 $n$ is the amount of numbers.
@@ -591,7 +591,7 @@ For example,
 is a geometric progression with constant 2.
 The sum of a geometric progression can be calculated
 using the formula
-\[\frac{bx-a}{x-1}\]
+\[a + ak + ak^2 + \cdots + b = \frac{bk-a}{k-1}\]
 where $a$ is the first number,
 $b$ is the last number and the
 ratio between consecutive numbers is $x$.
@@ -599,11 +599,11 @@ For example,
 \[3+6+12+24=\frac{24 \cdot 2 - 3}{2-1} = 45.\]
 
 This formula can be derived as follows. Let
-\[ S = a + ax + ax^2 + \cdots + b .\]
+\[ S = a + ak + ak^2 + \cdots + b .\]
 By multiplying both sides by $x$, we get
-\[ xS = ax + ax^2 + ax^3 + \cdots + bx,\]
+\[ kS = ak + ak^2 + ak^3 + \cdots + bk,\]
 and solving the equation
-\[ xS-S = bx-a\]
+\[ kS-S = bk-a\]
 yields the formula.
 
 A special case of a sum of a geometric progression is the formula
@@ -774,7 +774,7 @@ but false in the set of natural numbers.
 Using the notation described above,
 we can express many kinds of logical propositions.
 For example,
-\[\forall x ((x>1 \land \lnot P(x)) \Rightarrow (\exists a (\exists b (x = ab \land a > 1 \land b > 1))))\]
+\[\forall x ((x>1 \land \lnot P(x)) \Rightarrow (\exists a (\exists b (a > 1 \land b > 1 \land x = ab))))\]
 means that if a number $x$ is larger than 1
 and not a prime number,
 then there are numbers $a$ and $b$
@@ -824,8 +824,8 @@ f(n) & = & f(n-1)+f(n-2) \\
 The first Fibonacci numbers are
 \[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, \ldots\]
 There is also a closed-form formula
-for calculating Fibonacci numbers\footnote{This formula is sometimes called
-\index{Binet's formula} \key{Binet's formula}.}:
+for calculating Fibonacci numbers, which is sometimes called
+\index{Binet's formula} \key{Binet's formula}:
 \[f(n)=\frac{(1 + \sqrt{5})^n - (1-\sqrt{5})^n}{2^n \sqrt{5}}.\]
 
 \subsubsection{Logarithms}
@@ -843,7 +843,7 @@ that $\log_k(x)$ equals the number of times
 we have to divide $x$ by $k$ before we reach 
 the number 1.
 For example, $\log_2(32)=5$
-because 5 divisions are needed:
+because 5 divisions by 2 are needed:
 
 \[32 \rightarrow 16 \rightarrow 8 \rightarrow 4 \rightarrow 2 \rightarrow 1 \]
 
@@ -869,7 +869,6 @@ calculate logarithms to some fixed base.
 
 The \key{natural logarithm} $\ln(x)$ of a number $x$
 is a logarithm whose base is $e \approx 2.71828$.
-
 Another property of logarithms is that
 the number of digits of an integer $x$ in base $b$ is
 $\lfloor \log_b(x)+1 \rfloor$.
@@ -913,9 +912,8 @@ Some countries organize online practice contests
 for future IOI participants,
 such as the Croatian Open Competition in Informatics \cite{coci}
 and the USA Computing Olympiad \cite{usaco}.
-In addition,
-many problems from Polish contests
-are available online \cite{main}.
+In addition, a large collection of problems from Polish contests
+is available online \cite{main}.
 
 \subsubsection{ICPC}
 
@@ -964,13 +962,13 @@ performing well in a contest is a good way to prove one's skills.
 \subsubsection{Books}
 
 There are already some books (besides this book) that
-concentrate on competitive programming and algorithmic problem solving:
+focus on competitive programming and algorithmic problem solving:
 
 \begin{itemize}
-\item S. Halim and F. Halim:
-\emph{Competitive Programming 3: The New Lower Bound of Programming Contests} \cite{hal13}
 \item S. S. Skiena and M. A. Revilla:
 \emph{Programming Challenges: The Programming Contest Training Manual} \cite{ski03}
+\item S. Halim and F. Halim:
+\emph{Competitive Programming 3: The New Lower Bound of Programming Contests} \cite{hal13}
 \item K. Diks et al.: \emph{Looking for a Challenge? The Ultimate Problem Set from
 the University of Warsaw Programming Competitions} \cite{dik12}
 \end{itemize}
