@@ -40,9 +40,9 @@ that are a good starting point.
 
 We first discuss a problem that we
 have already seen in Chapter 6:
-Given a set of coin values $\{c_1,c_2,\ldots,c_k\}$
-and a sum of money $x$, our task is to
-form the sum $x$ using as few coins as possible.
+Given a set of coin values $\texttt{coins} = \{c_1,c_2,\ldots,c_k\}$
+and a target sum of money $n$, our task is to
+form the sum $n$ using as few coins as possible.
 
 In Chapter 6, we solved the problem using a
 greedy algorithm that always selects the largest
@@ -68,107 +68,123 @@ calculates the answer to each subproblem only once.
 
 The idea in dynamic programming is to
 formulate the problem recursively so
-that the answer to the problem can be
-calculated from answers to smaller
+that the solution to the problem can be
+calculated from solutions to smaller
 subproblems.
 In the coin problem, a natural recursive
 problem is as follows:
 what is the smallest number of coins
 required to form a sum $x$?
 
-Let $f(x)$ be a function that gives the answer
-to the problem, i.e., $f(x)$ is the smallest
+Let $\texttt{solve}(x)$
+denote the minimum
 number of coins required to form a sum $x$.
 The values of the function depend on the
 values of the coins.
-For example, if the coin values are $\{1,3,4\}$,
+For example, if $\texttt{coins} = \{1,3,4\}$,
 the first values of the function are as follows:
 
 \[
 \begin{array}{lcl}
-f(0) & = & 0 \\
-f(1) & = & 1 \\
-f(2) & = & 2 \\
-f(3) & = & 1 \\
-f(4) & = & 1 \\
-f(5) & = & 2 \\
-f(6) & = & 2 \\
-f(7) & = & 2 \\
-f(8) & = & 2 \\
-f(9) & = & 3 \\
-f(10) & = & 3 \\
+\texttt{solve}(0) & = & 0 \\
+\texttt{solve}(1) & = & 1 \\
+\texttt{solve}(2) & = & 2 \\
+\texttt{solve}(3) & = & 1 \\
+\texttt{solve}(4) & = & 1 \\
+\texttt{solve}(5) & = & 2 \\
+\texttt{solve}(6) & = & 2 \\
+\texttt{solve}(7) & = & 2 \\
+\texttt{solve}(8) & = & 2 \\
+\texttt{solve}(9) & = & 3 \\
+\texttt{solve}(10) & = & 3 \\
 \end{array}
 \]
 
-First, $f(0)=0$ because no coins are needed
-for the sum $0$.
-Then, for example, $f(3)=1$ because the sum $3$
-can be formed using coin 3,
-and $f(5)=2$ because the sum 5 can
-be formed using coins 1 and 4.
+For example, $\texttt{solve}(7)=2$,
+because we need at least 2 coins
+to form the sum 7.
+In this case, the optimal solution is to choose
+coins 3 and 4.
 
-The essential property of $f$ is
+The essential property of $\texttt{solve}$ is
 that its values can be
 recursively calculated from its smaller values.
-For example, if the coin set is $\{1,3,4\}$,
-there are three ways how we can choose the
-first coin in a solution.
-If we choose coin 1, the remaining task
-is to form the sum $x-1$.
-Similarly, after choosing coins 3 and 4,
-the remaining sums are $x-3$ and $x-4$.
+More precisely,
+to calculate values of $\texttt{solve}$,
+we can use the following recursive function:
 
-Thus, the recursive formula is
-\[f(x) = \min(f(x-1),f(x-3),f(x-4))+1\]
-where the function $\min$ gives the smallest
-of its parameters.
-In the general case, for a coin set
-$\{c_1,c_2,\ldots,c_k\}$,
-the recursive formula is
-\[f(x) = \min(f(x-c_1),f(x-c_2),\ldots,f(x-c_k))+1.\]
-The base case for the function is
-\[f(0)=0,\]
-because no coins are needed for constructing
-the sum 0.
-In addition, it is convenient to define
-\[f(x)=\infty\hspace{8px}\textrm{if $x<0$},\]
-which means that to get a negative sum of money,
-an infinite number of coins is needed.
-This prevents the function from constructing
-a solution where the initial sum of money is negative.
+\begin{equation*}
+    \texttt{solve}(x) = \begin{cases}
+               \infty               & x < 0\\
+               0               & x = 0\\
+               \min_{c \in \texttt{coins}} \texttt{solve}(x-c)+1 & x > 0 \\
+           \end{cases}
+\end{equation*}
+
+First, if $x<0$, the value is $\infty$,
+because it is impossible to form a negative
+sum of money using any coins.
+Then, if $x=0$, the value is $0$,
+because no coins are needed to form an empty sum.
+Finally, if $x>0$, we go through all possible ways
+how to choose the first coin in the solution.
+The variable $c$ goes through all values in
+\texttt{coins} and recursively calculates the
+minimum number of coins needed.
+
+For example, if $\texttt{coins} = \{1,3,4\}$,
+there are three ways how the
+first coin in the solution can be chosen.
+If we choose coin 1, the remaining task
+is to form the sum $x-1$,
+and $\texttt{solve}(x-1)+1$
+coins are needed.
+Similarly, if we choose coin 3,
+$\texttt{solve}(x-3)+1$ coins are needed,
+and if we choose coin 4,
+$\texttt{solve}(x-4)+1$ coins are needed.
+The optimal solution is the minimum
+of those three values.
+Thus, in this case, the recursive formula for $x>0$ is
+
+\begin{equation*}
+\begin{aligned}
+\texttt{solve}(x) & = \min( & \texttt{solve}(x-1)+1 & , \\
+                  &         & \texttt{solve}(x-3)+1 & , \\
+                  &         & \texttt{solve}(x-4)+1 & ).
+\end{aligned}
+\end{equation*}
 
 Once a recursive function that solves the problem
 has been found,
 we can directly implement a solution in C++:
 
 \begin{lstlisting}
-int f(int x) {
+int solve(int x) {
     if (x < 0) return INF;
     if (x == 0) return 0;
     int best = INF;
     for (auto c : coins) {
-        best = min(best, f(x-c)+1);
+        best = min(best, solve(x-c)+1);
     }
     return best;
 }
 \end{lstlisting}
 
-The code assumes that the available coins are
-stored in an array $\texttt{coins}$,
-and the constant \texttt{INF} denotes infinity.
-This function works but it is not efficient yet,
-because it goes through a large number
-of ways to construct the sum.
-However, the function can be made efficient by
-using memoization.
+Here the constant \texttt{INF} denotes infinity.
+This function already works, but it is slow,
+because there may be an exponential number of ways
+to construct the sum.
+However, we can calculate the values of the function
+more efficiently by using a technique called memoization.
 
 \subsubsection{Using memoization}
 
 \index{memoization}
 
-Dynamic programming allows us to calculate the
-value of a recursive function efficiently
-using \key{memoization}.
+The idea of dynamic programming is to use
+\key{memoization} to efficiently calculate
+values of a recursive function.
 This means that an auxiliary array is used
 for recording the values of the function
 for different parameters.
@@ -183,7 +199,7 @@ int value[N];
 \end{lstlisting}
 
 where $\texttt{ready}[x]$ indicates
-whether the value of $f(x)$ has been calculated,
+whether the value of $\texttt{solve}(x)$ has been calculated,
 and if it is, $\texttt{value}[x]$
 contains this value.
 The constant $N$ has been chosen so
@@ -193,13 +209,13 @@ After this, the function can be efficiently
 implemented as follows:
 
 \begin{lstlisting}
-int f(int x) {
+int solve(int x) {
     if (x < 0) return INF;
     if (x == 0) return 0;
     if (ready[x]) return value[x];
     int best = INF;
     for (auto c : coins) {
-        best = min(best, f(x-c)+1);
+        best = min(best, solve(x-c)+1);
     }
     ready[x] = true;
     value[x] = best;
@@ -211,7 +227,7 @@ The function handles the base cases
 $x<0$ and $x=0$ as previously.
 Then the function checks from
 $\texttt{ready}[x]$ if
-$f(x)$ has already been stored
+$\texttt{solve}(x)$ has already been stored
 in $\texttt{value}[x]$,
 and if it is, the function directly returns it.
 Otherwise the function calculates the value
@@ -220,34 +236,34 @@ recursively and stores it in $\texttt{value}[x]$.
 Using memoization the function works
 efficiently, because the answer for each parameter $x$
 is calculated recursively only once.
-After a value of $f(x)$ has been stored in $\texttt{value}[x]$,
+After a value of $\texttt{solve}(x)$ has been stored in $\texttt{value}[x]$,
 it can be efficiently retrieved whenever the
 function will be called again with the parameter $x$.
 
-The resulting algorithm works in $O(xk)$ time,
-where the sum is $x$ and the number of coins is $k$.
+The resulting algorithm works in $O(nk)$ time,
+where the target sum is $n$ and the number of coins is $k$.
 In practice, the algorithm can be used if
-$x$ is so small that it is possible to allocate
+$n$ is so small that it is possible to allocate
 an array for all possible function parameters.
 
-Note that we can also construct the array \texttt{value}
-\emph{iteratively} using
+Note that we can also \emph{iteratively}
+construct the array \texttt{value} using
 a loop that simply calculates all the values
-of $f$ for parameters $0 \ldots x$:
+of $\texttt{solve}$ for parameters $0 \ldots n$:
 \begin{lstlisting}
 value[0] = 0;
-for (int i = 1; i <= x; i++) {
-    value[i] = INF;
+for (int x = 1; x <= n; x++) {
+    value[x] = INF;
     for (auto c : coins) {
-        if (i-c >= 0) {
-            value[i] = min(value[i], value[i-c]+1);
+        if (x-c >= 0) {
+            value[x] = min(value[x], value[x-c]+1);
         }
     }
 }
 \end{lstlisting}
 
-Since the iterative solution is shorter and a bit
-more efficient than recursion,
+Since the iterative solution is shorter and
+it has lower constant factors,
 competitive programmers often prefer this solution.
 
 \subsubsection{Constructing an example solution}
@@ -265,38 +281,36 @@ in an optimal solution:
 
 \begin{lstlisting}
 value[0] = 0;
-for (int i = 1; i <= x; i++) {
-    value[i] = INF;
+for (int x = 1; x <= n; x++) {
+    value[x] = INF;
     for (auto c : coins) {
-        if (i-c < 0) continue;
-        int v = value[i-c]+1;
-        if (v < value[i]) {
-            value[i] = v;
-            first[i] = c;
+        if (x-c < 0) continue;
+        int v = value[x-c]+1;
+        if (v < value[x]) {
+            value[x] = v;
+            first[x] = c;
         }
     }
 }
 \end{lstlisting}
 
 After this, we can print the coins that
-form the sum $x$ as follows:
+form the sum $n$ as follows:
 
 \begin{lstlisting}
-while (x > 0) {
-    cout << first[x] << "\n";
-    x -= first[x];
+while (n > 0) {
+    cout << first[n] << "\n";
+    n -= first[n];
 }
 \end{lstlisting}
 
 \subsubsection{Counting the number of solutions}
 
-Let us now consider a variant of the coin problem
-that is otherwise like the original problem,
-but we are asked to count the total number of solutions instead
-of finding the optimal solution.
-For example, if the coins are $\{1,3,4\}$ and
-the target sum is $5$,
-there are a total of 6 solutions:
+Another version of the coin problem is to
+calculate the total number of ways
+to produce a sum $x$ using the coins.
+For example, if $\texttt{coins}=\{1,3,4\}$ and
+$x=5$, there are a total of 6 solutions:
 
 \begin{multicols}{2}
 \begin{itemize}
@@ -309,52 +323,49 @@ there are a total of 6 solutions:
 \end{itemize}
 \end{multicols}
 
-The number of solutions can be calculated
-using the same idea as finding the optimal solution.
-The difference is that when finding the optimal solution,
-we maximize or minimize something in the recursion,
-but now we calculate sums of numbers of solutions.
+Again, we can solve the problem recursively.
+Let $\texttt{solve}(x)$ denote the number of ways
+we can form the sum $x$.
+For example, in the above case,
+$\texttt{solve}(5)=6$.
+The values of the function can be calculated
+as follows:
+\begin{equation*}
+    \texttt{solve}(x) = \begin{cases}
+               0               & x < 0\\
+               1               & x = 0\\
+               \sum_{c \in \texttt{coins}} \texttt{solve}(x-c) & x > 0 \\
+           \end{cases}
+\end{equation*}
 
-To solve the problem, we define a function $f(x)$
-that gives the number of ways to construct
-a sum $x$ using the coins.
-For example, $f(5)=6$ when the coins are $\{1,3,4\}$.
-The value of $f(x)$ can be calculated recursively
-using the formula
-\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_{k}).\]
-The base cases are $f(0)=1$, because there is exactly
-one way to form the sum 0 using an empty set of coins,
-and $f(x)=0$, when $x<0$, because it is not possible
-to form a negative sum of money.
+If $x<0$, the value is 0, because there are no solutions.
+If $x=0$, the value is 1, because there is only one way
+to form an empty sum.
+Otherwise we calculate the sum of all values
+of the form $\texttt{solve}(x-c)$ where $c$ is in \texttt{coins}.
 
-If the coin set is $\{1,3,4\}$, the function is
-\[ f(x) = f(x-1)+f(x-3)+f(x-4) \]
-and the first values of the function are:
-\[
-\begin{array}{lcl}
-f(0) & = & 1 \\
-f(1) & = & 1 \\
-f(2) & = & 1 \\
-f(3) & = & 2 \\
-f(4) & = & 4 \\
-f(5) & = & 6 \\
-f(6) & = & 9 \\
-f(7) & = & 15 \\
-f(8) & = & 25 \\
-f(9) & = & 40 \\
-\end{array}
-\]
+For example, if $\texttt{coins}=\{1,3,4\}$,
+the recursive formula for $x>0$ is
+\begin{equation*}
+\begin{aligned}
+\texttt{solve}(x) & = & \texttt{solve}(x-1) & + \\
+                    &       & \texttt{solve}(x-3) & + \\
+                     &      & \texttt{solve}(x-4) & .
+\end{aligned}
+\end{equation*}
 
-The following code calculates the value of $f(x)$
-using dynamic programming by filling the array
-\texttt{count} for parameters $0 \ldots x$:
+The following code constructs an array
+$\texttt{count}$ such that
+$\texttt{count}[x]$ equals
+the value of $\texttt{solve}(x)$
+for $0 \le x \le n$:
 
 \begin{lstlisting}
 count[0] = 1;
-for (int i = 1; i <= x; i++) {
+for (int x = 1; x <= n; i++) {
     for (auto c : coins) {
-        if (i-c >= 0) {
-            count[i] += count[i-c];
+        if (x-c >= 0) {
+            count[x] += count[x-c];
         }
     }
 }
@@ -368,11 +379,11 @@ This can be done by changing the code so that
 all calculations are done modulo $m$.
 In the above code, it suffices to add the line
 \begin{lstlisting}
-        count[i] %= m;
+        count[x] %= m;
 \end{lstlisting}
 after the line
 \begin{lstlisting}
-        count[i] += count[i-c];
+        count[x] += count[x-c];
 \end{lstlisting}
 
 Now we have discussed all basic
