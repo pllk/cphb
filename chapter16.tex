@@ -437,13 +437,13 @@ In such a graph, each node corresponds to a dynamic programming state
 and the edges indicate how the states depend on each other.
 
 As an example, consider the problem
-of forming a sum of money $x$
+of forming a sum of money $n$
 using coins
 $\{c_1,c_2,\ldots,c_k\}$.
 In this problem, we can construct a graph where
 each node corresponds to a sum of money,
 and the edges show how the coins can be chosen.
-For example, for coins $\{1,3,4\}$ and $x=6$,
+For example, for coins $\{1,3,4\}$ and $n=6$,
 the graph is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -474,9 +474,9 @@ the graph is as follows:
 \end{center}
 
 Using this representation,
-the shortest path from node 0 to node $x$
+the shortest path from node 0 to node $n$
 corresponds to a solution with the minimum number of coins,
-and the total number of paths from node 0 to node $x$
+and the total number of paths from node 0 to node $n$
 equals the total number of solutions.
 
 \section{Successor paths}
