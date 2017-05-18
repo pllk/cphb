@@ -30,8 +30,9 @@ counting the solutions.
 
 Understanding dynamic programming is a milestone
 in every competitive programmer's career.
-While the basic idea of the technique is simple,
-the challenge is how to apply it to different problems.
+While the basic idea is simple,
+the challenge is how to apply
+dynamic programming to different problems.
 This chapter introduces a set of classic problems
 that are a good starting point.
 
@@ -73,11 +74,11 @@ subproblems.
 In the coin problem, a natural recursive
 problem is as follows:
 what is the smallest number of coins
-required for constructing a sum $x$?
+required to form a sum $x$?
 
 Let $f(x)$ be a function that gives the answer
 to the problem, i.e., $f(x)$ is the smallest
-number of coins required for constructing a sum $x$.
+number of coins required to form a sum $x$.
 The values of the function depend on the
 values of the coins.
 For example, if the coin values are $\{1,3,4\}$,
@@ -101,27 +102,27 @@ f(10) & = & 3 \\
 
 First, $f(0)=0$ because no coins are needed
 for the sum $0$.
-Moreover, $f(3)=1$ because the sum $3$
+Then, for example, $f(3)=1$ because the sum $3$
 can be formed using coin 3,
 and $f(5)=2$ because the sum 5 can
 be formed using coins 1 and 4.
 
-The essential property in the function is
-that each value of $f(x)$ can be calculated
-recursively from smaller values of the function.
+The essential property of $f$ is
+that its values can be
+recursively calculated from its smaller values.
 For example, if the coin set is $\{1,3,4\}$,
-there are three ways to select the first coin
-in a solution: we can choose coin 1, 3 or 4.
-If coin 1 is chosen, the remaining task is to
-form the sum $x-1$.
-Similarly, if coin 3 or 4 is chosen,
-we should form the sum $x-3$ or $x-4$.
+there are three ways how we can choose the
+first coin in a solution.
+If we choose coin 1, the remaining task
+is to form the sum $x-1$.
+Similarly, after choosing coins 3 and 4,
+the remaining sums are $x-3$ and $x-4$.
 
 Thus, the recursive formula is
 \[f(x) = \min(f(x-1),f(x-3),f(x-4))+1\]
 where the function $\min$ gives the smallest
 of its parameters.
-In the general case, for the coin set
+In the general case, for a coin set
 $\{c_1,c_2,\ldots,c_k\}$,
 the recursive formula is
 \[f(x) = \min(f(x-c_1),f(x-c_2),\ldots,f(x-c_k))+1.\]
@@ -130,9 +131,9 @@ The base case for the function is
 because no coins are needed for constructing
 the sum 0.
 In addition, it is convenient to define
-\[f(x)=\infty\hspace{8px}\textrm{if $x<0$}.\]
-This means that an infinite number of coins
-is needed for forming a negative sum of money.
+\[f(x)=\infty\hspace{8px}\textrm{if $x<0$},\]
+which means that to get a negative sum of money,
+an infinite number of coins is needed.
 This prevents the function from constructing
 a solution where the initial sum of money is negative.
 
@@ -144,16 +145,16 @@ we can directly implement a solution in C++:
 int f(int x) {
     if (x < 0) return INF;
     if (x == 0) return 0;
-    int u = INF;
-    for (int i = 1; i <= k; i++) {
-        u = min(u, f(x-c[i])+1);
+    int best = INF;
+    for (auto c : coins) {
+        best = min(best, f(x-c)+1);
     }
-    return u;
+    return best;
 }
 \end{lstlisting}
 
 The code assumes that the available coins are
-stored in an array $\texttt{c}$,
+stored in an array $\texttt{coins}$,
 and the constant \texttt{INF} denotes infinity.
 This function works but it is not efficient yet,
 because it goes through a large number
@@ -161,7 +162,7 @@ of ways to construct the sum.
 However, the function can be made efficient by
 using memoization.
 
-\subsubsection{Memoization}
+\subsubsection{Using memoization}
 
 \index{memoization}
 
@@ -175,16 +176,18 @@ For each parameter, the value of the function
 is calculated recursively only once, and after this,
 the value can be directly retrieved from the array.
 
-In this problem, we can use an array
+In this problem, we use arrays
 \begin{lstlisting}
-int d[N];
+bool ready[N];
+int value[N];
 \end{lstlisting}
 
-where $\texttt{d}[x]$ will contain
-the value of $f(x)$.
-The constant $N$ has to be chosen so
-that all required values of the function fit
-in the array.
+where $\texttt{ready}[x]$ indicates
+whether the value of $f(x)$ has been calculated,
+and if it is, $\texttt{value}[x]$
+contains this value.
+The constant $N$ has been chosen so
+that all required values fit in the arrays.
 
 After this, the function can be efficiently
 implemented as follows:
@@ -193,109 +196,103 @@ implemented as follows:
 int f(int x) {
     if (x < 0) return INF;
     if (x == 0) return 0;
-    if (d[x]) return d[x];
-    int u = INF;
-    for (int i = 1; i <= k; i++) {
-        u = min(u, f(x-c[i])+1);
+    if (ready[x]) return value[x];
+    int best = INF;
+    for (auto c : coins) {
+        best = min(best, f(x-c)+1);
     }
-    d[x] = u;
-    return d[x];
+    ready[x] = true;
+    value[x] = best;
+    return best;
 }
 \end{lstlisting}
 
 The function handles the base cases
 $x<0$ and $x=0$ as previously.
-Then the function checks if
+Then the function checks from
+$\texttt{ready}[x]$ if
 $f(x)$ has already been stored
-in $\texttt{d}[x]$.
-If the value of $f(x)$ is found in the array,
-the function directly returns it.
+in $\texttt{value}[x]$,
+and if it is, the function directly returns it.
 Otherwise the function calculates the value
-recursively and stores it in $\texttt{d}[x]$.
+recursively and stores it in $\texttt{value}[x]$.
 
 Using memoization the function works
 efficiently, because the answer for each parameter $x$
 is calculated recursively only once.
-After a value of $f(x)$ has been stored in the array,
+After a value of $f(x)$ has been stored in $\texttt{value}[x]$,
 it can be efficiently retrieved whenever the
 function will be called again with the parameter $x$.
 
-The time complexity of the resulting algorithm
-is $O(xk)$ where the sum is $x$ and the number of
-coins is $k$.
+The resulting algorithm works in $O(xk)$ time,
+where the sum is $x$ and the number of coins is $k$.
 In practice, the algorithm can be used if
 $x$ is so small that it is possible to allocate
 an array for all possible function parameters.
 
-Note that the array can also be constructed using
-a loop that calculates all the values
-instead of a recursive function:
+Note that we can also construct the array \texttt{value}
+\emph{iteratively} using
+a loop that simply calculates all the values
+of $f$ for parameters $0 \ldots x$:
 \begin{lstlisting}
-d[0] = 0;
+value[0] = 0;
 for (int i = 1; i <= x; i++) {
-    int u = INF;
-    for (int j = 1; j <= k; j++) {
-        if (i-c[j] < 0) continue;
-        u = min(u, d[i-c[j]]+1);
-    }
-    d[i] = u;
-}
-\end{lstlisting}
-
-This implementation is shorter and somewhat
-more efficient than recursion,
-and experienced competitive programmers
-often prefer dynamic programming solutions
-that are implemented using loops.
-Still, the underlying idea is the same as
-in the recursive function.
-
-\subsubsection{Constructing a solution}
-
-Sometimes we are asked both to find the value
-of an optimal solution and also to give
-an example how such a solution can be constructed.
-In the coin problem, this means that the algorithm
-should show how to select the coins that produce
-the sum $x$ using as few coins as possible.
-
-We can construct the solution by adding another
-array to the code. The new array indicates for
-each sum of money the first coin that should be
-chosen in an optimal solution.
-In the following code, the array \texttt{e}
-is used for this:
-
-\begin{lstlisting}
-d[0] = 0;
-for (int i = 1; i <= x; i++) {
-    d[i] = INF;
-    for (int j = 1; j <= k; j++) {
-        if (i-c[j] < 0) continue;
-        int u = d[i-c[j]]+1;
-        if (u < d[i]) {
-            d[i] = u;
-            e[i] = c[j];
+    value[i] = INF;
+    for (auto c : coins) {
+        if (i-c >= 0) {
+            value[i] = min(value[i], value[i-c]+1);
         }
     }
 }
 \end{lstlisting}
 
-After this, we can print the coins needed
-for the sum $x$ as follows:
+Since the iterative solution is shorter and a bit
+more efficient than recursion,
+competitive programmers often prefer this solution.
+
+\subsubsection{Constructing an example solution}
+
+Sometimes we are asked both to find the value
+of an optimal solution and to give
+an example how such a solution can be constructed.
+In the coin problem, for example,
+we might be asked both the minimum number of coins
+and an example how to choose the coins.
+We can do this by using an array \texttt{first} 
+that indicates for
+each sum of money the first coin 
+in an optimal solution:
+
+\begin{lstlisting}
+value[0] = 0;
+for (int i = 1; i <= x; i++) {
+    value[i] = INF;
+    for (auto c : coins) {
+        if (i-c < 0) continue;
+        int v = value[i-c]+1;
+        if (v < value[i]) {
+            value[i] = v;
+            first[i] = c;
+        }
+    }
+}
+\end{lstlisting}
+
+After this, we can print the coins that
+form the sum $x$ as follows:
 
 \begin{lstlisting}
 while (x > 0) {
-    cout << e[x] << "\n";
-    x -= e[x];
+    cout << first[x] << "\n";
+    x -= first[x];
 }
 \end{lstlisting}
 
 \subsubsection{Counting the number of solutions}
 
-Let us now consider a variant of the problem
+Let us now consider a variant of the coin problem
 that is otherwise like the original problem,
-but we should count the total number of solutions instead
+but we are asked to count the total number of solutions instead
 of finding the optimal solution.
 For example, if the coins are $\{1,3,4\}$ and
 the target sum is $5$,
@@ -312,21 +309,19 @@ there are a total of 6 solutions:
 \end{itemize}
 \end{multicols}
 
-The number of the solutions can be calculated
+The number of solutions can be calculated
 using the same idea as finding the optimal solution.
 The difference is that when finding the optimal solution,
 we maximize or minimize something in the recursion,
-but now we will calculate sums of numbers of solutions.
+but now we calculate sums of numbers of solutions.
 
-To solve the problem, we can define a function $f(x)$
+To solve the problem, we define a function $f(x)$
 that gives the number of ways to construct
 a sum $x$ using the coins.
 For example, $f(5)=6$ when the coins are $\{1,3,4\}$.
 The value of $f(x)$ can be calculated recursively
 using the formula
-\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_{k}),\]
-because to form the sum $x$, we have to first
-choose some coin $c_i$ and then form the sum $x-c_i$.
+\[ f(x) = f(x-c_1)+f(x-c_2)+\cdots+f(x-c_{k}).\]
 The base cases are $f(0)=1$, because there is exactly
 one way to form the sum 0 using an empty set of coins,
 and $f(x)=0$, when $x<0$, because it is not possible
@@ -352,14 +347,15 @@ f(9) & = & 40 \\
 
 The following code calculates the value of $f(x)$
 using dynamic programming by filling the array
-\texttt{d} for parameters $0 \ldots x$:
+\texttt{count} for parameters $0 \ldots x$:
 
 \begin{lstlisting}
-d[0] = 1;
+count[0] = 1;
 for (int i = 1; i <= x; i++) {
-    for (int j = 1; j <= k; j++) {
-        if (i-c[j] < 0) continue;
-        d[i] += d[i-c[j]];
+    for (auto c : coins) {
+        if (i-c >= 0) {
+            count[i] += count[i-c];
+        }
     }
 }
 \end{lstlisting}
@@ -372,20 +368,19 @@ This can be done by changing the code so that
 all calculations are done modulo $m$.
 In the above code, it suffices to add the line
 \begin{lstlisting}
-        d[i] %= m;
+        count[i] %= m;
 \end{lstlisting}
 after the line
 \begin{lstlisting}
-        d[i] += d[i-c[j]];
+        count[i] += count[i-c];
 \end{lstlisting}
 
 Now we have discussed all basic
-techniques related to
-dynamic programming.
+ideas of dynamic programming.
 Since dynamic programming can be used
 in many different situations,
 we will now go through a set of problems
-that show further examples about
+that show further examples about the
 possibilities of dynamic programming.
 
 \section{Longest increasing subsequence}
