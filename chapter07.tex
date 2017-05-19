@@ -38,14 +38,14 @@ that are a good starting point.
 
 \section{Coin problem}
 
-We first discuss a problem that we
+We first focus on a problem that we
 have already seen in Chapter 6:
 Given a set of coin values $\texttt{coins} = \{c_1,c_2,\ldots,c_k\}$
 and a target sum of money $n$, our task is to
 form the sum $n$ using as few coins as possible.
 
 In Chapter 6, we solved the problem using a
-greedy algorithm that always selects the largest
+greedy algorithm that always chooses the largest
 possible coin.
 The greedy algorithm works, for example,
 when the coins are the euro coins,
@@ -100,19 +100,40 @@ the first values of the function are as follows:
 \end{array}
 \]
 
-For example, $\texttt{solve}(7)=2$,
-because we need at least 2 coins
-to form the sum 7.
-In this case, the optimal solution is to choose
-coins 3 and 4.
+For example, $\texttt{solve}(10)=3$,
+because at least 3 coins are needed
+to form the sum 10.
+The optimal solution is $3+3+4=10$.
 
 The essential property of $\texttt{solve}$ is
 that its values can be
 recursively calculated from its smaller values.
-More precisely,
-to calculate values of $\texttt{solve}$,
-we can use the following recursive function:
+The idea is to focus on the \emph{first}
+coin that we choose for the sum.
+For example, in the above example,
+the first coin can be either 1, 3 or 4.
+If we first choose coin 1,
+the remaining task is to form the sum 9
+using the minimum number of coins,
+which is a subproblem of the original problem.
+Of course, the same applies to coins 3 and 4.
+Thus, we can use the following recursive formula
+to calculate the minimum number of coins:
+\begin{equation*}
+\begin{aligned}
+\texttt{solve}(x) & = \min( & \texttt{solve}(x-1)+1 & , \\
+                  &         & \texttt{solve}(x-3)+1 & , \\
+                  &         & \texttt{solve}(x-4)+1 & ).
+\end{aligned}
+\end{equation*}
+The base case of the recursion is $\texttt{solve}(0)=0$,
+because no coins are needed to form an empty sum.
+For example,
+\[ \texttt{solve}(10) = \texttt{solve}(7)+1 = \texttt{solve}(4)+2 = \texttt{solve}(0)+3 = 3.\]
 
+Now we are ready to a general recursive function
+that calculates the minimum number of
+coins needed to form a sum $x$:
 \begin{equation*}
     \texttt{solve}(x) = \begin{cases}
                \infty               & x < 0\\
@@ -123,41 +144,17 @@ we can use the following recursive function:
 
 First, if $x<0$, the value is $\infty$,
 because it is impossible to form a negative
-sum of money using any coins.
+sum of money.
 Then, if $x=0$, the value is $0$,
 because no coins are needed to form an empty sum.
-Finally, if $x>0$, we go through all possible ways
-how to choose the first coin in the solution.
-The variable $c$ goes through all values in
-\texttt{coins} and recursively calculates the
-minimum number of coins needed.
-
-For example, if $\texttt{coins} = \{1,3,4\}$,
-there are three ways how the
-first coin in the solution can be chosen.
-If we choose coin 1, the remaining task
-is to form the sum $x-1$,
-and $\texttt{solve}(x-1)+1$
-coins are needed.
-Similarly, if we choose coin 3,
-$\texttt{solve}(x-3)+1$ coins are needed,
-and if we choose coin 4,
-$\texttt{solve}(x-4)+1$ coins are needed.
-The optimal solution is the minimum
-of those three values.
-Thus, in this case, the recursive formula for $x>0$ is
-
-\begin{equation*}
-\begin{aligned}
-\texttt{solve}(x) & = \min( & \texttt{solve}(x-1)+1 & , \\
-                  &         & \texttt{solve}(x-3)+1 & , \\
-                  &         & \texttt{solve}(x-4)+1 & ).
-\end{aligned}
-\end{equation*}
+Finally, if $x>0$, the variable $c$ goes through
+all possibilities how to choose the first coin
+of the sum.
 
 Once a recursive function that solves the problem
 has been found,
-we can directly implement a solution in C++:
+we can directly implement a solution in C++
+(the constant \texttt{INF} denotes infinity):
 
 \begin{lstlisting}
 int solve(int x) {
@@ -171,12 +168,11 @@ int solve(int x) {
 }
 \end{lstlisting}
 
-Here the constant \texttt{INF} denotes infinity.
-This function already works, but it is slow,
+Still, this function is not efficient,
 because there may be an exponential number of ways
 to construct the sum.
-However, we can calculate the values of the function
-more efficiently by using a technique called memoization.
+However, next we will see how to make the
+function efficient using a technique called memoization.
 
 \subsubsection{Using memoization}
 
@@ -185,9 +181,8 @@ more efficiently by using a technique called memoization.
 The idea of dynamic programming is to use
 \key{memoization} to efficiently calculate
 values of a recursive function.
-This means that an auxiliary array is used
-for recording the values of the function
-for different parameters.
+This means that the values of the function
+are stored in an array after calculating them.
 For each parameter, the value of the function
 is calculated recursively only once, and after this,
 the value can be directly retrieved from the array.
@@ -205,7 +200,7 @@ contains this value.
 The constant $N$ has been chosen so
 that all required values fit in the arrays.
 
-After this, the function can be efficiently
+Now the function can be efficiently
 implemented as follows:
 
 \begin{lstlisting}
@@ -217,8 +212,8 @@ int solve(int x) {
     for (auto c : coins) {
         best = min(best, solve(x-c)+1);
     }
-    ready[x] = true;
     value[x] = best;
+    ready[x] = true;
     return best;
 }
 \end{lstlisting}
@@ -231,20 +226,17 @@ $\texttt{solve}(x)$ has already been stored
 in $\texttt{value}[x]$,
 and if it is, the function directly returns it.
 Otherwise the function calculates the value
+of $\texttt{solve}(x)$
 recursively and stores it in $\texttt{value}[x]$.
 
-Using memoization the function works
-efficiently, because the answer for each parameter $x$
+This function works efficiently,
+because the answer for each parameter $x$
 is calculated recursively only once.
 After a value of $\texttt{solve}(x)$ has been stored in $\texttt{value}[x]$,
 it can be efficiently retrieved whenever the
 function will be called again with the parameter $x$.
-
-The resulting algorithm works in $O(nk)$ time,
+The time complexity of the algorithm is $O(nk)$,
 where the target sum is $n$ and the number of coins is $k$.
-In practice, the algorithm can be used if
-$n$ is so small that it is possible to allocate
-an array for all possible function parameters.
 
 Note that we can also \emph{iteratively}
 construct the array \texttt{value} using
@@ -262,41 +254,45 @@ for (int x = 1; x <= n; x++) {
 }
 \end{lstlisting}
 
-Since the iterative solution is shorter and
-it has lower constant factors,
-competitive programmers often prefer this solution.
+In fact, most competitive programmers prefer this
+implementation, because it is shorter and has
+lower constant factors.
+In the sequel, we also use iterative implementations
+in our examples.
+Still, it is often easier to think about
+dynamic programming solutions
+in terms of recursive functions.
 
-\subsubsection{Constructing an example solution}
+
+\subsubsection{Constructing a solution}
 
 Sometimes we are asked both to find the value
 of an optimal solution and to give
 an example how such a solution can be constructed.
 In the coin problem, for example,
-we might be asked both the minimum number of coins
-and an example how to choose the coins.
-We can do this by using an array \texttt{first} 
+we can declare another array
 that indicates for
 each sum of money the first coin 
 in an optimal solution:
-
+\begin{lstlisting}
+int first[N];
+\end{lstlisting}
+Then, we can modify the algorithm as follows:
 \begin{lstlisting}
 value[0] = 0;
 for (int x = 1; x <= n; x++) {
     value[x] = INF;
     for (auto c : coins) {
-        if (x-c < 0) continue;
-        int v = value[x-c]+1;
-        if (v < value[x]) {
-            value[x] = v;
+        if (x-c >= 0 && value[x-c]+1 < value[x]) {
+            value[x] = value[x-c]+1;
             first[x] = c;
         }
     }
 }
 \end{lstlisting}
-
-After this, we can print the coins that
-form the sum $n$ as follows:
-
+After this, the following code can be used to
+print the coins that appear in an optimal solution for
+the sum $n$:
 \begin{lstlisting}
 while (n > 0) {
     cout << first[n] << "\n";
@@ -306,11 +302,12 @@ while (n > 0) {
 
 \subsubsection{Counting the number of solutions}
 
-Another version of the coin problem is to
+Let us now consider another version
+of the coin problem where our task is to
 calculate the total number of ways
 to produce a sum $x$ using the coins.
 For example, if $\texttt{coins}=\{1,3,4\}$ and
-$x=5$, there are a total of 6 solutions:
+$x=5$, there are a total of 6 ways:
 
 \begin{multicols}{2}
 \begin{itemize}
@@ -326,10 +323,17 @@ $x=5$, there are a total of 6 solutions:
 Again, we can solve the problem recursively.
 Let $\texttt{solve}(x)$ denote the number of ways
 we can form the sum $x$.
-For example, in the above case,
-$\texttt{solve}(5)=6$.
-The values of the function can be calculated
-as follows:
+For example, if $\texttt{coins}=\{1,3,4\}$,
+then $\texttt{solve}(5)=6$ and the recursive formula is
+\begin{equation*}
+\begin{aligned}
+\texttt{solve}(x) & = & \texttt{solve}(x-1) & + \\
+                    &       & \texttt{solve}(x-3) & + \\
+                     &      & \texttt{solve}(x-4) & .
+\end{aligned}
+\end{equation*}
+
+In this case, the general recursive function is as follows:
 \begin{equation*}
     \texttt{solve}(x) = \begin{cases}
                0               & x < 0\\
@@ -344,15 +348,6 @@ to form an empty sum.
 Otherwise we calculate the sum of all values
 of the form $\texttt{solve}(x-c)$ where $c$ is in \texttt{coins}.
 
-For example, if $\texttt{coins}=\{1,3,4\}$,
-the recursive formula for $x>0$ is
-\begin{equation*}
-\begin{aligned}
-\texttt{solve}(x) & = & \texttt{solve}(x-1) & + \\
-                    &       & \texttt{solve}(x-3) & + \\
-                     &      & \texttt{solve}(x-4) & .
-\end{aligned}
-\end{equation*}
 
 The following code constructs an array
 $\texttt{count}$ such that
