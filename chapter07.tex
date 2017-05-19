@@ -650,89 +650,106 @@ The time complexity of the algorithm is $O(n^2)$.
 
 \index{knapsack}
 
-\key{Knapsack} is a classic problem where we
-are given $n$ objects with weights
-$w_1,w_2,\ldots,w_n$ and values
-$v_1,v_2,\ldots,v_n$.
-Our task is to choose a subset of the objects
-such that the sum of the weights is at most $W$
-and the sum of the values is as large as possible.
+The term \key{knapsack} refers to problems where
+a set of objects is given, and we should find
+a subset of objects that has some properties.
+Knapsack problems can often be solved
+using dynamic programming.
 
-\begin{samepage}
-For example, if the objects are
+In this section, we consider the following
+problem:
+Suppose that there are $n$
+objects whose weights are $\{w_1,w_2,\ldots,w_n\}$,
+and we should determine all distinct weight sums
+that can be constructed using the objects.
+For example, if the weights are
+$\{1,3,3,5\}$, the following weight
+sums are possible:
+
 \begin{center}
-\begin{tabular}{rrr}
-object & weight & value \\
+\begin{tabular}{rrrrrrrrrrrrr}
+ 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
 \hline
-A & 5 & 1 \\
-B & 6 & 3 \\
-C & 8 & 5 \\
-D & 5 & 3 \\
+ X & X & & X & X & X & X & X & X & X & & X & X \\
 \end{tabular}
 \end{center}
-\end{samepage}
-and $W=12$,
-an optimal solution is to select objects $B$ and $D$.
-In this case, the sum of weights is
-$6+5=11 \le 12$, and the sum of values is $3+3=6$.
 
-This problem can be solved in two different ways
-using dynamic programming.
-We can either regard the problem as maximizing the
-total value of the objects or 
-as minimizing the total weight of the objects.
+In this case, all weight sums between $0 \ldots 12$
+are possible, expect 2 and 10.
+For example, the weight sum 7 is possible because we
+can select the weights $\{1,3,3\}$.
+Note that there may be multiple objects
+with the same weight.
 
-\subsubsection{Solution 1}
+To solve the problem, we focus on subproblems
+where we only use the first $k$ objects
+to construct weight sums.
+Let $\texttt{possible}(k,x)=\texttt{true}$ if
+we can construct a weight sum $x$
+using the first $k$ objects,
+and otherwise $\texttt{possible}(k,x)=\texttt{false}$.
+The values of the function can be recursively
+calculated as follows:
+\[ \texttt{possible}(k,x) = \texttt{possible}(k-1,x) \lor \texttt{possible}(k-1,x-w_k) \]
+This means that we can construct a weight sum $x$
+using the $k$ first objects in two ways
+depending on whether we
+use the weight $w_k$ in the sum or not.
+(The symbol ''$\lor$'' denotes the ''or'' operation.)
+In addition, $\texttt{possible}(0,0)=\texttt{true}$
+and $\texttt{possible}(0,x)=\texttt{false}$ when $x \neq 0$.
 
-\textit{Maximization:} Let $\texttt{value}(k,u)$
-denote the maximum value
-of a subset of objects $1 \ldots k$
-whose weight is $u$.
-Thus, the solution to the problem is
-\[\max_{0 \le u \le W} \texttt{value}(n,u).\]
+The following table shows all values of the function
+for the weights $\{1,3,3,5\}$ (the symbol ''X''
+indicates the true values):
 
-A recursive formula for calculating
-the function is
-\[f(k,u) = \max(f(k-1,u),f(k-1,u-p_k)+a_k),\]
-because we can either include or not include
-object $k$ in the solution.
-The base cases are $f(0,0)=0$ and $f(0,u)=-\infty$
-when $u \neq 0$. The time compexity of
-the solution is $O(nx)$.
+\begin{center}
+\begin{tabular}{r|rrrrrrrrrrrrr}
+ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\hline
+ 0 & X & \\
+ 1 & X & X \\
+ 2 & X & X & & X & X \\
+ 3 & X & X & & X & X & & X & X \\
+ 4 & X & X & & X & X & X & X & X & X & X & & X & X \\
+\end{tabular}
+\end{center}
 
-In the example case, the optimal solution is
-$f(4,11)=6$ that can be constructed
-using the following sequence:
-\[f(4,11)=f(3,6)+3=f(2,6)+3=f(1,0)+3+3=f(0,0)+3+3=6.\]
+After calculating those values, $\texttt{possible}(n,x)$
+tells us whether we can construct a
+weight sum $x$ using \emph{all} objects.
 
-\subsubsection{Solution 2}
+Let $W$ denote the total weight of the objects.
+The following $O(nW)$ time
+dynamic programming solution
+corresponds to the recursive function:
+\begin{lstlisting}
+possible[0][0] = true;
+for (int k = 1; k <= n; k++) {
+    for (int x = 0; x <= W; x++) {
+        possible[k][x] = possible[k-1][x];
+        if (x-w[k] >= 0) possible[k][x] |= possible[k-1][x-w[k]];
+    }
+}
+\end{lstlisting}
 
-\textit{Minimization:} Let $f(k,u)$
-denote the smallest possible total weight
-when a subset of objects
-$1 \ldots k$ is selected such
-that the total value is $u$.
-The solution to the problem is the
-largest value $u$
-for which  $0 \le u \le s$ and $f(n,u) \le x$
-where $s=\sum_{i=1}^n a_i$.
-A recursive formula for calculating the function is
-\[f(k,u) = \min(f(k-1,u),f(k-1,u-a_k)+p_k)\]
-as in solution 1.
-The base cases are $f(0,0)=0$ and $f(0,u)=\infty$
-when $u \neq 0$.
-The time complexity of the solution is $O(ns)$.
+However, here is a better implementation that only uses
+a one-dimensional array $\texttt{possible}[x]$
+that indicates whether we can construct a subset with weight sum $x$.
+The trick is to update the array from right to left for
+each new weight:
+\begin{lstlisting}
+possible[0] = true;
+for (int k = 1; k <= n; k++) {
+    for (int x = W; x >= 0; x--) {
+        if (possible[x]) possible[x+w[k]] = true;
+    }
+}
+\end{lstlisting}
 
-In the example case, the optimal solution is $f(4,6)=11$
-that can be constructed using the following sequence:
-\[f(4,6)=f(3,3)+5=f(2,3)+5=f(1,0)+6+5=f(0,0)+6+5=11.\]
-
-~\\
-It is interesting to note how the parameters of the input
-affect the efficiency of the solutions.
-The efficiency of solution 1 depends on the weights
-of the objects, while the efficiency of solution 2
-depends on the values of the objects.
+In some other knapsack problems, objects have both weights and values,
+and we should find a maximum-value subset whose weight is restricted.
+We can solve such problems using similar ideas as we used here.
 
 \section{Edit distance}
 
