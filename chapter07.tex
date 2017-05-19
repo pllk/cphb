@@ -348,7 +348,6 @@ to form an empty sum.
 Otherwise we calculate the sum of all values
 of the form $\texttt{solve}(x-c)$ where $c$ is in \texttt{coins}.
 
-
 The following code constructs an array
 $\texttt{count}$ such that
 $\texttt{count}[x]$ equals
@@ -393,15 +392,13 @@ possibilities of dynamic programming.
 
 \index{longest increasing subsequence}
 
-Let us consider the following problem:
-Given an array that contains $n$
-numbers,
-our task is to find the
+Our first problem is to find the
 \key{longest increasing subsequence}
-of the array.
-This is a sequence of array elements
+in an array \texttt{t} of $n$ elements.
+This is a maximum-length
+sequence of array elements
 that goes from left to right,
-and each element of the sequence is larger
+and each element in the sequence is larger
 than the previous element.
 For example, in the array
 
@@ -462,65 +459,81 @@ contains 4 elements:
 \end{tikzpicture}
 \end{center}
 
-Let $f(k)$ be the length of the
+Let $\texttt{length}(k)$ denote
+the length of the
 longest increasing subsequence
 that ends at position $k$.
-Using this function, the answer to the problem
-is the largest of the values
-$f(0),f(1),\ldots,f(n-1)$.
-For example, in the above array
-the values of the function are as follows:
+Thus, if we calculate all values of
+$\texttt{length}(k)$ where $0 \le k \le n-1$,
+we will find out the length of the
+longest increasing subsequence.
+For example, the values of the function
+for the above array are as follows:
 \[
 \begin{array}{lcl}
-f(0) & = & 1 \\
-f(1) & = & 1 \\
-f(2) & = & 2 \\
-f(3) & = & 1 \\
-f(4) & = & 3 \\
-f(5) & = & 2 \\
-f(6) & = & 4 \\
-f(7) & = & 2 \\
+\texttt{length}(0) & = & 1 \\
+\texttt{length}(1) & = & 1 \\
+\texttt{length}(2) & = & 2 \\
+\texttt{length}(3) & = & 1 \\
+\texttt{length}(4) & = & 3 \\
+\texttt{length}(5) & = & 2 \\
+\texttt{length}(6) & = & 4 \\
+\texttt{length}(7) & = & 2 \\
 \end{array}
 \]
 
-When calculating the value of $f(k)$,
-there are two possibilities how the subsequence
-that ends at position $k$ is constructed:
-\begin{enumerate}
-\item The subsequence
-only contains the element at position $k$. In this case $f(k)=1$.
-\item The subsequence contains a subsequence
-that ends at position $i$ where $i<k$,
-followed by the element at position $k$.
-The element at position $i$ must be smaller
-than the element at position $k$.
-In this case $f(k)=f(i)+1$.
-\end{enumerate}
+For example, $\texttt{length}(6)=4$,
+because the longest increasing subsequence
+that ends at position 6 consists of 4 elements.
 
-For example, in the above example $f(6)=4$,
-because the subsequence $[2,5,7]$ of length 3
-ends at position 4, and by adding the element
-at position 6 to this subsequence,
-we get the optimal subsequence $[2,5,7,8]$ of length 4.
+To calculate a value of $\texttt{length}(k)$,
+we should find a position $i<k$
+for which $\texttt{t}[i]<\texttt{t}[k]$
+and $\texttt{length}(i)$ is as large as possible.
+Then we know that
+$\texttt{length}(k)=\texttt{length}(i)+1$,
+because this is an optimal way to add
+$\texttt{t}[k]$ to a subsequence.
+However, if there is no such position $i$,
+then $\texttt{length}(k)=1$,
+which means that the subsequence only contains
+$\texttt{t}[k]$.
 
-An easy way to calculate the
-value of $f(k)$ is to
-go through all previous values
-$f(0),f(1),\ldots,f(k-1)$ and select the best solution.
-The time complexity of such an algorithm is $O(n^2)$.
-Surprisingly, it is also possible to solve the
-problem in $O(n \log n)$ time. Can you see how?
+Since all values of the function can be calculated
+from its smaller values,
+we can use dynamic programming.
+In the following code, the values
+of the function will be stored in an array
+$\texttt{length}$.
+
+\begin{lstlisting}
+for (int k = 0; k < n; k++) {
+    length[k] = 1;
+    for (int i = 0; i < k; i++) {
+        if (t[i] < t[k]) {
+            length[k] = max(length[k],length[i]+1);
+        }
+    }
+}
+\end{lstlisting}
+
+This code works in $O(n^2)$ time,
+because it consists of two nested loops.
+However, it is also possible to implement
+the dynamic programming calculation
+more efficiently in $O(n \log n)$ time.
+Can you find a way to do this?
 
 \section{Paths in a grid}
 
 Our next problem is to find a path
-in an $n \times n$ grid
 from the upper-left corner to
-the lower-right corner such that
+the lower-right corner
+of an $n \times n$ grid, such that
 we only move down and right.
-Each square contains a number,
+Each square contains a value,
 and the path should be constructed so
-that the sum of the numbers along
+that the sum of the values along
 the path is as large as possible.
 
 The following picture shows an optimal
@@ -566,19 +579,29 @@ path in a grid:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-The sum of the numbers on the path is 67,
+The sum of the values on the path is 67,
 and this is the largest possible sum on a path
 from the
 upper-left corner to the lower-right corner.
 
-We can approach the problem by
-calculating for each square $(y,x)$
-the maximum sum on a path
-from the upper-left corner to square $(y,x)$.
-Let $f(y,x)$ denote this sum,
-so $f(n,n)$ is the maximum sum on a path
+Assume that the rows and columns of the
+grid are numbered from 1 to $n$,
+and $\texttt{value}[y][x]$ equals the value
+of square $(y,x)$.
+Let $\texttt{sum}(y,x)$ denote the maximum
+sum on a path from the upper-left corner
+to square $(y,x)$.
+Now $\texttt{sum}(n,n)$ tells us
+the maximum sum
 from the upper-left corner to
 the lower-right corner.
+For example, in the above grid,
+$\texttt{sum}(5,5)=67$.
+
+We can recursively calculate the sums
+as follows:
+\[ \texttt{sum}(y,x) = \max(\texttt{sum}(y,x-1),\texttt{sum}(y-1,x))+\texttt{value}[y][x]\]
+
 
 The recursive formula is based on the observation
 that a path that ends at square $(y,x)$
@@ -597,27 +620,31 @@ or square $(y-1,x)$:
 \end{tikzpicture}
 \end{center}
 
-Let $r(y,x)$ denote the number in square $(y,x)$.
-The base cases for the recursive function
-are as follows:
+Thus, we select the direction that maximizes
+the sum.
+We assume that $\texttt{sum}(y,x)=0$
+if $y=0$ or $x=0$ (because no such paths exist),
+so the recursive formula also works when $y=1$ or $x=1$.
 
-\[
-\begin{array}{lcl}
-f(1,1) & = & r(1,1) \\
-f(1,x) & = & f(1,x-1)+r(1,x) \\
-f(y,1) & = & f(y-1,1)+r(y,1)\\
-\end{array}
-\]
+Since the function \texttt{sum} has two parameters,
+the dynamic programming array also has two dimensions.
+For example, we can use an array
+\begin{lstlisting}
+int sum[N][N];
+\end{lstlisting}
+and calculate the sums as follows:
+\begin{lstlisting}
+for (int y = 1; y <= n; y++) {
+    for (int x = 1; x <= n; x++) {
+        sum[y][x] = max(sum[y][x-1],sum[y-1][x])+value[y][x];
+    }
+}
+\end{lstlisting}
 
-In the general case there are two
-possible paths, and we should select the path
-that produces the larger sum:
-\[ f(y,x) = \max(f(y,x-1),f(y-1,x))+r(y,x)\]
-
-The time complexity of the solution is $O(n^2)$,
-because each value $f(y,x)$ can be calculated
-in constant time using the values of the
-adjacent squares.
+Note that it is not needed to separately handle the
+cases where $y=1$ or $x=1$, because we use a
+one-indexed array whose values are initially zeros.
+The time complexity of the algorithm is $O(n^2)$.
 
 \section{Knapsack}
 
@@ -625,10 +652,10 @@ adjacent squares.
 
 \key{Knapsack} is a classic problem where we
 are given $n$ objects with weights
-$p_1,p_2,\ldots,p_n$ and values
-$a_1,a_2,\ldots,a_n$.
+$w_1,w_2,\ldots,w_n$ and values
+$v_1,v_2,\ldots,v_n$.
 Our task is to choose a subset of the objects
-such that the sum of the weights is at most $x$
+such that the sum of the weights is at most $W$
 and the sum of the values is as large as possible.
 
 \begin{samepage}
@@ -644,26 +671,26 @@ D & 5 & 3 \\
 \end{tabular}
 \end{center}
 \end{samepage}
-and the maximum allowed total weight is 12,
+and $W=12$,
 an optimal solution is to select objects $B$ and $D$.
-Their total weight $6+5=11$ does not exceed 12,
-and their total value $3+3=6$ is the largest possible.
+In this case, the sum of weights is
+$6+5=11 \le 12$, and the sum of values is $3+3=6$.
 
-This task can be solved in two different ways
+This problem can be solved in two different ways
 using dynamic programming.
 We can either regard the problem as maximizing the
 total value of the objects or 
-minimizing the total weight of the objects.
+as minimizing the total weight of the objects.
 
 \subsubsection{Solution 1}
 
-\textit{Maximization:} Let $f(k,u)$
-denote the largest possible total value
-when a subset of objects $1 \ldots k$ is selected
-such that the total weight is $u$.
-The solution to the problem is
-the largest value
-$f(n,u)$ where $0 \le u \le x$.
+\textit{Maximization:} Let $\texttt{value}(k,u)$
+denote the maximum value
+of a subset of objects $1 \ldots k$
+whose weight is $u$.
+Thus, the solution to the problem is
+\[\max_{0 \le u \le W} \texttt{value}(n,u).\]
+
 A recursive formula for calculating
 the function is
 \[f(k,u) = \max(f(k-1,u),f(k-1,u-p_k)+a_k),\]
