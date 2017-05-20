@@ -646,25 +646,25 @@ cases where $y=1$ or $x=1$, because we use a
 one-indexed array whose values are initially zeros.
 The time complexity of the algorithm is $O(n^2)$.
 
-\section{Knapsack}
+\section{Knapsack problems}
 
 \index{knapsack}
 
 The term \key{knapsack} refers to problems where
-a set of objects is given, and we should find
-a subset of objects that has some properties.
+a set of objects is given, and 
+subsets with some properties
+have to be found.
 Knapsack problems can often be solved
 using dynamic programming.
 
 In this section, we consider the following
 problem:
-Suppose that there are $n$
-objects whose weights are $\{w_1,w_2,\ldots,w_n\}$,
-and we should determine all distinct weight sums
-that can be constructed using the objects.
+We are given a list of weights
+$[w_1,w_2,\ldots,w_n]$,
+and our task is to determine all distinct
+sums that can be constructed using the weights.
 For example, if the weights are
-$\{1,3,3,5\}$, the following weight
-sums are possible:
+$[1,3,3,5]$, the following sums are possible:
 
 \begin{center}
 \begin{tabular}{rrrrrrrrrrrrr}
@@ -674,33 +674,40 @@ sums are possible:
 \end{tabular}
 \end{center}
 
-In this case, all weight sums between $0 \ldots 12$
-are possible, expect 2 and 10.
-For example, the weight sum 7 is possible because we
-can select the weights $\{1,3,3\}$.
-Note that there may be multiple objects
-with the same weight.
+In this case, all sums between $0 \ldots 12$
+are possible, except 2 and 10.
+For example, the sum 7 is possible because we
+can select the weights $[1,3,3]$.
 
 To solve the problem, we focus on subproblems
-where we only use the first $k$ objects
-to construct weight sums.
-Let $\texttt{possible}(k,x)=\texttt{true}$ if
-we can construct a weight sum $x$
-using the first $k$ objects,
-and otherwise $\texttt{possible}(k,x)=\texttt{false}$.
+where we only use the first $k$ weights
+on the list to construct sums.
+Let $\texttt{possible}(x,k)=\texttt{true}$ if
+we can construct a sum $x$
+using the first $k$ weights,
+and otherwise $\texttt{possible}(x,k)=\texttt{false}$.
 The values of the function can be recursively
 calculated as follows:
-\[ \texttt{possible}(k,x) = \texttt{possible}(k-1,x) \lor \texttt{possible}(k-1,x-w_k) \]
-This means that we can construct a weight sum $x$
-using the $k$ first objects in two ways
-depending on whether we
-use the weight $w_k$ in the sum or not.
-(The symbol ''$\lor$'' denotes the ''or'' operation.)
-In addition, $\texttt{possible}(0,0)=\texttt{true}$
-and $\texttt{possible}(0,x)=\texttt{false}$ when $x \neq 0$.
+\[ \texttt{possible}(x,k) = \texttt{possible}(x-w_k,k-1) \lor \texttt{possible}(x,k-1) \]
+The formula is based on the fact that we can
+either use or not use the weight $w_k$ in the sum.
+If we use $w_k$, the remaining task is to
+form the sum $x-w_k$ using the first $k-1$ weights,
+and if we do not use $w_k$,
+the remaining task is to form the sum $x$
+using the first $k-1$ weights.
+In addition,
+\begin{equation*}
+    \texttt{possible}(x,0) = \begin{cases}
+               \texttt{true}    & x = 0\\
+               \texttt{false}   & x \neq 0 \\
+           \end{cases}
+\end{equation*}
+because if no weights are used,
+we can only form the sum 0.
 
 The following table shows all values of the function
-for the weights $\{1,3,3,5\}$ (the symbol ''X''
+for the weights $[1,3,3,5]$ (the symbol ''X''
 indicates the true values):
 
 \begin{center}
@@ -715,11 +722,11 @@ indicates the true values):
 \end{tabular}
 \end{center}
 
-After calculating those values, $\texttt{possible}(n,x)$
+After calculating those values, $\texttt{possible}(x,n)$
 tells us whether we can construct a
-weight sum $x$ using \emph{all} objects.
+sum $x$ using \emph{all} weights.
 
-Let $W$ denote the total weight of the objects.
+Let $W$ denote the total sum of the weights.
 The following $O(nW)$ time
 dynamic programming solution
 corresponds to the recursive function:
@@ -727,15 +734,15 @@ corresponds to the recursive function:
 possible[0][0] = true;
 for (int k = 1; k <= n; k++) {
     for (int x = 0; x <= W; x++) {
-        possible[k][x] = possible[k-1][x];
-        if (x-w[k] >= 0) possible[k][x] |= possible[k-1][x-w[k]];
+        if (x-w[k] >= 0) possible[x][k] |= possible[x-w[k]][k-1];
+        possible[x][k] |= possible[x][k-1];
     }
 }
 \end{lstlisting}
 
 However, here is a better implementation that only uses
 a one-dimensional array $\texttt{possible}[x]$
-that indicates whether we can construct a subset with weight sum $x$.
+that indicates whether we can construct a subset with sum $x$.
 The trick is to update the array from right to left for
 each new weight:
 \begin{lstlisting}
@@ -747,9 +754,11 @@ for (int k = 1; k <= n; k++) {
 }
 \end{lstlisting}
 
-In some other knapsack problems, objects have both weights and values,
-and we should find a maximum-value subset whose weight is restricted.
-We can solve such problems using similar ideas as we used here.
+Note that the general idea presented here can be used
+in many knapsack problems.
+For example, if we are given objects with weights and values,
+we can determine for each weight sum the maximum value
+sum of a subset.
 
 \section{Edit distance}
 
@@ -765,55 +774,55 @@ The allowed editing operations are as follows:
 \begin{itemize}
 \item insert a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{ABCA})
 \item remove a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{AC})
-\item change a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{ADC})
+\item modify a character (e.g. \texttt{ABC} $\rightarrow$ \texttt{ADC})
 \end{itemize}
 
 For example, the edit distance between
 \texttt{LOVE} and \texttt{MOVIE} is 2,
 because we can first perform the operation
  \texttt{LOVE} $\rightarrow$ \texttt{MOVE}
-(change) and then the operation
+(modify) and then the operation
 \texttt{MOVE} $\rightarrow$ \texttt{MOVIE}
-(insertion).
+(insert).
 This is the smallest possible number of operations,
-because it is clear that it is not possible
-to use only one operation.
+because it is clear that only one operation is not enough.
 
-Suppose we are given strings
-\texttt{x} and \texttt{y} that contain
-$n$ and $m$ characters, respectively,
-and we wish to calculate the edit distance
-between them.
-This can be done using
-dynamic programming in $O(nm)$ time.
-Let $f(a,b)$ denote the edit distance
-between the first $a$ characters of \texttt{x}
-and the first $b$ characters of \texttt{y}.
-Using this function, the edit distance between
-\texttt{x} and \texttt{y} equals $f(n,m)$.
+Suppose that we are given a string \texttt{x}
+of length $n$ and a string \texttt{y} of length $m$,
+and we want to calculate the edit distance between
+\texttt{x} and \texttt{y}.
+To solve the problem, we define a function
+$\texttt{distance}(a,b)$ that gives the
+edit distance between prefixes
+$\texttt{x}[0 \ldots a]$ and $\texttt{y}[0 \ldots b]$.
+Thus, using this function, the edit distance
+between \texttt{x} and \texttt{y} equals $\texttt{distance}(n-1,m-1)$.
 
-The base cases for the function are
-\[
-\begin{array}{lcl}
-f(0,b) & = & b \\
-f(a,0) & = & a \\
-\end{array}
-\]
-and in the general case the formula is
-\[ f(a,b) = \min(f(a,b-1)+1,f(a-1,b)+1,f(a-1,b-1)+c),\]
-where $c=0$ if the $a$th character of \texttt{x}
-equals the $b$th character of \texttt{y},
-and otherwise $c=1$.
-The formula considers all possible ways to shorten the strings:
+We can calculate the values of \texttt{distance}
+as follows:
+\begin{equation*}
+\begin{aligned}
+\texttt{distance}(a,b) & = \min(& \texttt{distance}(a,b-1)+1 & , \\
+                    &       & \texttt{distance}(a-1,b)+1 & , \\
+                     &      & \texttt{distance}(a-1,b-1)+\texttt{cost}(a,b) & ).
+\end{aligned}
+\end{equation*}
+Here $\texttt{cost}(a,b)=0$ if $\texttt{x}[a]=\texttt{y}[b]$,
+and otherwise $\texttt{cost}(a,b)=1$.
+The formula considers the following ways to
+edit the string \texttt{x}:
 \begin{itemize}
-\item $f(a,b-1)$ means that a character is inserted to \texttt{x}
-\item $f(a-1,b)$ means that a character is removed from \texttt{x}
-\item $f(a-1,b-1)$ means that \texttt{x} and \texttt{y} contain
-the same character ($c=0$),
-or a character in \texttt{x} is transformed into
-a character in \texttt{y} ($c=1$)
+\item $\texttt{distance}(a,b-1)$: insert a character at the end of \texttt{x}
+\item $\texttt{distance}(a-1,b)$: remove the last character from \texttt{x}
+\item $\texttt{distance}(a-1,b-1)$: match or modify the last character of \texttt{x}
 \end{itemize}
-The following table shows the values of $f$
+In the two first cases, one editing operation is needed
+(insert or remove).
+In the last case, if $\texttt{x}[a]=\texttt{y}[b]$,
+we can match the last characters without editing,
+and otherwise one editing operation is needed (modify).
+
+The following table shows the values of \texttt{distance}
 in the example case:
 \begin{center}
 \begin{tikzpicture}[scale=.65]
@@ -940,7 +949,7 @@ the edit distance between \texttt{LOV} and \texttt{MOV}, etc.
 Sometimes the states of a dynamic programming solution
 are more complex than fixed combinations of numbers.
 As an example,
-we consider the problem of calculating
+consider the problem of calculating
 the number of distinct ways to
 fill an $n \times m$ grid using
 $1 \times 2$ and $2 \times 1$ size tiles.
@@ -987,9 +996,9 @@ $\sqsubset \sqsupset \sqsubset \sqsupset \sqcup \sqcup \sqcap$
 $\sqsubset \sqsupset \sqsubset \sqsupset \sqsubset \sqsupset \sqcup$
 \end{itemize}
 
-Let $f(k,x)$ denote the number of ways to
+Let $\texttt{count}(k,x)$ denote the number of ways to
 construct a solution for rows $1 \ldots k$
-in the grid so that string $x$ corresponds to row $k$.
+of the grid such that string $x$ corresponds to row $k$.
 It is possible to use dynamic programming here,
 because the state of a row is constrained
 only by the state of the previous row.
@@ -1039,7 +1048,7 @@ that worked independently.}:
 This formula is very efficient, because it calculates
 the number of tilings in $O(nm)$ time,
 but since the answer is a product of real numbers,
-a practical problem in using the formula is
+a problem when using the formula is
 how to store the intermediate results accurately.
 
 
