@@ -2,43 +2,41 @@
 
 All data in computer programs is internally stored as bits,
 i.e., as numbers 0 and 1.
-In this chapter, we will learn how integers
-are represented as bits, and how bit operations
-can be used to manipulate them.
+This chapter discusses the bit representation
+of integers, and shows examples
+of how to use bit operations.
 It turns out that there are many uses for
-bit operations in algorithm programming.
+bit manipulation in algorithm programming.
 
 \section{Bit representation}
 
 \index{bit representation}
 
-Every nonnegative integer can be represented as a sum
-\[c_k 2^k + \ldots + c_2 2^2 + c_1 2^1 + c_0 2^0,\]
-where each coefficient $c_i$ is either 0 or 1.
-The bit representation of such a number is
-$c_k \cdots c_2 c_1 c_0$.
-For example, the number 43 corresponds to the sum
-\[1 \cdot 2^5 + 0 \cdot 2^4 + 1 \cdot 2^3 + 0 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0,\]
-so the bit representation of the number is 101011.
+In programming, an $n$ bit integer is internally
+stored as a binary number that consists of $n$ bits.
+For example, the C++ type \texttt{int} is
+a 32-bit type, which means that every \texttt{int}
+number consists of 32 bits.
 
-In programming, the length of the bit representation
-depends on the data type of the number.
-For example, in C++ the type \texttt{int} is
-usually a 32-bit type and an \texttt{int} number
-consists of 32 bits.
-Thus, the bit representation of 43
-as an \texttt{int} number is as follows:
+Here is the bit representation of
+the \texttt{int} number 43: 
 \[00000000000000000000000000101011\]
+The bits in the representation are indexed from right to left.
+To convert a bit representation $b_k \cdots b_2 b_1 b_0$ into a number,
+we can use the formula
+\[b_k 2^k + \ldots + b_2 2^2 + b_1 2^1 + b_0 2^0.\]
+For example,
+\[1 \cdot 2^5 + 1 \cdot 2^3 + 1 \cdot 2^1 + 1 \cdot 2^0 = 43.\]
 
 The bit representation of a number is either
 \key{signed} or \key{unsigned}.
 Usually a signed representation is used,
 which means that both negative and positive
 numbers can be represented.
-A signed number of $n$ bits can contain any
+A signed variable of $n$ bits can contain any
 integer between $-2^{n-1}$ and $2^{n-1}-1$.
 For example, the \texttt{int} type in C++ is
-a signed type, and it can contain any
+a signed type, so an \texttt{int} variable can contain any
 integer between $-2^{31}$ and $2^{31}-1$.
 
 The first bit in a signed representation
@@ -50,21 +48,20 @@ opposite number of a number is calculated by first
 inverting all the bits in the number,
 and then increasing the number by one.
 
-For example, the bit representation of $-43$
-as an \texttt{int} number is as follows:
-\[11111111111111111111111111010101\]
+For example, the bit representation of
+the \texttt{int} number $-43$ is
+\[11111111111111111111111111010101.\]
 
 In an unsigned representation, only nonnegative
-numbers can be used, but the upper bound of the numbers is larger.
-An unsigned number of $n$ bits can contain any
+numbers can be used, but the upper bound for the values is larger.
+An unsigned variable of $n$ bits can contain any
 integer between $0$ and $2^n-1$.
-For example, the \texttt{unsigned int} type in C++
+For example, in C++, an \texttt{unsigned int} variable
 can contain any integer between $0$ and $2^{32}-1$.
 
-There is a connection between signed and unsigned
+There is a connection between the
 representations:
-a number $-x$ in a signed representation
-equals the number $2^n-x$ in an unsigned representation.
+a signed number $-x$ equals an unsigned number $2^n-x$.
 For example, the following code shows that
 the signed number $x=-43$ equals the unsigned
 number $y=2^{32}-43$:
@@ -90,7 +87,7 @@ cout << x << "\n"; // -2147483648
 \end{lstlisting}
 
 Initially, the value of $x$ is $2^{31}-1$.
-This is the largest number that can be stored
+This is the largest value that can be stored
 in an \texttt{int} variable,
 so the next number after $2^{31}-1$ is $-2^{31}$.
 
@@ -172,7 +169,7 @@ for example, \textasciitilde$29 = -30$.
 
 The result of the not operation at the bit level
 depends on the length of the bit representation,
-because the operation changes all bits.
+because the operation inverts all bits.
 For example, if the numbers are 32-bit
 \texttt{int} numbers, the result is as follows:
 
@@ -192,11 +189,9 @@ zero bits to the number,
 and the right bit shift $x > > k$
 removes the $k$ last bits from the number.
 For example, $14 < < 2 = 56$,
-because $14$ equals 1110
-and $56$ equals 111000.
+because $14$ and $56$ correspond to 1110 and 111000.
 Similarly, $49 > > 3 = 6$,
-because $49$ equals 110001
-and $6$ equals 110.
+because $49$ and $6$ correspond to 110001 and 110.
 
 Note that $x < < k$
 corresponds to multiplying $x$ by $2^k$,
@@ -209,7 +204,7 @@ rounded down to an integer.
 A number of the form $1 < < k$ has a one bit
 in position $k$ and all other bits are zero,
 so we can use such numbers to access single bits of numbers.
-For example, the $k$th bit of a number is one
+In particular, the $k$th bit of a number is one
 exactly when $x$ \& $(1 < < k)$ is not zero.
 The following code prints the bit representation
 of an \texttt{int} number $x$:
@@ -222,13 +217,13 @@ for (int i = 31; i >= 0; i--) {
 \end{lstlisting}
 
 It is also possible to modify single bits
-of numbers using the above idea.
-For example, the expression $x$ | $(1 < < k)$
+of numbers using similar ideas.
+For example, the formula $x$ | $(1 < < k)$
 sets the $k$th bit of $x$ to one,
-the expression
+the formula
 $x$ \& \textasciitilde $(1 < < k)$
 sets the $k$th bit of $x$ to zero,
-and the expression
+and the formula
 $x$ $\XOR$ $(1 < < k)$
 inverts the $k$th bit of $x$.
 
@@ -239,7 +234,7 @@ one bits to zero, except for the last one bit.
 The formula $x$ | $(x-1)$
 inverts all the bits after the last one bit.
 Also note that a positive number $x$ is
-of the form $2^k$ if $x$ \& $(x-1) = 0$.
+a power of two exactly when $x$ \& $(x-1) = 0$.
 
 \subsubsection*{Additional functions}
 
@@ -272,86 +267,76 @@ cout << __builtin_parity(x) << "\n"; // 1
 \end{lstlisting}
 \end{samepage}
 
-The above functions support \texttt{int} numbers,
-but there are also \texttt{long long} functions
-available with the suffix \texttt{ll}.
+While the above functions only support \texttt{int} numbers,
+there are also \texttt{long long} versions of
+the functions available with the suffix \texttt{ll}.
 
 \section{Representing sets}
 
-Each subset of a set $\{0,1,2,\ldots,n-1\}$
-corresponds to an $n$ bit number
-where the one bits indicate which elements
-are included in the subset.
-For example, the set $\{1,3,4,8\}$
-corresponds to the number $2^8+2^4+2^3+2^1=282$,
-whose bit representation is 100011010.
+Every subset of a set
+$\{0,1,2,\ldots,n-1\}$
+can be represented as an $n$ bit integer
+whose one bits indicate which
+elements belong to the subset.
+This is an efficient way to represent sets,
+because every element requires only one bit of memory,
+and set operations can be implemented as bit operations.
 
-The benefit in using the bit representation
-is that the information whether an element belongs
-to the set requires only one bit of memory.
-In addition, set operations can be efficiently
-implemented as bit operations.
+For example, since \texttt{int} is a 32-bit type,
+an \texttt{int} number can represent any subset
+of the set $\{0,1,2,\ldots,31\}$.
+The bit representation of the set $\{1,3,4,8\}$ is
+\[00000000000000000000000100011010,\]
+which corresponds to the number $2^8+2^4+2^3+2^1=282$.
 
 \subsubsection{Set implementation}
 
-In the following code, $x$
-contains a subset of $\{0,1,2,\ldots,31\}$.
-The code adds the elements 1, 3, 4 and 8
-to the set and then prints the elements.
-
+The following code declares an \texttt{int}
+variable $x$ that can contain
+a subset of $\{0,1,2,\ldots,31\}$.
+After this, the code adds the elements 1, 3, 4 and 8
+to the set and prints the size of the set.
 \begin{lstlisting}
-// x is an empty set
 int x = 0;
-// add elements 1, 3, 4 and 8 to the set
 x |= (1<<1);
 x |= (1<<3);
 x |= (1<<4);
 x |= (1<<8);
-// print the elements in the set
+cout << __builtin_popcount(x) << "\n"; // 4
+\end{lstlisting}
+Then, the following code prints all
+elements that belong to the set:
+\begin{lstlisting}
 for (int i = 0; i < 32; i++) {
     if (x&(1<<i)) cout << i << " ";
 }
-cout << "\n";
-\end{lstlisting}
-
-The output of the code is as follows:
-
-\begin{lstlisting}
-1 3 4 8
+// output: 1 3 4 8
 \end{lstlisting}
 
 \subsubsection{Set operations}
 
-Set operations can be implemented as follows:
-\begin{itemize}
-\item $a$ \& $b$ is the intersection $a \cap b$ of $a$ and $b$
-\item $a$ | $b$ is the union $a \cup b$ of $a$ and $b$
-\item \textasciitilde$a$ is the complement $\bar a$ of $a$
-\item $a$ \& (\textasciitilde$b$) is the difference
-$a \setminus b$ of $a$ and $b$
-\end{itemize}
+Set operations can be implemented as follows as bit operations:
 
-For example, the following code constructs the union
-of $\{1,3,4,8\}$ and $\{3,6,8,9\}$:
+\begin{center}
+\begin{tabular}{lll}
+& set syntax & bit syntax \\
+\hline
+intersection & $a \cap b$ & $a$ \& $b$ \\
+union & $a \cup b$ & $a$ | $b$ \\
+complement & $\bar a$ & \textasciitilde$a$ \\
+difference & $a \setminus b$ & $a$ \& (\textasciitilde$b$) \\
+\end{tabular}
+\end{center}
+
+For example, the following code first constructs
+the sets $x=\{1,3,4,8\}$ and $y=\{3,6,8,9\}$,
+and then calculates the set $z = x \cup y = \{1,3,4,6,8,9\}$:
 
 \begin{lstlisting}
-// set {1,3,4,8}
 int x = (1<<1)+(1<<3)+(1<<4)+(1<<8);
-// set {3,6,8,9}
 int y = (1<<3)+(1<<6)+(1<<8)+(1<<9);
-// union of the sets
 int z = x|y;
-// print the elements in the union
-for (int i = 0; i < 32; i++) {
-    if (z&(1<<i)) cout << i << " ";
-}
-cout << "\n";
-\end{lstlisting}
-
-The output of the code is as follows:
-
-\begin{lstlisting}
-1 3 4 6 8 9
+cout << __builtin_popcount(z) << "\n"; // 6
 \end{lstlisting}
 
 \subsubsection{Iterating through subsets}
