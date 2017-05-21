@@ -6,16 +6,17 @@
 \index{maximum query}
 
 In this chapter, we discuss data structures
-that allow us to efficiently answer range queries.
-In a \key{range query}, we are given two indices
-to an array, and our task is to calculate some
-value based on the elements between the given indices.
+that allow us to efficiently process range queries.
+In a \key{range query},
+our task is to calculate a value
+based on a subarray of an array.
 Typical range queries are:
 \begin{itemize}
-\item \key{sum query}: calculate the sum of elements
-\item \key{minimum query}: find the smallest element
-\item \key{maximum query}: find the largest element
+\item $\texttt{sum}_q(a,b)$: calculate the sum of values in range $[a,b]$
+\item $\texttt{min}_q(a,b)$: find the minimum value in range $[a,b]$
+\item $\texttt{max}_q(a,b)$: find the maximum value in range $[a,b]$
 \end{itemize}
+
 For example, consider the range $[3,6]$ in the following array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -42,38 +43,37 @@ For example, consider the range $[3,6]$ in the following array:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-In this range, the sum of elements is $4+6+1+3=16$,
-the minimum element is 1 and the maximum element is 6.
+In this case, $\texttt{sum}_q(3,6)=14$,
+$\texttt{min}_q(3,6)=1$ and $\texttt{max}_q(3,6)=6$.
 
-A simple way to process range queries is to
-go through all elements in the range.
-For example, the following function \texttt{sum}
-calculates the sum of elements in a range
-$[a,b]$ of an array $t$:
+A simple way to process range queries is to use
+a loop that goes through all array values in the range.
+For example, the following function can be
+used to process sum queries on an array:
 
 \begin{lstlisting}
 int sum(int a, int b) {
     int s = 0;
     for (int i = a; i <= b; i++) {
-        s += t[i];
+        s += array[i];
     }
     return s;
 }
 \end{lstlisting}
 
-The above function works in $O(n)$ time,
-where $n$ is the number of elements in the array.
+This function works in $O(n)$ time,
+where $n$ is the size of the array.
 Thus, we can process $q$ queries in $O(nq)$
 time using the function.
 However, if both $n$ and $q$ are large, this approach
-is slow, and it turns out that there are
+is slow. Fortunately, it turns out that there are
 ways to process range queries much more efficiently.
 
 \section{Static array queries}
 
 We first focus on a situation where
-the array is \key{static}, i.e.,
-the elements are never modified between the queries.
+the array is \emph{static}, i.e.,
+the array values are never updated between the queries.
 In this case, it suffices to construct
 a static data structure that tells us
 the answer for any possible query.
@@ -83,11 +83,12 @@ the answer for any possible query.
 \index{prefix sum array}
 
 We can easily process
-sum queries on a static array,
-because we can use a data structure called
-a \key{prefix sum array}.
-Each value in such an array equals
-the sum of values in the original array up to that position.
+sum queries on a static array
+by constructing a \key{prefix sum array}.
+Each value in the prefix sum array equals
+the sum of values in the original array up to that position,
+i.e., the value at position $k$ is $\texttt{sum}_q(0,k)$.
+The prefix sum array can be constructed in $O(n)$ time.
 
 For example, consider the following array:
 \begin{center}
@@ -142,14 +143,12 @@ The corresponding prefix sum array is as follows:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-Let $\textrm{sum}(a,b)$ denote the sum of elements
-in the range $[a,b]$.
 Since the prefix sum array contains all values
-of $\textrm{sum}(0,k)$,
+of $\texttt{sum}_q(0,k)$,
 we can calculate any value of
-$\textrm{sum}(a,b)$ in $O(1)$ time, because
-\[ \textrm{sum}(a,b) = \textrm{sum}(0,b) - \textrm{sum}(0,a-1).\]
-By defining $\textrm{sum}(0,-1)=0$,
+$\texttt{sum}_q(a,b)$ in $O(1)$ time as follows:
+\[ \texttt{sum}_q(a,b) = \texttt{sum}_q(0,b) - \texttt{sum}_q(0,a-1)\]
+By defining $\texttt{sum}_q(0,-1)=0$,
 the above formula also holds when $a=0$.
 
 For example, consider the range $[3,6]$:
@@ -178,9 +177,9 @@ For example, consider the range $[3,6]$:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-The sum in the range is $8+6+1+4=19$.
-This sum can be calculated using
-two values in the prefix sum array:
+In this case $\texttt{sum}_q(3,6)=8+6+1+4=19$.
+This sum can be calculated from
+two values of the prefix sum array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (3,1);
@@ -196,7 +195,6 @@ two values in the prefix sum array:
 \node at (6.5,0.5) {$27$};
 \node at (7.5,0.5) {$29$};
 
-
 \footnotesize
 \node at (0.5,1.4) {$0$};
 \node at (1.5,1.4) {$1$};
@@ -208,14 +206,15 @@ two values in the prefix sum array:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-Thus, the sum in the range $[3,6]$ is $27-8=19$.
+Thus, $\texttt{sum}_q(3,6)=\texttt{sum}_q(0,6)-\texttt{sum}_q(0,2)=27-8=19$.
 
 It is also possible to generalize this idea
 to higher dimensions.
 For example, we can construct a two-dimensional
-prefix sum array that can be used for calculating
+prefix sum array that can be used to calculate
 the sum of any rectangular subarray in $O(1)$ time.
-Each value in such an array is the sum of a subarray
+Each sum in such an array corresponds to
+a subarray
 that begins at the upper-left corner of the array.
 
 \begin{samepage}
@@ -224,7 +223,6 @@ The following picture illustrates the idea:
 \begin{tikzpicture}[scale=0.54]
 \draw[fill=lightgray] (3,2) rectangle (7,5);
 \draw (0,0) grid (10,7);
-%\draw[line width=2pt] (3,2) rectangle (7,5);
 \node[anchor=center] at (6.5, 2.5) {$A$};
 \node[anchor=center] at (2.5, 2.5) {$B$};
 \node[anchor=center] at (6.5, 5.5) {$C$};
@@ -236,28 +234,33 @@ The following picture illustrates the idea:
 The sum of the gray subarray can be calculated
 using the formula
 \[S(A) - S(B) - S(C) + S(D),\]
-where $S(X)$ denotes the sum of a rectangular
+where $S(X)$ denotes the sum of values
+in a rectangular
 subarray from the upper-left corner
 to the position of $X$.
 
 \subsubsection{Minimum queries}
 
-Next we will see how we can
-process range minimum queries in $O(1)$ time
-after an $O(n \log n)$ time preprocessing using \index{sparse table}
-a data structure called a \key{sparse table}\footnote{The
-sparse table structure was introduced in \cite{ben00}.
-There are also more sophisticated techniques \cite{fis06} where
-the preprocessing time of the array is only $O(n)$, but such algorithms
-are not needed in competitive programming.}.
-Note that minimum and maximum queries can always
-be processed using similar techniques,
-so it suffices to focus on minimum queries.
+\index{sparse table}
 
-Let $\textrm{rmq}(a,b)$ (''range minimum query'')
-denote the minimum element in the range $[a,b]$.
-The idea is to precalculate all values of $\textrm{rmq}(a,b)$
-where $b-a+1$, the length of the range, is a power of two.
+Minimum queries are more difficult to process
+than sum queries.
+Still, there is a quite simple 
+$O(n \log n)$ time preprocessing
+method after which we can answer any minimum
+query in $O(1)$ time\footnote{This technique
+was introduced in \cite{ben00} and sometimes
+called the \key{sparse table} method.
+There are also more sophisticated techniques \cite{fis06} where
+the preprocessing time is only $O(n)$, but such algorithms
+are not needed in competitive programming.}.
+Note that since minimum and maximum queries can
+be processed similarly,
+we can focus on minimum queries.
+
+The idea is to precalculate all values of
+$\textrm{min}_q(a,b)$ where
+$b-a+1$ (the length of the range) is a power of two.
 For example, for the array
 
 \begin{center}
@@ -284,13 +287,13 @@ For example, for the array
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-the following values will be calculated:
+the following values are calculated:
 
 \begin{center}
 \begin{tabular}{ccc}
 
-\begin{tabular}{ccc}
-$a$ & $b$ & $\textrm{rmq}(a,b)$ \\
+\begin{tabular}{lll}
+$a$ & $b$ & $\texttt{min}_q(a,b)$ \\
 \hline
 0 & 0 & 1 \\
 1 & 1 & 3 \\
@@ -304,8 +307,8 @@ $a$ & $b$ & $\textrm{rmq}(a,b)$ \\
 
 &
 
-\begin{tabular}{ccc}
-$a$ & $b$ & $\textrm{rmq}(a,b)$ \\
+\begin{tabular}{lll}
+$a$ & $b$ & $\texttt{min}_q(a,b)$ \\
 \hline
 0 & 1 & 1 \\
 1 & 2 & 3 \\
@@ -319,8 +322,8 @@ $a$ & $b$ & $\textrm{rmq}(a,b)$ \\
 
 &
 
-\begin{tabular}{ccc}
-$a$ & $b$ & $\textrm{rmq}(a,b)$ \\
+\begin{tabular}{lll}
+$a$ & $b$ & $\texttt{min}_q(a,b)$ \\
 \hline
 0 & 3 & 1 \\
 1 & 4 & 3 \\
@@ -338,17 +341,17 @@ $a$ & $b$ & $\textrm{rmq}(a,b)$ \\
 The number of precalculated values is $O(n \log n)$,
 because there are $O(\log n)$ range lengths
 that are powers of two.
-In addition, the values can be calculated efficiently
+The values can be calculated efficiently
 using the recursive formula
-\[\textrm{rmq}(a,b) = \min(\textrm{rmq}(a,a+w-1),\textrm{rmq}(a+w,b)),\]
+\[\texttt{min}_q(a,b) = \min(\texttt{min}_q(a,a+w-1),\texttt{min}_q(a+w,b)),\]
 where $b-a+1$ is a power of two and $w=(b-a+1)/2$.
 Calculating all those values takes $O(n \log n)$ time.
 
-After this, any value of $\textrm{rmq}(a,b)$ can be calculated
+After this, any value of $\texttt{min}_q(a,b)$ can be calculated
 in $O(1)$ time as a minimum of two precalculated values.
 Let $k$ be the largest power of two that does not exceed $b-a+1$.
-We can calculate the value of $\textrm{rmq}(a,b)$ using the formula
-\[\textrm{rmq}(a,b) = \min(\textrm{rmq}(a,a+k-1),\textrm{rmq}(b-k+1,b)).\]
+We can calculate the value of $\texttt{min}_q(a,b)$ using the formula
+\[\texttt{min}_q(a,b) = \min(\texttt{min}_q(a,a+k-1),\texttt{min}_q(b-k+1,b)).\]
 In the above formula, the range $[a,b]$ is represented
 as the union of the ranges $[a,a+k-1]$ and $[b-k+1,b]$, both of length $k$.
 
@@ -434,41 +437,45 @@ the union of the ranges $[1,4]$ and $[3,6]$:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-Since $\textrm{rmq}(1,4)=3$ and $\textrm{rmq}(3,6)=1$,
-we can conclude that $\textrm{rmq}(1,6)=1$.
+Since $\texttt{min}_q(1,4)=3$ and $\texttt{min}_q(3,6)=1$,
+we conclude that $\texttt{min}_q(1,6)=1$.
 
-\section{Binary indexed trees}
+\section{Binary indexed tree}
 
 \index{binary indexed tree}
 \index{Fenwick tree}
 
 A \key{binary indexed tree} or a \key{Fenwick tree}\footnote{The
 binary indexed tree structure was presented by P. M. Fenwick in 1994 \cite{fen94}.}
-can be seen as a dynamic version of a prefix sum array.
-This data structure supports two $O(\log n)$ time operations:
-calculating the sum of elements in a range
-and modifying the value of an element.
+can be seen as a dynamic variant of a prefix sum array.
+It supports two $O(\log n)$ time operations on an array:
+processing a range sum query and updating a value.
 
 The advantage of a binary indexed tree is
-that it allows us to efficiently \emph{update}
-array elements between sum queries.
+that it allows us to efficiently update
+array values between sum queries.
 This would not be possible using a prefix sum array,
 because after each update, it would be necessary to build the
 whole prefix sum array again in $O(n)$ time.
 
 \subsubsection{Structure}
 
-In this section we assume that one-based indexing
-is used, because it makes the implementation easier.
-A binary indexed tree is as an array
-whose value at position $x$ 
-equals the sum of elements in the range $[x-k+1,x]$
-of the original array,
-where $k$ is the largest power of two that divides $x$.
-For example, if $x=6$, then $k=2$, because 2 divides 6
-but 4 does not divide 6.
+Even if the name of the structure is a binary indexed \emph{tree},
+it is usually represented as an array.
+In this section we assume that all arrays are one-indexed,
+because it makes the implementation easier.
 
-\begin{samepage}
+Let $p(k)$ denote the largest power of two that
+divides $k$.
+We store a binary indexed tree as an array \texttt{tree}
+such that
+\[ \texttt{tree}[k] = \texttt{sum}_q(k-p(k)+1,k),\]
+i.e., each position $k$ contains the sum of values
+in a range of the original array whose length is $p(k)$
+and that ends at position $k$.
+For example, since $p(6)=2$, $\texttt{tree}[6]$
+contains the value of $\texttt{sum}_q(5,6)$.
+
 For example, consider the following array:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -494,8 +501,7 @@ For example, consider the following array:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-\end{samepage}
-\begin{samepage}
+
 The corresponding binary indexed tree is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -521,20 +527,13 @@ The corresponding binary indexed tree is as follows:
 \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-\end{samepage}
-
-For example, the value at position 6
-in the binary indexed tree is 7,
-because the sum of elements in the range $[5,6]$
-of the array is $6+1=7$.
 
 The following picture shows more clearly
 how each value in the binary indexed tree
-corresponds to a range in the array:
+corresponds to a range in the original array:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
-%\fill[color=lightgray] (3,0) rectangle (7,1);
 \draw (0,0) grid (8,1);
 
 \node at (0.5,0.5) {$1$};
@@ -576,20 +575,16 @@ corresponds to a range in the array:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Sum queries}
+Using a binary indexed tree,
+any value of $\texttt{sum}_q(1,k)$
+can be calculated in $O(\log n)$ time,
+because a range $[1,k]$ can always be divided into
+$O(\log n)$ ranges whose sums are stored in the tree.
 
-The values in a binary indexed tree
-can be used to efficiently calculate
-the sum of array elements in any range $[1,k]$,
-because such a range
-can be divided into $O(\log n)$ ranges
-whose sums are available in the binary indexed tree.
-
-For example, the range $[1,7]$ corresponds to
-the following values:
+For example, the range $[1,7]$ consists of
+the following ranges:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
-%\fill[color=lightgray] (3,0) rectangle (7,1);
 \draw (0,0) grid (8,1);
 
 \node at (0.5,0.5) {$1$};
@@ -630,23 +625,23 @@ the following values:
 \draw (0,-4) -- (8,-4) -- (8,-4.5) -- (0,-4.5) -- (0,-4);
 \end{tikzpicture}
 \end{center}
+Thus, we can calculate the corresponding sum as follows:
+\[\texttt{sum}_q(1,7)=\texttt{sum}_q(1,4)+\texttt{sum}_q(5,6)+\texttt{sum}_q(7,7)=16+7+4=27\]
 
-Hence, the sum of elements in the range $[1,7]$ is $16+7+4=27$.
-
-To calculate the sum of elements in any range $[a,b]$,
+To calculate the value of $\texttt{sum}_q(a,b)$ where $a>1$,
 we can use the same trick that we used with prefix sum arrays:
-\[ \textrm{sum}(a,b) = \textrm{sum}(1,b) - \textrm{sum}(1,a-1).\]
-Also in this case, only $O(\log n)$ values are needed.
+\[ \texttt{sum}_q(a,b) = \texttt{sum}_q(1,b) - \texttt{sum}_q(1,a-1).\]
+Since we can calculate both $\texttt{sum}_q(1,b)$
+and $\texttt{sum}_q(1,a-1)$ in $O(\log n)$ time,
+the total time complexity is $O(\log n)$.
 
-\subsubsection{Array updates}
-
-When a value in the array changes,
-several values in the binary indexed tree should be updated.
-For example, if the element at position 3 changes,
+Then, after updating a value in the original array,
+several values in the binary indexed tree
+should be updated.
+For example, if the value at position 3 changes,
 the sums of the following ranges change:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
-%\fill[color=lightgray] (3,0) rectangle (7,1);
 \draw (0,0) grid (8,1);
 
 \node at (0.5,0.5) {$1$};
@@ -690,45 +685,35 @@ the sums of the following ranges change:
 
 Since each array element belongs to $O(\log n)$
 ranges in the binary indexed tree,
-it suffices to update $O(\log n)$ values.
-
+it suffices to update $O(\log n)$ values in the tree.
 
 \subsubsection{Implementation}
 
-The operations of a binary indexed tree can be implemented
-in an elegant and efficient way using bit operations.
-The key fact needed is that $k \& -k$
-isolates the last one bit of a number $k$.
-For example, $26 \& -26=2$ because the number $26$
-corresponds to 11010 and the number $2$ corresponds to 10.
+The operations of a binary indexed tree can be
+efficiently implemented using bit operations.
+The key fact needed is that we can
+calculate any value of $p(k)$ using the formula
+\[p(k) = k \& -k.\]
 
-It turns out that when processing a sum query,
-the position $k$ in the binary indexed tree needs to be
-decreased by $k \& -k$ at every step,
-and when updating the array,
-the position $k$ needs to be increased by $k \& -k$ at every step.
-
-Suppose that the binary indexed tree is stored in an array \texttt{b}.
-The following function calculates
-the sum of elements in a range $[1,k]$:
+The following function calculates the value of $\texttt{sum}_q(1,k)$:
 \begin{lstlisting}
 int sum(int k) {
     int s = 0;
     while (k >= 1) {
-        s += b[k];
+        s += tree[k];
         k -= k&-k;
     }
     return s;
 }
 \end{lstlisting}
 
-The following function increases the value
-of the element at position $k$ by $x$
+The following function increases the
+array value at position $k$ by $x$
 ($x$ can be positive or negative):
 \begin{lstlisting}
 void add(int k, int x) {
     while (k <= n) {
-        b[k] += x;
+        tree[k] += x;
         k += k&-k;
     }
 }
@@ -737,20 +722,18 @@ void add(int k, int x) {
 The time complexity of both the functions is
 $O(\log n)$, because the functions access $O(\log n)$
 values in the binary indexed tree, and each move
-to the next position
-takes $O(1)$ time using bit operations.
+to the next position takes $O(1)$ time.
 
-\section{Segment trees}
+\section{Segment tree}
 
 \index{segment tree}
 
-A \key{segment tree}\footnote{Quite similar structures were used
-in late 1970's to solve geometric problems \cite{ben80}.
-The bottom-up-implementation in this chapter corresponds to
-that in \cite{sta06}.} is a data structure
+A \key{segment tree}\footnote{The bottom-up-implementation in this chapter corresponds to
+that in \cite{sta06}. Similar structures were used
+in late 1970's to solve geometric problems \cite{ben80}.} is a data structure
 that supports two operations:
 processing a range query and
-modifying an element in the array.
+updating an array value.
 Segment trees can support
 sum queries, minimum and maximum queries and many other
 queries so that both operations work in $O(\log n)$ time.
@@ -774,7 +757,7 @@ correspond to the array elements,
 and the other nodes
 contain information needed for processing range queries.
 
-Throughout the section, we assume that the size
+In this section, we assume that the size
 of the array is a power of two and zero-based
 indexing is used, because it is convenient to build
 a segment tree for such an array.
@@ -847,19 +830,18 @@ The corresponding segment tree is as follows:
 \end{tikzpicture}
 \end{center}
 
-Each internal node in the segment tree contains
-information about a range of size $2^k$
-in the original array.
+Each internal tree node
+corresponds to an array range
+whose size is a power of two.
 In the above tree, the value of each internal
-node is the sum of the corresponding array elements,
+node is the sum of the corresponding array values,
 and it can be calculated as the sum of
 the values of its left and right child node.
 
-\subsubsection{Range queries}
-
-The sum of elements in a given range
-can be calculated as a sum of values in the segment tree.
-For example, consider the following range:
+It turns out that any range $[a,b]$
+can be divided into $O(\log n)$ ranges
+whose values are stored in tree nodes.
+For example, consider the range [2,7]:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=gray!50] (2,0) rectangle (8,1);
@@ -873,21 +855,20 @@ For example, consider the following range:
 \node[anchor=center] at (5.5, 0.5) {7};
 \node[anchor=center] at (6.5, 0.5) {2};
 \node[anchor=center] at (7.5, 0.5) {6};
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
+
+\footnotesize
+\node at (0.5,1.4) {$0$};
+\node at (1.5,1.4) {$1$};
+\node at (2.5,1.4) {$2$};
+\node at (3.5,1.4) {$3$};
+\node at (4.5,1.4) {$4$};
+\node at (5.5,1.4) {$5$};
+\node at (6.5,1.4) {$6$};
+\node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-The sum of elements in the range is
-$6+3+2+7+2+6=26$.
-The following two nodes in the tree
+Here $\texttt{sum}_q(2,7)=6+3+2+7+2+6=26$.
+In this case, the following two tree nodes
 correspond to the range:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -927,27 +908,24 @@ correspond to the range:
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-Thus, the sum of elements in the range is $9+17=26$.
+Thus, another way to calculate the sum is $9+17=26$.
 
 When the sum is calculated using nodes
-that are located as high as possible in the tree,
+located as high as possible in the tree,
 at most two nodes on each level
 of the tree are needed.
 Hence, the total number of nodes
-is only $O(\log n)$.
+is $O(\log n)$.
 
-\subsubsection{Array updates}
-
-When an element in the array changes,
-we should update all nodes in the tree
-whose value depends on the element.
+After an array update,
+we should update all nodes
+whose value depends on the updated value.
 This can be done by traversing the path
-from the element to the top node
+from the updated array element to the top node
 and updating the nodes along the path.
 
-\begin{samepage}
-The following picture shows which nodes in the segment tree
-change if the element 7 in the array changes.
+The following picture shows which tree nodes
+change if the array value 7 changes:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -988,27 +966,24 @@ change if the element 7 in the array changes.
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-\end{samepage}
 
 The path from bottom to top
 always consists of $O(\log n)$ nodes,
 so each update changes $O(\log n)$ nodes in the tree.
 
-\subsubsection{Storing the tree}
+\subsubsection{Implementation}
 
-A segment tree can be stored in an array
-of $2N$ elements where $N$ is a power of two.
-Such a tree corresponds to an array
-indexed from $0$ to $N-1$.
-
-In the segment tree array,
-the element at position 1
-corresponds to the top node of the tree,
-the elements at positions 2 and 3 correspond to
-the second level of the tree, and so on.
-Finally, the elements at positions $N \ldots 2N-1$
-correspond to the bottom level of the tree, i.e.,
-the elements of the original array.
+We store a segment tree as an array
+of $2n$ elements where $n$ is the size of
+the original array and a power of two.
+The tree nodes are stored from top to bottom:
+$\texttt{tree}[1]$ is the top node,
+$\texttt{tree}[2]$ and $\texttt{tree}[3]$
+are its children, and so on.
+Finally, the values from $\texttt{tree}[n]$
+to $\texttt{tree}[2n-1]$ correspond to
+the values of the original array
+on the bottom level of the tree.
 
 For example, the segment tree
 \begin{center}
@@ -1049,10 +1024,9 @@ For example, the segment tree
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-can be stored as follows ($N=8$):
+is stored as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
-%\fill[color=lightgray] (3,0) rectangle (7,1);
 \draw (0,0) grid (15,1);
 
 \node at (0.5,0.5) {$39$};
@@ -1090,79 +1064,67 @@ can be stored as follows ($N=8$):
 \end{tikzpicture}
 \end{center}
 Using this representation,
-for a node at position $k$,
-\begin{itemize}
-\item the parent node is at position $\lfloor k/2 \rfloor$,
-\item the left child node is at position $2k$, and
-\item the right child node is at position $2k+1$.
-\end{itemize}
-% Note that this implies that the index of a node
-% is even if it is a left child and odd if it is a right child.
+the parent of $\texttt{tree}[k]$
+is $\texttt{tree}[\lfloor k/2 \rfloor]$,
+and its children are $\texttt{tree}[2k]$
+and $\texttt{tree}[2k+1]$.
+Note that this implies that the position of a node
+is even if it is a left child and odd if it is a right child.
 
-\subsubsection{Functions}
-
-Assume that the segment tree is stored
-in an array \texttt{p}.
 The following function
-calculates the sum of elements in a range $[a,b]$:
-
+calculates the value of $\texttt{sum}_q(a,b)$:
 \begin{lstlisting}
 int sum(int a, int b) {
-    a += N; b += N;
+    a += n; b += n;
     int s = 0;
     while (a <= b) {
-        if (a%2 == 1) s += p[a++];
-        if (b%2 == 0) s += p[b--];
+        if (a%2 == 1) s += tree[a++];
+        if (b%2 == 0) s += tree[b--];
         a /= 2; b /= 2;
     }
     return s;
 }
 \end{lstlisting}
+The function maintains a range
+that is initially $[a+n,b+n]$.
+Then, at each step, the range is moved
+one level higher in the tree,
+and before that, the values of the nodes that do not
+belong to the higher range are added to the sum.
 
-The function starts at the bottom of the tree
-and moves one level up at each step.
-Initially, the range $[a+N,b+N]$ corresponds
-to the range $[a,b]$ in the original array.
-At each step, the function adds the value of
-the left and right node to the sum
-if their parent nodes do not belong to the range.
-This process continues, until the sum of the
-range has been calculated.
-
-The following function increases the value
-of the element at position $k$ by $x$:
-
+The following function increases the array value
+at position $k$ by $x$:
 \begin{lstlisting}
 void add(int k, int x) {
-    k += N;
-    p[k] += x;
+    k += n;
+    tree[k] += x;
     for (k /= 2; k >= 1; k /= 2) {
-        p[k] = p[2*k]+p[2*k+1];
+        tree[k] = tree[2*k]+tree[2*k+1];
     }
 }
 \end{lstlisting}
-First the function updates the element
+First the function updates the value
 at the bottom level of the tree.
 After this, the function updates the values of all
-internal nodes in the tree, until it reaches
+internal tree nodes, until it reaches
 the top node of the tree.
 
-Both above functions work
+Both the above functions work
 in $O(\log n)$ time, because a segment tree
 of $n$ elements consists of $O(\log n)$ levels,
-and the operations move one level forward in the tree at each step.
+and the functions move one level higher
+in the tree at each step.
 
 \subsubsection{Other queries}
 
-Segment trees can support any queries
-as long as we can divide a range into two parts,
+Segment trees can support all range queries
+where it is possible to divide a range into two parts,
 calculate the answer separately for both parts
 and then efficiently combine the answers.
 Examples of such queries are
 minimum and maximum, greatest common divisor,
 and bit operations and, or and xor.
 
-\begin{samepage}
 For example, the following segment tree
 supports minimum queries:
 
@@ -1204,71 +1166,65 @@ supports minimum queries:
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-\end{samepage}
 
-In this segment tree, every node in the tree
-contains the smallest element in the corresponding
-range of the array.
+In this case, every tree node contains
+the smallest value in the corresponding
+array range.
 The top node of the tree contains the smallest
-element of the whole array.
+value in the whole array.
 The operations can be implemented like previously,
 but instead of sums, minima are calculated.
 
-\subsubsection{Binary search in a tree}
-
-The structure of the segment tree allows us
-to use binary search for finding elements in the array.
+The structure of a segment tree also allows us
+to use binary search for locating array elements.
 For example, if the tree supports minimum queries,
-we can find the position of the smallest
-element in $O(\log n)$ time.
+we can find the position of an element
+with the smallest value in $O(\log n)$ time.
 
-For example, in the following tree the
-smallest element 1 can be found
+For example, in the above tree, an
+element with the smallest value 1 can be found
 by traversing a path downwards from the top node:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
-\draw (8,0) grid (16,1);
+\draw (0,0) grid (8,1);
 
-\node[anchor=center] at (8.5, 0.5) {9};
-\node[anchor=center] at (9.5, 0.5) {5};
-\node[anchor=center] at (10.5, 0.5) {7};
-\node[anchor=center] at (11.5, 0.5) {1};
-\node[anchor=center] at (12.5, 0.5) {6};
-\node[anchor=center] at (13.5, 0.5) {2};
-\node[anchor=center] at (14.5, 0.5) {3};
-\node[anchor=center] at (15.5, 0.5) {2};
+\node[anchor=center] at (0.5, 0.5) {5};
+\node[anchor=center] at (1.5, 0.5) {8};
+\node[anchor=center] at (2.5, 0.5) {6};
+\node[anchor=center] at (3.5, 0.5) {3};
+\node[anchor=center] at (4.5, 0.5) {1};
+\node[anchor=center] at (5.5, 0.5) {7};
+\node[anchor=center] at (6.5, 0.5) {2};
+\node[anchor=center] at (7.5, 0.5) {6};
 
-%\node[anchor=center] at (1,2.5) {13};
+\node[draw, circle,minimum size=22pt] (a) at (1,2.5) {5};
+\path[draw,thick,-] (a) -- (0.5,1);
+\path[draw,thick,-] (a) -- (1.5,1);
+\node[draw, circle,minimum size=22pt] (b) at (3,2.5) {3};
+\path[draw,thick,-] (b) -- (2.5,1);
+\path[draw,thick,-] (b) -- (3.5,1);
+\node[draw, circle,minimum size=22pt] (c) at (5,2.5) {1};
+\path[draw,thick,-] (c) -- (4.5,1);
+\path[draw,thick,-] (c) -- (5.5,1);
+\node[draw, circle,minimum size=22pt] (d) at (7,2.5) {2};
+\path[draw,thick,-] (d) -- (6.5,1);
+\path[draw,thick,-] (d) -- (7.5,1);
 
-\node[draw, circle,minimum size=22pt] (e) at (9,2.5) {5};
-\path[draw,thick,-] (e) -- (8.5,1);
-\path[draw,thick,-] (e) -- (9.5,1);
-\node[draw, circle,minimum size=22pt] (f) at (11,2.5) {1};
-\path[draw,thick,-] (f) -- (10.5,1);
-\path[draw,thick,-] (f) -- (11.5,1);
-\node[draw, circle,minimum size=22pt] (g) at (13,2.5) {2};
-\path[draw,thick,-] (g) -- (12.5,1);
-\path[draw,thick,-] (g) -- (13.5,1);
-\node[draw, circle,minimum size=22pt] (h) at (15,2.5) {2};
-\path[draw,thick,-] (h) -- (14.5,1);
-\path[draw,thick,-] (h) -- (15.5,1);
+\node[draw, circle,minimum size=22pt] (i) at (2,4.5) {3};
+\path[draw,thick,-] (i) -- (a);
+\path[draw,thick,-] (i) -- (b);
+\node[draw, circle,minimum size=22pt] (j) at (6,4.5) {1};
+\path[draw,thick,-] (j) -- (c);
+\path[draw,thick,-] (j) -- (d);
 
-\node[draw, circle,minimum size=22pt] (k) at (10,4.5) {1};
-\path[draw,thick,-] (k) -- (e);
-\path[draw,thick,-] (k) -- (f);
-\node[draw, circle,minimum size=22pt] (l) at (14,4.5) {2};
-\path[draw,thick,-] (l) -- (g);
-\path[draw,thick,-] (l) -- (h);
+\node[draw, circle,minimum size=22pt] (m) at (4,6.5) {1};
+\path[draw,thick,-] (m) -- (i);
+\path[draw,thick,-] (m) -- (j);
 
-\node[draw, circle,minimum size=22pt] (n) at (12,6.5) {1};
-\path[draw,thick,-] (n) -- (k);
-\path[draw,thick,-] (n) -- (l);
-
-
-\path[draw=red,thick,->,line width=2pt] (n) -- (k);
-\path[draw=red,thick,->,line width=2pt] (k) -- (f);
-\path[draw=red,thick,->,line width=2pt] (f) -- (11.5,1);
+\path[draw=red,thick,->,line width=2pt] (m) -- (j);
+\path[draw=red,thick,->,line width=2pt] (j) -- (c);
+\path[draw=red,thick,->,line width=2pt] (c) -- (4.5,1);
 \end{tikzpicture}
 \end{center}
 
@@ -1296,11 +1252,11 @@ This can be done if we know all the indices
 needed during the algorithm beforehand.
 
 The idea is to replace each original index $x$
-with $p(x)$ where $p$ is a function that
+with $c(x)$ where $c$ is a function that
 compresses the indices.
 We require that the order of the indices
-does not change, so if $a<b$, then $p(a)<p(b)$.
-This allows us to conviently perform queries
+does not change, so if $a<b$, then $c(a)<c(b)$.
+This allows us to conveniently perform queries
 even if the indices are compressed.
 
 For example, if the original indices are
@@ -1308,9 +1264,9 @@ $555$, $10^9$ and $8$, the new indices are:
 
 \[
 \begin{array}{lcl}
-p(8) & = & 1 \\
-p(555) & = & 2 \\
-p(10^9) & = & 3 \\
+c(8) & = & 1 \\
+c(555) & = & 2 \\
+c(10^9) & = & 3 \\
 \end{array}
 \]
 
@@ -1330,9 +1286,8 @@ elements in a range $[a,b]$ by $x$.
 Surprisingly, we can use the data structures
 presented in this chapter also in this situation.
 To do this, we build a \key{difference array}
-for the array.
-In such an array, each value indicates
-the difference between two consecutive values
+whose values indicate
+the differences between consecutive values
 in the original array.
 Thus, the original array is the
 prefix sum array of the
@@ -1393,15 +1348,17 @@ The difference array for the above array is as follows:
 \end{center}
 
 For example, the value 2 at position 6 in the original array
-corresponds to the sum $3-2+4-3=2$.
+corresponds to the sum $3-2+4-3=2$ in the difference array.
 
 The advantage of the difference array is
 that we can update a range
 in the original array by changing just
 two elements in the difference array.
 For example, if we want to 
-increase the elements in the range $1 \ldots 4$ by 5,
-it suffices to increase the value at position 1 by 5
+increase the original array 
+values between positions 1 and 4 by 5,
+it suffices to increase the
+difference array value at position 1 by 5
 and decrease the value at position 5 by 5.
 The result is as follows:
 
@@ -1430,8 +1387,8 @@ The result is as follows:
 \end{tikzpicture}
 \end{center}
 
-More generally, to increase the elements
-in a range $[a,b]$ by $x$,
+More generally, to increase the values
+in range $[a,b]$ by $x$,
 we increase the value at position $a$ by $x$
 and decrease the value at position $b+1$ by $x$.
 Thus, it is only needed to update single values
