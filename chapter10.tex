@@ -330,7 +330,7 @@ difference & $a \setminus b$ & $a$ \& (\textasciitilde$b$) \\
 
 For example, the following code first constructs
 the sets $x=\{1,3,4,8\}$ and $y=\{3,6,8,9\}$,
-and then calculates the set $z = x \cup y = \{1,3,4,6,8,9\}$:
+and then constructs the set $z = x \cup y = \{1,3,4,6,8,9\}$:
 
 \begin{lstlisting}
 int x = (1<<1)+(1<<3)+(1<<4)+(1<<8);
@@ -367,6 +367,76 @@ do {
 } while (b=(b-x)&x);
 \end{lstlisting}
 
+\section{Bit optimizations}
+
+It is often possible to optimize algorithms
+using bit operations.
+Such optimizations do not change the
+time complexity of the algorithm,
+but they may have a large impact
+on the actual running time of the code.
+In this section we discuss examples
+of such situations.
+
+\subsubsection{Hamming distances}
+
+\index{Hamming distance}
+The \key{Hamming distance} between two bit strings
+of equal length is
+the number of positions where the strings differ.
+For example, the Hamming distance between
+01101 and 11001 is 2.
+
+Consider the following problem: We are given
+a list of $n$ bit strings, each of length $k$,
+and our task is to calculate the minimum Hamming distance
+between two strings in the list.
+For example, the minimum distance for the list
+$[00111,01101,11101]$ is 2.
+
+A straightforward way to solve the problem is
+to go through all pairs of string and calculate
+their Hamming distances.
+Such an algorithm works in $O(n^2 k)$ time.
+The following function can be used to calculate
+the Hamming distance between two strings:
+\begin{lstlisting}
+int distance(string a, string b) {
+    int d = 0;
+    for (int i = 0; i < k; i++) {
+        if (a[i] != b[i]) d++;
+    }
+    return d;
+}
+\end{lstlisting}
+
+However, if $k$ is small, we can optimize the code
+by storing the bit strings as integers and
+calculating the Hamming distances using bit operations.
+In particular, if $k \le 32$, we can just store
+the strings as \texttt{int} values and use the
+following function to calculate distances:
+\begin{lstlisting}
+int distance(int a, int b) {
+    return __builtin_popcount(a^b);
+}
+\end{lstlisting}
+In the above function, the xor operation constructs
+a bit string that has one bits in positions
+where $a$ and $b$ differ.
+Then, the number of bits is calculated using
+the \texttt{\_\_builtin\_popcount} function.
+
+To compare the implementations, we generated
+a list of 10000 random bit strings of length 30.
+Using the first approach, the search took
+13.5 seconds, and after the bit optimization,
+it took only 0.5 seconds.
+Thus, the bit optimized code was almost
+30 times faster than the original code.
+
+\subsubsection{}
+
 \section{Dynamic programming}
 
 \subsubsection{From permutations to subsets}
@@ -379,7 +449,7 @@ contains a subset of a set and possibly
 some additional information\footnote{This technique was introduced in 1962
 by M. Held and R. M. Karp \cite{hel62}.}.
 
-The benefit in this is that
+The benefit of this is that
 $n!$, the number of permutations of an $n$ element set,
 is much larger than $2^n$, the number of subsets
 of the same set.
@@ -388,68 +458,64 @@ $n! \approx 2.4 \cdot 10^{18}$ and $2^n \approx 10^6$.
 Hence, for certain values of $n$,
 we can efficiently go through subsets but not through permutations.
 
-As an example, consider the problem of
-calculating the number of
-permutations of a set $\{0,1,\ldots,n-1\}$,
-where the difference between any two consecutive
-elements is larger than one.
-For example, when $n=4$, there are two such permutations:
-$(1,3,0,2)$ and $(2,0,3,1)$.
+As an example, consider the following problem:
+There is an elevator with maximum weight $x$,
+and $n$ people with known weights
+who want to get from the ground floor
+to the top floor.
+What is the minimum number of rides needed
+if the people enter the elevator in an optimal order?
 
-Let $f(x,k)$ denote the number of valid permutations
-of a subset $x$ where the last element is $k$ and
-the difference between any two consecutive
-elements is larger than one.
-For example, $f(\{0,1,3\},1)=1$,
-because there is a permutation $(0,3,1)$,
-and $f(\{0,1,3\},3)=0$, because 0 and 1
-cannot be next to each other.
+For example, suppose that $x=10$, $n=5$
+and the weights are as follows:
+\begin{center}
+\begin{tabular}{ll}
+person & weight \\
+\hline
+$A$ & 2 \\
+$B$ & 3 \\
+$C$ & 3 \\
+$D$ & 5 \\
+$E$ & 6 \\
+\end{tabular}
+\end{center}
+In this case, the minimum number of rides is 2.
+One optimal order is $\{A,C,D,B,E\}$,
+which partitions the people into two rides:
+first $\{A,C,D\}$ (total weight 10),
+and then $\{B,E\}$ (total weight 9).
 
-Using $f$, the answer to the problem equals
-\[ \sum_{i=0}^{n-1} f(\{0,1,\ldots,n-1\},i), \]
-because the permutation has to contain all
-elements $\{0,1,\ldots,n-1\}$ and the last
-element can be any element.
+The problem can be easily solved in $O(n! n)$ time
+by testing all possible permutations of $n$ people.
+However, we can use dynamic programming to get
+a more efficient $O(2^n n)$ time algorithm.
+The idea is to calculate for each subset of people
+two values: the minimum number of rides needed and
+the minimum weight of people who ride in the last group.
 
-The dynamic programming values can be stored as follows:
-\begin{lstlisting}
-int d[1<<n][n];
-\end{lstlisting}
+Let $\texttt{rides}(X)$ denote the minimum number
+of rides and $\texttt{weight}(X)$ denote the minimum
+weight of the last group, where $X$ is a subset
+of people. For example,
+\[ \texttt{rides}(\{B,D,E\})=2 \hspace{10px} \textrm{and}
+\hspace{10px} \texttt{weight}(\{B,D,E\})=5,\]
+because the optimal rides are $\{B,E\}$ and $\{D\}$,
+and the second ride has weight 5.
+Of course, our final goal is to calculate the value
+of $\texttt{rides}(\{A,B,C,D,E\})$ that is the solution
+to the problem.
 
-First, $f(\{k\},k)=1$ for all values of $k$:
-\begin{lstlisting}
-for (int i = 0; i < n; i++) d[1<<i][i] = 1;
-\end{lstlisting}
-
-Then, the other values can be calculated
-as follows:
-\begin{lstlisting}
-for (int b = 0; b < (1<<n); b++) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (abs(i-j) > 1 && (b&(1<<i)) && (b&(1<<j))) {
-                d[b][i] += d[b^(1<<i)][j];
-            }
-        }
-    }
-}
-\end{lstlisting}
-
-In the above code,
-the variable $b$ goes through all subsets and each
-permutation is of the form $(\ldots,j,i)$,
-where the difference between $i$ and $j$ is
-larger than one and $i$ and $j$ belong to $b$.
-
-Finally, the number of solutions can be
-calculated as follows:
-
-\begin{lstlisting}
-int s = 0;
-for (int i = 0; i < n; i++) {
-    s += d[(1<<n)-1][i];
-}
-\end{lstlisting}
+It turns out that we can calculate the values
+of the functions recursively and then apply
+dynamic programming.
+The idea is to go through all people
+that belong to $X$ and optimally
+choose the last person who enters the elevator.
+For example, if $X=\{B,D,E\}$,
+one of $B$, $D$ and $E$ is the last person
+who enters the elevator.
+Each such choice yields a subproblem
+for a smaller subset of people.
 
 \subsubsection{Counting subsets}
 
