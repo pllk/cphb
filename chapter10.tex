@@ -516,6 +516,119 @@ with $N=64$ (\texttt{long long} numbers).
 
 \section{Dynamic programming}
 
+Bit operations provide an efficient way to
+implement dynamic programming algorithms
+whose states contain subsets of elements,
+because such states can be stored as integers.
+In particular, information about all subsets
+of $n$ elements can be stored in an array like
+\begin{lstlisting}
+int value[1<<n];
+\end{lstlisting}
+The following code also has an useful property:
+\begin{lstlisting}
+for (int b = 0; b < (1<<n); b++) {
+    // code
+}
+\end{lstlisting}
+If we go through subsets in this order,
+we always process subset $A$ before subset $B$
+if $A \subset B$, which may be useful
+in dynamic programming.
+
+Next we discuss some examples where bit operations
+and dynamic programming can be combined.
+
+\subsubsection{Paths in a grid}
+
+As a first example, consider a problem
+where an $n \times n$ grid is given such that
+each square contains an integer $0 \ldots k$.
+Our task is to check if there is a path from the upper-left
+corner to the lower-right corner
+such that we only move right and down
+and each integer $0 \ldots k$ appears on the path.
+
+For example, the following path contains all
+integers $0 \ldots 4$:
+\begin{center}
+\begin{tikzpicture}[scale=.65]
+  \begin{scope}
+    \fill [color=lightgray] (0, 9) rectangle (1, 8);
+    \fill [color=lightgray] (0, 8) rectangle (1, 7);
+    \fill [color=lightgray] (1, 8) rectangle (2, 7);
+    \fill [color=lightgray] (1, 7) rectangle (2, 6);
+    \fill [color=lightgray] (2, 7) rectangle (3, 6);
+    \fill [color=lightgray] (3, 7) rectangle (4, 6);
+    \fill [color=lightgray] (4, 7) rectangle (5, 6);
+    \fill [color=lightgray] (4, 6) rectangle (5, 5);
+    \fill [color=lightgray] (4, 5) rectangle (5, 4);
+    \draw (0, 4) grid (5, 9);
+    \node at (0.5,8.5) {2};
+    \node at (1.5,8.5) {0};
+    \node at (2.5,8.5) {5};
+    \node at (3.5,8.5) {3};
+    \node at (4.5,8.5) {1};
+    \node at (0.5,7.5) {0};
+    \node at (1.5,7.5) {1};
+    \node at (2.5,7.5) {4};
+    \node at (3.5,7.5) {2};
+    \node at (4.5,7.5) {0};
+    \node at (0.5,6.5) {3};
+    \node at (1.5,6.5) {0};
+    \node at (2.5,6.5) {2};
+    \node at (3.5,6.5) {4};
+    \node at (4.5,6.5) {1};
+    \node at (0.5,5.5) {6};
+    \node at (1.5,5.5) {5};
+    \node at (2.5,5.5) {0};
+    \node at (3.5,5.5) {1};
+    \node at (4.5,5.5) {3};
+    \node at (0.5,4.5) {0};
+    \node at (1.5,4.5) {2};
+    \node at (2.5,4.5) {3};
+    \node at (3.5,4.5) {3};
+    \node at (4.5,4.5) {1};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+We assume that the rows and columns are numbered
+from 1 to $n$. Moreover, let $\texttt{value}[x][y]$
+denote the value at position $(x,y)$.
+The problem can be solved in $O(n^2 2^k)$ time
+by defining a function $\texttt{possible}[x][y][S]$
+whose value is true exactly when there is a path
+from the upper-left square to square $(x,y)$ such that
+all values in $S$ appear on the path.
+Thus, $\texttt{possible}[n][n][\{0 \ldots k\}]$
+tells us whether a desired path exists.
+The function values can be calculated using
+the following recurrence:
+\begin{equation*}
+\begin{aligned}
+\texttt{possible}[x][y][\emptyset] & = & \textrm{true} \\
+\texttt{possible}[x][y][S] & = & \texttt{possible}[x-1][y][S \setminus \texttt{value}[x][y]] \lor \\
+                    &  & \texttt{possible}[x][y-1][S \setminus \texttt{value}[x][y]] \\
+\end{aligned}
+\end{equation*}
+The base case states that there is always a path that
+does not contain any digits.
+Then, in the recursive case we remove $\texttt{value}[x][y]$
+from $S$, because we can collect it in square $(x,y)$.
+
+The dynamic programming implementation is as follows:
+\begin{lstlisting}
+for (int x = 1; x <= n; x++) {
+    for (int y = 1; y <= n; y++) {
+        for (int b = 0; b < (1<<k); b++) {
+            possible[x][y][b] = possible[x-1][y][b&~value[x][y]] ||
+                                  possible[x][y-1][b&~value[x][y]];
+        }
+    }
+}
+\end{lstlisting}
+
 \subsubsection{From permutations to subsets}
 
 Using dynamic programming, it is often possible
