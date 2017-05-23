@@ -375,33 +375,38 @@ Such optimizations do not change the
 time complexity of the algorithm,
 but they may have a large impact
 on the actual running time of the code.
-In this section we discuss examples
+In this section we discuss two examples
 of such situations.
 
 \subsubsection{Hamming distances}
 
 \index{Hamming distance}
-The \key{Hamming distance} between two bit strings
-of equal length is
+The \key{Hamming distance}
+$\texttt{hamming}(a,b)$ between two
+equal-length bit strings $a$ and $b$ is
 the number of positions where the strings differ.
-For example, the Hamming distance between
-01101 and 11001 is 2.
+For example, $\texttt{hamming}(01101,11001)=2$.
 
-Consider the following problem: We are given
+Consider the following problem: Given
 a list of $n$ bit strings, each of length $k$,
-and our task is to calculate the minimum Hamming distance
+calculate the minimum Hamming distance
 between two strings in the list.
-For example, the minimum distance for the list
-$[00111,01101,11101]$ is 2.
+For example, the answer for $[00111,01101,11110]$,
+is 2, because
+\begin{itemize}[noitemsep]
+\item $\texttt{hamming}(00111,01101)=2$,
+\item $\texttt{hamming}(00111,11110)=3$, and
+\item $\texttt{hamming}(01101,11110)=3$.
+\end{itemize}
 
 A straightforward way to solve the problem is
 to go through all pairs of string and calculate
-their Hamming distances.
-Such an algorithm works in $O(n^2 k)$ time.
-The following function can be used to calculate
+their Hamming distances,
+which yields an $O(n^2 k)$ time algorithm.
+The following function calculates
 the Hamming distance between two strings:
 \begin{lstlisting}
-int distance(string a, string b) {
+int hamming(string a, string b) {
     int d = 0;
     for (int i = 0; i < k; i++) {
         if (a[i] != b[i]) d++;
@@ -417,7 +422,7 @@ In particular, if $k \le 32$, we can just store
 the strings as \texttt{int} values and use the
 following function to calculate distances:
 \begin{lstlisting}
-int distance(int a, int b) {
+int hamming(int a, int b) {
     return __builtin_popcount(a^b);
 }
 \end{lstlisting}
@@ -431,11 +436,83 @@ To compare the implementations, we generated
 a list of 10000 random bit strings of length 30.
 Using the first approach, the search took
 13.5 seconds, and after the bit optimization,
-it took only 0.5 seconds.
+it only took 0.5 seconds.
 Thus, the bit optimized code was almost
 30 times faster than the original code.
 
-\subsubsection{}
+\subsubsection{Counting subgrids}
+
+As another example, consider the
+following problem:
+Given an $n \times n$ grid whose
+each square is either black or white,
+calculate the number of subgrids
+whose all corners are black.
+For example, the grid
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+\fill[black] (1,1) rectangle (2,2);
+\fill[black] (1,4) rectangle (2,5);
+\fill[black] (4,1) rectangle (5,2);
+\fill[black] (4,4) rectangle (5,5);
+\fill[black] (1,3) rectangle (2,4);
+\fill[black] (2,3) rectangle (3,4);
+\fill[black] (2,1) rectangle (3,2);
+\fill[black] (0,2) rectangle (1,3);
+\draw (0,0) grid (5,5);
+\end{tikzpicture}
+\end{center}
+contains two such subgrids:
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+\fill[black] (1,1) rectangle (2,2);
+\fill[black] (1,4) rectangle (2,5);
+\fill[black] (4,1) rectangle (5,2);
+\fill[black] (4,4) rectangle (5,5);
+\fill[black] (1,3) rectangle (2,4);
+\fill[black] (2,3) rectangle (3,4);
+\fill[black] (2,1) rectangle (3,2);
+\fill[black] (0,2) rectangle (1,3);
+\draw (0,0) grid (5,5);
+
+\fill[black] (7+1,1) rectangle (7+2,2);
+\fill[black] (7+1,4) rectangle (7+2,5);
+\fill[black] (7+4,1) rectangle (7+5,2);
+\fill[black] (7+4,4) rectangle (7+5,5);
+\fill[black] (7+1,3) rectangle (7+2,4);
+\fill[black] (7+2,3) rectangle (7+3,4);
+\fill[black] (7+2,1) rectangle (7+3,2);
+\fill[black] (7+0,2) rectangle (7+1,3);
+\draw (7+0,0) grid (7+5,5);
+
+\draw[color=red,line width=1mm] (1,1) rectangle (3,4);
+\draw[color=red,line width=1mm] (7+1,1) rectangle (7+5,5);
+\end{tikzpicture}
+\end{center}
+
+There is an $O(n^3)$ time algorithm for solving the problem:
+go through all $O(n^2)$ pairs of rows and for each pair
+calculate the number of columns that contain a black
+square in both rows in $O(n)$ time.
+Then, if there are $c$ such columns for a fixed row pair,
+they account for $c(c-1)/2$ subgrids with black corners.
+
+To optimize this algorithm, we divide the grid into blocks
+of columns such that each block consists of $N$
+consecutive columns. Then, each row is stored as
+a list of $N$-bit numbers that describe the colors
+of the squares.
+Using this representation,
+we can process $N$ columns at the same time
+using bit operations, and the resulting algorithm
+works in $O(n^3/N)$ time.
+
+We generated a random grid of size $2500 \times 2500$
+and compared the original and bit-optimized implementation.
+While the original code took $29.6$ seconds,
+the bit-optimized version only took $3.1$ seconds
+with $N=32$ (\texttt{int} numbers) and $1.7$ seconds
+with $N=64$ (\texttt{long long} numbers).
 
 \section{Dynamic programming}
 
