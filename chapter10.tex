@@ -516,41 +516,26 @@ with $N=64$ (\texttt{long long} numbers).
 
 \section{Dynamic programming}
 
-Bit operations provide an efficient way to
-implement dynamic programming algorithms
+Bit operations provide an efficient and convenient
+way to implement dynamic programming algorithms
 whose states contain subsets of elements,
 because such states can be stored as integers.
-In particular, information about all subsets
-of $n$ elements can be stored in an array like
-\begin{lstlisting}
-int value[1<<n];
-\end{lstlisting}
-The following code also has an useful property:
-\begin{lstlisting}
-for (int b = 0; b < (1<<n); b++) {
-    // code
-}
-\end{lstlisting}
-If we go through subsets in this order,
-we always process subset $A$ before subset $B$
-if $A \subset B$, which may be useful
-in dynamic programming.
-
-Next we discuss some examples where bit operations
-and dynamic programming can be combined.
+Next we discuss some examples of combining
+bit operations and dynamic programming.
 
 \subsubsection{Paths in a grid}
 
-As a first example, consider a problem
-where an $n \times n$ grid is given such that
-each square contains an integer $0 \ldots k$.
+As a first example, consider
+an $n \times n$ grid where
+each square contains an integer.
 Our task is to check if there is a path from the upper-left
 corner to the lower-right corner
 such that we only move right and down
-and each integer $0 \ldots k$ appears on the path.
+and each integer between 0 and $k$ appears on the path.
 
-For example, the following path contains all
-integers $0 \ldots 4$:
+For example, in the following grid,
+there is a path that contains all
+integers between 0 and $k$:
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
@@ -566,8 +551,8 @@ integers $0 \ldots 4$:
     \draw (0, 4) grid (5, 9);
     \node at (0.5,8.5) {2};
     \node at (1.5,8.5) {0};
-    \node at (2.5,8.5) {5};
-    \node at (3.5,8.5) {3};
+    \node at (2.5,8.5) {3};
+    \node at (3.5,8.5) {1};
     \node at (4.5,8.5) {1};
     \node at (0.5,7.5) {0};
     \node at (1.5,7.5) {1};
@@ -579,8 +564,8 @@ integers $0 \ldots 4$:
     \node at (2.5,6.5) {2};
     \node at (3.5,6.5) {4};
     \node at (4.5,6.5) {1};
-    \node at (0.5,5.5) {6};
-    \node at (1.5,5.5) {5};
+    \node at (0.5,5.5) {2};
+    \node at (1.5,5.5) {1};
     \node at (2.5,5.5) {0};
     \node at (3.5,5.5) {1};
     \node at (4.5,5.5) {3};
@@ -594,34 +579,45 @@ integers $0 \ldots 4$:
 \end{center}
 
 We assume that the rows and columns are numbered
-from 1 to $n$. Moreover, let $\texttt{value}[x][y]$
-denote the value at position $(x,y)$.
-The problem can be solved in $O(n^2 2^k)$ time
-by defining a function $\texttt{possible}[x][y][S]$
-whose value is true exactly when there is a path
+from 1 to $n$, and $\texttt{value}[x][y]$
+denotes the value at position $(x,y)$.
+It turns out that the problem can be solved in $O(n^2 2^k)$ time
+using dynamic programming.
+
+Let $\texttt{possible}(x,y,S)$ be a function
+that indicates whether there is a path
 from the upper-left square to square $(x,y)$ such that
 all values in $S$ appear on the path.
-Thus, $\texttt{possible}[n][n][\{0 \ldots k\}]$
+Thus, $\texttt{possible}(n,n,\{0 \ldots k\})$
 tells us whether a desired path exists.
-The function values can be calculated using
+The values of the function can be calculated using
 the following recurrence:
 \begin{equation*}
 \begin{aligned}
-\texttt{possible}[x][y][\emptyset] & = & \textrm{true} \\
-\texttt{possible}[x][y][S] & = & \texttt{possible}[x-1][y][S \setminus \texttt{value}[x][y]] \lor \\
-                    &  & \texttt{possible}[x][y-1][S \setminus \texttt{value}[x][y]] \\
+\texttt{possible}(x,y,\emptyset) & = & \textrm{true} \\
+\texttt{possible}(x,y,S) & = & \texttt{possible}(x-1,y,S \setminus \texttt{value}[x][y]) \lor \\
+                    &  & \texttt{possible}(x,y-1,S \setminus \texttt{value}[x][y]) \\
 \end{aligned}
 \end{equation*}
 The base case states that there is always a path that
-does not contain any digits.
-Then, in the recursive case we remove $\texttt{value}[x][y]$
+does not contain any integers.
+Then, in the recursive case we consider both directions
+and remove $\texttt{value}[x][y]$
 from $S$, because we can collect it in square $(x,y)$.
 
-The dynamic programming implementation is as follows:
+We can implement the dynamic programming using an array
 \begin{lstlisting}
-for (int x = 1; x <= n; x++) {
-    for (int y = 1; y <= n; y++) {
-        for (int b = 0; b < (1<<k); b++) {
+bool possible[N][N][1<<K];
+\end{lstlisting}
+where $N$ and $K$ are suitably large constants.
+Then, we can calculate the values
+of the function as follows:
+\begin{lstlisting}
+for (int x = 0; x <= n; x++) {
+    for (int y = 0; y <= n; y++) {
+        possible[x][y][0] = true;
+        if (x == 0 || y == 0) continue;
+        for (int b = 1; b < (1<<k); b++) {
             possible[x][y][b] = possible[x-1][y][b&~value[x][y]] ||
                                   possible[x][y-1][b&~value[x][y]];
         }
@@ -633,19 +629,15 @@ for (int x = 1; x <= n; x++) {
 
 Using dynamic programming, it is often possible
 to change an iteration over permutations into
-an iteration over subsets, so that
-the dynamic programming state
-contains a subset of a set and possibly
-some additional information\footnote{This technique was introduced in 1962
+an iteration over subsets\footnote{This technique was introduced in 1962
 by M. Held and R. M. Karp \cite{hel62}.}.
-
-The benefit of this is that
+The benefit of this technique is that
 $n!$, the number of permutations of an $n$ element set,
 is much larger than $2^n$, the number of subsets
 of the same set.
 For example, if $n=20$, then
 $n! \approx 2.4 \cdot 10^{18}$ and $2^n \approx 10^6$.
-Hence, for certain values of $n$,
+Thus, for certain values of $n$,
 we can efficiently go through subsets but not through permutations.
 
 As an example, consider the following problem:
@@ -683,8 +675,8 @@ The idea is to calculate for each subset of people
 two values: the minimum number of rides needed and
 the minimum weight of people who ride in the last group.
 
-Let $\texttt{rides}(X)$ denote the minimum number
-of rides and $\texttt{weight}(X)$ denote the minimum
+Let $\texttt{rides}(X)$ and $\texttt{weight}(X)$ denote
+the minimum number of rides and the minimum
 weight of the last group, where $X$ is a subset
 of people. For example,
 \[ \texttt{rides}(\{B,D,E\})=2 \hspace{10px} \textrm{and}
@@ -695,7 +687,7 @@ Of course, our final goal is to calculate the value
 of $\texttt{rides}(\{A,B,C,D,E\})$ that is the solution
 to the problem.
 
-It turns out that we can calculate the values
+We can calculate the values
 of the functions recursively and then apply
 dynamic programming.
 The idea is to go through all people
@@ -707,31 +699,35 @@ who enters the elevator.
 Each such choice yields a subproblem
 for a smaller subset of people.
 
+Note that we can use a loop like
+\begin{lstlisting}
+for (int b = 0; b < (1<<n); b++) {
+    // process subset b
+}
+\end{lstlisting}
+to go through the subsets,
+because if $X$ and $Y$ are two subsets
+and $X \subset Y$,
+then $X$ comes before $Y$ in the above order.
+
 \subsubsection{Counting subsets}
 
 Our last problem in this chapter is as follows:
-We are given a collection $C$ that consists of $m$ sets,
-and our task is to determine for each set
-the number of sets in $C$ that are its subsets.
-For example, consider the following collection:
-\[C = \{\{0\}, \{0,2\}, \{1,4\}, \{0,1,4\}, \{1,4,5\}\}\]
-For any set $x$ in $C$,
-let $f(x)$ denote the number of sets (including $x$) in $C$
-that are subsets of $x$.
-For example, $f(\{0,1,4\})=3$, because the
-sets $\{0\}$, $\{1,4\}$ and $\{0,1,4\}$ are
-subsets of $\{0,1,4\}$.
-Using this notation, our task is to calculate the value of $f(x)$
-for every set $x$ in the collection.
+Let $X=\{0,1,\ldots,n-1\}$, and each subset $S \subset X$,
+is assigned an integer $\texttt{value}(S)$.
+Our task is to calculate for each $S$
+\[\texttt{sum}(S) = \sum_{A \subset S} \texttt{value}(A),\]
+i.e., the sum of values of subsets of $S$.
 
-We will assume that each set is
-a subset of $\{0,1,\ldots,n-1\}$.
-Thus, the collection can contain at most
-$2^n$ sets.
-A straightforward way to solve the problem
-is to go through all pairs of sets in the collection.
-However, a more efficient solution is possible
-using dynamic programming.
+Because there are a total of $2^n$ subsets,
+one possible solution is to go through all
+pairs of subsets in $O(2^{2n})$ time.
+However, using dynamic programming, we
+can solve the problem in $O(2^n n)$ time.
+
+Let $\texttt{sum}(S,k)$ denote the sum of
+values of subsets of $S$
+
 
 Let $c(x,k)$ denote the number of sets in
 $C$ that equal a set $x$
