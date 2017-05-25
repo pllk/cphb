@@ -120,11 +120,11 @@ Of course, the same applies to coins 3 and 4.
 Thus, we can use the following recursive formula
 to calculate the minimum number of coins:
 \begin{equation*}
-\begin{aligned}
-\texttt{solve}(x) & = \min( & \texttt{solve}(x-1)+1 & , \\
-                  &         & \texttt{solve}(x-3)+1 & , \\
-                  &         & \texttt{solve}(x-4)+1 & ).
-\end{aligned}
+\begin{split}
+\texttt{solve}(x) = \min( & \texttt{solve}(x-1)+1, \\
+                           & \texttt{solve}(x-3)+1, \\
+                           & \texttt{solve}(x-4)+1).
+\end{split}
 \end{equation*}
 The base case of the recursion is $\texttt{solve}(0)=0$,
 because no coins are needed to form an empty sum.
@@ -326,11 +326,11 @@ we can form the sum $x$.
 For example, if $\texttt{coins}=\{1,3,4\}$,
 then $\texttt{solve}(5)=6$ and the recursive formula is
 \begin{equation*}
-\begin{aligned}
-\texttt{solve}(x) & = & \texttt{solve}(x-1) & + \\
-                    &       & \texttt{solve}(x-3) & + \\
-                     &      & \texttt{solve}(x-4) & .
-\end{aligned}
+\begin{split}
+\texttt{solve}(x) = & \texttt{solve}(x-1) + \\
+                    & \texttt{solve}(x-3) + \\
+                    & \texttt{solve}(x-4)  .
+\end{split}
 \end{equation*}
 
 In this case, the general recursive function is as follows:
@@ -801,11 +801,11 @@ between \texttt{x} and \texttt{y} equals $\texttt{distance}(n-1,m-1)$.
 We can calculate the values of \texttt{distance}
 as follows:
 \begin{equation*}
-\begin{aligned}
-\texttt{distance}(a,b) & = \min(& \texttt{distance}(a,b-1)+1 & , \\
-                    &       & \texttt{distance}(a-1,b)+1 & , \\
-                     &      & \texttt{distance}(a-1,b-1)+\texttt{cost}(a,b) & ).
-\end{aligned}
+\begin{split}
+\texttt{distance}(a,b) = \min(& \texttt{distance}(a,b-1)+1, \\
+                           & \texttt{distance}(a-1,b)+1, \\
+                           & \texttt{distance}(a-1,b-1)+\texttt{cost}(a,b)).
+\end{split}
 \end{equation*}
 Here $\texttt{cost}(a,b)=0$ if $\texttt{x}[a]=\texttt{y}[b]$,
 and otherwise $\texttt{cost}(a,b)=1$.
