@@ -169,15 +169,19 @@ void g(int n) {
 \end{lstlisting}
 In this case each function call generates two other
 calls, except for $n=1$.
-Hence, the call $\texttt{g}(n)$ causes the following calls:
+Let us see what happens when $g$ is called
+with parameter $n$.
+The following table shows the function calls
+this single call yields:
 \begin{center}
 \begin{tabular}{rr}
-parameter & number of calls \\
+function call & number of calls \\
 \hline
-$n$ & 1 \\
-$n-1$ & 2 \\
+$g(n)$ & 1 \\
+$g(n-1)$ & 2 \\
+$g(n-2)$ & 4 \\
 $\cdots$ & $\cdots$ \\
-$1$ & $2^{n-1}$ \\
+$g(1)$ & $2^{n-1}$ \\
 \end{tabular}
 \end{center}
 Based on this, the time complexity is
