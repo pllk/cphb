@@ -646,9 +646,8 @@ to change an iteration over permutations into
 an iteration over subsets\footnote{This technique was introduced in 1962
 by M. Held and R. M. Karp \cite{hel62}.}.
 The benefit of this is that
-$n!$, the number of permutations of an $n$ element set,
-is much larger than $2^n$, the number of subsets
-of the same set.
+$n!$, the number of permutations,
+is much larger than $2^n$, the number of subsets.
 For example, if $n=20$, then
 $n! \approx 2.4 \cdot 10^{18}$ and $2^n \approx 10^6$.
 Thus, for certain values of $n$,
@@ -689,16 +688,20 @@ The idea is to calculate for each subset of people
 two values: the minimum number of rides needed and
 the minimum weight of people who ride in the last group.
 
-Let $\texttt{rides}(S)$ and $\texttt{weight}(S)$ denote
-the minimum number of rides and the minimum
-weight of the last group, where $S$ is a subset
-of people. For example,
+Let $\texttt{weight}[p]$ denote the weight of
+person $p$ where $0 \le p < n$.
+Then we define two functions:
+$\texttt{rides}(S)$ is the minimum number of
+rides for a subset $S$,
+and $\texttt{last}(S)$ is the minimum weight
+of the last ride.
+For example, in the above scenario
 \[ \texttt{rides}(\{B,D,E\})=2 \hspace{10px} \textrm{and}
-\hspace{10px} \texttt{weight}(\{B,D,E\})=5,\]
+\hspace{10px} \texttt{last}(\{B,D,E\})=5,\]
 because the optimal rides are $\{B,E\}$ and $\{D\}$,
 and the second ride has weight 5.
 Of course, our final goal is to calculate the value
-of $\texttt{rides}(X)$ where $X$ is a set that
+of $\texttt{rides}(P)$ where $P$ is a set that
 contains all the people.
 
 We can calculate the values
@@ -706,50 +709,74 @@ of the functions recursively and then apply
 dynamic programming.
 The idea is to go through all people
 who belong to $S$ and optimally
-choose the last person who enters the elevator.
-For example, if $S=\{B,D,E\}$,
-one of $B$, $D$ and $E$ is the last person
-who enters the elevator.
+choose the last person $p$ who enters the elevator.
 Each such choice yields a subproblem
 for a smaller subset of people.
+If $\texttt{last}(S \setminus p)+\texttt{weight}[p] \le x$,
+we can add $p$ to the last ride.
+Otherwise, we have to reserve a new ride
+that initially only contains $p$.
 
-Note that we can use a loop like
+A convenient way to implement a dynamic programming
+solution is to declare an array
 \begin{lstlisting}
-for (int b = 0; b < (1<<n); b++) {
-    // process subset b
+pair<int,int> best[1<<N];
+\end{lstlisting}
+that contains values of \texttt{rides} and \texttt{weight}
+as pairs. For an empty group, no rides are needed:
+\begin{lstlisting}
+best[0] = {0,0};
+\end{lstlisting}
+Then, we can fill the array as follows:
+
+\begin{lstlisting}
+for (int s = 1; s < (1<<n); s++) {
+    best[s] = {n,0};
+    for (int p = 0; p < n; p++) {
+        if (s&(1<<p)) {
+            auto option = best[s^(1<<p)];
+            if (option.second+weight[p] <= x) {
+                option.second += weight[p];
+            } else {
+                option.first++;
+                option.second = weight[p];
+            }
+            best[s] = min(best[s], option);
+        }
+    }
 }
 \end{lstlisting}
-to go through the subsets,
-because if $S_1$ and $S_2$ are two subsets
-and $S_1 \subset S_2$,
-then $S_1$ comes before $S_2$ in the above order.
+Note that in the above loop, for any two subsets $S_1$ and $S_2$
+such that $S_1 \subset S_2$, we process $S_1$ before $S_2$.
+Thus, the dynamic programming values are calculated in the
+correct order.
 
 \subsubsection{Counting subsets}
 
 Our last problem in this chapter is as follows:
 Let $X=\{0 \ldots n-1\}$, and each subset $S \subset X$,
-is assigned an integer $\texttt{value}(S)$.
+is assigned an integer $\texttt{value}[S]$.
 Our task is to calculate for each $S$
-\[\texttt{sum}(S) = \sum_{A \subset S} \texttt{value}(A),\]
+\[\texttt{sum}(S) = \sum_{A \subset S} \texttt{value}[A],\]
 i.e., the sum of values of subsets of $S$.
 
 For example, suppose that $n=3$ and the values are as follows:
 \begin{multicols}{2}
 \begin{itemize}
-\item $\texttt{value}(\emptyset) = 3$
-\item $\texttt{value}(\{0\}) = 1$
-\item $\texttt{value}(\{1\}) = 4$
-\item $\texttt{value}(\{0,1\}) = 5$
-\item $\texttt{value}(\{2\}) = 5$
-\item $\texttt{value}(\{0,2\}) = 1$
-\item $\texttt{value}(\{1,2\}) = 3$
-\item $\texttt{value}(\{0,1,2\}) = 3$
+\item $\texttt{value}[\emptyset] = 3$
+\item $\texttt{value}[\{0\}] = 1$
+\item $\texttt{value}[\{1\}] = 4$
+\item $\texttt{value}[\{0,1\}] = 5$
+\item $\texttt{value}[\{2\}] = 5$
+\item $\texttt{value}[\{0,2\}] = 1$
+\item $\texttt{value}[\{1,2\}] = 3$
+\item $\texttt{value}[\{0,1,2\}] = 3$
 \end{itemize}
 \end{multicols}
 In this case, for example,
 \begin{equation*}
 \begin{split}
-\texttt{sum}(\{0,2\}) &= \texttt{value}(\emptyset)+\texttt{value}(\{0\})+\texttt{value}(\{2\})+\texttt{value}(\{0,2\}) \\ 
+\texttt{sum}(\{0,2\}) &= \texttt{value}[\emptyset]+\texttt{value}[\{0\}]+\texttt{value}[\{2\}]+\texttt{value}[\{0,2\}] \\ 
                       &= 3 + 1 + 5 + 1 = 10.
 \end{split}
 \end{equation*}
@@ -759,59 +786,55 @@ one possible solution is to go through all
 pairs of subsets in $O(2^{2n})$ time.
 However, using dynamic programming, we
 can solve the problem in $O(2^n n)$ time.
+The idea is to focus on sums where the
+elements that may removed from $S$ are restricted.
 
-Let $\texttt{sum}(S,k)$ denote the sum of
-values of subsets of $S$
-
-
-Let $c(x,k)$ denote the number of sets in
-$C$ that equal a set $x$
-if we are allowed to remove any subset of
-$\{0,1,\ldots,k\}$ from $x$.
-For example, in the above collection,
-$c(\{0,1,4\},1)=2$,
-where the corresponding sets are
-$\{1,4\}$ and $\{0,1,4\}$.
-
-It turns out that we can calculate all
-values of $c(x,k)$ in $O(2^n n)$ time.
-This solves our problem, because
-\[f(x)=c(x,n-1).\]
-
-The base cases for the function are:
+Let $\texttt{partial}(S,k)$ denote the sum of
+values of subsets of $S$ with the restriction
+that only elements $0 \ldots k$
+may be removed from $S$.
+For example,
+\[\texttt{partial}(\{0,2\},1)=\texttt{value}[\{2\}]+\texttt{value}[\{0,2\}],\]
+because we only may remove elements $0 \ldots 1$.
+We can calculate values of \texttt{sum} using
+values of \texttt{partial}, because
+\[\texttt{sum}(S) = \texttt{partial}(S,n-1).\]
+The base cases for the function are
+\[\texttt{partial}(S,-1)=\texttt{value}[S],\]
+because in this case no elements can be removed from $S$.
+Then, in the general case we can use the following recurrence:
 \begin{equation*}
-    c(x,-1) = \begin{cases}
-               0 & \textrm{if $x \notin C$}\\
-               1 & \textrm{if $x \in C$}\\
+    \texttt{partial}(S,k) = \begin{cases}
+               \texttt{partial}(S,k-1) & k \notin S \\
+               \texttt{partial}(S,k-1) + \texttt{partial}(S \setminus \{k\},k-1) & k \in S
            \end{cases}
 \end{equation*}
-For larger values of $k$, the following recursion holds:
-\begin{equation*}
-    c(x,k) = \begin{cases}
-               c(x,k-1)          & \textrm{if $k \notin x$}\\
-               c(x,k-1)+c(x \setminus \{k\},k-1)    & \textrm{if $k \in x$}\\
-           \end{cases}
-\end{equation*}
+Here we focus on the element $k$.
+If $k \in S$, we have two options: we may either keep $k$ in $S$
+or remove it from $S$.
 
-We can conveniently implement the algorithm by representing
-the sets using bits.
-Assume that there is an array
+There is a particularly clever way to implement the
+calculation of sums. We can declare an array
 \begin{lstlisting}
-int d[1<<n];
+int sum[1<<N];
 \end{lstlisting}
-that is initialized so that $d[x]=1$ if $x$ belongs to $C$
-and otherwise $d[x]=0$.
-We can now implement the algorithm as follows:
-
+that will contain the sum of each subset.
+The array is initialized as follows:
+\begin{lstlisting}
+for (int s = 0; s < (1<<n); s++) {
+    sum[s] = value[s];
+}
+\end{lstlisting}
+Then, we can fill the array as follows:
 \begin{lstlisting}
 for (int k = 0; k < n; k++) {
-    for (int b = 0; b < (1<<n); b++) {
-        if (b&(1<<k)) d[b] += d[b^(1<<k)];
+    for (int s = 0; s < (1<<n); s++) {
+        if (s&(1<<k)) sum[s] += sum[s^(1<<k)];
     }
 }
 \end{lstlisting}
-The above code is based on the recursive definition
-of $c$. As a special trick, the code only uses
-the array $d$ to calculate all values of the function.
-Finally, for each set $x$ in $C$, $f(x)=d[x]$.
-
+This code calculates the values of $\texttt{partial}(S,k)$
+for $k=0 \ldots n-1$ to the array \texttt{sum}.
+Since $\texttt{partial}(S,k)$ is always based on
+$\texttt{partial}(S,k-1)$, we can reuse the array
+\texttt{sum}, which yields a very efficient implementation.
