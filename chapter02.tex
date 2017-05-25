@@ -172,7 +172,7 @@ calls, except for $n=1$.
 Let us see what happens when $g$ is called
 with parameter $n$.
 The following table shows the function calls
-this single call yields:
+produced by this single call:
 \begin{center}
 \begin{tabular}{rr}
 function call & number of calls \\
@@ -362,11 +362,11 @@ Given an array of $n$ numbers,
 our task is to calculate the
 \key{maximum subarray sum}, i.e.,
 the largest possible sum of 
-a sequence of consecutive numbers
+a sequence of consecutive values
 in the array\footnote{J. Bentley's
 book \emph{Programming Pearls} \cite{ben86} made the problem popular.}.
 The problem is interesting when there may be
-negative numbers in the array.
+negative values in the array.
 For example, in the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -403,22 +403,19 @@ the following subarray produces the maximum sum $10$:
 
 \subsubsection{Algorithm 1}
 
-Assume that the numbers are stored in
-an array \texttt{t}.
 A straightforward way to solve the problem
-is to go through all possible ways of
-selecting a subarray, calculate the sum of
-the numbers in each subarray and maintain
+is to go through all possible subarrays,
+calculate the sum of values in each subarray and maintain
 the maximum sum.
 The following code implements this algorithm:
 
 \begin{lstlisting}
 int best = 0;
-for (int a = 0; a < n; a++) {
-    for (int b = a; b < n; b++) {
+for (int first = 0; first < n; first++) {
+    for (int last = first; last < n; last++) {
         int sum = 0;
-        for (int k = a; k <= b; k++) {
-            sum += t[k];
+        for (int k = first; k <= last; k++) {
+            sum += array[k];
         }
         best = max(best,sum);
     }
@@ -426,8 +423,8 @@ for (int a = 0; a < n; a++) {
 cout << best << "\n";
 \end{lstlisting}
 
-The variables \texttt{a} and \texttt{b} determine the first and last
-number in the subarray,
+The variables \texttt{first} and \texttt{last} determine the range
+of the subarray,
 and the sum of the numbers is calculated to the variable \texttt{sum}.
 The variable \texttt{best} contains the maximum sum found during the search.
 
@@ -445,10 +442,10 @@ The result is the following code:
 
 \begin{lstlisting}
 int best = 0;
-for (int a = 0; a < n; a++) {
+for (int first = 0; first < n; first++) {
     int sum = 0;
-    for (int b = a; b < n; b++) {
-        sum += t[b];
+    for (int last = first; last < n; last++) {
+        sum += array[last];
         best = max(best,sum);
     }
 }
@@ -489,7 +486,7 @@ The following code implements the algorithm:
 \begin{lstlisting}
 int best = 0, sum = 0;
 for (int k = 0; k < n; k++) {
-    sum = max(t[k],sum+t[k]);
+    sum = max(array[k],sum+array[k]);
     best = max(best,sum);
 }
 cout << best << "\n";
