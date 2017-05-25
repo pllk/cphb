@@ -56,7 +56,7 @@ void search(int k) {
 
 When the function \texttt{search}
 is called with parameter $k$,
-it decides whether to include
+it decides whether to include the
 element $k$ in the subset or not,
 and in both cases,
 then calls itself with parameter $k+1$
@@ -137,7 +137,7 @@ the last bit corresponds to element 0,
 the second last bit corresponds to element 1,
 and so on.
 For example, the bit representation of 25
-is 11001, that corresponds to the subset $\{0,3,4\}$.
+is 11001, which corresponds to the subset $\{0,3,4\}$.
 
 The following code goes through the subsets
 of a set of $n$ elements
@@ -183,7 +183,7 @@ using recursion.
 The following function \texttt{search} goes
 through the permutations of the set $\{0,1,\ldots,n-1\}$.
 The function builds a vector \texttt{permutation}
-that describes the permutation,
+that contains the permutation,
 and the search begins when the function is
 called without parameters.
 
@@ -349,10 +349,10 @@ void search(int y) {
         return;
     }
     for (int x = 0; x < n; x++) {
-        if (r1[x] || r2[x+y] || r3[x-y+n-1]) continue;
-        r1[x] = r2[x+y] = r3[x-y+n-1] = 1;
+        if (column[x] || diag1[x+y] || diag2[x-y+n-1]) continue;
+        column[x] = diag1[x+y] = diag2[x-y+n-1] = 1;
         search(y+1);
-        r1[x] = r2[x+y] = r3[x-y+n-1] = 0;
+        column[x] = diag1[x+y] = diag2[x-y+n-1] = 0;
     }
 }
 \end{lstlisting}
@@ -368,13 +368,13 @@ When the function \texttt{search} is
 called with parameter $y$,
 it places a queen to row $y$
 and then calls itself with parameter $y+1$.
-However, if $y=n$, a solution has been found
+Then, if $y=n$, a solution has been found
 and the variable \texttt{count} is increased by one.
 
-The array \texttt{r1} keeps track of the columns
-that already contain a queen,
-and the arrays \texttt{r2} and \texttt{r3}
-keep track of the diagonals.
+The array \texttt{column} keeps track of columns
+that contain a queen,
+and the arrays \texttt{diag1} and \texttt{diag2}
+keep track of diagonals.
 It is not allowed to add another queen to a
 column or diagonal that already contains a queen. 
 For example, the columns and diagonals of
@@ -437,9 +437,9 @@ the $4 \times 4$ board are numbered as follows:
     \node at (8.5,0.5) {$2$};
     \node at (9.5,0.5) {$3$};
 
-    \node at (-4,-1) {\texttt{r1}};
-    \node at (2,-1) {\texttt{r2}};
-    \node at (8,-1) {\texttt{r3}};
+    \node at (-4,-1) {\texttt{column}};
+    \node at (2,-1) {\texttt{diag1}};
+    \node at (8,-1) {\texttt{diag2}};
 
   \end{scope}
 \end{tikzpicture}
@@ -619,9 +619,6 @@ the path can turn either left or right:
           (3.5,0.5) -- (3.5,1.5) -- (1.5,1.5) --
           (1.5,2.5) -- (4.5,2.5) -- (4.5,0.5) --
           (5.5,0.5) -- (5.5,6.5);
-
-    \node at (4.5,6.5) {$a$};
-    \node at (6.5,6.5) {$b$};
   \end{scope}
 \end{tikzpicture}
 \end{center}
@@ -716,10 +713,10 @@ to choose some numbers from the list so that
 their sum is $x$.
 For example, given the list $[2,4,5,9]$ and $x=15$,
 we can choose the numbers $[2,4,9]$ to get $2+4+9=15$.
-However, if $x=10$,
+However, if $x=10$ for the same list,
 it is not possible to form the sum.
 
-An easy solution to the problem is to
+A simple algorithm to the problem is to
 go through all subsets of the elements and
 check if the sum of any of the subsets is $x$.
 The running time of such an algorithm is $O(2^n)$,
