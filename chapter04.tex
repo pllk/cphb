@@ -363,9 +363,9 @@ instead of iterators:
 
 \newpage
 \begin{lstlisting}
-sort(t, t+n);
-reverse(t, t+n);
-random_shuffle(t, t+n);
+sort(a, a+n);
+reverse(a, a+n);
+random_shuffle(a, a+n);
 \end{lstlisting}
 
 \subsubsection{Set iterators}
@@ -473,7 +473,7 @@ element that corresponds to \texttt{it} or the previous element.
 \index{bitset}
 
 A \key{bitset} is an array
-where each element is either 0 or 1.
+whose each value is either 0 or 1.
 For example, the following code creates
 a bitset that contains 10 elements:
 \begin{lstlisting}
@@ -532,7 +532,7 @@ whose size can be efficiently
 changed at both ends of the array.
 Like a vector, a deque provides the functions
 \texttt{push\_back} and \texttt{pop\_back}, but
-it also provides the functions
+it also includes the functions
 \texttt{push\_front} and \texttt{pop\_front}
 which are not available in a vector.
 
@@ -550,7 +550,7 @@ The internal implementation of a deque
 is more complex than that of a vector,
 and for this reason, a deque is slower than a vector.
 Still, both adding and removing
-elements takes $O(1)$ time on average at both ends.
+elements take $O(1)$ time on average at both ends.
 
 \subsubsection{Stack}
 
