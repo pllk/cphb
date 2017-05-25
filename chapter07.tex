@@ -78,7 +78,7 @@ required to form a sum $x$?
 
 Let $\texttt{solve}(x)$
 denote the minimum
-number of coins required to form a sum $x$.
+number of coins required for a sum $x$.
 The values of the function depend on the
 values of the coins.
 For example, if $\texttt{coins} = \{1,3,4\}$,
@@ -110,7 +110,7 @@ that its values can be
 recursively calculated from its smaller values.
 The idea is to focus on the \emph{first}
 coin that we choose for the sum.
-For example, in the above example,
+For example, in the above scenario,
 the first coin can be either 1, 3 or 4.
 If we first choose coin 1,
 the remaining task is to form the sum 9
@@ -131,7 +131,7 @@ because no coins are needed to form an empty sum.
 For example,
 \[ \texttt{solve}(10) = \texttt{solve}(7)+1 = \texttt{solve}(4)+2 = \texttt{solve}(0)+3 = 3.\]
 
-Now we are ready to a general recursive function
+Now we are ready to give a general recursive function
 that calculates the minimum number of
 coins needed to form a sum $x$:
 \begin{equation*}
@@ -236,7 +236,7 @@ After a value of $\texttt{solve}(x)$ has been stored in $\texttt{value}[x]$,
 it can be efficiently retrieved whenever the
 function will be called again with the parameter $x$.
 The time complexity of the algorithm is $O(nk)$,
-where the target sum is $n$ and the number of coins is $k$.
+where $n$ is the target sum and $k$ is the number of coins.
 
 Note that we can also \emph{iteratively}
 construct the array \texttt{value} using
@@ -257,7 +257,7 @@ for (int x = 1; x <= n; x++) {
 In fact, most competitive programmers prefer this
 implementation, because it is shorter and has
 lower constant factors.
-In the sequel, we also use iterative implementations
+From now on, we also use iterative implementations
 in our examples.
 Still, it is often easier to think about
 dynamic programming solutions
@@ -333,7 +333,7 @@ then $\texttt{solve}(5)=6$ and the recursive formula is
 \end{split}
 \end{equation*}
 
-In this case, the general recursive function is as follows:
+Then, the general recursive function is as follows:
 \begin{equation*}
     \texttt{solve}(x) = \begin{cases}
                0               & x < 0\\
@@ -394,7 +394,7 @@ possibilities of dynamic programming.
 
 Our first problem is to find the
 \key{longest increasing subsequence}
-in an array \texttt{t} of $n$ elements.
+in an array of $n$ elements.
 This is a maximum-length
 sequence of array elements
 that goes from left to right,
@@ -488,16 +488,16 @@ that ends at position 6 consists of 4 elements.
 
 To calculate a value of $\texttt{length}(k)$,
 we should find a position $i<k$
-for which $\texttt{t}[i]<\texttt{t}[k]$
+for which $\texttt{array}[i]<\texttt{array}[k]$
 and $\texttt{length}(i)$ is as large as possible.
 Then we know that
 $\texttt{length}(k)=\texttt{length}(i)+1$,
 because this is an optimal way to add
-$\texttt{t}[k]$ to a subsequence.
+$\texttt{array}[k]$ to a subsequence.
 However, if there is no such position $i$,
 then $\texttt{length}(k)=1$,
 which means that the subsequence only contains
-$\texttt{t}[k]$.
+$\texttt{array}[k]$.
 
 Since all values of the function can be calculated
 from its smaller values,
@@ -510,7 +510,7 @@ $\texttt{length}$.
 for (int k = 0; k < n; k++) {
     length[k] = 1;
     for (int i = 0; i < k; i++) {
-        if (t[i] < t[k]) {
+        if (array[i] < array[k]) {
             length[k] = max(length[k],length[i]+1);
         }
     }
@@ -531,7 +531,7 @@ from the upper-left corner to
 the lower-right corner
 of an $n \times n$ grid, such that
 we only move down and right.
-Each square contains a value,
+Each square contains a positive integer,
 and the path should be constructed so
 that the sum of the values along
 the path is as large as possible.
@@ -640,10 +640,6 @@ for (int y = 1; y <= n; y++) {
     }
 }
 \end{lstlisting}
-
-Note that it is not needed to separately handle the
-cases where $y=1$ or $x=1$, because we use a
-one-indexed array whose values are initially zeros.
 The time complexity of the algorithm is $O(n^2)$.
 
 \section{Knapsack problems}
@@ -657,11 +653,10 @@ have to be found.
 Knapsack problems can often be solved
 using dynamic programming.
 
-In this section, we consider the following
-problem:
-We are given a list of weights
+In this section, we focus on the following
+problem: Given a list of weights
 $[w_1,w_2,\ldots,w_n]$,
-and our task is to determine all distinct
+determine all
 sums that can be constructed using the weights.
 For example, if the weights are
 $[1,3,3,5]$, the following sums are possible:
@@ -681,11 +676,11 @@ can select the weights $[1,3,3]$.
 
 To solve the problem, we focus on subproblems
 where we only use the first $k$ weights
-on the list to construct sums.
-Let $\texttt{possible}(x,k)=\texttt{true}$ if
+to construct sums.
+Let $\texttt{possible}(x,k)=\textrm{true}$ if
 we can construct a sum $x$
 using the first $k$ weights,
-and otherwise $\texttt{possible}(x,k)=\texttt{false}$.
+and otherwise $\texttt{possible}(x,k)=\textrm{false}$.
 The values of the function can be recursively
 calculated as follows:
 \[ \texttt{possible}(x,k) = \texttt{possible}(x-w_k,k-1) \lor \texttt{possible}(x,k-1) \]
@@ -696,11 +691,11 @@ form the sum $x-w_k$ using the first $k-1$ weights,
 and if we do not use $w_k$,
 the remaining task is to form the sum $x$
 using the first $k-1$ weights.
-In addition,
+As the base cases,
 \begin{equation*}
     \texttt{possible}(x,0) = \begin{cases}
-               \texttt{true}    & x = 0\\
-               \texttt{false}   & x \neq 0 \\
+               \textrm{true}    & x = 0\\
+               \textrm{false}   & x \neq 0 \\
            \end{cases}
 \end{equation*}
 because if no weights are used,
@@ -712,7 +707,7 @@ indicates the true values):
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrrrrrrr}
- & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+$k \backslash x$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
 \hline
  0 & X & \\
  1 & X & X \\
@@ -798,7 +793,7 @@ $\texttt{x}[0 \ldots a]$ and $\texttt{y}[0 \ldots b]$.
 Thus, using this function, the edit distance
 between \texttt{x} and \texttt{y} equals $\texttt{distance}(n-1,m-1)$.
 
-We can calculate the values of \texttt{distance}
+We can calculate values of \texttt{distance}
 as follows:
 \begin{equation*}
 \begin{split}
