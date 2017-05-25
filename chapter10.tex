@@ -492,20 +492,35 @@ contains two such subgrids:
 
 There is an $O(n^3)$ time algorithm for solving the problem:
 go through all $O(n^2)$ pairs of rows and for each pair
-calculate the number of columns that contain a black
+$(a,b)$ calculate the number of columns that contain a black
 square in both rows in $O(n)$ time.
-Then, if there are $c$ such columns for a fixed row pair,
-they account for $c(c-1)/2$ subgrids with black corners.
+The following code assumes that $\texttt{color}[y][x]$
+denotes the color in row $y$ in column $x$:
+\begin{lstlisting}
+int count = 0;
+for (int i = 0; i < n; i++) {
+    if (color[a][i] == BLACK && color[b][i] == BLACK) count++;
+}
+\end{lstlisting}
+Then, those columns
+account for $\texttt{count}(\texttt{count}-1)/2$ subgrids with black corners,
+because we can choose any two of them to form a subgrid.
 
 To optimize this algorithm, we divide the grid into blocks
 of columns such that each block consists of $N$
 consecutive columns. Then, each row is stored as
 a list of $N$-bit numbers that describe the colors
-of the squares.
-Using this representation,
-we can process $N$ columns at the same time
-using bit operations, and the resulting algorithm
-works in $O(n^3/N)$ time.
+of the squares. Now we can process $N$ columns at the same time
+using bit operations. In the following code,
+$\texttt{color}[y][k]$ represents
+a block of $N$ colors as bits (0 is white and 1 is black).
+\begin{lstlisting}
+int count = 0;
+for (int i = 0; i <= n/N; i++) {
+    count += __builtin_popcount(color[a][i]&color[b][i]);
+}
+\end{lstlisting}
+The resulting algorithm works in $O(n^3/N)$ time.
 
 We generated a random grid of size $2500 \times 2500$
 and compared the original and bit-optimized implementation.
@@ -520,110 +535,109 @@ Bit operations provide an efficient and convenient
 way to implement dynamic programming algorithms
 whose states contain subsets of elements,
 because such states can be stored as integers.
-Next we discuss some examples of combining
+Next we discuss examples of combining
 bit operations and dynamic programming.
 
-\subsubsection{Paths in a grid}
+\subsubsection{Optimal selection}
 
-As a first example, consider
-an $n \times n$ grid where
-each square contains an integer.
-Our task is to check if there is a path from the upper-left
-corner to the lower-right corner
-such that we only move right and down
-and each integer between 0 and $k$ appears on the path.
-
-For example, in the following grid,
-there is a path that contains all
-integers between 0 and $k$:
+As a first example, consider the following problem:
+We are given the prices of $k$ products
+over $n$ days, and we want to buy each product
+exactly once.
+However, we are allowed to buy at most one product
+in a day.
+What is the minimum total price?
+For example, consider the following scenario ($k=3$ and $n=8$):
 \begin{center}
 \begin{tikzpicture}[scale=.65]
-  \begin{scope}
-    \fill [color=lightgray] (0, 9) rectangle (1, 8);
-    \fill [color=lightgray] (0, 8) rectangle (1, 7);
-    \fill [color=lightgray] (1, 8) rectangle (2, 7);
-    \fill [color=lightgray] (1, 7) rectangle (2, 6);
-    \fill [color=lightgray] (2, 7) rectangle (3, 6);
-    \fill [color=lightgray] (3, 7) rectangle (4, 6);
-    \fill [color=lightgray] (4, 7) rectangle (5, 6);
-    \fill [color=lightgray] (4, 6) rectangle (5, 5);
-    \fill [color=lightgray] (4, 5) rectangle (5, 4);
-    \draw (0, 4) grid (5, 9);
-    \node at (0.5,8.5) {2};
-    \node at (1.5,8.5) {0};
-    \node at (2.5,8.5) {3};
-    \node at (3.5,8.5) {1};
-    \node at (4.5,8.5) {1};
-    \node at (0.5,7.5) {0};
-    \node at (1.5,7.5) {1};
-    \node at (2.5,7.5) {4};
-    \node at (3.5,7.5) {2};
-    \node at (4.5,7.5) {0};
-    \node at (0.5,6.5) {3};
-    \node at (1.5,6.5) {0};
-    \node at (2.5,6.5) {2};
-    \node at (3.5,6.5) {4};
-    \node at (4.5,6.5) {1};
-    \node at (0.5,5.5) {2};
-    \node at (1.5,5.5) {1};
-    \node at (2.5,5.5) {0};
-    \node at (3.5,5.5) {1};
-    \node at (4.5,5.5) {3};
-    \node at (0.5,4.5) {0};
-    \node at (1.5,4.5) {2};
-    \node at (2.5,4.5) {3};
-    \node at (3.5,4.5) {3};
-    \node at (4.5,4.5) {1};
-  \end{scope}
+    \draw (0, 0) grid (8,3);
+    \node at (-2.5,2.5) {product $A$};
+    \node at (-2.5,1.5) {product $B$};
+    \node at (-2.5,0.5) {product $C$};
+
+    \foreach \x/\v in {0/6,1/9,2/5,3/2,4/8,5/9,6/1,7/6}
+        {\node at (\x+0.5,2.5) {\v};}
+    \foreach \x/\v in {0/8,1/2,2/6,3/2,4/7,5/5,6/7,7/2}
+        {\node at (\x+0.5,1.5) {\v};}
+    \foreach \x/\v in {0/5,1/3,2/9,3/7,4/3,5/5,6/1,7/4}
+        {\node at (\x+0.5,0.5) {\v};}
+\end{tikzpicture}
+\end{center}
+In this scenario, the minimum total price is $5$:
+\begin{center}
+\begin{tikzpicture}[scale=.65]
+    \fill [color=lightgray] (1, 1) rectangle (2, 2);
+    \fill [color=lightgray] (3, 2) rectangle (4, 3);
+    \fill [color=lightgray] (6, 0) rectangle (7, 1);
+    \draw (0, 0) grid (8,3);
+    \node at (-2.5,2.5) {product $A$};
+    \node at (-2.5,1.5) {product $B$};
+    \node at (-2.5,0.5) {product $C$};
+
+    \foreach \x/\v in {0/6,1/9,2/5,3/2,4/8,5/9,6/1,7/6}
+        {\node at (\x+0.5,2.5) {\v};}
+    \foreach \x/\v in {0/8,1/2,2/6,3/2,4/7,5/5,6/7,7/2}
+        {\node at (\x+0.5,1.5) {\v};}
+    \foreach \x/\v in {0/5,1/3,2/9,3/7,4/3,5/5,6/1,7/4}
+        {\node at (\x+0.5,0.5) {\v};}
 \end{tikzpicture}
 \end{center}
 
-We assume that the rows and columns are numbered
-from 1 to $n$, and $\texttt{value}[x][y]$
-denotes the value at position $(x,y)$.
-It turns out that the problem can be solved in $O(n^2 2^k)$ time
-using dynamic programming.
+Let $\texttt{price}[x][d]$ denote the price of product $x$
+on day $d$ where $0 \le x < k$ and $0 \le d < n$.
+For example, in the above scenario $\texttt{price}[2][3] = 7$.
+Then, let $\texttt{total}(S,d)$ denote the minimum total
+price for buying a subset $S$ of products by day $d$.
+Using this function, the solution to the problem is
+$\texttt{total}(\{0 \ldots k-1\},n-1)$.
 
-Let $\texttt{possible}(x,y,S)$ be a function
-that indicates whether there is a path
-from the upper-left square to square $(x,y)$ such that
-all values in $S$ appear on the path.
-Thus, $\texttt{possible}(n,n,\{0 \ldots k\})$
-tells us whether a desired path exists.
-The values of the function can be calculated using
-the following recurrence:
+First, $\texttt{total}(\emptyset,d) = 0$,
+because it does not cost anything to buy an empty set,
+and $\texttt{total}(\{x\},0) = \texttt{price}[x][0]$,
+because there is one way to buy one product on the first day.
+Then, the following recurrence can be used:
 \begin{equation*}
 \begin{aligned}
-\texttt{possible}(x,y,\emptyset) & = & \textrm{true} \\
-\texttt{possible}(x,y,S) & = & \texttt{possible}(x-1,y,S \setminus \texttt{value}[x][y]) \lor \\
-                    &  & \texttt{possible}(x,y-1,S \setminus \texttt{value}[x][y]) \\
+\texttt{total}(S,d) & = \min( & \texttt{total}(S,d-1), \\
+& & \min_{x \in S} \texttt{total}(S \setminus x,d-1)+\texttt{price}[x][d]))
 \end{aligned}
 \end{equation*}
-The base case states that there is always a path that
-does not contain any integers.
-Then, in the recursive case we consider both directions
-and remove $\texttt{value}[x][y]$
-from $S$, because we can collect it in square $(x,y)$.
+This means that we either do not buy any product on day $d$
+or buy a product $x$ that belongs to $S$.
+In the latter case, we remove $x$ from $S$ and add the
+price of $x$ to the total price.
 
-We can implement the dynamic programming using an array
+The next step is to calculate the values of the function
+using dynamic programming.
+To store the function values, we declare an array
 \begin{lstlisting}
-bool possible[N][N][1<<K];
+int total[1<<K][N];
 \end{lstlisting}
-where $N$ and $K$ are suitably large constants.
-Then, we can calculate the values
-of the function as follows:
+where $K$ and $N$ are suitably large constants.
+The first dimension of the array corresponds to a bit
+representation of a subset.
+
+First, the cases where $d=0$ can be processed as follows:
 \begin{lstlisting}
-for (int x = 0; x <= n; x++) {
-    for (int y = 0; y <= n; y++) {
-        possible[x][y][0] = true;
-        if (x == 0 || y == 0) continue;
-        for (int b = 1; b < (1<<k); b++) {
-            possible[x][y][b] = possible[x-1][y][b&~value[x][y]] ||
-                                  possible[x][y-1][b&~value[x][y]];
+for (int x = 0; x < k; x++) {
+    total[1<<x][0] = price[x][0];
+}
+\end{lstlisting}
+Then, the recurrence translates into the following code:
+\begin{lstlisting}
+for (int d = 1; d < n; d++) {
+    for (int s = 0; s < (1<<k); s++) {
+        total[s][d] = total[s][d-1];
+        for (int x = 0; x < k; x++) {
+            if (s&(1<<x)) {
+                total[s][d] = min(total[s][d],
+                                    total[s^(1<<x)][d-1]+price[x][d]);
+            }
         }
     }
 }
 \end{lstlisting}
+The time complexity of the algorithm is $O(n 2^k k)$.
 
 \subsubsection{From permutations to subsets}
 
@@ -631,14 +645,14 @@ Using dynamic programming, it is often possible
 to change an iteration over permutations into
 an iteration over subsets\footnote{This technique was introduced in 1962
 by M. Held and R. M. Karp \cite{hel62}.}.
-The benefit of this technique is that
+The benefit of this is that
 $n!$, the number of permutations of an $n$ element set,
 is much larger than $2^n$, the number of subsets
 of the same set.
 For example, if $n=20$, then
 $n! \approx 2.4 \cdot 10^{18}$ and $2^n \approx 10^6$.
 Thus, for certain values of $n$,
-we can efficiently go through subsets but not through permutations.
+we can efficiently go through the subsets but not through the permutations.
 
 As an example, consider the following problem:
 There is an elevator with maximum weight $x$,
@@ -675,25 +689,25 @@ The idea is to calculate for each subset of people
 two values: the minimum number of rides needed and
 the minimum weight of people who ride in the last group.
 
-Let $\texttt{rides}(X)$ and $\texttt{weight}(X)$ denote
+Let $\texttt{rides}(S)$ and $\texttt{weight}(S)$ denote
 the minimum number of rides and the minimum
-weight of the last group, where $X$ is a subset
+weight of the last group, where $S$ is a subset
 of people. For example,
 \[ \texttt{rides}(\{B,D,E\})=2 \hspace{10px} \textrm{and}
 \hspace{10px} \texttt{weight}(\{B,D,E\})=5,\]
 because the optimal rides are $\{B,E\}$ and $\{D\}$,
 and the second ride has weight 5.
 Of course, our final goal is to calculate the value
-of $\texttt{rides}(\{A,B,C,D,E\})$ that is the solution
-to the problem.
+of $\texttt{rides}(X)$ where $X$ is a set that
+contains all the people.
 
 We can calculate the values
 of the functions recursively and then apply
 dynamic programming.
 The idea is to go through all people
-that belong to $X$ and optimally
+who belong to $S$ and optimally
 choose the last person who enters the elevator.
-For example, if $X=\{B,D,E\}$,
+For example, if $S=\{B,D,E\}$,
 one of $B$, $D$ and $E$ is the last person
 who enters the elevator.
 Each such choice yields a subproblem
@@ -706,18 +720,39 @@ for (int b = 0; b < (1<<n); b++) {
 }
 \end{lstlisting}
 to go through the subsets,
-because if $X$ and $Y$ are two subsets
-and $X \subset Y$,
-then $X$ comes before $Y$ in the above order.
+because if $S_1$ and $S_2$ are two subsets
+and $S_1 \subset S_2$,
+then $S_1$ comes before $S_2$ in the above order.
 
 \subsubsection{Counting subsets}
 
 Our last problem in this chapter is as follows:
-Let $X=\{0,1,\ldots,n-1\}$, and each subset $S \subset X$,
+Let $X=\{0 \ldots n-1\}$, and each subset $S \subset X$,
 is assigned an integer $\texttt{value}(S)$.
 Our task is to calculate for each $S$
 \[\texttt{sum}(S) = \sum_{A \subset S} \texttt{value}(A),\]
 i.e., the sum of values of subsets of $S$.
+
+For example, suppose that $n=3$ and the values are as follows:
+\begin{multicols}{2}
+\begin{itemize}
+\item $\texttt{value}(\emptyset) = 3$
+\item $\texttt{value}(\{0\}) = 1$
+\item $\texttt{value}(\{1\}) = 4$
+\item $\texttt{value}(\{0,1\}) = 5$
+\item $\texttt{value}(\{2\}) = 5$
+\item $\texttt{value}(\{0,2\}) = 1$
+\item $\texttt{value}(\{1,2\}) = 3$
+\item $\texttt{value}(\{0,1,2\}) = 3$
+\end{itemize}
+\end{multicols}
+In this case, for example,
+\begin{equation*}
+\begin{split}
+\texttt{sum}(\{0,2\}) &= \texttt{value}(\emptyset)+\texttt{value}(\{0\})+\texttt{value}(\{2\})+\texttt{value}(\{0,2\}) \\ 
+                      &= 3 + 1 + 5 + 1 = 10.
+\end{split}
+\end{equation*}
 
 Because there are a total of $2^n$ subsets,
 one possible solution is to go through all
