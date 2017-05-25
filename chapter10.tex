@@ -496,7 +496,7 @@ go through all $O(n^2)$ pairs of rows and for each pair
 $(a,b)$ calculate the number of columns that contain a black
 square in both rows in $O(n)$ time.
 The following code assumes that $\texttt{color}[y][x]$
-denotes the color in row $y$ in column $x$:
+denotes the color in row $y$ and column $x$:
 \begin{lstlisting}
 int count = 0;
 for (int i = 0; i < n; i++) {
@@ -727,7 +727,7 @@ we declare an array
 pair<int,int> best[1<<N];
 \end{lstlisting}
 that contains for each subset $S$
-a pair $(\texttt{rides}(S),\texttt{last}(S)$.
+a pair $(\texttt{rides}(S),\texttt{last}(S))$.
 For an empty group, no rides are needed:
 \begin{lstlisting}
 best[0] = {0,0};
@@ -763,7 +763,7 @@ correct order.
 \subsubsection{Counting subsets}
 
 Our last problem in this chapter is as follows:
-Let $X=\{0 \ldots n-1\}$, and each subset $S \subset X$,
+Let $X=\{0 \ldots n-1\}$, and each subset $S \subset X$
 is assigned an integer $\texttt{value}[S]$.
 Our task is to calculate for each $S$
 \[\texttt{sum}(S) = \sum_{A \subset S} \texttt{value}[A],\]
