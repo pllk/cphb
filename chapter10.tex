@@ -369,13 +369,13 @@ do {
 
 \section{Bit optimizations}
 
-It is often possible to optimize algorithms
-using bit operations.
+Many algorithms can be optimized using
+bit operations.
 Such optimizations do not change the
 time complexity of the algorithm,
 but they may have a large impact
 on the actual running time of the code.
-In this section we discuss two examples
+In this section we discuss examples
 of such situations.
 
 \subsubsection{Hamming distances}
@@ -383,15 +383,16 @@ of such situations.
 \index{Hamming distance}
 The \key{Hamming distance}
 $\texttt{hamming}(a,b)$ between two
-equal-length bit strings $a$ and $b$ is
+strings $a$ and $b$ of equal length is
 the number of positions where the strings differ.
-For example, $\texttt{hamming}(01101,11001)=2$.
+For example,
+\[\texttt{hamming}(01101,11001)=2.\]
 
 Consider the following problem: Given
 a list of $n$ bit strings, each of length $k$,
 calculate the minimum Hamming distance
 between two strings in the list.
-For example, the answer for $[00111,01101,11110]$,
+For example, the answer for $[00111,01101,11110]$
 is 2, because
 \begin{itemize}[noitemsep]
 \item $\texttt{hamming}(00111,01101)=2$,
@@ -400,11 +401,11 @@ is 2, because
 \end{itemize}
 
 A straightforward way to solve the problem is
-to go through all pairs of string and calculate
+to go through all pairs of strings and calculate
 their Hamming distances,
 which yields an $O(n^2 k)$ time algorithm.
-The following function calculates
-the Hamming distance between two strings:
+The following function can be used to
+calculate distances:
 \begin{lstlisting}
 int hamming(string a, string b) {
     int d = 0;
@@ -445,7 +446,7 @@ Thus, the bit optimized code was almost
 As another example, consider the
 following problem:
 Given an $n \times n$ grid whose
-each square is either black or white,
+each square is either black (1) or white (0),
 calculate the number of subgrids
 whose all corners are black.
 For example, the grid
@@ -499,7 +500,7 @@ denotes the color in row $y$ in column $x$:
 \begin{lstlisting}
 int count = 0;
 for (int i = 0; i < n; i++) {
-    if (color[a][i] == BLACK && color[b][i] == BLACK) count++;
+    if (color[a][i] == 1 && color[b][i] == 1) count++;
 }
 \end{lstlisting}
 Then, those columns
@@ -513,7 +514,7 @@ a list of $N$-bit numbers that describe the colors
 of the squares. Now we can process $N$ columns at the same time
 using bit operations. In the following code,
 $\texttt{color}[y][k]$ represents
-a block of $N$ colors as bits (0 is white and 1 is black).
+a block of $N$ colors as bits.
 \begin{lstlisting}
 int count = 0;
 for (int i = 0; i <= n/N; i++) {
@@ -523,9 +524,9 @@ for (int i = 0; i <= n/N; i++) {
 The resulting algorithm works in $O(n^3/N)$ time.
 
 We generated a random grid of size $2500 \times 2500$
-and compared the original and bit-optimized implementation.
+and compared the original and bit optimized implementation.
 While the original code took $29.6$ seconds,
-the bit-optimized version only took $3.1$ seconds
+the bit optimized version only took $3.1$ seconds
 with $N=32$ (\texttt{int} numbers) and $1.7$ seconds
 with $N=64$ (\texttt{long long} numbers).
 
@@ -551,10 +552,12 @@ For example, consider the following scenario ($k=3$ and $n=8$):
 \begin{center}
 \begin{tikzpicture}[scale=.65]
     \draw (0, 0) grid (8,3);
-    \node at (-2.5,2.5) {product $A$};
-    \node at (-2.5,1.5) {product $B$};
-    \node at (-2.5,0.5) {product $C$};
+    \node at (-2.5,2.5) {product 0};
+    \node at (-2.5,1.5) {product 1};
+    \node at (-2.5,0.5) {product 2};
 
+    \foreach \x in {0,...,7}
+        {\node at (\x+0.5,3.5) {\x};}
     \foreach \x/\v in {0/6,1/9,2/5,3/2,4/8,5/9,6/1,7/6}
         {\node at (\x+0.5,2.5) {\v};}
     \foreach \x/\v in {0/8,1/2,2/6,3/2,4/7,5/5,6/7,7/2}
@@ -570,10 +573,12 @@ In this scenario, the minimum total price is $5$:
     \fill [color=lightgray] (3, 2) rectangle (4, 3);
     \fill [color=lightgray] (6, 0) rectangle (7, 1);
     \draw (0, 0) grid (8,3);
-    \node at (-2.5,2.5) {product $A$};
-    \node at (-2.5,1.5) {product $B$};
-    \node at (-2.5,0.5) {product $C$};
+    \node at (-2.5,2.5) {product 0};
+    \node at (-2.5,1.5) {product 1};
+    \node at (-2.5,0.5) {product 2};
 
+    \foreach \x in {0,...,7}
+        {\node at (\x+0.5,3.5) {\x};}
     \foreach \x/\v in {0/6,1/9,2/5,3/2,4/8,5/9,6/1,7/6}
         {\node at (\x+0.5,2.5) {\v};}
     \foreach \x/\v in {0/8,1/2,2/6,3/2,4/7,5/5,6/7,7/2}
@@ -584,7 +589,7 @@ In this scenario, the minimum total price is $5$:
 \end{center}
 
 Let $\texttt{price}[x][d]$ denote the price of product $x$
-on day $d$ where $0 \le x < k$ and $0 \le d < n$.
+on day $d$.
 For example, in the above scenario $\texttt{price}[2][3] = 7$.
 Then, let $\texttt{total}(S,d)$ denote the minimum total
 price for buying a subset $S$ of products by day $d$.
@@ -597,10 +602,10 @@ and $\texttt{total}(\{x\},0) = \texttt{price}[x][0]$,
 because there is one way to buy one product on the first day.
 Then, the following recurrence can be used:
 \begin{equation*}
-\begin{aligned}
-\texttt{total}(S,d) & = \min( & \texttt{total}(S,d-1), \\
-& & \min_{x \in S} \texttt{total}(S \setminus x,d-1)+\texttt{price}[x][d]))
-\end{aligned}
+\begin{split}
+\texttt{total}(S,d) = \min( & \texttt{total}(S,d-1), \\
+& \min_{x \in S} (\texttt{total}(S \setminus x,d-1)+\texttt{price}[x][d]))
+\end{split}
 \end{equation*}
 This means that we either do not buy any product on day $d$
 or buy a product $x$ that belongs to $S$.
@@ -667,18 +672,18 @@ and the weights are as follows:
 \begin{tabular}{ll}
 person & weight \\
 \hline
-$A$ & 2 \\
-$B$ & 3 \\
-$C$ & 3 \\
-$D$ & 5 \\
-$E$ & 6 \\
+0 & 2 \\
+1 & 3 \\
+2 & 3 \\
+3 & 5 \\
+4 & 6 \\
 \end{tabular}
 \end{center}
 In this case, the minimum number of rides is 2.
-One optimal order is $\{A,C,D,B,E\}$,
+One optimal order is $\{0,2,3,1,4\}$,
 which partitions the people into two rides:
-first $\{A,C,D\}$ (total weight 10),
-and then $\{B,E\}$ (total weight 9).
+first $\{0,2,3\}$ (total weight 10),
+and then $\{1,4\}$ (total weight 9).
 
 The problem can be easily solved in $O(n! n)$ time
 by testing all possible permutations of $n$ people.
@@ -689,20 +694,19 @@ two values: the minimum number of rides needed and
 the minimum weight of people who ride in the last group.
 
 Let $\texttt{weight}[p]$ denote the weight of
-person $p$ where $0 \le p < n$.
-Then we define two functions:
+person $p$.
+We define two functions:
 $\texttt{rides}(S)$ is the minimum number of
 rides for a subset $S$,
 and $\texttt{last}(S)$ is the minimum weight
 of the last ride.
 For example, in the above scenario
-\[ \texttt{rides}(\{B,D,E\})=2 \hspace{10px} \textrm{and}
-\hspace{10px} \texttt{last}(\{B,D,E\})=5,\]
-because the optimal rides are $\{B,E\}$ and $\{D\}$,
+\[ \texttt{rides}(\{1,3,4\})=2 \hspace{10px} \textrm{and}
+\hspace{10px} \texttt{last}(\{1,3,4\})=5,\]
+because the optimal rides are $\{1,4\}$ and $\{3\}$,
 and the second ride has weight 5.
 Of course, our final goal is to calculate the value
-of $\texttt{rides}(P)$ where $P$ is a set that
-contains all the people.
+of $\texttt{rides}(\{0 \ldots n-1\})$.
 
 We can calculate the values
 of the functions recursively and then apply
@@ -717,13 +721,14 @@ we can add $p$ to the last ride.
 Otherwise, we have to reserve a new ride
 that initially only contains $p$.
 
-A convenient way to implement a dynamic programming
-solution is to declare an array
+To implement dynamic programming,
+we declare an array
 \begin{lstlisting}
 pair<int,int> best[1<<N];
 \end{lstlisting}
-that contains values of \texttt{rides} and \texttt{weight}
-as pairs. For an empty group, no rides are needed:
+that contains for each subset $S$
+a pair $(\texttt{rides}(S),\texttt{last}(S)$.
+For an empty group, no rides are needed:
 \begin{lstlisting}
 best[0] = {0,0};
 \end{lstlisting}
@@ -731,13 +736,16 @@ Then, we can fill the array as follows:
 
 \begin{lstlisting}
 for (int s = 1; s < (1<<n); s++) {
+    // initial value: n rides are needed
     best[s] = {n,0};
     for (int p = 0; p < n; p++) {
         if (s&(1<<p)) {
             auto option = best[s^(1<<p)];
             if (option.second+weight[p] <= x) {
+                // add p to an existing ride
                 option.second += weight[p];
             } else {
+                // reserve a new ride for p
                 option.first++;
                 option.second = weight[p];
             }
@@ -746,7 +754,8 @@ for (int s = 1; s < (1<<n); s++) {
     }
 }
 \end{lstlisting}
-Note that in the above loop, for any two subsets $S_1$ and $S_2$
+Note that the above loop guarantees that
+for any two subsets $S_1$ and $S_2$
 such that $S_1 \subset S_2$, we process $S_1$ before $S_2$.
 Thus, the dynamic programming values are calculated in the
 correct order.
@@ -787,7 +796,7 @@ pairs of subsets in $O(2^{2n})$ time.
 However, using dynamic programming, we
 can solve the problem in $O(2^n n)$ time.
 The idea is to focus on sums where the
-elements that may removed from $S$ are restricted.
+elements that may be removed from $S$ are restricted.
 
 Let $\texttt{partial}(S,k)$ denote the sum of
 values of subsets of $S$ with the restriction
