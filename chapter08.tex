@@ -74,7 +74,7 @@ contains a subarray whose sum is 8:
 
 This problem can be solved in
 $O(n)$ time by using the two pointers method.
-The idea is maintain pointers that point to the
+The idea is to maintain pointers that point to the
 first and last value of a subarray.
 On each turn, the left pointer moves one step
 to the right, and the right pointer moves to the right
@@ -171,9 +171,9 @@ whose sum is $x$ has been found.
 
 The running time of the algorithm depends on
 the number of steps the right pointer moves.
-There is no useful upper bound how many steps the
-pointer can move on a single turn.
-However, the pointer moves \emph{a total of}
+While there is no useful upper bound on how many steps the
+pointer can move on a \emph{single} turn.
+we know that the pointer moves \emph{a total of}
 $O(n)$ steps during the algorithm,
 because it only moves to the right.
 
@@ -188,8 +188,8 @@ the algorithm works in $O(n)$ time.
 Another problem that can be solved using
 the two pointers method is the following problem,
 also known as the \key{2SUM problem}:
-we are given an array of $n$ numbers and
-a target sum $x$, and our task is to find
+given an array of $n$ numbers and
+a target sum $x$, find
 two array values such that their sum is $x$,
 or report that no such values exist.
 
@@ -335,8 +335,8 @@ certain phase of the algorithm, but the total
 number of the operations is limited.
 
 As an example, consider the problem
-of finding the \key{nearest smaller element}
-of each array element, i.e.,
+of finding for each array element
+the \key{nearest smaller element}, i.e.,
 the first smaller element that precedes the element
 in the array.
 It is possible that no such element exists,
@@ -558,11 +558,11 @@ always corresponds to the minimum element inside the window.
 After each window move,
 we remove elements from the end of the queue
 until the last queue element
-is smaller than the last window element,
+is smaller than the new window element,
 or the queue becomes empty.
 We also remove the first queue element
 if it is not inside the window anymore.
-Finally, we add the last window element
+Finally, we add the new window element
 to the end of the queue.
 
 As an example, consider the following array:
