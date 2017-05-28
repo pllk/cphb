@@ -10,22 +10,24 @@ and adding any edge to a tree creates a cycle.
 Moreover, there is always a unique path between any
 two nodes of a tree.
 
-For example, the following tree consists of 7 nodes and 6 edges:
+For example, the following tree consists of 8 nodes and 7 edges:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,3) {$2$};
-\node[draw, circle] (3) at (0,1) {$4$};
-\node[draw, circle] (4) at (2,1) {$5$};
-\node[draw, circle] (5) at (4,1) {$6$};
-\node[draw, circle] (6) at (-2,3) {$7$};
-\node[draw, circle] (7) at (-2,1) {$3$};
+\node[draw, circle] (2) at (2,3) {$4$};
+\node[draw, circle] (3) at (0,1) {$2$};
+\node[draw, circle] (4) at (2,1) {$3$};
+\node[draw, circle] (5) at (4,1) {$7$};
+\node[draw, circle] (6) at (-2,3) {$5$};
+\node[draw, circle] (7) at (-2,1) {$6$};
+\node[draw, circle] (8) at (-4,1) {$8$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
 \path[draw,thick,-] (2) -- (5);
 \path[draw,thick,-] (3) -- (6);
 \path[draw,thick,-] (3) -- (7);
+\path[draw,thick,-] (7) -- (8);
 \end{tikzpicture}
 \end{center}
 
@@ -34,7 +36,7 @@ For example, the following tree consists of 7 nodes and 6 edges:
 The \key{leaves} of a tree are the nodes
 with degree 1, i.e., with only one neighbor.
 For example, the leaves of the above tree
-are nodes 3, 5, 6 and 7.
+are nodes 3, 5, 7 and 8.
 
 \index{root}
 \index{rooted tree}
@@ -44,26 +46,27 @@ is appointed the \key{root} of the tree,
 and all other nodes are
 placed underneath the root.
 For example, in the following tree,
-node 1 is the root of the tree.
+node 1 is the root node.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,1) {$2$};
-\node[draw, circle] (3) at (-2,1) {$4$};
-\node[draw, circle] (4) at (0,1) {$5$};
-\node[draw, circle] (5) at (2,-1) {$6$};
-\node[draw, circle] (6) at (-3,-1) {$3$};
-\node[draw, circle] (7) at (-1,-1) {$7$};
+\node[draw, circle] (4) at (2,1) {$4$};
+\node[draw, circle] (2) at (-2,1) {$2$};
+\node[draw, circle] (3) at (0,1) {$3$};
+\node[draw, circle] (7) at (2,-1) {$7$};
+\node[draw, circle] (5) at (-3,-1) {$5$};
+\node[draw, circle] (6) at (-1,-1) {$6$};
+\node[draw, circle] (8) at (-1,-3) {$8$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
 \path[draw,thick,-] (2) -- (5);
-\path[draw,thick,-] (3) -- (6);
-\path[draw,thick,-] (3) -- (7);
+\path[draw,thick,-] (2) -- (6);
+\path[draw,thick,-] (4) -- (7);
+\path[draw,thick,-] (6) -- (8);
 \end{tikzpicture}
 \end{center}
-
 \index{child}
 \index{parent}
 
@@ -73,23 +76,34 @@ is its upper neighbor.
 Each node has exactly one parent,
 except for the root that does not have a parent.
 For example, in the above tree,
-the children of node 4 are nodes 3 and 7,
-and the parent is node 1.
+the children of node 2 are nodes 5 and 6,
+and its parent is node 1.
 
 \index{subtree}
 
 The structure of a rooted tree is \emph{recursive}:
 each node of the tree acts as the root of a \key{subtree}
-that contains the node itself and all other nodes
-that can be reached by traversing down the tree.
-For example, in the above tree, the subtree of node 4
-consists of nodes 4, 3 and 7.
+that contains the node itself and all nodes
+that are in the subtrees of its children.
+For example, in the above tree, the subtree of node 2
+consists of nodes 2, 5, 6 and 8:
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\node[draw, circle] (2) at (-2,1) {$2$};
+\node[draw, circle] (5) at (-3,-1) {$5$};
+\node[draw, circle] (6) at (-1,-1) {$6$};
+\node[draw, circle] (8) at (-1,-3) {$8$};
+\path[draw,thick,-] (2) -- (5);
+\path[draw,thick,-] (2) -- (6);
+\path[draw,thick,-] (6) -- (8);
+\end{tikzpicture}
+\end{center}
 
 \section{Tree traversal}
 
-Depth-first search and breadth-first search
-can be used for traversing the nodes of a tree.
-The traversal of a tree is easier to implement than
+General graph traversal algorithms
+can be used to traverse the nodes of a tree.
+However, the traversal of a tree is easier to implement than
 that of a general graph, because
 there are no cycles in the tree and it is not
 possible to reach a node from multiple directions.
@@ -107,7 +121,7 @@ void dfs(int s, int e) {
 }
 \end{lstlisting}
 
-The function parameters are the current node $s$
+The function is given two parameters: the current node $s$
 and the previous node $e$.
 The purpose of the parameter $e$ is to make sure
 that the search only moves to nodes
@@ -137,8 +151,8 @@ to a leaf.
 As an example, let us calculate for each node $s$
 a value $\texttt{count}[s]$: the number of nodes in its subtree.
 The subtree contains the node itself and
-all nodes in the subtrees of its children.
-Thus, we can calculate the number of nodes
+all nodes in the subtrees of its children,
+so we can calculate the number of nodes
 recursively using the following code:
 
 \begin{lstlisting}
@@ -157,18 +171,17 @@ void dfs(int s, int e) {
 \index{diameter}
 
 The \key{diameter} of a tree
-is the maximum length of a path
-between two nodes of the tree.
-For example, in the tree
+is the maximum length of a path between two nodes.
+For example, consider the following tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,3) {$2$};
-\node[draw, circle] (3) at (0,1) {$4$};
-\node[draw, circle] (4) at (2,1) {$5$};
-\node[draw, circle] (5) at (4,1) {$6$};
-\node[draw, circle] (6) at (-2,3) {$7$};
-\node[draw, circle] (7) at (-2,1) {$3$};
+\node[draw, circle] (2) at (2,3) {$4$};
+\node[draw, circle] (3) at (0,1) {$2$};
+\node[draw, circle] (4) at (2,1) {$3$};
+\node[draw, circle] (5) at (4,1) {$7$};
+\node[draw, circle] (6) at (-2,3) {$5$};
+\node[draw, circle] (7) at (-2,1) {$6$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
@@ -177,37 +190,67 @@ For example, in the tree
 \path[draw,thick,-] (3) -- (7);
 \end{tikzpicture}
 \end{center}
-the diameter is 4, and it corresponds to two paths:
-the path between nodes 3 and 6,
-and the path between nodes 7 and 6.
-
-Next we will learn two efficient algorithms
-for calculating the diameter of a tree.
-Both algorithms calculate the diameter in $O(n)$ time.
-The first algorithm is based on dynamic programming,
-and the second algorithm uses two depth-first searches
-to calculate the diameter.
-
-\subsubsection{Algorithm 1}
-
-First, we root the tree arbitrarily.
-After this, we use dynamic programming
-to calculate for each node $x$
-the maximum length of a path that begins at some leaf,
-ascends to $x$ and then descends to another leaf.
-The maximum length of such a path equals the diameter of the tree.
-
-In the example graph, a longest path begins at node 7,
-ascends to node 1, and then descends to node 6:
+The diameter of this tree is 4,
+which corresponds to the following path:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,1) {$2$};
-\node[draw, circle] (3) at (-2,1) {$4$};
-\node[draw, circle] (4) at (0,1) {$5$};
-\node[draw, circle] (5) at (2,-1) {$6$};
-\node[draw, circle] (6) at (-3,-1) {$3$};
-\node[draw, circle] (7) at (-1,-1) {$7$};
+\node[draw, circle] (2) at (2,3) {$4$};
+\node[draw, circle] (3) at (0,1) {$2$};
+\node[draw, circle] (4) at (2,1) {$3$};
+\node[draw, circle] (5) at (4,1) {$7$};
+\node[draw, circle] (6) at (-2,3) {$5$};
+\node[draw, circle] (7) at (-2,1) {$6$};
+\path[draw,thick,-] (1) -- (2);
+\path[draw,thick,-] (1) -- (3);
+\path[draw,thick,-] (1) -- (4);
+\path[draw,thick,-] (2) -- (5);
+\path[draw,thick,-] (3) -- (6);
+\path[draw,thick,-] (3) -- (7);
+
+\path[draw,thick,-,color=red,line width=2pt] (7) -- (3);
+\path[draw,thick,-,color=red,line width=2pt] (3) -- (1);
+\path[draw,thick,-,color=red,line width=2pt] (1) -- (2);
+\path[draw,thick,-,color=red,line width=2pt] (2) -- (5);
+\end{tikzpicture}
+\end{center}
+Note that there may be several maximum-length paths.
+In the above path, we could replace node 6 with node 5
+to obtain another path with length 4.
+
+Next we will discuss two $O(n)$ time algorithms
+for calculating the diameter of a tree.
+The first algorithm is based on dynamic programming,
+and the second algorithm uses two depth-first searches.
+
+\subsubsection{Algorithm 1}
+
+A general way to approach many tree problems
+is to first root the tree arbitrarily.
+After this, we can try to solve the problem
+separately for each subtree.
+Our first algorithm for calculating the diameter
+is based on this idea.
+
+An important observation is that every path
+in a rooted tree has a \emph{highest point}:
+the highest node that belongs to the path.
+Thus, we can calculate for each node the length
+of the longest path whose highest point is the node.
+One of those paths corresponds to the diameter of the tree.
+
+For example, in the following tree,
+node 1 is the highest point on the path
+that corresponds to the diameter:
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\node[draw, circle] (1) at (0,3) {$1$};
+\node[draw, circle] (2) at (2,1) {$4$};
+\node[draw, circle] (3) at (-2,1) {$2$};
+\node[draw, circle] (4) at (0,1) {$3$};
+\node[draw, circle] (5) at (2,-1) {$7$};
+\node[draw, circle] (6) at (-3,-1) {$5$};
+\node[draw, circle] (7) at (-1,-1) {$6$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
@@ -222,19 +265,30 @@ ascends to node 1, and then descends to node 6:
 \end{tikzpicture}
 \end{center}
 
-The algorithm first calculates for each node $x$
-the maximum length of a path from $x$ to a leaf.
+We calculate for each node $x$ two values:
+\begin{itemize}
+\item $\texttt{toLeaf}(x)$: the maximum length of a path from $x$ to any leaf
+\item $\texttt{maxLength}(x)$: the maximum length of a path
+whose highest point is $x$
+\end{itemize}
 For example, in the above tree,
-a longest path from node 1 to a leaf has length 2
-(the path can be $1 \rightarrow 4 \rightarrow 3$,
-$1 \rightarrow 4 \rightarrow 7$ or $1 \rightarrow 2 \rightarrow 6$).
-After this, the algorithm calculates for each node
-$x$ the maximum length of a path where $x$
-is the highest point of the path.
-Such a path can be found by choosing
-two children with longest paths to leaves.
-For example, in the above graph, 
-nodes 2 and 4 yield a longest path for node 1.
+$\texttt{toLeaf}(1)=2$, because there is a path
+$1 \rightarrow 2 \rightarrow 6$,
+and $\texttt{maxLength}(1)=4$,
+because there is a path
+$6 \rightarrow 2 \rightarrow 1 \rightarrow 4 \rightarrow 7$.
+In this case, $\texttt{maxLength}(1)$ equals the diameter.
+
+Dynamic programming can be used to calculate the above
+values for all nodes in $O(n)$ time.
+First, to calculate $\texttt{toLeaf}(x)$,
+we go through the children of $x$,
+choose a child $c$ with maximum $\texttt{toLeaf}(c)$
+and add one to this value.
+Then, to calculate $\texttt{maxLength}(x)$,
+we choose two distinct children $a$ and $b$
+such that the sum $\texttt{toLeaf}(a)+\texttt{toLeaf}(b)$
+is maximum and add two to this sum.
 
 \subsubsection{Algorithm 2}
 
@@ -245,16 +299,16 @@ and find the farthest node $b$ from $a$.
 Then, we find the farthest node $c$ from $b$.
 The diameter of the tree is the distance between $b$ and $c$.
 
-In the example graph, $a$, $b$ and $c$ could be:
+In the following graph, $a$, $b$ and $c$ could be:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,3) {$2$};
-\node[draw, circle] (3) at (0,1) {$4$};
-\node[draw, circle] (4) at (2,1) {$5$};
-\node[draw, circle] (5) at (4,1) {$6$};
-\node[draw, circle] (6) at (-2,3) {$7$};
-\node[draw, circle] (7) at (-2,1) {$3$};
+\node[draw, circle] (2) at (2,3) {$4$};
+\node[draw, circle] (3) at (0,1) {$2$};
+\node[draw, circle] (4) at (2,1) {$3$};
+\node[draw, circle] (5) at (4,1) {$7$};
+\node[draw, circle] (6) at (-2,3) {$5$};
+\node[draw, circle] (7) at (-2,1) {$6$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
@@ -262,10 +316,10 @@ In the example graph, $a$, $b$ and $c$ could be:
 \path[draw,thick,-] (3) -- (6);
 \path[draw,thick,-] (3) -- (7);
 \node[color=red] at (2,1.6) {$a$};
-\node[color=red] at (-1.4,3) {$b$};
+\node[color=red] at (-2,1.6) {$b$};
 \node[color=red] at (4,1.6) {$c$};
 
-\path[draw,thick,-,color=red,line width=2pt] (6) -- (3);
+\path[draw,thick,-,color=red,line width=2pt] (7) -- (3);
 \path[draw,thick,-,color=red,line width=2pt] (3) -- (1);
 \path[draw,thick,-,color=red,line width=2pt] (1) -- (2);
 \path[draw,thick,-,color=red,line width=2pt] (2) -- (5);
@@ -281,12 +335,12 @@ nodes hang from it:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (2,1) {$1$};
-\node[draw, circle] (2) at (4,1) {$2$};
-\node[draw, circle] (3) at (0,1) {$4$};
-\node[draw, circle] (4) at (2,-1) {$5$};
-\node[draw, circle] (5) at (6,1) {$6$};
-\node[draw, circle] (6) at (0,-1) {$3$};
-\node[draw, circle] (7) at (-2,1) {$7$};
+\node[draw, circle] (2) at (4,1) {$4$};
+\node[draw, circle] (3) at (0,1) {$2$};
+\node[draw, circle] (4) at (2,-1) {$3$};
+\node[draw, circle] (5) at (6,1) {$7$};
+\node[draw, circle] (6) at (0,-1) {$5$};
+\node[draw, circle] (7) at (-2,1) {$6$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
@@ -312,7 +366,7 @@ The farthest node from $a$
 is node $b$, node $c$ or some other node
 that is at least as far from node $x$.
 Thus, this node is always a valid choice for
-a starting node of a path that corresponds to the diameter.
+an endpoint of a path that corresponds to the diameter.
 
 \section{Distances between nodes}
 
