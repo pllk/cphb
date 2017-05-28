@@ -202,19 +202,19 @@ The algorithm consists of $n-1$ rounds,
 and on each round the algorithm goes through
 all edges of the graph and tries to
 reduce the distances.
-The algorithm constructs an array \texttt{dist}
+The algorithm constructs an array \texttt{distance}
 that will contain the distances from $x$
 to all nodes of the graph.
 The constant \texttt{INF} denotes an infinite distance.
 
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) dist[i] = INF;
-dist[x] = 0;
+for (int i = 1; i <= n; i++) distance[i] = INF;
+distance[x] = 0;
 for (int i = 1; i <= n-1; i++) {
     for (auto e : edges) {
         int a, b, w;
         tie(a, b, w) = e;
-        dist[b] = min(dist[b], dist[a]+w);
+        distance[b] = min(distance[b], distance[a]+w);
     }
 }
 \end{lstlisting}
@@ -419,7 +419,8 @@ In this case,
 the edges from node 1 reduced the distances of
 nodes 2, 4 and 5, whose distances are now 5, 9 and 1.
 
-The next node to be processed is node 5 with distance 1:
+The next node to be processed is node 5 with distance 1.
+This reduces the distance to node 4 from 9 to 3:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {3};
@@ -444,7 +445,8 @@ The next node to be processed is node 5 with distance 1:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-After this, the next node is node 4:
+After this, the next node is node 4, which reduces
+the distance to node 3 to 9:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -553,28 +555,27 @@ that contains the nodes ordered by their distances.
 Using a priority queue, the next node to be processed
 can be retrieved in logarithmic time.
 
-In the following code,
-the priority queue
+In the following code, the priority queue
 \texttt{q} contains pairs of the form $(-d,x)$,
 meaning that the current distance to node $x$ is $d$.
-The array $\texttt{dist}$ contains the distance to
-each node, and the array $\texttt{ready}$ indicates
+The array $\texttt{distance}$ contains the distance to
+each node, and the array $\texttt{processed}$ indicates
 whether a node has been processed.
 Initially the distance is $0$ to $x$ and $\infty$ to all other nodes.
 
 \begin{lstlisting}
-for (int i = 1; i <= n; i++) dist[i] = INF;
-dist[x] = 0;
+for (int i = 1; i <= n; i++) distance[i] = INF;
+distance[x] = 0;
 q.push({0,x});
 while (!q.empty()) {
     int a = q.top().second; q.pop();
-    if (ready[a]) continue;
-    ready[a] = true;
-    for (auto u : v[a]) {
+    if (processed[a]) continue;
+    processed[a] = true;
+    for (auto u : adj[a]) {
         int b = u.first, w = u.second;
-        if (dist[a]+w < dist[b]) {
-            dist[b] = dist[a]+w;
-            q.push({-dist[b],b});
+        if (distance[a]+w < distance[b]) {
+            distance[b] = distance[a]+w;
+            q.push({-distance[b],b});
         }
     }
 }
@@ -586,7 +587,7 @@ The reason for this is that the
 default version of the C++ priority queue finds maximum
 elements, while we want to find minimum elements.
 By using negative distances,
-we can directly use the default version of the C++ priority queue\footnote{Of
+we can directly use the default priority queue\footnote{Of
 course, we could also declare the priority queue as in Chapter 4.5
 and use positive distances, but the implementation would be a bit longer.}.
 Also note that there may be several instances of the same
@@ -613,10 +614,10 @@ in a single run.
 
 The algorithm maintains a two-dimensional array
 that contains distances between the nodes.
-First, the distances are calculated only using
-direct edges between the nodes.
-After this the algorithm reduces the distances
-by using intermediate nodes in the paths.
+First, distances are calculated only using
+direct edges between the nodes,
+and after this, the algorithm reduces distances
+by using intermediate nodes in paths.
 
 \subsubsection{Example}
 
@@ -661,8 +662,7 @@ In this graph, the initial array is as follows:
 The algorithm consists of consecutive rounds.
 On each round, the algorithm selects a new node
 that can act as an intermediate node in paths from now on,
-and the algorithm reduces the distances in the array
-using this node.
+and distances are reduced using this node.
 
 On the first round, node 1 is the new intermediate node.
 There is a new path between nodes 2 and 4
@@ -764,17 +764,17 @@ The advantage of the
 Floyd–Warshall algorithm that it is
 easy to implement.
 The following code constructs a
-distance matrix where $\texttt{dist}[a][b]$
+distance matrix where $\texttt{distance}[a][b]$
 is the shortest distance between nodes $a$ and $b$.
-First, the algorithm initializes \texttt{dist}
-using the adjacency matrix \texttt{mat} of the graph:
+First, the algorithm initializes \texttt{distance}
+using the adjacency matrix \texttt{adj} of the graph:
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n; j++) {
-        if (i == j) dist[i][j] = 0;
-        else if (mat[i][j]) dist[i][j] = mat[i][j];
-        else dist[i][j] = INF;
+        if (i == j) distance[i][j] = 0;
+        else if (adj[i][j]) distance[i][j] = adj[i][j];
+        else distance[i][j] = INF;
     }
 }
 \end{lstlisting}
@@ -783,7 +783,8 @@ After this, the shortest distances can be found as follows:
 for (int k = 1; k <= n; k++) {
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= n; j++) {
-            dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j]);
+            distance[i][j] = min(distance[i][j],
+                                   distance[i][k]+distance[k][j]);
         }
     }
 }

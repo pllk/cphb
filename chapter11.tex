@@ -57,6 +57,7 @@ The \key{length} of a path is the number of
 edges in it.
 For example, the above graph contains
 a path $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$
+of length 3
 from node 1 to node 5:
 
 \begin{center}
@@ -519,10 +520,10 @@ as follows:
 vector<pair<int,int>> adj[N];
 \end{lstlisting}
 
-If there is an edge from node $a$ to node $b$
-with weight $w$, the adjacency list of node $a$
-contains the pair $(b,w)$.
-For example, the graph
+In this case, the adjacency list of node $a$
+contains the pair $(b,w)$
+always when there is an edge from node $a$ to node $b$
+with weight $w$. For example, the graph
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -569,14 +570,14 @@ We can efficiently check from an adjacency matrix
 if there is an edge between two nodes.
 The matrix can be stored as an array
 \begin{lstlisting}
-int mat[N][N];
+int adj[N][N];
 \end{lstlisting}
-where each value $\texttt{mat}[a][b]$ indicates
+where each value $\texttt{adj}[a][b]$ indicates
 whether the graph contains an edge from
 node $a$ to node $b$.
 If the edge is included in the graph,
-then $\texttt{mat}[a][b]=1$,
-and otherwise $\texttt{mat}[a][b]=0$.
+then $\texttt{adj}[a][b]=1$,
+and otherwise $\texttt{adj}[a][b]=0$.
 For example, the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -677,7 +678,7 @@ corresponds to the following matrix:
 \end{samepage}
 
 The drawback of the adjacency matrix representation
-is that there are $n^2$ elements in the matrix
+is that the matrix contains $n^2$ elements,
 and usually most of them are zero.
 For this reason, the representation cannot be used
 if the graph is large.

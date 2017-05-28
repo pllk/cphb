@@ -133,17 +133,17 @@ vector<int> adj[N];
 \end{lstlisting}
 and also maintains an array
 \begin{lstlisting}
-bool vis[N];
+bool visited[N];
 \end{lstlisting}
 that keeps track of the visited nodes.
 Initially, each array value is \texttt{false},
 and when the search arrives at node $s$,
-the value of \texttt{vis}[$s$] becomes \texttt{true}.
+the value of \texttt{visited}[$s$] becomes \texttt{true}.
 The function can be implemented as follows:
 \begin{lstlisting}
 void dfs(int s) {
-    if (vis[s]) return;
-    vis[s] = true;
+    if (visited[s]) return;
+    visited[s] = true;
     // process node s
     for (auto u: adj[s]) {
         dfs(u);
@@ -312,8 +312,8 @@ as adjacency lists and maintains the following
 data structures:
 \begin{lstlisting}
 queue<int> q;
-bool vis[N];
-int dist[N];
+bool visited[N];
+int distance[N];
 \end{lstlisting}
 
 The queue \texttt{q}
@@ -322,24 +322,24 @@ in increasing order of their distance.
 New nodes are always added to the end
 of the queue, and the node at the beginning
 of the queue is the next node to be processed.
-The array \texttt{vis} indicates
+The array \texttt{visited} indicates
 which nodes the search has already visited,
-and the array \texttt{dist} will contain the
+and the array \texttt{distance} will contain the
 distances from the starting node to all nodes of the graph.
 
 The search can be implemented as follows,
 starting at node $x$:
 \begin{lstlisting}
-vis[x] = true;
-dist[x] = 0;
+visited[x] = true;
+distance[x] = 0;
 q.push(x);
 while (!q.empty()) {
     int s = q.front(); q.pop();
     // process node s
     for (auto u : adj[s]) {
-        if (vis[u]) continue;
-        vis[u] = true;
-        dist[u] = dist[s]+1;
+        if (visited[u]) continue;
+        visited[u] = true;
+        distance[u] = distance[s]+1;
         q.push(u);
     }
 }
