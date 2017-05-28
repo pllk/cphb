@@ -411,10 +411,10 @@ The following code implements this algorithm:
 
 \begin{lstlisting}
 int best = 0;
-for (int first = 0; first < n; first++) {
-    for (int last = first; last < n; last++) {
+for (int a = 0; a < n; a++) {
+    for (int b = a; b < n; b++) {
         int sum = 0;
-        for (int k = first; k <= last; k++) {
+        for (int k = a; k <= b; k++) {
             sum += array[k];
         }
         best = max(best,sum);
@@ -423,9 +423,9 @@ for (int first = 0; first < n; first++) {
 cout << best << "\n";
 \end{lstlisting}
 
-The variables \texttt{first} and \texttt{last} determine the range
-of the subarray,
-and the sum of the numbers is calculated to the variable \texttt{sum}.
+The variables \texttt{a} and \texttt{b} fix the first and
+last index of the subarray,
+and the sum of values is calculated to the variable \texttt{sum}.
 The variable \texttt{best} contains the maximum sum found during the search.
 
 The time complexity of the algorithm is $O(n^3)$,
@@ -442,10 +442,10 @@ The result is the following code:
 
 \begin{lstlisting}
 int best = 0;
-for (int first = 0; first < n; first++) {
+for (int a = 0; a < n; a++) {
     int sum = 0;
-    for (int last = first; last < n; last++) {
-        sum += array[last];
+    for (int b = a; b < n; b++) {
+        sum += array[b];
         best = max(best,sum);
     }
 }
