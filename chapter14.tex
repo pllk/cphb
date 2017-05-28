@@ -368,151 +368,162 @@ that is at least as far from node $x$.
 Thus, this node is always a valid choice for
 an endpoint of a path that corresponds to the diameter.
 
-\section{Distances between nodes}
+\section{All longest paths}
 
-A more difficult problem is to calculate
-for each node of the tree and for each direction,
-the maximum distance to a node in that direction.
-It turns out that this can be calculated in
-$O(n)$ time using dynamic programming.
+Our next problem is to calculate for every node
+in the tree the maximum length of a path
+that begins at the node.
+This can be seen as a generalization of the
+tree diameter problem, because the largest of those
+lengths equals the diameter of the tree.
+Also this problem can be solved in $O(n)$ time.
 
-\begin{samepage}
-In the example graph, the distances are as follows:
+As an example, consider the following tree:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
-\node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,3) {$2$};
-\node[draw, circle] (3) at (0,1) {$4$};
-\node[draw, circle] (4) at (2,1) {$5$};
-\node[draw, circle] (5) at (4,1) {$6$};
-\node[draw, circle] (6) at (-2,3) {$7$};
-\node[draw, circle] (7) at (-2,1) {$3$};
+\node[draw, circle] (1) at (0,0) {$1$};
+\node[draw, circle] (2) at (-1.5,-1) {$4$};
+\node[draw, circle] (3) at (2,0) {$2$};
+\node[draw, circle] (4) at (-1.5,1) {$3$};
+\node[draw, circle] (6) at (3.5,-1) {$6$};
+\node[draw, circle] (7) at (3.5,1) {$5$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
-\path[draw,thick,-] (2) -- (5);
 \path[draw,thick,-] (3) -- (6);
 \path[draw,thick,-] (3) -- (7);
-\node[color=red] at (0.5,3.2) {$2$};
-\node[color=red] at (0.3,2.4) {$1$};
-\node[color=red] at (-0.2,2.4) {$2$};
-\node[color=red] at (-0.2,1.5) {$3$};
-\node[color=red] at (-0.5,1.2) {$1$};
-\node[color=red] at (-1.7,2.4) {$4$};
-\node[color=red] at (-0.5,0.8) {$1$};
-\node[color=red] at (-1.5,0.8) {$4$};
-\node[color=red] at (1.5,3.2) {$3$};
-\node[color=red] at (1.5,1.2) {$3$};
-\node[color=red] at (3.5,1.2) {$4$};
-\node[color=red] at (2.2,2.4) {$1$};
 \end{tikzpicture}
 \end{center}
-\end{samepage}
-For example, the farthest node from node 4
-in the direction of node 1 is node 6, and the distance to that
-node is 3 using the path
-$4 \rightarrow 1 \rightarrow 2 \rightarrow 6$.
 
-\begin{samepage}
+Let $\texttt{maxLength}(x)$ denote the maximum length
+of a path that begins at node $x$.
+For example, in the above tree,
+$\texttt{maxLength}(4)=3$, because there
+is a path $4 \rightarrow 1 \rightarrow 2 \rightarrow 6$.
+Here is a complete table of the values:
+\begin{center}
+\begin{tabular}{l|lllllll}
+node $x$ & 1 & 2 & 3 & 4 & 5 & 6 \\
+$\texttt{maxLength}(x)$ & 2 & 2 & 3 & 3 & 3 & 3 \\
+\end{tabular}
+\end{center}
+
 Also in this problem, a good starting point
-is to root the tree.
-After this, all distances to leaves can
-be calculated using dynamic programming:
+for solving the problem is to root the tree arbitrarily:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,1) {$2$};
-\node[draw, circle] (3) at (-2,1) {$4$};
-\node[draw, circle] (4) at (0,1) {$5$};
-\node[draw, circle] (5) at (2,-1) {$6$};
-\node[draw, circle] (6) at (-3,-1) {$3$};
-\node[draw, circle] (7) at (-1,-1) {$7$};
+\node[draw, circle] (2) at (2,1) {$4$};
+\node[draw, circle] (3) at (-2,1) {$2$};
+\node[draw, circle] (4) at (0,1) {$3$};
+\node[draw, circle] (6) at (-3,-1) {$5$};
+\node[draw, circle] (7) at (-1,-1) {$6$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
-\path[draw,thick,-] (2) -- (5);
 \path[draw,thick,-] (3) -- (6);
 \path[draw,thick,-] (3) -- (7);
-
-\node[color=red] at (-2.5,0.7) {$1$};
-\node[color=red] at (-1.5,0.7) {$1$};
-
-\node[color=red] at (2.2,0.5) {$1$};
-
-\node[color=red] at (-0.5,2.8) {$2$};
-\node[color=red] at (0.2,2.5) {$1$};
-\node[color=red] at (0.5,2.8) {$2$};
 \end{tikzpicture}
 \end{center}
-\end{samepage}
 
-The remaining task is to calculate
-the distances through parents.
-This can be done by traversing the tree once again
-and keeping track of the largest distance from the parent
-of the current node to some other node in another direction.
-
-For example, the distance from node 2 upwards
-is one larger than the distance from node 1
-downwards in some other direction than node 2:
+The first part of the problem is to calculate for every node $x$
+the maximum length of a path that goes through a child of $x$.
+For example, the longest path from node 1
+goes through its child 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,1) {$2$};
-\node[draw, circle] (3) at (-2,1) {$4$};
-\node[draw, circle] (4) at (0,1) {$5$};
-\node[draw, circle] (5) at (2,-1) {$6$};
-\node[draw, circle] (6) at (-3,-1) {$3$};
-\node[draw, circle] (7) at (-1,-1) {$7$};
+\node[draw, circle] (2) at (2,1) {$4$};
+\node[draw, circle] (3) at (-2,1) {$2$};
+\node[draw, circle] (4) at (0,1) {$3$};
+\node[draw, circle] (6) at (-3,-1) {$5$};
+\node[draw, circle] (7) at (-1,-1) {$6$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
-\path[draw,thick,-] (2) -- (5);
 \path[draw,thick,-] (3) -- (6);
 \path[draw,thick,-] (3) -- (7);
 
-\path[draw,thick,-,color=red,line width=2pt] (1) -- (2);
-\path[draw,thick,-,color=red,line width=2pt] (1) -- (3);
-\path[draw,thick,-,color=red,line width=2pt] (3) -- (7);
-
+\path[draw,thick,->,color=red,line width=2pt] (1) -- (3);
+\path[draw,thick,->,color=red,line width=2pt] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-Finally, we can calculate the distances for all nodes
-and all directions:
+This part is easy to solve in $O(n)$ time, because we can use
+dynamic programming as we have done previously.
+
+Then, the second part of the problem is to calculate
+for every node $x$ the maximum length of a path
+through its parent $p$.
+For example, the longest path
+from node 3 goes through its parent 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
-\node[draw, circle] (2) at (2,1) {$2$};
-\node[draw, circle] (3) at (-2,1) {$4$};
-\node[draw, circle] (4) at (0,1) {$5$};
-\node[draw, circle] (5) at (2,-1) {$6$};
-\node[draw, circle] (6) at (-3,-1) {$3$};
-\node[draw, circle] (7) at (-1,-1) {$7$};
+\node[draw, circle] (2) at (2,1) {$4$};
+\node[draw, circle] (3) at (-2,1) {$2$};
+\node[draw, circle] (4) at (0,1) {$3$};
+\node[draw, circle] (6) at (-3,-1) {$5$};
+\node[draw, circle] (7) at (-1,-1) {$6$};
 \path[draw,thick,-] (1) -- (2);
 \path[draw,thick,-] (1) -- (3);
 \path[draw,thick,-] (1) -- (4);
-\path[draw,thick,-] (2) -- (5);
 \path[draw,thick,-] (3) -- (6);
 \path[draw,thick,-] (3) -- (7);
 
-\node[color=red] at (-2.5,0.7) {$1$};
-\node[color=red] at (-1.5,0.7) {$1$};
-
-\node[color=red] at (2.2,0.5) {$1$};
-
-\node[color=red] at (-0.5,2.8) {$2$};
-\node[color=red] at (0.2,2.5) {$1$};
-\node[color=red] at (0.5,2.8) {$2$};
-
-\node[color=red] at (-3,-0.4) {$4$};
-\node[color=red] at (-1,-0.4) {$4$};
-\node[color=red] at (-2,1.6) {$3$};
-\node[color=red] at (2,1.6) {$3$};
-
-\node[color=red] at (2.2,-0.4) {$4$};
-\node[color=red] at (0.2,1.6) {$3$};
+\path[draw,thick,->,color=red,line width=2pt] (4) -- (1);
+\path[draw,thick,->,color=red,line width=2pt] (1) -- (3);
+\path[draw,thick,->,color=red,line width=2pt] (3) -- (6);
 \end{tikzpicture}
 \end{center}
+
+At first glance, it seems that we should choose
+the longest path from $p$.
+However, this \emph{does not} always work,
+because the longest path from $p$
+may go through $x$.
+Here is an example of this situation:
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\node[draw, circle] (1) at (0,3) {$1$};
+\node[draw, circle] (2) at (2,1) {$4$};
+\node[draw, circle] (3) at (-2,1) {$2$};
+\node[draw, circle] (4) at (0,1) {$3$};
+\node[draw, circle] (6) at (-3,-1) {$5$};
+\node[draw, circle] (7) at (-1,-1) {$6$};
+\path[draw,thick,-] (1) -- (2);
+\path[draw,thick,-] (1) -- (3);
+\path[draw,thick,-] (1) -- (4);
+\path[draw,thick,-] (3) -- (6);
+\path[draw,thick,-] (3) -- (7);
+
+\path[draw,thick,->,color=red,line width=2pt] (3) -- (1);
+\path[draw,thick,->,color=red,line width=2pt] (1) -- (2);
+\end{tikzpicture}
+\end{center}
+
+Still, we can solve the second part in
+$O(n)$ time by storing \emph{two} maximum lengths
+for each node $x$:
+\begin{itemize}
+\item $\texttt{maxLength}_1(x)$:
+the maximum length of a path from $x$
+\item $\texttt{maxLength}_2(x)$
+the maximum length of a path from $x$
+in another direction than the first path
+\end{itemize}
+For example, in the above graph,
+$\texttt{maxLength}_1(1)=2$
+using the path $1 \rightarrow 2 \rightarrow 5$,
+and $\texttt{maxLength}_2(1)=1$
+using the path $1 \rightarrow 3$.
+
+Finally, if the path that corresponds to
+$\texttt{maxLength}_1(p)$ goes through $x$,
+we conclude that the maximum length is
+$\texttt{maxLength}_2(p)+1$,
+and otherwise the maximum length is
+$\texttt{maxLength}_1(p)+1$.
+
 
 \section{Binary trees}
 
