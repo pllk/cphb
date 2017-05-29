@@ -117,8 +117,9 @@ has an Eulerian circuit that starts and ends at node 1:
 \subsubsection{Existence}
 
 The existence of Eulerian paths and circuits
-depends on the degrees of the nodes of the graph.
-First, an undirected graph has an Eulerian path if all the edges
+depends on the degrees of the nodes.
+First, an undirected graph has an Eulerian path 
+exactly when all the edges
 belong to the same connected component and
 \begin{itemize}
 \item the degree of each node is even \emph{or}
@@ -126,8 +127,7 @@ belong to the same connected component and
 and the degree of all other nodes is even.
 \end{itemize}
 
-In the first case, each Eulerian path of the graph
-is also an Eulerian circuit.
+In the first case, each Eulerian path is also an Eulerian circuit.
 In the second case, the odd-degree nodes are the starting
 and ending nodes of an Eulerian path which is not an Eulerian circuit.
 
@@ -158,9 +158,9 @@ but the graph does not contain an Eulerian circuit.
 
 In a directed graph,
 we focus on indegrees and outdegrees
-of the nodes of the graph.
+of the nodes.
 A directed graph contains an Eulerian path
-if all the edges belong to the same strongly
+exactly when all the edges belong to the same strongly
 connected component and
 \begin{itemize}
 \item in each node, the indegree equals the outdegree, \emph{or}
@@ -169,7 +169,7 @@ in another node, the outdegree is one larger than the indegree,
 and in all other nodes, the indegree equals the outdegree.
 \end{itemize}
 
-In the first case, each Eulerian path of the graph
+In the first case, each Eulerian path
 is also an Eulerian circuit,
 and in the second case, the graph contains an Eulerian path
 that begins at the node whose outdegree is larger
@@ -248,7 +248,7 @@ an outgoing edge that is not included in the circuit.
 The algorithm constructs a new path from node $x$
 that only contains edges that are not yet in the circuit.
 Sooner or later,
-the path will return to the node $x$,
+the path will return to node $x$,
 which creates a subcircuit.
 
 If the graph only contains an Eulerian path,
@@ -499,7 +499,7 @@ the graph contains a Hamiltonian path.
 \end{itemize}
 
 A common property in these theorems and other results is
-that they guarantee the existence of a Hamiltonian
+that they guarantee the existence of a Hamiltonian path
 if the graph has \emph{a large number} of edges.
 This makes sense, because the more edges the graph contains,
 the more possibilities there is to construct a Hamiltonian path.
@@ -519,12 +519,13 @@ The time complexity of such an algorithm is at least $O(n!)$,
 because there are $n!$ different ways to choose the order of $n$ nodes.
 
 A more efficient solution is based on dynamic programming
-(see Chapter 10.4).
-The idea is to define a function $f(s,x)$,
-where $s$ is a subset of nodes and $x$
-is one of the nodes in the subset.
+(see Chapter 10.5).
+The idea is to calculate values
+of a function $\texttt{possible}(S,x)$,
+where $S$ is a subset of nodes and $x$
+is one of the nodes.
 The function indicates whether there is a Hamiltonian path
-that visits the nodes of $s$ and ends at node $x$.
+that visits the nodes of $S$ and ends at node $x$.
 It is possible to implement this solution in $O(2^n n^2)$ time.
 
 \section{De Bruijn sequences}
@@ -532,7 +533,6 @@ It is possible to implement this solution in $O(2^n n^2)$ time.
 \index{De Bruijn sequence}
 
 A \key{De Bruijn sequence}
-%\footnote{N. G. de Bruijn (1918--2012) was a Dutch mathematician.}
 is a string that contains
 every string of length $n$
 exactly once as a substring, for a fixed
@@ -548,10 +548,10 @@ combinations of three bits:
 
 It turns out that each De Bruijn sequence
 corresponds to an Eulerian path in a graph.
-The idea is to construct the graph where
+The idea is to construct a graph where
 each node contains a string of $n-1$ characters
 and each edge adds one character to the string.
-The following graph corresponds to the above example:
+The following graph corresponds to the above scenario:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -653,7 +653,7 @@ in a square where the number of possible moves is as
 \emph{small} as possible.
 
 For example, in the following situation, there are five
-possible squares to which the knight can move:
+possible squares to which the knight can move (squares $a \ldots e$):
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (5,5);
