@@ -1,7 +1,6 @@
 \chapter{Directed graphs}
 
 In this chapter, we focus on two classes of directed graphs:
-
 \begin{itemize}
 \item \key{Acyclic graphs}:
 There are no cycles in the graph,
@@ -43,7 +42,7 @@ For example, for the graph
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-a possible topological sort is
+one topological sort is
 $[4,1,5,2,3,6]$:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -206,7 +205,7 @@ and there can be several topological sorts for a graph.
 
 Let us now consider a graph for which we
 cannot construct a topological sort,
-because there is a cycle in the graph:
+because the graph contains a cycle:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -247,7 +246,7 @@ The search proceeds as follows:
 \end{tikzpicture}
 \end{center}
 The search reaches node 2 whose state is 1,
-which means the graph contains a cycle.
+which means that the graph contains a cycle.
 In this example, there is a cycle
 $2 \rightarrow 3 \rightarrow 5 \rightarrow 2$.
 
@@ -296,15 +295,15 @@ There are a total of three such paths:
 \item $1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$
 \end{itemize}
 
-Let $p(x)$ denote the number of paths from
+Let $\texttt{paths}(x)$ denote the number of paths from
 node 1 to node $x$.
-As a base case, $p(1)=1$.
-Then, to calculate other values of $p(x)$,
+As a base case, $\texttt{paths}(1)=1$.
+Then, to calculate other values of $\texttt{paths}(x)$,
 we may use the recursion
-\[p(x) = p(a_1)+p(a_2)+\cdots+p(a_k)\]
+\[\texttt{paths}(x) = \texttt{paths}(a_1)+\texttt{paths}(a_2)+\cdots+\texttt{paths}(a_k)\]
 where $a_1,a_2,\ldots,a_k$ are the nodes from which there
 is an edge to $x$.
-Since the graph is acyclic, the values of $p(x)$
+Since the graph is acyclic, the values of $\texttt{paths}(x)$
 can be calculated in the order of a topological sort.
 A topological sort for the above graph is as follows:
 \begin{center}
@@ -352,11 +351,11 @@ Hence, the numbers of paths are as follows:
 \end{tikzpicture}
 \end{center}
 
-For example, to calculate the value of $p(3)$,
-we may use the formula $p(2)+p(5)$,
+For example, to calculate the value of $\texttt{paths}(3)$,
+we can use the formula $\texttt{paths}(2)+\texttt{paths}(5)$,
 because there are edges from nodes 2 and 5
 to node 3.
-Since $p(2)=2$ and $p(5)=1$, we conclude that $p(3)=3$.
+Since $\texttt{paths}(2)=2$ and $\texttt{paths}(5)=1$, we conclude that $\texttt{paths}(3)=3$.
 
 \subsubsection{Extending Dijkstra's algorithm}
 
@@ -496,7 +495,7 @@ one cycle and some paths that lead to it.
 Successor graphs are sometimes called
 \key{functional graphs}.
 The reason for this is that any successor graph
-corresponds to a function $f$ that defines
+corresponds to a function that defines
 the edges of the graph.
 The parameter for the function is a node of the graph,
 and the function gives the successor of that node.
@@ -506,7 +505,7 @@ For example, the function
 \begin{tabular}{r|rrrrrrrrr}
 $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
 \hline
-$f(x)$ & 3 & 5 & 7 & 6 & 2 & 2 & 1 & 6 & 3 \\
+$\texttt{succ}(x)$ & 3 & 5 & 7 & 6 & 2 & 2 & 1 & 6 & 3 \\
 \end{tabular}
 \end{center}
 defines the following graph:
@@ -535,10 +534,10 @@ defines the following graph:
 \end{center}
 
 Since each node of a successor graph has a
-unique successor, we can also define a function $f(x,k)$
+unique successor, we can also define a function $\texttt{succ}(x,k)$
 that gives the node that we will reach if
 we begin at node $x$ and walk $k$ steps forward.
-For example, in the above graph $f(4,6)=2$,
+For example, in the above graph $\texttt{succ}(4,6)=2$,
 because we will reach node 2 by walking 6 steps from node 4:
 
 \begin{center}
@@ -560,21 +559,21 @@ because we will reach node 2 by walking 6 steps from node 4:
 \end{tikzpicture}
 \end{center}
 
-A straightforward way to calculate a value of $f(x,k)$
+A straightforward way to calculate a value of $\texttt{succ}(x,k)$
 is to start at node $x$ and walk $k$ steps forward, which takes $O(k)$ time.
-However, using preprocessing, any value of $f(x,k)$
+However, using preprocessing, any value of $\texttt{succ}(x,k)$
 can be calculated in only $O(\log k)$ time.
 
-The idea is to precalculate all values $f(x,k)$ where
+The idea is to precalculate all values of $\texttt{succ}(x,k)$ where
 $k$ is a power of two and at most $u$, where $u$ is
 the maximum number of steps we will ever walk.
 This can be efficiently done, because
 we can use the following recursion:
 
 \begin{equation*}
-    f(x,k) = \begin{cases}
-               f(x)              & k = 1\\
-               f(f(x,k/2),k/2)   & k > 1\\
+    \texttt{succ}(x,k) = \begin{cases}
+               \texttt{succ}(x)              & k = 1\\
+               \texttt{succ}(\texttt{succ}(x,k/2),k/2)   & k > 1\\
            \end{cases}
 \end{equation*}
 
@@ -586,25 +585,25 @@ In the above graph, the first values are as follows:
 \begin{tabular}{r|rrrrrrrrr}
 $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
 \hline
-$f(x,1)$ & 3 & 5 & 7 & 6 & 2 & 2 & 1 & 6 & 3 \\
-$f(x,2)$ & 7 & 2 & 1 & 2 & 5 & 5 & 3 & 2 & 7 \\
-$f(x,4)$ & 3 & 2 & 7 & 2 & 5 & 5 & 1 & 2 & 3 \\
-$f(x,8)$ & 7 & 2 & 1 & 2 & 5 & 5 & 3 & 2 & 7 \\
+$\texttt{succ}(x,1)$ & 3 & 5 & 7 & 6 & 2 & 2 & 1 & 6 & 3 \\
+$\texttt{succ}(x,2)$ & 7 & 2 & 1 & 2 & 5 & 5 & 3 & 2 & 7 \\
+$\texttt{succ}(x,4)$ & 3 & 2 & 7 & 2 & 5 & 5 & 1 & 2 & 3 \\
+$\texttt{succ}(x,8)$ & 7 & 2 & 1 & 2 & 5 & 5 & 3 & 2 & 7 \\
 $\cdots$ \\
 \end{tabular}
 \end{center}
 
-After this, any value of $f(x,k)$ can be calculated
+After this, any value of $\texttt{succ}(x,k)$ can be calculated
 by presenting the number of steps $k$ as a sum of powers of two.
-For example, if we want to calculate the value of $f(x,11)$,
+For example, if we want to calculate the value of $\texttt{succ}(x,11)$,
 we first form the representation $11=8+2+1$.
 Using that,
-\[f(x,11)=f(f(f(x,8),2),1).\]
+\[\texttt{succ}(x,11)=\texttt{succ}(\texttt{succ}(\texttt{succ}(x,8),2),1).\]
 For example, in the previous graph
-\[f(4,11)=f(f(f(4,8),2),1)=5.\]
+\[\texttt{succ}(4,11)=\texttt{succ}(\texttt{succ}(\texttt{succ}(4,8),2),1)=5.\]
 
 Such a representation always consists of
-$O(\log k)$ parts, so calculating a value of $f(x,k)$
+$O(\log k)$ parts, so calculating a value of $\texttt{succ}(x,k)$
 takes $O(\log k)$ time.
 
 \section{Cycle detection}
@@ -642,7 +641,7 @@ we begin our walk at node 1,
 the first node that belongs to the cycle is node 4, and the cycle consists
 of three nodes (4, 5 and 6).
 
-An easy way to detect the cycle is to walk in the
+A simple way to detect the cycle is to walk in the
 graph and keep track of
 all nodes that have been visited. Once a node is visited
 for the second time, we can conclude
@@ -672,13 +671,12 @@ one step forward and the pointer $b$
 walks two steps forward.
 The process continues until
 the pointers meet each other:
-
 \begin{lstlisting}
-a = f(x);
-b = f(f(x));
+a = succ(x);
+b = succ(succ(x));
 while (a != b) {
-    a = f(a);
-    b = f(f(b));
+    a = succ(a);
+    b = succ(succ(b));
 }
 \end{lstlisting}
 
@@ -688,26 +686,23 @@ so the length of the cycle divides $k$.
 Thus, the first node that belongs to the cycle
 can be found by moving the pointer $a$ to node $x$
 and advancing the pointers
-step by step until they meet again:
-
+step by step until they meet again.
 \begin{lstlisting}
 a = x;
 while (a != b) {
-    a = f(a);
-    b = f(b);
+    a = succ(a);
+    b = succ(b);
 }
+first = a;
 \end{lstlisting}
 
-Now $a$ and $b$ point to the first node in the cycle
-that can be reached from node $x$.
-Finally, the length $c$ of the cycle
+After this, the length of the cycle
 can be calculated as follows:
-
 \begin{lstlisting}
-b = f(a);
-c = 1;
+b = succ(a);
+length = 1;
 while (a != b) {
-    b = f(b);
-    c++;
+    b = succ(b);
+    length++;
 }
 \end{lstlisting}
