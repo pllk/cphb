@@ -542,16 +542,16 @@ and there are some edges between the sets:
 \end{center}
 
 The size of the cut is the sum of the edges
-that go from the set $A$ to the set $B$.
+that go from $A$ to $B$.
 This is an upper bound for the flow
 in the graph, because the flow has to proceed
-from the set $A$ to the set $B$.
-Thus, a maximum flow is smaller than or equal to
-any cut in the graph.
+from $A$ to $B$.
+Thus, the size of a maximum flow is smaller than or equal to
+the size of any cut in the graph.
 
 On the other hand, the Ford–Fulkerson algorithm
-produces a flow that is \emph{exactly} as large
-as a cut in the graph.
+produces a flow whose size is \emph{exactly} as large
+as the size of a cut in the graph.
 Thus, the flow has to be a maximum flow
 and the cut has to be a minimum cut.
 
@@ -773,14 +773,14 @@ from the source to the sink is 1.
 \index{maximum matching}
 
 The \key{maximum matching} problem asks to find
-a maximum-size set of node pairs of a graph
+a maximum-size set of node pairs in an undirected graph
 such that each pair is connected with an edge and
 each node belongs to at most one pair.
 
 There are polynomial algorithms for finding
 maximum matchings in general graphs \cite{edm65},
-but such algorithms are complex and do
-not appear in programming contests.
+but such algorithms are complex and
+rarely seen in programming contests.
 However, in bipartite graphs,
 the maximum matching problem is much easier
 to solve, because we can reduce it to the
@@ -813,7 +813,7 @@ the groups are $\{1,2,3,4\}$ and $\{5,6,7,8\}$.
 \path[draw,thick,-] (4) -- (7);
 \end{tikzpicture}
 \end{center}
-The size of a maximum matching of the graph is 3:
+The size of a maximum matching of this graph is 3:
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
 \node[draw, circle] (1) at (2,4.5) {1};
@@ -843,8 +843,8 @@ to the maximum flow problem by adding two new nodes
 to the graph: a source and a sink.
 We also add edges from the source
 to each left node and from each right node to the sink.
-After this, the maximum flow of the graph
-equals the maximum matching of the original graph.
+After this, the size of a maximum flow in the graph
+equals the size of a maximum matching in the original graph.
 
 For example, the reduction for the above
 graph is as follows:
@@ -895,11 +895,8 @@ The maximum flow of this graph is as follows:
 \node[draw, circle] (a) at (-2,2.25) {\phantom{0}};
 \node[draw, circle] (b) at (12,2.25) {\phantom{0}};
 
-%\path[draw,thick,->] (1) -- (5);
-%\path[draw,thick,->] (2) -- (7);
 \path[draw,thick,->] (3) -- (5);
 \path[draw,thick,->] (3) -- (6);
-%\path[draw,thick,->] (3) -- (8);
 \path[draw,thick,->] (4) -- (7);
 
 \path[draw,thick,->] (a) -- (1);
@@ -1007,7 +1004,7 @@ we cannot form such a matching.
 Since $X$ contains more nodes than $f(X)$,
 there are no pairs for all nodes in $X$.
 For example, in the above graph, both nodes 2 and 4
-should be connected with node 7 which is not allowed.
+should be connected with node 7 which is not possible.
 
 \subsubsection{Kőnig's theorem}
 
@@ -1052,9 +1049,9 @@ with a maximum matching of size 3:
 \path[draw=red,thick,-,line width=2pt] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-Kőnig's theorem tells us that the size
+Now Kőnig's theorem tells us that the size
 of a minimum node cover is also 3.
-It can be constructed as follows:
+Such a cover can be constructed as follows:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.60]
@@ -1116,7 +1113,7 @@ set is as follows:
 
 \index{path cover}
 
-A \key{path cover} is a set of paths of a graph
+A \key{path cover} is a set of paths in a graph
 such that each node of the graph belongs to at least one path.
 It turns out that in directed, acyclic graphs,
 we can reduce the problem of finding a minimum
@@ -1177,12 +1174,12 @@ by constructing a \emph{matching graph} where each node
 of the original graph is represented by
 two nodes: a left node and a right node.
 There is an edge from a left node to a right node
-if there is a such an edge in the original graph.
+if there is such an edge in the original graph.
 In addition, the matching graph contains a source and a sink,
 and there are edges from the source to all
 left nodes and from all right nodes to the sink.
 
-A maximum matching of the resulting graph corresponds
+A maximum matching in the resulting graph corresponds
 to a minimum node-disjoint path cover in
 the original graph.
 For example, the following matching graph
