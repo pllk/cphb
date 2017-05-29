@@ -250,7 +250,7 @@ the example graph is as follows:
 \end{center}
 
 After this, the algorithm goes through
-the list of nodes created by the first search
+the list of nodes created by the first search,
 in \emph{reverse} order.
 If a node does not belong to a component,
 the algorithm creates a new component
@@ -283,9 +283,6 @@ begins at node 3:
 \path[draw,thick,<-] (6) -- (7);
 
 \draw [red,thick,dashed,line width=2pt] (-0.5,2.5) rectangle (-3.5,-0.5);
-%\draw [red,thick,dashed,line width=2pt] (-4.5,2.5) rectangle (-7.5,1.5);
-%\draw [red,thick,dashed,line width=2pt] (-4.5,0.5) rectangle (-5.5,-0.5);
-%\draw [red,thick,dashed,line width=2pt] (-6.5,0.5) rectangle (-7.5,-0.5);
 \end{tikzpicture}
 \end{center}
 
@@ -294,8 +291,8 @@ the component does not ''leak'' to other parts in the graph.
 
 \begin{samepage}
 The next nodes in the list are nodes 7 and 6,
-but they already belong to a component.
-The next new component begins at node 1:
+but they already belong to a component,
+so the next new component begins at node 1:
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -499,10 +496,10 @@ In the graph of the formula $L_1$
 there are no nodes $x_i$ and $\lnot x_i$
 such that both nodes 
 belong to the same strongly connected component,
-so there is a solution.
+so a solution exists.
 In the graph of the formula $L_2$
 all nodes belong to the same strongly connected component,
-so there are no solutions.
+so a solution does not exist.
 
 If a solution exists, the values for the variables
 can be found by going through the nodes of the
@@ -544,13 +541,13 @@ where $x_4$ becomes true.
 After this, we process the component $C$
 where $x_1$ and $x_2$ become false
 and $x_3$ becomes true.
-All variables have been assigned a value,
+All variables have been assigned values,
 so the remaining components $A$ and $B$
 do not change the variables.
 
 Note that this method works, because the
-graph has a special structure.
-If there are paths from node $x_i$ to node $x_j$
+graph has a special structure:
+if there are paths from node $x_i$ to node $x_j$
 and from node $x_j$ to node $\lnot x_j$,
 then node $x_i$ never becomes true.
 The reason for this is that there is also
@@ -559,7 +556,7 @@ and both $x_i$ and $x_j$ become false.
 
 \index{3SAT problem}
 
-A more difficult problem is the \key{3SAT problem}
+A more difficult problem is the \key{3SAT problem},
 where each part of the formula is of the form
 $(a_i \lor b_i \lor c_i)$.
 This problem is NP-hard, so no efficient algorithm
