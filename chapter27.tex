@@ -281,9 +281,9 @@ For example, consider the following operation:
 \end{center}
 
 First, we calculate the minimum distance
-from  the white cell marked with * to a black cell.
+from the white cell marked with * to a black cell.
 The minimum distance is 2, because we can move
-to steps left to a black cell.
+two steps left to a black cell.
 Then, we paint the white cell black:
 
 \begin{center}
@@ -316,7 +316,8 @@ $O(\sqrt n)$ \emph{batches}, each of which consists
 of $O(\sqrt n)$ operations.
 At the beginning of each batch,
 we perform Algorithm 1.
-Then, we use Algorithm 2 to process the batches.
+Then, we use Algorithm 2 to process the operations
+in the batch.
 We clear the list of Algorithm 2 between
 the batches.
 At each operation,
@@ -341,13 +342,12 @@ if a positive integer $n$ is represented as
 a sum of positive integers,
 such a sum always contains at most
 $O(\sqrt n)$ \emph{distinct} numbers.
-
 The reason for this is that to construct
 a sum that contains a maximum number of distinct
 numbers, we should choose \emph{small} numbers.
 If we choose the numbers $1,2,\ldots,k$,
 the resulting sum is
-\[\frac{k(k+1)}{2} \le n.\]
+\[\frac{k(k+1)}{2}.\]
 Thus, the maximum amount of distinct numbers is $k = O(\sqrt n)$.
 Next we will discuss two problems that can be solved
 efficiently using this observation.
@@ -371,19 +371,20 @@ $\{1,3,3\}$, the possible sums are as follows:
 
 Using the standard knapsack approach (see Chapter 7.4),
 the problem can be solved as follows:
-we define a function $f(k,s)$ whose value is 1
-if the sum $s$ can be formed using the first $k$ weights,
+we define a function $\texttt{possible}(x,k)$ whose value is 1
+if the sum $x$ can be formed using the first $k$ weights,
 and 0 otherwise.
-All values of this function can be calculated
+Since the sum of the weights is $n$,
+there are at most $n$ weights and
+all values of the function can be calculated
 in $O(n^2)$ time using dynamic programming.
 
 However, we can make the algorithm more efficient
-by using the fact that the sum of the weights is $n$,
-which means that there are at most $O(\sqrt n)$
-distinct weights.
+by using the fact that there are at most $O(\sqrt n)$
+\emph{distinct} weights.
 Thus, we can process the weights in groups
-such that all weights in each group are equal.
-It turns out that we can process each group
+that consists of similar weights.
+We can process each group
 in $O(n)$ time, which yields an $O(n \sqrt n)$ time algorithm.
 
 The idea is to use an array that records the sums of weights
@@ -396,12 +397,13 @@ can be formed using this group and the previous groups.
 
 \subsubsection{String construction}
 
-Given a string \texttt{s} and a dictionary $D$ of strings,
+Given a string \texttt{s} of length $n$
+and a set of strings $D$ whose total length is $m$,
 consider the problem of counting the number of ways
 \texttt{s} can be formed as a concatenation of strings in $D$.
 For example,
-if \texttt{s} is \texttt{ABAB} and $D$ is
-$\{\texttt{A},\texttt{B},\texttt{AB}\}$,
+if $\texttt{s}=\texttt{ABAB}$ and
+$D=\{\texttt{A},\texttt{B},\texttt{AB}\}$,
 there are 4 ways:
 
 \begin{itemize}[noitemsep]
@@ -411,12 +413,10 @@ there are 4 ways:
 \item $\texttt{AB}+\texttt{AB}$
 \end{itemize}
 
-Assume that the length of \texttt{s} is $n$
-and the total length of the strings in $D$ is $m$.
 We can solve the problem using dynamic programming:
-Let $f(k)$ denote the number of ways to construct the prefix
+Let $\texttt{count}(k)$ denote the number of ways to construct the prefix
 $\texttt{s}[0 \ldots k]$ using the strings in $D$.
-Now $f(n-1)$ gives the answer to the problem,
+Now $\texttt{count}(n-1)$ gives the answer to the problem,
 and we can solve the problem in $O(n^2)$ time
 using a trie structure.
 
@@ -425,12 +425,12 @@ by using string hashing and the fact that there
 are at most $O(\sqrt m)$ distinct string lengths in $D$.
 First, we construct a set $H$ that contains all
 hash values of the strings in $D$.
-Then, when calculating a value of $f(k)$,
-we consider each integer $p$
+Then, when calculating a value of $\texttt{count}(k)$,
+we go through all values of $p$
 such that there is a string of length $p$ in $D$,
 calculate the hash value of $\texttt{s}[k-p+1 \ldots k]$
 and check if it belongs to $H$.
-Since there are at most $O(\sqrt m)$ distinct word lengths,
+Since there are at most $O(\sqrt m)$ distinct string lengths,
 this results in an algorithm whose running time is $O(n \sqrt m)$.
 
 \section{Mo's algorithm}
