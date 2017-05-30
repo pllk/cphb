@@ -83,7 +83,7 @@ corresponds to the set
 \[A = \{2,4,6\}.\]
 
 Each outcome $x$ is assigned a probability $p(x)$.
-Furthermore, the probability $P(A)$ of an event
+Then, the probability $P(A)$ of an event
 $A$ can be calculated as a sum
 of probabilities of outcomes using the formula
 \[P(A) = \sum_{x \in A} p(x).\]
@@ -169,7 +169,7 @@ Hence, when calculating the
 probability of $A$, we only consider the outcomes
 that also belong to $B$.
 
-Using the above sets,
+Using the previous sets,
 \[P(A | B)= 1/3,\]
 because the outcomes of $B$ are
 $\{1,2,3\}$, and one of them is even.
@@ -409,7 +409,7 @@ $[p_1,p_2,\ldots,p_n]$, where $p_k$ is the
 probability that the current state is $k$.
 The formula $p_1+p_2+\cdots+p_n=1$ always holds.
 
-In the example, the initial distribution is
+In the above scenario, the initial distribution is
 $[1,0,0,0,0]$, because we always begin in floor 1.
 The next distribution is $[0,1,0,0,0]$,
 because we can only move from floor 1 to floor 2.
@@ -428,7 +428,7 @@ a walk of $m$ steps in $O(n^2 m)$ time.
 The transitions of a Markov chain can also be
 represented as a matrix that updates the
 probability distribution.
-In this example, the matrix is
+In the above scenario, the matrix is
 
 \[ 
  \begin{bmatrix}
@@ -543,7 +543,7 @@ When each element $x$ is randomly chosen,
 the size of the array about halves at each step,
 so the time complexity for
 finding the $k$th order statistic is about
-\[n+n/2+n/4+n/8+\cdots \le 2n = O(n).\]
+\[n+n/2+n/4+n/8+\cdots < 2n = O(n).\]
 
 The worst case of the algorithm requires still $O(n^2)$ time,
 because it is possible that $x$ is always chosen

@@ -12,7 +12,7 @@ As an example, consider the problem
 of counting the number of ways to
 represent an integer $n$ as a sum of positive integers.
 For example, there are 8 representations
-for the number $4$:
+for $4$:
 \begin{multicols}{2}
 \begin{itemize}
 \item $1+1+1+1$
@@ -59,7 +59,10 @@ f(3) & = & 4 \\
 f(4) & = & 8 \\
 \end{array}
 \]
-It turns out that the function also has a closed-form formula
+
+Sometimes, a recursive formula can be replaced
+with a closed-form formula.
+In this problem,
 \[
 f(n)=2^{n-1},
 \]
@@ -316,7 +319,7 @@ there are 6 solutions:
 In this scenario, we can assume that
 $k$ balls are initially placed in boxes
 and there is an empty box between each
-pair of two adjacent boxes.
+two adjacent boxes.
 The remaining task is to choose the
 positions for the remaining empty boxes.
 There are $n-2k+1$ such boxes and
@@ -354,7 +357,7 @@ $n$ left parentheses and $n$ right parentheses.
 For example, $C_3=5$, because
 we can construct the following parenthesis
 expressions using three
-left parentheses and three right parentheses:
+left and right parentheses:
 
 \begin{itemize}[noitemsep]
 \item \texttt{()()()}
@@ -411,7 +414,8 @@ not counting the outermost parentheses
 \item $C_{n-i-1}$: the number of ways to construct an
 expression using the parentheses of the second part
 \end{itemize}
-In addition, the base case is $C_0=1$,
+
+The base case is $C_0=1$,
 because we can construct an empty parenthesis
 expression using zero pairs of parentheses.
 
@@ -442,10 +446,10 @@ the expression becomes \texttt{)((()(}.
 
 The resulting expression consists of $n+1$
 left parentheses and $n-1$ right parentheses.
-The number of such expressions is ${2n \choose n+1}$
-that equals the number of non-valid
+The number of such expressions is ${2n \choose n+1}$,
+which equals the number of non-valid
 parenthesis expressions.
-Thus the number of valid parenthesis
+Thus, the number of valid parenthesis
 expressions can be calculated using the formula
 \[{2n \choose n}-{2n \choose n+1} = {2n \choose n} - \frac{n}{n+1} {2n \choose n} = \frac{1}{n+1} {2n \choose n}.\]
 
@@ -541,7 +545,7 @@ the intersections are known, and vice versa.
 A simple example of the technique is the formula
 \[ |A \cup B| = |A| + |B| - |A \cap B|,\]
 where $A$ and $B$ are sets and $|X|$
-is the size of a set $X$.
+denotes the size of $X$.
 The formula can be illustrated as follows:
 
 \begin{center}
@@ -614,7 +618,7 @@ As an example, let us count the number of \key{derangements}
 of elements $\{1,2,\ldots,n\}$, i.e., permutations
 where no element remains in its original place.
 For example, when $n=3$, there are
-two possible derangements: $(2,3,1)$ and $(3,1,2)$.
+two derangements: $(2,3,1)$ and $(3,1,2)$.
 
 One approach for solving the problem is to use
 inclusion-exclusion.
@@ -676,7 +680,7 @@ with some other element than 1.
 Now we have to construct a derangement
 of $n-1$ element, because we cannot replace
 the element $x$ with the element $1$, and all other
-elements should be changed.
+elements must be changed.
 
 \section{Burnside's lemma}
 
