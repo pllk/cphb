@@ -85,7 +85,7 @@ It is clear for a human which of the lines is the correct
 choice, but the situation is difficult for a computer.
                            
 However, it turns out that we can solve the problem using
-another method that is much easier to use.
+another method that is more convenient to a programmer.
 Namely, there is a general formula
 \[x_1y_2-x_2y_1+x_2y_3-x_3y_2+x_3y_4-x_4y_3+x_4y_1-x_1y_4,\]
 that calculates the area of a quadrilateral
@@ -209,7 +209,7 @@ counterclockwise.
 
 The function $\texttt{polar}(s,a)$ constructs a vector
 whose length is $s$ and that points to an angle $a$.
-Moreover, a vector can be rotated by an angle $a$
+A vector can be rotated by an angle $a$
 by multiplying it by a vector with length 1 and angle $a$.
 
 The following code calculates the angle of
@@ -320,7 +320,7 @@ points $s_1$, $s_2$ and $p$ are on the same line.
 
 \index{line segment intersection}
 
-Consider the problem of checking
+Next we consider the problem of testing
 whether two line segments
 $ab$ and $cd$ intersect. The possible cases are:
 
@@ -404,7 +404,7 @@ exactly when both points $c$ and $d$ are
 on different sides of a line through $a$ and $b$,
 and points $a$ and $b$ are on different
 sides of a line through $c$ and $d$.
-Hence, we can use cross products to check this.
+We can use cross products to check this.
 
 \subsubsection{Point distance from a line}
 
@@ -413,9 +413,8 @@ the area of a triangle can be calculated
 using the formula
 \[\frac{| (a-c) \times (b-c) |}{2},\]
 where $a$, $b$ and $c$ are the vertices of the triangle.
-
-Using this formula, it is possible to calculate the
-shortest distance between a point and a line.
+Using this fact, we can derive a formula
+for calculating the shortest distance between a point and a line.
 For example, in the following picture $d$ is the
 shortest distance between the point $p$ and the line
 that is defined by the points $s_1$ and $s_2$:
@@ -678,8 +677,8 @@ from the center point, using the Euclidean and Manhattan distances:
 
 \subsubsection{Rotating coordinates}
 
-Some problems are easier to solve if the
-Manhattan distance is used instead of the Euclidean distance.
+Some problems are easier to solve if
+Manhattan distances are used instead of Euclidean distances.
 As an example, consider a problem where we are given
 $n$ points in the two-dimensional plane
 and our task is to calculate the maximum Manhattan
@@ -721,7 +720,7 @@ between points $B$ and $C$:
 \end{tikzpicture}
 \end{center}
 
-A useful technique related to the Manhattan distance
+A useful technique related to Manhattan distances
 is to rotate all coordinates 45 degrees so that
 a point $(x,y)$ becomes $(x+y,y-x)$.
 For example, after rotating the above points,
@@ -773,7 +772,7 @@ and the Manhattan distance is
 \[|1-3|+|0-3| = \max(|1-6|,|-1-0|) = 5.\]
 
 The rotated coordinates provide a simple way
-to operate with the Manhattan distance, because we can
+to operate with Manhattan distances, because we can
 consider x and y coordinates separately.
 To maximize the Manhattan distance between two points,
 we should find two points whose
