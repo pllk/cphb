@@ -3,7 +3,7 @@
 \index{segment tree}
 
 A segment tree is a versatile data structure
-that can be used in a large number of problems.
+that can be used to solve a large number of algorithm problems.
 However, there are many topics related to segment trees
 that we have not touched yet.
 Now is time to discuss some more advanced variants
@@ -12,17 +12,16 @@ of segment trees.
 So far, we have implemented the operations
 of a segment tree by walking \emph{from bottom to top}
 in the tree.
-For example, we have calculated the sum of 
-elements in a range $[a,b]$
-as follows (Chapter 9.3):
+For example, we have calculated
+range sums as follows (Chapter 9.3):
 
 \begin{lstlisting}
 int sum(int a, int b) {
-    a += N; b += N;
+    a += n; b += n;
     int s = 0;
     while (a <= b) {
-        if (a%2 == 1) s += p[a++];
-        if (b%2 == 0) s += p[b--];
+        if (a%2 == 1) s += tree[a++];
+        if (b%2 == 0) s += tree[b--];
         a /= 2; b /= 2;
     }
     return s;
@@ -30,35 +29,35 @@ int sum(int a, int b) {
 \end{lstlisting}
 
 However, in more advanced segment trees,
-it is often needed to implement the operations
+it is often necessary to implement the operations
 in another way, \emph{from top to bottom}.
 Using this approach, the function becomes as follows:
-
 \begin{lstlisting}
 int sum(int a, int b, int k, int x, int y) {
     if (b < x || a > y) return 0;
-    if (a <= x && y <= b) return p[k];
+    if (a <= x && y <= b) return tree[k];
     int d = (x+y)/2;
     return sum(a,b,2*k,x,d) + sum(a,b,2*k+1,d+1,y);
 }
 \end{lstlisting}
 
-Now we can calculate the sum of
-elements in $[a,b]$ as follows:
+Now we can calculate any value of $\texttt{sum}_q(a,b)$
+(the sum of array values in range $[a,b]$) as follows:
 \begin{lstlisting}
-int s = sum(a, b, 1, 0, N-1);
+int s = sum(a, b, 1, 0, n-1);
 \end{lstlisting}
+
 The parameter $k$ indicates the current position
-in \texttt{p}.
+in \texttt{tree}.
 Initially $k$ equals 1, because we begin
-at the root of the segment tree.
+at the root of the tree.
 The range $[x,y]$ corresponds to $k$
-and is initially $[0,N-1]$.
+and is initially $[0,n-1]$.
 When calculating the sum,
 if $[x,y]$ is outside $[a,b]$,
 the sum is 0,
 and if $[x,y]$ is completely inside $[a,b]$,
-the sum can be found in \texttt{p}.
+the sum can be found in \texttt{tree}.
 If $[x,y]$ is partially inside $[a,b]$,
 the search continues recursively to the
 left and right half of $[x,y]$.
@@ -67,9 +66,9 @@ and the right half is $[d+1,y]$
 where $d=\lfloor \frac{x+y}{2} \rfloor$.
 
 The following picture shows how the search proceeds
-when calculating the sum of elements in $[a,b]$.
+when calculating the value of $\texttt{sum}_q(a,b)$.
 The gray nodes indicate nodes where the recursion
-stops and the sum can be found in \texttt{p}.
+stops and the sum can be found in \texttt{tree}.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -191,7 +190,7 @@ related to lazy updates, which has not been
 propagated to its children.
 
 There are two types of range updates:
-each element in the range is either
+each array value in the range is either
 \emph{increased} by some value
 or \emph{assigned} some value.
 Both operations can be implemented using
@@ -202,17 +201,17 @@ a tree that supports both operations at the same time.
 
 Let us consider an example where our goal is to
 construct a segment tree that supports
-two operations: increasing each element in
+two operations: increasing each value in
 $[a,b]$ by a constant and calculating the sum of
-elements in $[a,b]$.
+values in $[a,b]$.
 
 We will construct a tree where each node
-contains two values $s/z$:
-$s$ denotes the sum of elements in the range
+has two values $s/z$:
+$s$ denotes the sum of values in the range,
 and $z$ denotes the value of a lazy update,
-which means that all elements in the range
+which means that all values in the range
 should be increased by $z$.
-In the following tree, $z=0$ for all nodes,
+In the following tree, $z=0$ in all nodes,
 so there are no ongoing lazy updates.
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -290,7 +289,7 @@ When the elements in $[a,b]$ are increased by $u$,
 we walk from the root towards the leaves
 and modify the nodes of the tree as follows:
 If the range $[x,y]$ of a node is
-completely inside the range $[a,b]$,
+completely inside $[a,b]$,
 we increase the $z$ value of the node by $u$ and stop.
 If $[x,y]$ only partially belongs to $[a,b]$,
 we increase the $s$ value of the node by $hu$,
@@ -406,10 +405,9 @@ downwards only when it is necessary,
 which guarantees that the operations are always efficient.
 
 The following picture shows how the tree changes
-when we calculate the sum of elements in $[a,b]$.
+when we calculate the value of $\texttt{sum}_a(a,b)$.
 The rectangle shows the nodes whose values change,
-because a lazy update is propagated downwards,
-which is necessary to calculate the sum in $[a,b]$.
+because a lazy update is propagated downwards.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -501,7 +499,7 @@ which is necessary to calculate the sum in $[a,b]$.
 Note that sometimes it is needed to combine lazy updates.
 This happens when a node that already has a lazy update
 is assigned another lazy update.
-In this problem, it is easy to combine lazy updates,
+When calculating sums, it is easy to combine lazy updates,
 because the combination of updates $z_1$ and $z_2$
 corresponds to an update $z_1+z_2$.
 
@@ -511,13 +509,12 @@ Lazy updates can be generalized so that it is
 possible to update ranges using polynomials of the form
 \[p(u) = t_k u^k + t_{k-1} u^{k-1} + \cdots + t_0.\]
 
-In this case, the update for an element
-at position $i$
-in the range $[a,b]$ is $p(i-a)$.
+In this case, the update for a value
+at position $i$ in $[a,b]$ is $p(i-a)$.
 For example, adding the polynomial $p(u)=u+1$
-to the range $[a,b]$ means that the element at position $a$
-is increased by 1, the element at position $a+1$
-is increased by 2, and so on.
+to $[a,b]$ means that the value at position $a$
+increases by 1, the value at position $a+1$
+increases by 2, and so on.
 
 To support polynomial updates,
 each node is assigned $k+2$ values,
@@ -526,7 +523,7 @@ The value $s$ is the sum of the elements in the range,
 and the values $z_0,z_1,\ldots,z_k$ are the coefficients
 of a polynomial that corresponds to a lazy update.
 
-Now, the sum of elements in a range $[x,y]$ equals
+Now, the sum of values in a range $[x,y]$ equals
 \[s+\sum_{u=0}^{y-x} z_k u^k + z_{k-1} u^{k-1} + \cdots + z_0.\]
 
 The value of such a sum
@@ -560,27 +557,25 @@ are actually accessed during the algorithm,
 which can save a large amount of memory.
 
 The nodes of a dynamic tree can be represented as structs:
-
 \begin{lstlisting}
 struct node {
-    int v;
+    int value;
     int x, y;
-    node *l, *r;
-    node(int v, int x, int y) : v(v), x(x), y(y) {}
+    node *left, *right;
+    node(int v, int x, int y) : value(v), x(x), y(y) {}
 };
 \end{lstlisting}
-Here $v$ is the value of the node,
-$[x,y]$ is the corresponding range,
-and $l$ and $r$ point to the left
+Here \texttt{value} is the value of the node,
+$[\texttt{x},\texttt{y}]$ is the corresponding range,
+and \texttt{left} and \texttt{right} point to the left
 and right subtree.
 
 After this, nodes can be created as follows:
-
 \begin{lstlisting}
 // create new node
-node *u = new node(0, 0, 15);
+node *x = new node(0, 0, 15);
 // change value
-u->v = 5;
+x->value = 5;
 \end{lstlisting}
 
 \subsubsection{Sparse segment trees}
@@ -589,19 +584,19 @@ u->v = 5;
 
 A dynamic segment tree is useful when
 the underlying array is \emph{sparse},
-i.e., the range $[0,N-1]$
+i.e., the range $[0,n-1]$
 of allowed indices is large,
 but most array values are zeros.
-While an ordinary segment tree uses $O(N)$ memory,
-a dynamic segment tree only uses $O(n \log N)$ memory,
-where $n$ is the number of operations performed.
+While an ordinary segment tree uses $O(n)$ memory,
+a dynamic segment tree only uses $O(k \log n)$ memory,
+where $k$ is the number of operations performed.
 
 A \key{sparse segment tree} initially has
-only one node $[0,N-1]$ whose value is zero,
+only one node $[0,n-1]$ whose value is zero,
 which means that every array value is zero.
 After updates, new nodes are dynamically added
 to the tree.
-For example, if $N=16$ and the elements
+For example, if $n=16$ and the elements
 in positions 3 and 10 have been modified,
 the tree contains the following nodes:
 \begin{center}
@@ -630,16 +625,16 @@ the tree contains the following nodes:
 \end{center}
 
 Any path from the root node to a leaf contains
-$O(\log N)$ nodes,
-so each operation adds at most $O(\log N)$
+$O(\log n)$ nodes,
+so each operation adds at most $O(\log n)$
 new nodes to the tree.
-Thus, after $n$ operations, the tree contains
-at most $O(n \log N)$ nodes.
+Thus, after $k$ operations, the tree contains
+at most $O(k \log n)$ nodes.
 
-Note that if all indices of the elements
-are known at the beginning of the algorithm,
+Note that if we know all elements to be updated
+at the beginning of the algorithm,
 a dynamic segment tree is not necessary,
-but we can use an ordinary segment tree with
+because we can use an ordinary segment tree with
 index compression (Chapter 9.4).
 However, this is not possible when the indices
 are generated during the algorithm.
@@ -773,8 +768,8 @@ stored as follows:
 The structure of each previous tree can be
 reconstructed by following the pointers
 starting at the corresponding root node.
-Since each operation during the algorithm
-adds only $O(\log N)$ new nodes to the tree,
+Since each operation
+adds only $O(\log n)$ new nodes to the tree,
 it is possible to store the full modification history of the tree.
 
 \section{Data structures}
