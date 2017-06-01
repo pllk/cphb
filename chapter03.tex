@@ -48,16 +48,6 @@ For example, the array
 \node at (5.5,0.5) {$2$};
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$6$};
-
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 will be as follows after sorting:
@@ -72,16 +62,6 @@ will be as follows after sorting:
 \node at (5.5,0.5) {$6$};
 \node at (6.5,0.5) {$8$};
 \node at (7.5,0.5) {$9$};
-
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -103,12 +83,13 @@ the elements of the array.
 Whenever two consecutive elements are found
 that are not in correct order,
 the algorithm swaps them.
-The algorithm can be implemented as follows
-for an array \texttt{t}:
+The algorithm can be implemented as follows:
 \begin{lstlisting}
 for (int i = 0; i < n; i++) {
     for (int j = 0; j < n-1; j++) {
-        if (t[j] > t[j+1]) swap(t[j],t[j+1]);
+        if (array[j] > array[j+1]) {
+            swap(array[j],array[j+1]);
+        }
     }
 }
 \end{lstlisting}
@@ -134,16 +115,6 @@ For example, in the array
 \node at (5.5,0.5) {$2$};
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$6$};
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -164,16 +135,6 @@ as follows:
 \node at (7.5,0.5) {$6$};
 
 \draw[thick,<->] (3.5,-0.25) .. controls (3.25,-1.00) and (2.75,-1.00) .. (2.5,-0.25);
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -190,16 +151,6 @@ as follows:
 \node at (7.5,0.5) {$6$};
 
 \draw[thick,<->] (5.5,-0.25) .. controls (5.25,-1.00) and (4.75,-1.00) .. (4.5,-0.25);
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -216,16 +167,6 @@ as follows:
 \node at (7.5,0.5) {$6$};
 
 \draw[thick,<->] (6.5,-0.25) .. controls (6.25,-1.00) and (5.75,-1.00) .. (5.5,-0.25);
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -242,16 +183,6 @@ as follows:
 \node at (7.5,0.5) {$9$};
 
 \draw[thick,<->] (7.5,-0.25) .. controls (7.25,-1.00) and (6.75,-1.00) .. (6.5,-0.25);
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -269,12 +200,11 @@ $O(n^2)$ swaps are required for sorting the array.
 
 A useful concept when analyzing sorting
 algorithms is an \key{inversion}:
-a pair of elements
-$(\texttt{t}[a],\texttt{t}[b])$
-in the array such that
-$a<b$ and $\texttt{t}[a]>\texttt{t}[b]$,
+a pair of array elements
+$(\texttt{array}[a],\texttt{array}[b])$ such that
+$a<b$ and $\texttt{array}[a]>\texttt{array}[b]$,
 i.e., the elements are in the wrong order.
-For example, in the array
+For example, the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -286,19 +216,9 @@ For example, in the array
 \node at (5.5,0.5) {$5$};
 \node at (6.5,0.5) {$9$};
 \node at (7.5,0.5) {$8$};
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
-the inversions are $(6,3)$, $(6,5)$ and $(9,8)$.
+has tree inversions: $(6,3)$, $(6,5)$ and $(9,8)$.
 The number of inversions indicates
 how much work is needed to sort the array.
 An array is completely sorted when
@@ -327,22 +247,23 @@ One such algorithm is \key{merge sort}\footnote{According to \cite{knu983},
 merge sort was invented by J. von Neumann in 1945.},
 which is based on recursion.
 
-Merge sort sorts a subarray \texttt{t}$[a \ldots b]$ as follows:
+Merge sort sorts a subarray \texttt{array}$[a \ldots b]$ as follows:
 
 \begin{enumerate}
 \item If $a=b$, do not do anything, because the subarray is already sorted.
 \item Calculate the position of the middle element: $k=\lfloor (a+b)/2 \rfloor$.
-\item Recursively sort the subarray \texttt{t}$[a \ldots k]$.
-\item Recursively sort the subarray \texttt{t}$[k+1 \ldots b]$.
-\item \emph{Merge} the sorted subarrays \texttt{t}$[a \ldots k]$ and \texttt{t}$[k+1 \ldots b]$
-into a sorted subarray \texttt{t}$[a \ldots b]$.
+\item Recursively sort the subarray \texttt{array}$[a \ldots k]$.
+\item Recursively sort the subarray \texttt{array}$[k+1 \ldots b]$.
+\item \emph{Merge} the sorted subarrays \texttt{array}$[a \ldots k]$ and
+\texttt{array}$[k+1 \ldots b]$
+into a sorted subarray \texttt{array}$[a \ldots b]$.
 \end{enumerate}
 
 Merge sort is an efficient algorithm, because it
 halves the size of the subarray at each step.
 The recursion consists of $O(\log n)$ levels,
 and processing each level takes $O(n)$ time.
-Merging the subarrays \texttt{t}$[a \ldots k]$ and \texttt{t}$[k+1 \ldots b]$
+Merging the subarrays \texttt{array}$[a \ldots k]$ and \texttt{array}$[k+1 \ldots b]$
 is possible in linear time, because they are already sorted.
 
 For example, consider sorting the following array:
@@ -357,16 +278,6 @@ For example, consider sorting the following array:
 \node at (5.5,0.5) {$2$};
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$9$};
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -386,17 +297,6 @@ as follows:
 \node at (6.5,0.5) {$2$};
 \node at (7.5,0.5) {$5$};
 \node at (8.5,0.5) {$9$};
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (5.5,1.4) {$5$};
-% \node at (6.5,1.4) {$6$};
-% \node at (7.5,1.4) {$7$};
-% \node at (8.5,1.4) {$8$};
-
 \end{tikzpicture}
 \end{center}
 
@@ -416,16 +316,6 @@ as follows:
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$8$};
 \node at (8.5,0.5) {$9$};
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (5.5,1.4) {$5$};
-% \node at (6.5,1.4) {$6$};
-% \node at (7.5,1.4) {$7$};
-% \node at (8.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -442,16 +332,6 @@ subarrays and creates the final sorted array:
 \node at (5.5,0.5) {$6$};
 \node at (6.5,0.5) {$8$};
 \node at (7.5,0.5) {$9$};
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 
@@ -557,16 +437,6 @@ For example, the array
 \node at (5.5,0.5) {$3$};
 \node at (6.5,0.5) {$5$};
 \node at (7.5,0.5) {$9$};
-% 
-% \footnotesize
-% \node at (0.5,1.4) {$1$};
-% \node at (1.5,1.4) {$2$};
-% \node at (2.5,1.4) {$3$};
-% \node at (3.5,1.4) {$4$};
-% \node at (4.5,1.4) {$5$};
-% \node at (5.5,1.4) {$6$};
-% \node at (6.5,1.4) {$7$};
-% \node at (7.5,1.4) {$8$};
 \end{tikzpicture}
 \end{center}
 corresponds to the following bookkeeping array:
@@ -653,8 +523,8 @@ sort(v.rbegin(),v.rend());
 An ordinary array can be sorted as follows:
 \begin{lstlisting}
 int n = 7; // array size
-int t[] = {4,2,5,3,5,8,3};
-sort(t,t+n);
+int a[] = {4,2,5,3,5,8,3};
+sort(a,a+n);
 \end{lstlisting}
 \newpage
 The following code sorts the string \texttt{s}:
@@ -772,11 +642,11 @@ A general method for searching for an element
 in an array is to use a \texttt{for} loop
 that iterates through the elements of the array.
 For example, the following code searches for
-an element $x$ in an array \texttt{t}:
+an element $x$ in an array:
 
 \begin{lstlisting}
 for (int i = 0; i < n; i++) {
-    if (t[i] == x) {
+    if (array[i] == x) {
         // x found at index i
     }
 }
@@ -821,10 +691,10 @@ The above idea can be implemented as follows:
 int a = 0, b = n-1;
 while (a <= b) {
     int k = (a+b)/2;
-    if (t[k] == x) {
+    if (array[k] == x) {
         // x found at index k
     }
-    if (t[k] > x) b = k-1;
+    if (array[k] > x) b = k-1;
     else a = k+1;
 }
 \end{lstlisting}
@@ -854,9 +724,9 @@ The following code implements the above idea:
 \begin{lstlisting}
 int k = 0;
 for (int b = n/2; b >= 1; b /= 2) {
-    while (k+b < n && t[k+b] <= x) k += b;
+    while (k+b < n && array[k+b] <= x) k += b;
 }
-if (t[k] == x) {
+if (array[k] == x) {
     // x found at index k
 }
 \end{lstlisting}
@@ -884,11 +754,11 @@ The functions assume that the array is sorted.
 If there is no such element, the pointer points to
 the element after the last array element.
 For example, the following code finds out whether
-\texttt{t} contains an element with value $x$:
+an array contains an element with value $x$:
 
 \begin{lstlisting}
-auto k = lower_bound(t,t+n,x)-t;
-if (k < n && t[k] == x) {
+auto k = lower_bound(array,array+n,x)-array;
+if (k < n && array[k] == x) {
     // x found at index k
 }
 \end{lstlisting}
@@ -897,15 +767,15 @@ Then, the following code counts the number of elements
 whose value is $x$:
 
 \begin{lstlisting}
-auto a = lower_bound(t, t+n, x);
-auto b = upper_bound(t, t+n, x);
+auto a = lower_bound(array, array+n, x);
+auto b = upper_bound(array, array+n, x);
 cout << b-a << "\n";
 \end{lstlisting}
 
 Using \texttt{equal\_range}, the code becomes shorter:
 
 \begin{lstlisting}
-auto r = equal_range(t, t+n, x);
+auto r = equal_range(array, array+n, x);
 cout << r.second-r.first << "\n";
 \end{lstlisting}
 
