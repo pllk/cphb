@@ -308,19 +308,19 @@ can be calculated in the order of a topological sort.
 A topological sort for the above graph is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
-\node[draw, circle] (1) at (3,0) {$1$};
+\node[draw, circle] (1) at (0,0) {$1$};
 \node[draw, circle] (2) at (4.5,0) {$2$};
 \node[draw, circle] (3) at (6,0) {$3$};
-\node[draw, circle] (4) at (0,0) {$4$};
-\node[draw, circle] (5) at (1.5,0) {$5$};
+\node[draw, circle] (4) at (1.5,0) {$4$};
+\node[draw, circle] (5) at (3,0) {$5$};
 \node[draw, circle] (6) at (7.5,0) {$6$};
 
-\path[draw,thick,->,>=latex] (1) -- (2);
+\path[draw,thick,->,>=latex] (1) edge [bend left=30] (2);
 \path[draw,thick,->,>=latex] (2) -- (3);
-\path[draw,thick,->,>=latex] (4) edge [bend left=30] (1);
+\path[draw,thick,->,>=latex] (1) -- (4);
 \path[draw,thick,->,>=latex] (4) -- (5);
-\path[draw,thick,->,>=latex] (5) edge [bend right=30] (2);
-\path[draw,thick,->,>=latex] (5) edge [bend right=40] (3);
+\path[draw,thick,->,>=latex] (5) -- (2);
+\path[draw,thick,->,>=latex] (5) edge [bend right=30] (3);
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
