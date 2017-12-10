@@ -749,10 +749,10 @@ because $S_A$ contains the sum $6$,
 $S_B$ contains the sum $9$, and $6+9=15$.
 This corresponds to the solution $[2,4,9]$.
 
-The time complexity of the algorithm is $O(2^{n/2})$,
-because both lists $A$ and $B$ contain about $n/2$ numbers
-and it takes $O(2^{n/2})$ time to calculate the sums of
-their subsets to lists $S_A$ and $S_B$.
-After this, it is possible to check in 
-$O(2^{n/2})$ time if the sum $x$ can be created
-from $S_A$ and $S_B$.
+We can implement the algorithm so that
+its time complexity is $O(2^{n/2})$.
+First, we generate \emph{sorted} lists $S_A$ and $S_B$,
+which can be done in $O(2^{n/2})$ time using a merge-like technique.
+After this, since the lists are sorted,
+we can check in $O(2^{n/2})$ time if
+the sum $x$ can be created from $S_A$ and $S_B$.
