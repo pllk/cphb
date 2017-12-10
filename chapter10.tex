@@ -333,8 +333,8 @@ the sets $x=\{1,3,4,8\}$ and $y=\{3,6,8,9\}$,
 and then constructs the set $z = x \cup y = \{1,3,4,6,8,9\}$:
 
 \begin{lstlisting}
-int x = (1<<1)+(1<<3)+(1<<4)+(1<<8);
-int y = (1<<3)+(1<<6)+(1<<8)+(1<<9);
+int x = (1<<1)|(1<<3)|(1<<4)|(1<<8);
+int y = (1<<3)|(1<<6)|(1<<8)|(1<<9);
 int z = x|y;
 cout << __builtin_popcount(z) << "\n"; // 6
 \end{lstlisting}
@@ -804,7 +804,7 @@ that only elements $0 \ldots k$
 may be removed from $S$.
 For example,
 \[\texttt{partial}(\{0,2\},1)=\texttt{value}[\{2\}]+\texttt{value}[\{0,2\}],\]
-because we only may remove elements $0 \ldots 1$.
+because we may only remove elements $0 \ldots 1$.
 We can calculate values of \texttt{sum} using
 values of \texttt{partial}, because
 \[\texttt{sum}(S) = \texttt{partial}(S,n-1).\]
