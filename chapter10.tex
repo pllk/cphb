@@ -728,16 +728,16 @@ pair<int,int> best[1<<N];
 \end{lstlisting}
 that contains for each subset $S$
 a pair $(\texttt{rides}(S),\texttt{last}(S))$.
-For an empty group, no rides are needed:
+We set the value for an empty group as follows:
 \begin{lstlisting}
-best[0] = {0,0};
+best[0] = {1,0};
 \end{lstlisting}
 Then, we can fill the array as follows:
 
 \begin{lstlisting}
 for (int s = 1; s < (1<<n); s++) {
-    // initial value: n rides are needed
-    best[s] = {n,0};
+    // initial value: n+1 rides are needed
+    best[s] = {n+1,0};
     for (int p = 0; p < n; p++) {
         if (s&(1<<p)) {
             auto option = best[s^(1<<p)];
