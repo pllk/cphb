@@ -247,7 +247,7 @@ value[0] = 0;
 for (int x = 1; x <= n; x++) {
     value[x] = INF;
     for (auto c : coins) {
-        if (x-c >= 0) {
+        if (x >= c) {
             value[x] = min(value[x], value[x-c]+1);
         }
     }
@@ -283,7 +283,7 @@ value[0] = 0;
 for (int x = 1; x <= n; x++) {
     value[x] = INF;
     for (auto c : coins) {
-        if (x-c >= 0 && value[x-c]+1 < value[x]) {
+        if ((x >= c) && value[x-c]+1 < value[x]) {
             value[x] = value[x-c]+1;
             first[x] = c;
         }
@@ -358,7 +358,7 @@ for $0 \le x \le n$:
 count[0] = 1;
 for (int x = 1; x <= n; x++) {
     for (auto c : coins) {
-        if (x-c >= 0) {
+        if (x >= c) {
             count[x] += count[x-c];
         }
     }
