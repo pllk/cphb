@@ -646,7 +646,7 @@ array to keep track of the maximum sums
 for (int y = 1; y < N; ++y) {
     sum[0] += value[y][0];
     for (int x = 1; x < N; ++x) {
-      sum[x] = value[y][x] + std::max(sum[x-1], sum[x]);
+      sum[x] = value[y][x] + max(sum[x-1], sum[x]);
     }
 }  
 \end{lstlisting}
