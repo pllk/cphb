@@ -634,11 +634,21 @@ int sum[N][N];
 \end{lstlisting}
 and calculate the sums as follows:
 \begin{lstlisting}
-for (int y = 1; y <= n; y++) {
-    for (int x = 1; x <= n; x++) {
+for (int y = 1; y < N; y++) {
+    for (int x = 1; x < N; x++) {
         sum[y][x] = max(sum[y][x-1],sum[y-1][x])+value[y][x];
     }
 }
+\end{lstlisting}
+However, below is a better solution that only uses one dimensional
+array to keep track of the maximum sums
+\begin{lstlisting}
+for (int y = 1; y < N; ++y) {
+    sum[0] += value[y][0];
+    for (int x = 1; x < N; ++x) {
+      sum[x] = value[y][x] + std::max(sum[x-1], sum[x]);
+    }
+}  
 \end{lstlisting}
 The time complexity of the algorithm is $O(n^2)$.
 
