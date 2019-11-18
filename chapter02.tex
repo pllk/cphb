@@ -487,8 +487,8 @@ for each ending position from left to right.
 
 The following code implements the algorithm:
 \begin{lstlisting}
-int best = 0, sum = 0;
-for (int k = 0; k < n; k++) {
+int best = array[0], sum = array[0];
+for (int k = 1; k < n; k++) {
     sum = max(array[k],sum+array[k]);
     best = max(best,sum);
 }
