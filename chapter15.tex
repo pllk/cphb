@@ -516,8 +516,7 @@ the chain that begins at $x$.
 
 \begin{lstlisting}
 int find(int x) {
-    while (x != link[x]) x = link[x];
-    return x;
+    return x != link[x] ? link[x] = find(link[x]) : x;
 }
 \end{lstlisting}
 
