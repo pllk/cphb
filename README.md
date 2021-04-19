@@ -12,7 +12,7 @@ https://cses.fi/problemset/
 
 ## License
 
-The license of the book is Creative Commons BY-NC-SA.
+The license of the book is Creative Commons BY-NC-SA 4.0.
 
 ## Other books
 
