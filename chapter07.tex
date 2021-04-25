@@ -247,7 +247,7 @@ value[0] = 0;
 for (int x = 1; x <= n; x++) {
     value[x] = INF;
     for (auto c : coins) {
-        if (x-c >= 0) {
+        if (x >= c) {
             value[x] = min(value[x], value[x-c]+1);
         }
     }
@@ -283,7 +283,7 @@ value[0] = 0;
 for (int x = 1; x <= n; x++) {
     value[x] = INF;
     for (auto c : coins) {
-        if (x-c >= 0 && value[x-c]+1 < value[x]) {
+        if ((x >= c) && value[x-c]+1 < value[x]) {
             value[x] = value[x-c]+1;
             first[x] = c;
         }
@@ -358,7 +358,7 @@ for $0 \le x \le n$:
 count[0] = 1;
 for (int x = 1; x <= n; x++) {
     for (auto c : coins) {
-        if (x-c >= 0) {
+        if (x >= c) {
             count[x] += count[x-c];
         }
     }
@@ -634,11 +634,21 @@ int sum[N][N];
 \end{lstlisting}
 and calculate the sums as follows:
 \begin{lstlisting}
-for (int y = 1; y <= n; y++) {
-    for (int x = 1; x <= n; x++) {
+for (int y = 1; y < N; y++) {
+    for (int x = 1; x < N; x++) {
         sum[y][x] = max(sum[y][x-1],sum[y-1][x])+value[y][x];
     }
 }
+\end{lstlisting}
+However, below is a better solution that only uses one dimensional
+array to keep track of the maximum sums
+\begin{lstlisting}
+for (int y = 1; y < N; ++y) {
+    sum[0] += value[y][0];
+    for (int x = 1; x < N; ++x) {
+      sum[x] = value[y][x] + max(sum[x-1], sum[x]);
+    }
+}  
 \end{lstlisting}
 The time complexity of the algorithm is $O(n^2)$.
 
