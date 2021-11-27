@@ -553,7 +553,7 @@ minimum distance node that has not been processed.
 An appropriate data structure for this is a priority queue
 that contains the nodes ordered by their distances.
 Using a priority queue, the next node to be processed
-can be retrieved in logarithmic time.
+can be looked up in constant and removed in logarithmic time.
 
 In the following code, the priority queue
 \texttt{q} contains pairs of the form $(-d,x)$,
