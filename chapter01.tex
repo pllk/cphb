@@ -1,79 +1,49 @@
 \chapter{Introduction}
 
-Competitive programming combines two topics:
-(1) the design of algorithms and (2) the implementation of algorithms.
+競技プログラミングとは次の二つのトピックからなっている。
+アルゴリズムの設計とアルゴリズムの実装である。
+%Competitive programming combines two topics:
+%(1) the design of algorithms and (2) the implementation of algorithms.
 
-The \key{design of algorithms} consists of problem solving
-and mathematical thinking.
-Skills for analyzing problems and solving them
-creatively are needed.
-An algorithm for solving a problem
-has to be both correct and efficient,
-and the core of the problem is often
-about inventing an efficient algorithm.
 
-Theoretical knowledge of algorithms
-is important to competitive programmers.
-Typically, a solution to a problem is
-a combination of well-known techniques and
-new insights.
-The techniques that appear in competitive programming
-also form the basis for the scientific research
-of algorithms.
+\key{アルゴリズムの設計} は問題解決と数学的思考です。
+問題を分析し、想像的に解決することが求められます。
+そのアルゴリズムは正確で効率的であることが求められ、多くの問題でポイントとなるのは効率的なアルゴリズムの考察です。
 
-The \key{implementation of algorithms} requires good
-programming skills.
-In competitive programming, the solutions
-are graded by testing an implemented algorithm
-using a set of test cases.
-Thus, it is not enough that the idea of the
-algorithm is correct, but the implementation also
-has to be correct.
+アルゴリズムの理論的な知識は、競技プログラミングに取り組むにあたり重要な要素です。
+一般的な問題は、よく知られたテクニックと新しい考察の組み合わせからなります。
+また、競技プログラミングに登場するテクニックは、アルゴリズムの科学的研究の基礎でもあります。
 
-A good coding style in contests is
-straightforward and concise.
-Programs should be written quickly,
-because there is not much time available.
-Unlike in traditional software engineering,
-the programs are short (usually at most a few
-hundred lines of code), and they do not need to 
-be maintained after the contest.
+The \key{アルゴリズムの実装} にはプログラミングスキルが大切になります。
+競技プログラミングでは、実装したアルゴリズムはテストケースでテストすることで採点されます。
+このため、アルゴリズムの考察に加えて、その実装も正しくなければなりません。
 
-\section{Programming languages}
 
-\index{programming language}
+コンテストでの良いコーディングスタイルとはシンプルで簡潔なものです。
+コンテストの時間は限られるため、プログラムは素早く書かなければなりません。
+通常のソフトウェア開発とは異なり、プログラムは短いですし（どんなに長くても数百行程度）、
+コンテスト後にメンテナンスする必要はありません。
 
-At the moment, the most popular programming
-languages used in contests are C++, Python and Java.
-For example, in Google Code Jam 2017,
-among the best 3,000 participants,
-79 \% used C++,
-16 \% used Python and
-8 \% used Java \cite{goo17}.
-Some participants also used several languages.
+\section{プログラミング言語}
 
-Many people think that C++ is the best choice
-for a competitive programmer,
-and C++ is nearly always available in
-contest systems.
-The benefits of using C++ are that
-it is a very efficient language and
-its standard library contains a 
-large collection
-of data structures and algorithms.
+\index{プログラミング言語}
 
-On the other hand, it is good to
-master several languages and understand
-their strengths.
-For example, if large integers are needed
-in the problem,
-Python can be a good choice, because it
-contains built-in operations for
-calculating with large integers.
-Still, most problems in programming contests
-are set so that
-using a specific programming language
-is not an unfair advantage.
+現在(2018年)最も使われているプログラミング言語はC++, Python, Javaです。
+Google Code Jam 2017の上位3000人をみてみると、
+79 \% が C++,
+16 \% が Python,
+8 \% が Java を使用しています\cite{goo17}.
+また、複数の言語を使い分けている参加者もいます。
+
+C++が競技プログラミングに最適と考える人は多く、C++はほぼどのコンテストでも利用できます。
+C++を使う利点は次の通りです。非常に効率的な言語であり
+標準ライブラリには データ構造やアルゴリズムが豊富に揃っていること。
+
+一方で複数の言語を使いこなし、それぞれの強みを理解するのも良いアプローチです。
+例えば、問題に(64bitや128bitを超える)大きな整数が必要な場合、
+Pythonは標準で大きな整数を扱えるため良い選択肢になります。
+とはいえ、コンテストの多くではあるプログラミング言語を選択したことで
+アンフェアにならないようにされています。
 
 All example programs in this book are written in C++,
 and the standard library's
@@ -82,11 +52,13 @@ The programs follow the C++11 standard,
 which can be used in most contests nowadays.
 If you cannot program in C++ yet,
 now is a good time to start learning.
+本書で紹介するプログラムはC++11で書かれており、多くのプログラミングコンテストで使うことができます(訳註：2018年はC++17対応のコンテストサイトは少なかった)。
+標準ライブラリのデータ構造やアルゴリズムが多く使用されています。
+C++でプログラミングができない人は、今が勉強を始める良い機会です！
 
-\subsubsection{C++ code template}
+\subsubsection{C++のテンプレート}
 
-A typical C++ code template for competitive programming
-looks like this:
+C++での競技プログラミング用テンプレートを以下に示します。
 
 \begin{lstlisting}
 #include <bits/stdc++.h>
@@ -98,51 +70,42 @@ int main() {
 }
 \end{lstlisting}
 
-The \texttt{\#include} line at the beginning
-of the code is a feature of the \texttt{g++} compiler
-that allows us to include the entire standard library.
-Thus, it is not needed to separately include
-libraries such as \texttt{iostream},
-\texttt{vector} and \texttt{algorithm},
-but rather they are available automatically.
+最初の\texttt{\#include}は\texttt{g++}の機能で標準ライブラリを一括で読み込むことができます。
+つまり、よく使う\texttt{iostream},
+\texttt{vector}や\texttt{algorithm},
+などが使えるようになります。
 
-The \texttt{using} line declares
-that the classes and functions
-of the standard library can be used directly
-in the code.
-Without the \texttt{using} line we would have
-to write, for example, \texttt{std::cout},
-but now it suffices to write \texttt{cout}.
+\texttt{using}行は標準ライブラリの機能を一括で使えるようにします。
+\texttt{using}がない場合は
+\texttt{std::cout}と書かないと行けませんが、これがあることで
+\texttt{cout}だけで十分になります。
 
-The code can be compiled using the following command:
+そして、このコードは以下のようにコンパイルします。
 
 \begin{lstlisting}
 g++ -std=c++11 -O2 -Wall test.cpp -o test
 \end{lstlisting}
 
-This command produces a binary file \texttt{test}
-from the source code \texttt{test.cpp}.
-The compiler follows the C++11 standard
-(\texttt{-std=c++11}),
-optimizes the code (\texttt{-O2})
-and shows warnings about possible errors (\texttt{-Wall}).
+このコマンドは\texttt{test.cpp}から
+\texttt{test}という実行形式のバイナリを作成します。
+(\texttt{-std=c++11})はC++11としてコンパイルすることを、
+(\texttt{-O2})は最適化を行うことを、
+(\texttt{-Wall})は全てのWarningを出すことを示します。
 
-\section{Input and output}
+\section{入出力}
 
-\index{input and output}
+\index{入出力}
 
-In most contests, standard streams are used for
-reading input and writing output.
-In C++, the standard streams are
-\texttt{cin} for input and \texttt{cout} for output.
-In addition, the C functions
-\texttt{scanf} and \texttt{printf} can be used.
+ほとんどのコンテストでは標準入出力ストリームが用いられます。
 
-The input for the program usually consists of
-numbers and strings that are separated with
-spaces and newlines.
-They can be read from the \texttt{cin} stream
-as follows:
+C++では標準入出力には、
+入力に\texttt{cin}が使われ、出力に\texttt{cout}が使われます。
+さらにCの関数である
+\texttt{scanf}と\texttt{printf}も利用できます。
+
+通常、入力はスペースと改行で区切られた数字と文字列で構成されており、
+これらは以下のように
+\texttt{cin}でストリームから読み込むことができます。
 
 \begin{lstlisting}
 int a, b;
@@ -150,11 +113,10 @@ string x;
 cin >> a >> b >> x;
 \end{lstlisting}
 
-This kind of code always works,
-assuming that there is at least one space
-or newline between each element in the input.
-For example, the above code can read
-both of the following inputs:
+
+cinは各要素の間に少なくとも1つのスペースか改行があることを前提に動作します。
+つまり、このコードは次の両方の入力を読み取ることができます。
+
 \begin{lstlisting}
 123 456 monkey
 \end{lstlisting}
@@ -162,65 +124,53 @@ both of the following inputs:
 123    456
 monkey
 \end{lstlisting}
-The \texttt{cout} stream is used for output
-as follows:
+The \texttt{cout}は次のように出力に使います。
 \begin{lstlisting}
 int a = 123, b = 456;
 string x = "monkey";
 cout << a << " " << b << " " << x << "\n";
 \end{lstlisting}
 
-Input and output is sometimes
-a bottleneck in the program.
-The following lines at the beginning of the code
-make input and output more efficient:
+入出力は時として実行時間のボトルネックになります。
+以下を用いることで効率的な入出力が可能です。
 
 \begin{lstlisting}
 ios::sync_with_stdio(0);
 cin.tie(0);
 \end{lstlisting}
 
-Note that the newline \texttt{"\textbackslash n"}
-works faster than \texttt{endl},
-because \texttt{endl} always causes
-a flush operation.
+\texttt{"\textbackslash n"}用いると
+\texttt{endl}よりも高速です。
+なぜなら、\texttt{endl} は毎回flushを行うからです。
 
-The C functions \texttt{scanf}
-and \texttt{printf} are an alternative
-to the C++ standard streams.
-They are usually a bit faster,
-but they are also more difficult to use.
-The following code reads two integers from the input:
+cinとcoutに代わり、C言語では\texttt{scanf}と\texttt{printf}が存在します。
+通常、これらの関数は少し速いに動作しますが、使用するのが少し複雑になります。。
+次のコードは入力から2つの整数を読み取ります。
 \begin{lstlisting}
 int a, b;
 scanf("%d %d", &a, &b);
 \end{lstlisting}
-The following code prints two integers:
+また、次の通り出力します。
 \begin{lstlisting}
 int a = 123, b = 456;
 printf("%d %d\n", a, b);
 \end{lstlisting}
 
-Sometimes the program should read a whole line
-from the input, possibly containing spaces.
-This can be accomplished by using the
-\texttt{getline} function:
+文字列の読み込みでは空白ごと読み込みたいことがあり、
+これは\texttt{getline}関数を使います。
 
 \begin{lstlisting}
 string s;
 getline(cin, s);
 \end{lstlisting}
 
-If the amount of data is unknown, the following
-loop is useful:
+また、読み込みたい文字列の数がわからない場合は次のように処理します。
 \begin{lstlisting}
 while (cin >> x) {
     // code
 }
 \end{lstlisting}
-This loop reads elements from the input
-one after another, until there is no
-more data available in the input.
+こうすることで入力に利用可能なデータがなくなるまで、入力から次々と要素を読み込みます。
 
 In some contest systems, files are used for
 input and output.
@@ -840,7 +790,7 @@ $\log_k(x)=a$ exactly when $k^a=x$.
 
 A useful property of logarithms is
 that $\log_k(x)$ equals the number of times
-we have to divide $x$ by $k$ before we reach 
+we have to divide $x$ by $k$ before we reach
 the number 1.
 For example, $\log_2(32)=5$
 because 5 divisions by 2 are needed:

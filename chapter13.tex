@@ -1,52 +1,32 @@
-\chapter{Shortest paths}
+\chapter{最短経路}
 
-\index{shortest path}
+\index{最短経路}
 
-Finding a shortest path between two nodes
-of a graph
-is an important problem that has many
-practical applications.
-For example, a natural problem related to a road network
-is to calculate the shortest possible length of a route
-between two cities, given the lengths of the roads.
+グラフの2ノード間の最短経路を求めることは重要なトピックであり様々な応用が可能です。
+例えば，複数の都市があり、それぞれをつなぐ道路の長さが与えられたときに，
+ある2つの都市を結ぶ路線の最短距離を計算する、などです。
+重みのないグラフでは、パスの長さはその辺の数に等しいので、単純な幅優先探索(BFS)で最短経路を求めることができます。
 
-In an unweighted graph, the length of a path equals
-the number of its edges, and we can
-simply use breadth-first search to find
-a shortest path.
-However, in this chapter we focus on
-weighted graphs
-where more sophisticated algorithms
-are needed
-for finding shortest paths.
+この章では、重み付きグラフで最短経路を見つけるための洗練されたアルゴリズムをみていきます。
 
-\section{Bellman–Ford algorithm}
+\section{最短経路(Bellman–Ford)}
 
-\index{Bellman–Ford algorithm}
+\index{最短経路(Bellman–Ford)}
 
-The \key{Bellman–Ford algorithm}\footnote{The algorithm is named after
+\key{Bellman–Ford algorithm}\footnote{The algorithm is named after
 R. E. Bellman and L. R. Ford who published it independently
-in 1958 and 1956, respectively \cite{bel58,for56a}.} finds
-shortest paths from a starting node to all
-nodes of the graph.
-The algorithm can process all kinds of graphs,
-provided that the graph does not contain a
-cycle with negative length.
-If the graph contains a negative cycle,
-the algorithm can detect this.
+in 1958 and 1956, respectively \cite{bel58,for56a}.} はあるノードから開始して
+全てのノードへの最短経路を計算します。
+このアルゴリズムは負のコストとなる閉路を持たない全てのグラフで利用できます。
+もし、負のコストとなる閉路が存在する場合、その検出を行います。
 
-The algorithm keeps track of distances
-from the starting node to all nodes of the graph.
-Initially, the distance to the starting node is 0
-and the distance to all other nodes in infinite.
-The algorithm reduces the distances by finding
-edges that shorten the paths until it is not
-possible to reduce any distance.
+このアルゴリズムは、開始ノードからすべてのノードまでの距離を調べます。
+まず、開始ノードまでの距離は0であり、他のすべてのノードまでの距離は無限とします。
+そして、どの距離も小さい距離に更新できなくなるまで、より小さな距離に更新できる辺を見つけていきます。
 
 \subsubsection{Example}
 
-Let us consider how the Bellman–Ford algorithm
-works in the following graph:
+次の図でBellman–Fordアルゴリズムの動作を説明します。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -68,9 +48,8 @@ works in the following graph:
 \path[draw,thick,-] (1) -- node[font=\small,label=above:7] {} (4);
 \end{tikzpicture}
 \end{center}
-Each node of the graph is assigned a distance.
-Initially, the distance to the starting node is 0,
-and the distance to all other nodes is infinite.
+各ノードは距離を持ちます。
+開始ノードの距離は0と、それ以外の距離はINFです。
 
 The algorithm searches for edges that reduce distances.
 First, all edges from node 1 reduce distances:
@@ -295,14 +274,14 @@ Then, the algorithm always processes the
 first node in the queue, and when an edge
 $a \rightarrow b$ reduces a distance,
 node $b$ is added to the queue.
-% 
-% The following implementation uses a 
+%
+% The following implementation uses a
 % \texttt{queue} \texttt{q}.
 % In addition, an array \texttt{inqueue} indicates
 % if a node is already in the queue,
 % in which case the algorithm does not add
 % the node to the queue again.
-% 
+%
 % \begin{lstlisting}
 % for (int i = 1; i <= n; i++) distance[i] = INF;
 % distance[x] = 0;
@@ -667,7 +646,7 @@ and distances are reduced using this node.
 On the first round, node 1 is the new intermediate node.
 There is a new path between nodes 2 and 4
 with length 14, because node 1 connects them.
-There is also a new path 
+There is also a new path
 between nodes 2 and 5 with length 6.
 
 \begin{center}

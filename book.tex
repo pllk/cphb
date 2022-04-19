@@ -1,8 +1,14 @@
-\documentclass[twoside,12pt,a4paper,english]{book}
+%\documentclass{ltjsarticle}
+\documentclass[twoside,12pt,a4paper]{ltjsbook}
+%\documentclass[twoside,12pt,a4paper]{ltjsarticle}
+%\documentclass[twoside,12pt,a4paper]{book}
+%\usepackage{luatexja} % ltjclasses, ltjsclasses を使うときはこの行不要
+
+
 
 %\includeonly{chapter04,list}
 
-\usepackage[english]{babel}
+\usepackage[japanese]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage[table]{xcolor}
@@ -68,7 +74,7 @@
 
 \begin{document}
 
-%\selectlanguage{finnish}
+%\selectlanguage{japanese}
 
 %\setcounter{page}{1}
 %\pagenumbering{roman}
@@ -85,6 +91,7 @@
 \setcounter{page}{1}
 
 \newcommand{\key}[1] {\textbf{#1}}
+
 
 \part{Basic techniques}
 \include{chapter01}

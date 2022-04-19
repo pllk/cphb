@@ -1,38 +1,23 @@
-\chapter{Graph traversal}
+\chapter{グラフ探索 - Graph traversal}
 
-This chapter discusses two fundamental
-graph algorithms:
-depth-first search and breadth-first search.
-Both algorithms are given a starting
-node in the graph,
-and they visit all nodes that can be reached
-from the starting node.
-The difference in the algorithms is the order
-in which they visit the nodes.
 
-\section{Depth-first search}
+この章では、深さ優先探索(DFS)と幅優先探索(BFS)という2つの基本的なグラフアルゴリズムについて説明します。
+どちらのアルゴリズムもグラフの開始ノードが与えられ、その開始ノードからすべての到達可能なノードを訪問し、
+両者はこの訪問順序が異なります。
+
+\section{深さ優先探索 - Depth-first search}
 
 \index{depth-first search}
 
-\key{Depth-first search} (DFS)
-is a straightforward graph traversal technique.
-The algorithm begins at a starting node,
-and proceeds to all other nodes that are
-reachable from the starting node using
-the edges of the graph.
+\key{深さ優先探索(Depth-first search)} (DFS)は直線的なグラフ探索技法です。
+開始ノードからエッジを使用して到達可能な他のすべてのノードに進みます。
+深さ優先探索は、新しいノードが見つかる限り、常にグラフ内の単一経路をたどります。
+行き止まりになったら、前のノードに戻り、グラフの他の部分の探索を開始します。
+このアルゴリズムは、訪問したノードを記録しておき、各ノードを一度だけ処理するようにします。
 
-Depth-first search always follows a single
-path in the graph as long as it finds
-new nodes.
-After this, it returns to previous
-nodes and begins to explore other parts of the graph.
-The algorithm keeps track of visited nodes,
-so that it processes each node only once.
+\subsubsection*{例}
+次のグラフを深さ優先探索で処理する方法を考えます。
 
-\subsubsection*{Example}
-
-Let us consider how depth-first search processes
-the following graph:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -48,10 +33,9 @@ the following graph:
 \path[draw,thick,-] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-We may begin the search at any node of the graph;
-now we will begin the search at node 1.
+グラフのどのノードから検索を始めても良いですが、ここではノード1から検索を始めます。
 
-The search first proceeds to node 2:
+まず、ノード2を探索します。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -69,7 +53,8 @@ The search first proceeds to node 2:
 \path[draw=red,thick,->,line width=2pt] (1) -- (2);
 \end{tikzpicture}
 \end{center}
-After this, nodes 3 and 5 will be visited:
+
+そして、3,5と訪問したとします。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -89,12 +74,10 @@ After this, nodes 3 and 5 will be visited:
 \path[draw=red,thick,->,line width=2pt] (3) -- (5);
 \end{tikzpicture}
 \end{center}
-The neighbors of node 5 are 2 and 3,
-but the search has already visited both of them,
-so it is time to return to the previous nodes.
-Also the neighbors of nodes 3 and 2
-have been visited, so we next move
-from node 1 to node 4:
+ノード5の隣接ノードは2と3ですが、
+すでにその両方を訪れているので、前のノードに戻ります。
+また、ノード3と2の隣接ノードは訪問済みなので、
+次はノード1からノード4へ移動することになります。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -112,34 +95,27 @@ from node 1 to node 4:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-After this, the search terminates because it has visited
-all nodes.
 
-The time complexity of depth-first search is $O(n+m)$
-where $n$ is the number of nodes and $m$ is the
-number of edges,
-because the algorithm processes each node and edge once.
+これですべてのノードを訪問したため、探索は終了します。
 
-\subsubsection*{Implementation}
+深さ優先探索の時間計算量は $O(n + m)$ （n はノードの数、m はエッジの数）です。
+なぜなら全てのノードと辺が１回ずつ辿るからです。
 
-Depth-first search can be conveniently
-implemented using recursion.
-The following function \texttt{dfs} begins
-a depth-first search at a given node.
-The function assumes that the graph is
-stored as adjacency lists in an array
+\subsubsection*{DFSの実装}
+
+深さ優先探索は再帰を使って簡単に実装できます。
+次の関数  \texttt{dfs}  は，引数に与えられたノードから深さ優先探索を開始します。
+この関数は，グラフを隣接リストとして参照します。
 \begin{lstlisting}
 vector<int> adj[N];
 \end{lstlisting}
-and also maintains an array
+また、次の配列を訪問済みのノードの情報として利用します。
 \begin{lstlisting}
 bool visited[N];
 \end{lstlisting}
-that keeps track of the visited nodes.
-Initially, each array value is \texttt{false},
-and when the search arrives at node $s$,
-the value of \texttt{visited}[$s$] becomes \texttt{true}.
-The function can be implemented as follows:
+訪問済みリストの値は最初全て\texttt{false}です。
+そして、$s$でこの関数が呼ばれると\texttt{visited}[$s$] は \texttt{true}になります。
+この関数は以下のように実装できます。
 \begin{lstlisting}
 void dfs(int s) {
     if (visited[s]) return;

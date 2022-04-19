@@ -102,7 +102,7 @@ we can manipulate them using standard set operations:
 \begin{itemize}
 \item The \key{complement} $\bar A$ means
 ''$A$ does not happen''.
-For example, when throwing a dice, 
+For example, when throwing a dice,
 the complement of $A=\{2,4,6\}$ is
 $\bar A = \{1,3,5\}$.
 \item The \key{union} $A \cup B$ means
@@ -430,7 +430,7 @@ represented as a matrix that updates the
 probability distribution.
 In the above scenario, the matrix is
 
-\[ 
+\[
  \begin{bmatrix}
   0 & 1/2 & 0 & 0 & 0 \\
   1 & 0 & 1/2 & 0 & 0 \\
@@ -446,7 +446,7 @@ For example, we can move from the distribution
 $[1,0,0,0,0]$ to the distribution
 $[0,1,0,0,0]$ as follows:
 
-\[ 
+\[
  \begin{bmatrix}
   0 & 1/2 & 0 & 0 & 0 \\
   1 & 0 & 1/2 & 0 & 0 \\
@@ -475,82 +475,57 @@ By calculating matrix powers efficiently,
 we can calculate the distribution after $m$ steps
 in $O(n^3 \log m)$ time.
 
-\section{Randomized algorithms}
+\section{乱択}
 
-\index{randomized algorithm}
+\index{乱択}
 
-Sometimes we can use randomness for solving a problem,
-even if the problem is not related to probabilities.
-A \key{randomized algorithm} is an algorithm that
-is based on randomness.
+問題を解くために確率とは関係ない問題だとしても、ランダム性を利用することがあります。
+\key{乱択}はランダム性を用いたアルゴリズムです。
 
-\index{Monte Carlo algorithm}
+\index{モンテカルロ法(Monte Carlo algorithm)}
 
-A \key{Monte Carlo algorithm} is a randomized algorithm
-that may sometimes give a wrong answer.
-For such an algorithm to be useful,
-the probability of a wrong answer should be small.
+A \key{モンテカルロ法(Monte Carlo algorithm)} は、
+間違った答えとなる可能性を十分に持つランダム化アルゴリズムのことです。
+このアルゴリズムが適切であるためには、間違った答えが出る確率が十分に小さいことが必要です。
 
-\index{Las Vegas algorithm}
+\index{ラスベガス法(Las Vegas algorithm)}
 
-A \key{Las Vegas algorithm} is a randomized algorithm
-that always gives the correct answer,
-but its running time varies randomly.
-The goal is to design an algorithm that is
-efficient with high probability.
+\key{ラスベガス法}は、間違った答えを出さないが、実行時間はランダムに変化するアルゴリズムである。
+このアルゴリズムのデザインには効率的なアルゴリズムの設計が必要です。
 
-Next we will go through three example problems that
-can be solved using randomness.
+次に、ランダム性を利用して解くことができる3つの例題を紹介します。
 
-\subsubsection{Order statistics}
+\subsubsection{k番目に小さい数(Order statistics)}
 
-\index{order statistic}
+\index{k番目に小さい数(Order statistics)}
 
-The $kth$ \key{order statistic} of an array
-is the element at position $k$ after sorting
-the array in increasing order.
-It is easy to calculate any order statistic
-in $O(n \log n)$ time by first sorting the array,
-but is it really needed to sort the entire array
-just to find one element?
-
-It turns out that we can find order statistics
-using a randomized algorithm without sorting the array.
-The algorithm, called \key{quickselect}\footnote{In 1961,
+配列の\key{k番目に小さい数(Order statistics)}は
+昇順にソートした後の位置kにある要素です。
+ですが、ある1つの要素を見つけるためだけに配列全体をソートする必要があるのでしょうか？
+実は，配列をソートせずにランダムなアルゴリズムでこれを求めることができます．
+これは\key{quickselect}\footnote{In 1961,
 C. A. R. Hoare published two algorithms that
 are efficient on average: \index{quicksort} \index{quickselect}
 \key{quicksort} \cite{hoa61a} for sorting arrays and
-\key{quickselect} \cite{hoa61b} for finding order statistics.}, is a Las Vegas algorithm:
-its running time is usually $O(n)$
-but $O(n^2)$ in the worst case.
+\key{quickselect} \cite{hoa61b} for finding order statistics.}
+アルゴリズム、別名ラスベガス・アルゴリズムと呼ばれ、その実行時間は通常$O(n)$、最悪の場合$O(n^2)$です。
 
-The algorithm chooses a random element $x$
-of the array, and moves elements smaller than $x$
-to the left part of the array,
-and all other elements to the right part of the array.
-This takes $O(n)$ time when there are $n$ elements.
-Assume that the left part contains $a$ elements
-and the right part contains $b$ elements.
-If $a=k$, element $x$ is the $k$th order statistic.
-Otherwise, if $a>k$, we recursively find the $k$th order
-statistic for the left part,
-and if $a<k$, we recursively find the $r$th order
-statistic for the right part where $r=k-a$.
-The search continues in a similar way, until the element
-has been found.
+このアルゴリズムは，配列のランダムな要素$x$を選んで，$x$より小さい要素を配列の左に，
+それ以外の要素を配列の右側に移動させます．
+これは要素がn個のとすると，O(n)で実行できます。
+左側には $a$ 個の要素，右側には $b$ 個の要素があるとしましょう。
+さて、$a = k$ ならば，要素 $x$ はk番目に小さい数です。
+$a > k$ の時は左側部分の $k$番目の数を再帰的に求め，
+$a < k$ の時は右側部分の $r$ 番目の数$（r = k - a）$を再帰的に求め，
+要素が見つかるまで同様の方法で探索を見つければ良いのです。
 
-When each element $x$ is randomly chosen,
-the size of the array about halves at each step,
-so the time complexity for
-finding the $k$th order statistic is about
+
+$x$ がランダムに選ばれるため，配列のサイズは各ステップで約半分と期待できるので，この時間計算量は次のようになります。
 \[n+n/2+n/4+n/8+\cdots < 2n = O(n).\]
 
-The worst case of the algorithm requires still $O(n^2)$ time,
-because it is possible that $x$ is always chosen
-in such a way that it is one of the smallest or largest
-elements in the array and $O(n)$ steps are needed.
-However, the probability for this is so small
-that this never happens in practice.
+最悪の場合は$O(n^2)$です。
+これは$x$ が配列の最小または最大の要素の1つになるように常に選択される場合で$O(n)$ ステップが必要になるからです．
+しかし、その確率は非常に小さいので、実際にはこのようなことは起こらないでしょう。
 
 \subsubsection{Verifying matrix multiplication}
 
@@ -586,7 +561,7 @@ size matrices are needed.
 The drawback of the algorithm is
 that there is a small chance that the algorithm
 makes a mistake when it reports that $AB=C$.
-For example, 
+For example,
 \[
  \begin{bmatrix}
   6 & 8 \\
@@ -631,7 +606,7 @@ before reporting that $AB=C$.
 Given a graph that contains $n$ nodes and $m$ edges,
 our task is to find a way to color the nodes
 of the graph using two colors so that
-for at least $m/2$ edges, the endpoints 
+for at least $m/2$ edges, the endpoints
 have different colors.
 For example, in the graph
 \begin{center}
@@ -686,4 +661,3 @@ Hence, the expected number of edges whose endpoints
 have different colors is $m/2$.
 Since it is expected that a random coloring is valid,
 we will quickly find a valid coloring in practice.
-
