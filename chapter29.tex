@@ -1,17 +1,11 @@
-\chapter{Geometry}
+\chapter{幾何学 - Geometry}
 
-\index{geometry}
+\index{幾何学 - geometry}
 
-In geometric problems, it is often challenging
-to find a way to approach the problem so that
-the solution to the problem can be conveniently implemented
-and the number of special cases is small.
+幾何学問題は時に複雑で、問題の解を合理的に求め、かつ特殊なケースの数が少なくなるようにアプローチする方法を見つけることは、しばしば困難なことです。
 
-As an example, consider a problem where
-we are given the vertices of a quadrilateral
-(a polygon that has four vertices),
-and our task is to calculate its area.
-For example, a possible input for the problem is as follows:
+例えば、四辺形（4つの頂点を持つ多角形）の頂点が与えられ、その面積を計算する問題を考えてみましょう。例えば、この問題の入力として、次のようなものがあります。
+
 
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
@@ -23,9 +17,9 @@ For example, a possible input for the problem is as follows:
 \draw[thick] (6,2) -- (5,6) -- (2,5) -- (1,1) -- (6,2);
 \end{tikzpicture}
 \end{center}
-One way to approach the problem is to divide
-the quadrilateral into two triangles by a straight
-line between two opposite vertices:
+
+この問題へのアプローチの１つは対向する2つの頂点間の直線で2つの三角形に分割することです。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -38,24 +32,18 @@ line between two opposite vertices:
 \draw[dashed,thick] (2,5) -- (6,2);
 \end{tikzpicture}
 \end{center}
-After this, it suffices to sum the areas
-of the triangles.
-The area of a triangle can be calculated,
-for example, using \key{Heron's formula}
+
+あとは、三角形の面積を合計すればよく、三角形の面積は、\key{Heron's formula - ヘロンの公式}で計算できます。
 %\footnote{Heron of Alexandria (c. 10--70) was a Greek mathematician.}
 \[ \sqrt{s (s-a) (s-b) (s-c)},\]
-where $a$, $b$ and $c$ are the lengths
-of the triangle's sides and
-$s=(a+b+c)/2$.
-\index{Heron's formula}
+ここで、$a$,$b$,$c$は三角形の各辺の長さで、
+$s=(a+b+c)/2$とします。
+\index{ヘロンの公式 - Heron's formula}
 
-This is a possible way to solve the problem,
-but there is one pitfall:
-how to divide the quadrilateral into triangles?
-It turns out that sometimes we cannot just pick
-two arbitrary opposite vertices.
-For example, in the following situation,
-the division line is \emph{outside} the quadrilateral:
+これはこれでよいアプローチなのですがひとつ落とし穴があります。
+四角形をどうやって三角形に分割するのか。実は任意の2つの対向する頂点を選べない場合があります。
+例えば、次のような場合、分割線は四辺形の外に出てしまいますね。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -68,7 +56,7 @@ the division line is \emph{outside} the quadrilateral:
 \draw[dashed,thick] (2,5) -- (6,2);
 \end{tikzpicture}
 \end{center}
-However, another way to draw the line works:
+ただ、もう一つの線引きの方法は有効です。
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -81,37 +69,30 @@ However, another way to draw the line works:
 \draw[dashed,thick] (3,2) -- (1,1);
 \end{tikzpicture}
 \end{center}
-It is clear for a human which of the lines is the correct
-choice, but the situation is difficult for a computer.
-                           
-However, it turns out that we can solve the problem using
-another method that is more convenient to a programmer.
-Namely, there is a general formula
+
+これは人間にとってはどの線が正しいかは明らかなのですが、コンピュータにとっては難しい状況です。
+しかし、プログラマーにとってより便利な別の方法を用いて問題を解くことができます。
+
 \[x_1y_2-x_2y_1+x_2y_3-x_3y_2+x_3y_4-x_4y_3+x_4y_1-x_1y_4,\]
-that calculates the area of a quadrilateral
-whose vertices are
+とすることによって四角形の面積が求められます。
 $(x_1,y_1)$,
 $(x_2,y_2)$,
-$(x_3,y_3)$ and
-$(x_4,y_4)$.
-This formula is easy to implement, there are no special
-cases, and we can even generalize the formula
+$(x_3,y_3)$, 
+$(x_4,y_4)$はそれぞれ４点の$x, y$座標です。
+この公式は実装が簡単で、特別なケースはなく、加えてすべての多角形に一般化することが可能です。
 to \emph{all} polygons.
 
-\section{Complex numbers}
+\section{複素数 - Complex numbers}
 
-\index{complex number}
-\index{point}
-\index{vector}
+\index{複素数 - complex number}
+\index{点 - point}
+\index{ベクトル - vector}
 
-A \key{complex number} is a number of the form $x+y i$,
-where $i = \sqrt{-1}$ is the \key{imaginary unit}.
-A geometric interpretation of a complex number is
-that it represents a two-dimensional point $(x,y)$
-or a vector from the origin to a point $(x,y)$.
+\key{複素数 - complex number}とは、$x + yi$ の形の数で、
+$i$は$i = \sqrt{-1}$となる\key{虚数 - imaginary unit}です。
+複素数の幾何学的な解釈としては、2次元の点$(x, y$)、あるいは、原点から点$(x, y)$へのベクトルを表すとします。
 
-For example, $4+2i$ corresponds to the
-following point and vector:
+例えば、$4＋2i$は次のような点とベクトルに対応します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
@@ -128,16 +109,12 @@ following point and vector:
 
 \index{complex@\texttt{complex}}
 
-The C++ complex number class \texttt{complex} is
-useful when solving geometric problems.
-Using the class we can represent points and vectors
-as complex numbers, and the class contains tools
-that are useful in geometry.
+C++の複素数クラス\texttt{complex}は、
+幾何学的な問題を解くときに便利です。
+このクラスを使って、点やベクトルを複素数として表現することができますし、幾何学で役立つツールも含まれています。
 
-In the following code, \texttt{C} is the type of
-a coordinate and \texttt{P} is the type of a point or a vector.
-In addition, the code defines macros \texttt{X} and \texttt{Y}
-that can be used to refer to x and y coordinates.
+以下のコードで、\texttt{C} は座標の型、\texttt{P} は点またはベクトルの型です。
+また、このコードでは x 座標と y 座標を参照するために使用できるマクロ \texttt{X} と \texttt{Y} を定義しています。
 
 \begin{lstlisting}
 typedef long long C;
@@ -146,16 +123,14 @@ typedef complex<C> P;
 #define Y imag()
 \end{lstlisting}
 
-For example, the following code defines a point $p=(4,2)$
-and prints its x and y coordinates:
+例えば、次のコードは、点$p = (4, 2)$を定義し、そのxとyの座標を表示するものです。
 
 \begin{lstlisting}
 P p = {4,2};
 cout << p.X << " " << p.Y << "\n"; // 4 2
 \end{lstlisting}
 
-The following code defines vectors $v=(3,1)$ and $u=(2,2)$,
-and after that calculates the sum $s=v+u$.
+次のコードは、ベクトル $v = (3, 1)$ と $u = (2, 2)$ を定義し、その後、和 $s = v + u$ を計算するものです。
 
 \begin{lstlisting}
 P v = {3,1};
@@ -164,57 +139,38 @@ P s = v+u;
 cout << s.X << " " << s.Y << "\n"; // 5 3
 \end{lstlisting}
 
-In practice,
-an appropriate coordinate type is usually
-\texttt{long long} (integer) or \texttt{long double}
-(real number).
-It is a good idea to use integer whenever possible,
-because calculations with integers are exact.
-If real numbers are needed,
-precision errors should be taken into account
-when comparing numbers.
-A safe way to check if real numbers $a$ and $b$ are equal
-is to compare them using $|a-b|<\epsilon$,
-where $\epsilon$ is a small number (for example, $\epsilon=10^{-9}$).
+実際には、\texttt{long long}か\texttt{long double}（実数）が適切な座標型であることが多いはずです。
+整数を使った計算は正確なので，実数が求められない限りは整数を使うべきです。
+実数が必要な場合は、数値の比較の際に、推定誤差を考慮する必要が出てきます。
+実数 $a$ と $b$ が等しいかどうかを確認する安全な方法は、
+$|a-b|<\epsilon$ (訳註：epsで表現されることが多い)で比較することです。
+$\epsilon$ は小さな数で例えば$\epsilon=10^{-9}$)などです。
 
-\subsubsection*{Functions}
+\subsubsection*{関数 - Functions}
 
-In the following examples, the coordinate type is
-\texttt{long double}.
+以下の例では型を\texttt{long double}とします。
 
-The function $\texttt{abs}(v)$ calculates the length
-$|v|$ of a vector $v=(x,y)$
-using the formula $\sqrt{x^2+y^2}$.
-The function can also be used for
-calculating the distance between points
-$(x_1,y_1)$ and $(x_2,y_2)$,
-because that distance equals the length
-of the vector $(x_2-x_1,y_2-y_1)$.
+$\texttt{abs}(v)$ は、$v=(x,y)$の長さ $|v|$ を$\sqrt{x^2+y^2}$を用いて計算します。
+この関数は、距離の計算にも使うことができます。 点$(x_1,y_1)$ と $(x_2,y_2)$の間の距離は、
+ベクトルの長さ$(x_2-x_1,y_2-y_1)$に等しくなります。
 
-The following code calculates the distance
-between points $(4,2)$ and $(3,-1)$:
+次のコードは、点 $(4, 2)$ と $(3, -1)$ の間の距離を計算する例です。
+
 \begin{lstlisting}
 P a = {4,2};
 P b = {3,-1};
 cout << abs(b-a) << "\n"; // 3.16228
 \end{lstlisting}
 
-The function $\texttt{arg}(v)$ calculates the
-angle of a vector $v=(x,y)$ with respect to the x axis.
-The function gives the angle in radians,
-where $r$ radians equals $180 r/\pi$ degrees.
-The angle of a vector that points to the right is 0,
-and angles decrease clockwise and increase
-counterclockwise.
+$\texttt{arg}(v)$ はベクトル $v = (x, y)$ の x 軸に対する角度を計算します.
+この関数は角度をラジアン単位で与えますが，ここで $r$ ラジアンは $180 r/\pi$度に相当します。
+つまり、右を指すベクトルの角度は 0 であり、角度は時計回りに減少し、反時計回りに増加します。
 
-The function $\texttt{polar}(s,a)$ constructs a vector
-whose length is $s$ and that points to an angle $a$.
-A vector can be rotated by an angle $a$
-by multiplying it by a vector with length 1 and angle $a$.
+$\texttt{polar}(s,a)$は、長さが $s$ で、角度 $a$ を指すベクトルを構成する。
+ベクトルの性質として、長さが 1 で角度 $a$ を持つベクトルと掛け合わせることによって、
+角度 a だけ回転させることができることに注意します。
 
-The following code calculates the angle of
-the vector $(4,2)$, rotates it $1/2$ radians
-counterclockwise, and then calculates the angle again:
+次のコードは、ベクトル $(4, 2)$ の角度を計算し、反時計回りに $1/2$ ラジアン 回転させた後、再度角度を計算します。
 
 \begin{lstlisting}
 P v = {4,2};
@@ -223,19 +179,21 @@ v *= polar(1.0,0.5);
 cout << arg(v) << "\n"; // 0.963648
 \end{lstlisting}
 
-\section{Points and lines}
+\section{点と線 - Points and lines}
 
-\index{cross product}
+\index{外積 - cross product}
 
-The \key{cross product} $a \times b$ of vectors
-$a=(x_1,y_1)$ and $b=(x_2,y_2)$ is calculated
-using the formula $x_1 y_2 - x_2 y_1$.
-The cross product tells us whether $b$
-turns left (positive value), does not turn (zero)
-or turns right (negative value)
-when it is placed directly after $a$.
+ベクトル$a=(x_1,y_1)$ と $b=(x_2,y_2)$の
+\key{外積(ベクトル積) - cross product}である$a \times b$ は、
+$x_1 y_2 - x_2 y_1$で求められます。
+外戚は、$a$に対して$b$が
+左回り(正の値)か 、
+直線(ゼロ)か、
+右回り(負の値)か、
+を教えてくれます。
 
-The following picture illustrates the above cases:
+次の図は、上記のケースを説明したものです。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 
@@ -266,10 +224,8 @@ The following picture illustrates the above cases:
 \end{center}
 
 \noindent
-For example, in the first case
-$a=(4,2)$ and $b=(1,2)$.
-The following code calculates the cross product
-using the class \texttt{complex}:
+例えば、最初のケースでは、$a=(4,2)$ and $b=(1,2)$で、次のコードは、
+\texttt{complex}クラスの機能を使い、を用いて外積を計算します。
 
 \begin{lstlisting}
 P a = {4,2};
@@ -277,24 +233,18 @@ P b = {1,2};
 C p = (conj(a)*b).Y; // 6
 \end{lstlisting}
 
-The above code works, because
-the function \texttt{conj} negates the y coordinate
-of a vector,
-and when the vectors $(x_1,-y_1)$ and $(x_2,y_2)$
-are multiplied together, the y coordinate
-of the result is $x_1 y_2 - x_2 y_1$.
+関数\texttt{conj}(訳註:共役複素数を得る関数)がベクトルのy座標を反転するので、
+ベクトル$(x_1,-y_1)$ と $(x_2,y_2)$となり、これを掛け合わせるので、
+$x_1 y_2 - x_2 y_1$となり、結果は6になります。
 
-\subsubsection{Point location}
+\subsubsection{点の位置 - Point location}
 
-Cross products can be used to test
-whether a point is located on the left or right
-side of a line.
-Assume that the line goes through points
-$s_1$ and $s_2$, we are looking from $s_1$
-to $s_2$ and the point is $p$.
+外積はある点が直線の左側にあるか右側にあるかを知るのに利用できます。
+まず、線が点 $s_1$ と $s_2$ を通るとします。$s_1$ 側から $s_2$ を見て、その点を $p$ 考えます。
+（訳註：どの点から見るかで左右は変わるので$s_1$からとします。）
 
-For example, in the following picture,
-$p$ is on the left side of the line:
+例えば、次の図では、pは左側にあります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.45]
 \draw[dashed,thick,->] (0,-3)--(12,6);
@@ -307,31 +257,20 @@ $p$ is on the left side of the line:
 \end{tikzpicture}
 \end{center}
 
-The cross product $(p-s_1) \times (p-s_2)$
-tells us the location of the point $p$.
-If the cross product is positive,
-$p$ is located on the left side,
-and if the cross product is negative,
-$p$ is located on the right side.
-Finally, if the cross product is zero,
-points $s_1$, $s_2$ and $p$ are on the same line.
+外積$(p-s_1) \times (p-s_2)$は点$p$の位置を示します。
+結果が正の場合、$p$は左側に位置し、負の場合、$p$は右側に位置し、
+最後に0であれば、点$s_1$ , $s_2$ と$p$は同じ線上にある。
 
-\subsubsection{Line segment intersection}
+\subsubsection{線分の交差 - Line segment intersection}
 
-\index{line segment intersection}
+\index{線分の交差 - line segment intersection}
 
-Next we consider the problem of testing
-whether two line segments
-$ab$ and $cd$ intersect. The possible cases are:
+次に、2つの線分$ab$と$cd$が同じあるいは交差するかを考えていきます。
 
 \textit{Case 1:}
-The line segments are on the same line
-and they overlap each other.
-In this case, there is an infinite number of
-intersection points.
-For example, in the following picture,
-all points between $c$ and $b$ are
-intersection points:
+線分が同じ線上にあり、互いに重なり合っている場合は
+この場合、交点は無限に存在するといえます。
+例えば、次の図では、$c$と$b$の間の点はすべて交点である。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \draw (1.5,1.5)--(6,3);
@@ -347,16 +286,13 @@ intersection points:
 \end{tikzpicture}
 \end{center}
 
-In this case, we can use cross products to
-check if all points are on the same line.
-After this, we can sort the points and check
-whether the line segments overlap each other.
+この場合、外積を用いるとすべての点が同一線上にあるかどうかを、
+確認することができます。
+点を並べ替えて、線分同士が重なっているかどうかを確認することができます。
 
 \textit{Case 2:}
-The line segments have a common vertex
-that is the only intersection point.
-For example, in the following picture the
-intersection point is $b=c$:
+線分が共通の頂点を持ち、そこが唯一の交点となる場合もあります。
+次の図では、交点は$b = c$です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -372,16 +308,10 @@ intersection point is $b=c$:
 \end{tikzpicture}
 \end{center}
 
-This case is easy to check, because
-there are only four possibilities
-for the intersection point:
-$a=c$, $a=d$, $b=c$ and $b=d$.
+この場合、交点の可能性は、$a=c$、$a=d$、$b=c$、$b=d$の4つだけ
 
 \textit{Case 3:}
-There is exactly one intersection point
-that is not a vertex of any line segment.
-In the following picture, the point $p$
-is the intersection point:
+どの点でもない交差点を持つ場合。次の図では、点$p$が交点である。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \draw (0,1)--(6,3);
@@ -399,25 +329,17 @@ is the intersection point:
 \end{tikzpicture}
 \end{center}
 
-In this case, the line segments intersect
-exactly when both points $c$ and $d$ are
-on different sides of a line through $a$ and $b$,
-and points $a$ and $b$ are on different
-sides of a line through $c$ and $d$.
-We can use cross products to check this.
+点$c$と$d$が直線$ab$の異なる側にいる時、線分は正確に交差する。
+これを確認するには、 外積を使えばよいです。
 
-\subsubsection{Point distance from a line}
+\subsubsection{線分から点への距離 - Point distance from a line}
 
-Another feature of cross products is that
-the area of a triangle can be calculated
-using the formula
+また、外積の特徴として、三角形の面積を計算式で求めることができます。
+
 \[\frac{| (a-c) \times (b-c) |}{2},\]
-where $a$, $b$ and $c$ are the vertices of the triangle.
-Using this fact, we can derive a formula
-for calculating the shortest distance between a point and a line.
-For example, in the following picture $d$ is the
-shortest distance between the point $p$ and the line
-that is defined by the points $s_1$ and $s_2$:
+ここで、a,b,cは三角形の頂点の座標です。
+これを用いてある点と直線の最短距離を計算する公式を導くことができます。
+例えば、次の図において、点 $p$ と点$s_1$ と$s_2$ で定義される直線との最短距離を$d$ としましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
 \draw (-2,-1)--(6,3);
@@ -432,22 +354,18 @@ that is defined by the points $s_1$ and $s_2$:
 \end{tikzpicture}
 \end{center}
 
-The area of the triangle whose vertices are
-$s_1$, $s_2$ and $p$ can be calculated in two ways:
-it is both
-$\frac{1}{2} |s_2-s_1| d$ and
-$\frac{1}{2} ((s_1-p) \times (s_2-p))$.
-Thus, the shortest distance is
+$s_1$ ,$s_2$ ,$p$を頂点とする三角形の面積は、
+$\frac{1}{2} |s_2-s_1| d$
+あるいは、
+$\frac{1}{2} ((s_1-p) \times (s_2-p))$
+の２つの方法で計算することができます。
+このため、最短の距離は、以下の通りとなります。
 \[ d = \frac{(s_1-p) \times (s_2-p)}{|s_2-s_1|} .\]
 
-\subsubsection{Point inside a polygon}
+\subsubsection{ポリゴン内の点　ーPoint inside a polygon}
 
-Let us now consider the problem of
-testing whether a point is located inside or outside
-a polygon.
-For example, in the following picture point $a$
-is inside the polygon and point $b$ is outside
-the polygon.
+点が多角形の内側にあるか外側にあるかを判定する問題を考えます。
+例えば、次の図で点$a$は多角形の内側にあり、点$b$は多角形の外側にあるというとしましょう。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
@@ -461,17 +379,13 @@ the polygon.
 \end{tikzpicture}
 \end{center}
 
-A convenient way to solve the problem is to
-send a \emph{ray} from the point to an arbitrary direction
-and calculate the number of times it touches
-the boundary of the polygon.
-If the number is odd,
-the point is inside the polygon,
-and if the number is even,
-the point is outside the polygon.
+この問題を特には興味深い方法が使えます。
+点から任意の方向に光線を送り（つまり、点から十分に長い線を書く）、
+それが多角形の線に触れる回数を計算します。
+その回数が奇数なら、その点は多角形の内側にあり、偶数なら多角形の外側にあることが知られています。
 
 \begin{samepage}
-For example, we could send the following rays:
+例を示します。
 \begin{center}
 \begin{tikzpicture}[scale=0.75]
 \draw (0,0)--(2,2)--(5,1)--(2,3)--(1,2)--(-1,2)--(1,4)--(-2,4)--(-2,1)--(-3,3)--(-4,0)--(0,0);
@@ -490,28 +404,22 @@ For example, we could send the following rays:
 \end{center}
 \end{samepage}
 
-The rays from $a$ touch 1 and 3 times
-the boundary of the polygon,
-so $a$ is inside the polygon.
-Correspondingly, the rays from $b$
-touch 0 and 2 times the boundary of the polygon,
-so $b$ is outside the polygon.
+$a$からの光線は、ポリゴンと1回、3回接するので、$a$はポリゴンの内側にあることになります。
+これに対応して$b$からの光線はポリゴンの境界と0回と2回接するので、$b$ はポリゴンの外側にあることになります。
 
-\section{Polygon area}
+\section{ポリゴンの面積 - Polygon area}
 
-A general formula for calculating the area
-of a polygon, sometimes called the \key{shoelace formula},
-is as follows: \index{shoelace formula}
+多角形の面積を計算するための一般的な公式は
+\key{靴紐アルゴリズム - shoelace formula}と呼ばれ、以下のように示されます。
+\index{靴紐アルゴリズム - shoelace formula}
+
 \[\frac{1}{2} |\sum_{i=1}^{n-1} (p_i \times p_{i+1})| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|, \]
-Here the vertices are
-$p_1=(x_1,y_1)$, $p_2=(x_2,y_2)$, $\ldots$, $p_n=(x_n,y_n)$
-in such an order that
-$p_i$ and $p_{i+1}$ are adjacent vertices on the boundary
-of the polygon,
-and the first and last vertex is the same, i.e., $p_1=p_n$.
+ここで，頂点は，$p_1=(x_1,y_1)$, $p_2=(x_2,y_2)$, $\ldots$, $p_n=(x_n,y_n)$
+，$p_i$と$p_{i+1}$ が多角形の境界で隣接し，
+最初と最後の頂点が同じになる順序，つまり  $p_1=p_n$ とします。
 
-For example, the area of the polygon
+例えば、
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \filldraw (4,1.4) circle (2pt);
@@ -527,13 +435,11 @@ For example, the area of the polygon
 \path[draw] (4,1.4) -- (7,3.4) -- (5,5.4) -- (2,4.4) -- (4,3.4) -- (4,1.4);
 \end{tikzpicture}
 \end{center}
-is
+
+このポリゴンの面積の面積は以下の通りです。
 \[\frac{|(2\cdot5-5\cdot4)+(5\cdot3-7\cdot5)+(7\cdot1-4\cdot3)+(4\cdot3-4\cdot1)+(4\cdot4-2\cdot3)|}{2} = 17/2.\]
 
-The idea of the formula is to go through trapezoids
-whose one side is a side of the polygon,
-and another side lies on the horizontal line $y=0$.
-For example:
+この考え方は$y$軸を一辺にもち、もう一方をポリゴンの辺に持つ台形を用いて面積を求めていきます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \path[draw,fill=lightgray] (5,5.4) -- (7,3.4) -- (7,0) -- (5,0) -- (5,5.4);
@@ -551,35 +457,30 @@ For example:
 \draw (0,0) -- (10,0);
 \end{tikzpicture}
 \end{center}
-The area of such a trapezoid is
+このような台形の面積は、$p_i$ と $p_{i+1}$に注目した時、
 \[(x_{i+1}-x_{i}) \frac{y_i+y_{i+1}}{2},\]
-where the vertices of the polygon are $p_i$ and $p_{i+1}$.
-If $x_{i+1}>x_{i}$, the area is positive,
-and if $x_{i+1}<x_{i}$, the area is negative.
+となります。さて、先ほどのルールに従い点は並んでいるため、
+$x_{i+1}>x_{i}$である時、この面積は加算すべきで、
+$x_{i+1}<x_{i}$であるとき、面積は減算すべきです。
 
-The area of the polygon is the sum of areas of
-all such trapezoids, which yields the formula
+このようにポリゴンの面積を台形の面積で求めることができました。
 \[|\sum_{i=1}^{n-1} (x_{i+1}-x_{i}) \frac{y_i+y_{i+1}}{2}| =
 \frac{1}{2} |\sum_{i=1}^{n-1} (x_i y_{i+1} - x_{i+1} y_i)|.\]
 
-Note that the absolute value of the sum is taken,
-because the value of the sum may be positive or negative,
-depending on whether we walk clockwise or counterclockwise
-along the boundary of the polygon.
+ポリゴンの境界に沿って時計回りに走査するか反時計回りに走査するかによって、
+和の値が正または負になることがあるので、和の絶対値をとることに注意してください。
 
-\subsubsection{Pick's theorem}
+\subsubsection{ピックの定理 - Pick's theorem}
 
-\index{Pick's theorem}
+\index{ピックの定理 - Pick's theorem}
 
-\key{Pick's theorem} provides another way to calculate
-the area of a polygon provided that all vertices 
-of the polygon have integer coordinates.
-According to Pick's theorem, the area of the polygon is
+\key{ピックの定理 - Pick's theorem} は、多角形のすべての頂点が整数の座標を持つ場合に、
+多角形の面積を計算する方法を提供します。
+ピックの定理によれば、多角形の面積で示すことができます。
 \[ a + b/2 -1,\]
-where $a$ is the number of integer points inside the polygon
-and $b$ is the number of integer points on the boundary of the polygon.
+ここで、$a$はポリゴン内部の整数点の数、$b$はポリゴンの境界上の整数点の数です。
 
-For example, the area of the polygon
+例えば、ポリゴンの面積
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \filldraw (4,1.4) circle (2pt);
@@ -609,27 +510,25 @@ For example, the area of the polygon
 \filldraw (5,2.4) circle (2pt);
 \end{tikzpicture}
 \end{center}
-is $6+7/2-1=17/2$.
+は$6+7/2-1=17/2$となります。
 
-\section{Distance functions}
+\section{距離関数 - Distance functions}
 
-\index{distance function}
-\index{Euclidean distance}
-\index{Manhattan distance}
+\index{距離関数 - distance function}
+\index{ユークリッド距離 - Euclidean distance}
+\index{マンハッタン距離 - Manhattan distance}
 
-A \key{distance function} defines the distance between
-two points.
-The usual distance function is the
-\key{Euclidean distance} where the distance between
-points $(x_1,y_1)$ and $(x_2,y_2)$ is
+\key{距離関数 - distance function}は2点の距離を求める関数です。
+一般的な距離は
+\key{ユークリッド距離 - Euclidean distance} で、 
+$(x_1,y_1)$ と $(x_2,y_2)$ に対して以下のように定まります。
 \[\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}.\]
-An alternative distance function is the
-\key{Manhattan distance}
-where the distance between points
-$(x_1,y_1)$ and $(x_2,y_2)$ is
+時に、
+\key{マンハッタン距離 - Manhattan distance}
+も使われ、これは以下のように示されます。
 \[|x_1-x_2|+|y_1-y_2|.\]
 \begin{samepage}
-For example, consider the following picture:
+次のように絵で考えてみます。
 \begin{center}
 \begin{tikzpicture}
 
@@ -655,12 +554,13 @@ For example, consider the following picture:
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-The Euclidean distance between the points is
+ユークリッド距離は、
 \[\sqrt{(5-2)^2+(2-1)^2}=\sqrt{10}\]
-and the Manhattan distance is
+となり、マンハッタン距離は
 \[|5-2|+|2-1|=4.\]
-The following picture shows regions that are within a distance of 1
-from the center point, using the Euclidean and Manhattan distances:
+となります。
+次の図は、ユークリッド距離とマンハッタン距離を用いた
+中心点から1以内の 距離にある領域です。
 \begin{center}
 \begin{tikzpicture}
 
@@ -675,16 +575,13 @@ from the center point, using the Euclidean and Manhattan distances:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Rotating coordinates}
+\subsubsection{回転座標 - Rotating coordinates}
 
-Some problems are easier to solve if
-Manhattan distances are used instead of Euclidean distances.
-As an example, consider a problem where we are given
-$n$ points in the two-dimensional plane
-and our task is to calculate the maximum Manhattan
-distance between any two points.
+ユークリッド距離の代わりにマンハッタン距離を使うと解きやすくなる問題もあります。
+例として、2次元平面上の$n$個の点が与えられ、
+任意の2点間の最大マンハッタン距離を計算する問題を考えてみます。
 
-For example, consider the following set of points:
+例えば、次のような点の集合があったとしましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.65]
 \draw[color=gray] (-1,-1) grid (4,4);
@@ -700,8 +597,7 @@ For example, consider the following set of points:
 \node at (3,0.5) {$D$};
 \end{tikzpicture}
 \end{center}
-The maximum Manhattan distance is 5
-between points $B$ and $C$:
+ここでのマンハッタン距離の最大値は$B$と$C$の$5$です。
 \begin{center}
 \begin{tikzpicture}[scale=0.65]
 \draw[color=gray] (-1,-1) grid (4,4);
@@ -720,11 +616,11 @@ between points $B$ and $C$:
 \end{tikzpicture}
 \end{center}
 
-A useful technique related to Manhattan distances
-is to rotate all coordinates 45 degrees so that
-a point $(x,y)$ becomes $(x+y,y-x)$.
-For example, after rotating the above points,
-the result is:
+
+マンハッタン距離を用いた便利なテクニックは、点$(x, y)$が、
+$(x + y, y - x)$になる ように、
+すべての座標を45度回転させることです。
+例えば、上記の点を回転させた結果は、以下のようになります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
@@ -741,7 +637,7 @@ the result is:
 \node at (4,-2.5) {$D$};
 \end{tikzpicture}
 \end{center}
-And the maximum distance is as follows:
+最大の距離は以下のようになります。
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \draw[color=gray] (0,-3) grid (7,3);
@@ -760,23 +656,22 @@ And the maximum distance is as follows:
 \end{tikzpicture}
 \end{center}
 
-Consider two points $p_1=(x_1,y_1)$ and $p_2=(x_2,y_2)$ whose rotated
-coordinates are $p'_1=(x'_1,y'_1)$ and $p'_2=(x'_2,y'_2)$.
-Now there are two ways to express the Manhattan distance
-between $p_1$ and $p_2$:
+回転座標がp!1=(x1!,y1!)とp!2=(x2!,y2!)である2点p1 =(x1 ,y1 )とp2 = (x2 , y2 ) を考えよう。ここで、p1 と p2 の間の Manhat- tan 距離を表現する方法は
+2つあります。
+ここで、２つの点$p_1=(x_1,y_1)$ と $p_2=(x_2,y_2)$ を回転させた座標である
+$p'_1=(x'_1,y'_1)$ と
+$p'_2=(x'_2,y'_2)$を考えます。
+今、$p_1$ と $p_2$のマンハッタン距離は２つの方法で表現できます。
 \[|x_1-x_2|+|y_1-y_2| = \max(|x'_1-x'_2|,|y'_1-y'_2|)\]
 
-For example, if $p_1=(1,0)$ and $p_2=(3,3)$,
-the rotated coordinates are $p'_1=(1,-1)$ and $p'_2=(6,0)$
-and the Manhattan distance is
+例えば、$p_1=(1,0)$ と $p_2=(3,3)$の場合、
+回転した座標は $p'_1=(1,-1)$ と $p'_2=(6,0)$
+であり、マンハッタン距離は、次の通りです。
 \[|1-3|+|0-3| = \max(|1-6|,|-1-0|) = 5.\]
 
-The rotated coordinates provide a simple way
-to operate with Manhattan distances, because we can
-consider x and y coordinates separately.
-To maximize the Manhattan distance between two points,
-we should find two points whose
-rotated coordinates maximize the value of
+回転座標は、xとyの座標を別々に考えることができるため、
+マンハッタン距離の操作は簡単に行うことができます。
+2点間のマンハッタン距離を最大にするには、
+回転座標の値が最大となる2点を見つければよいです。
 \[\max(|x'_1-x'_2|,|y'_1-y'_2|).\]
-This is easy, because either the horizontal or vertical
-difference of the rotated coordinates has to be maximum.
+これは簡単に求められ、回転した座標の水平または垂直方向の差のどちらかが最大であればよいからです。

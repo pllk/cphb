@@ -1,79 +1,48 @@
-\chapter{Game theory}
+\chapter{ゲーム理論}
 
-In this chapter, we will focus on two-player
-games that do not contain random elements.
-Our goal is to find a strategy that we can
-follow to win the game
-no matter what the opponent does,
-if such a strategy exists.
+この章では、ランダムな要素を含まない2人用ゲームに焦点を当てます。
+そして相手が何をやってもゲームに勝てるような戦略(もしそのような戦略)を見つけることです。
+このようなゲームには一般的な戦略があることがわかり、Nimを使ってゲームを分析することができます。
+まず、プレイヤーが山から棒を取り除く簡単なゲームを分析し、その後に一般化を行います。
 
-It turns out that there is a general strategy
-for such games,
-and we can analyze the games using the \key{nim theory}.
-First, we will analyze simple games where
-players remove sticks from heaps,
-and after this, we will generalize the strategy
-used in those games to other games.
+\section{ゲームの状態 - Game states}
 
-\section{Game states}
-
-Let us consider a game where there is initially
-a heap of $n$ sticks.
-Players $A$ and $B$ move alternately,
-and player $A$ begins.
-On each move, the player has to remove
-1, 2 or 3 sticks from the heap,
-and the player who removes the last stick wins the game.
+最初に$n$本の棒があるゲームを考えます。
+プレイヤー$A$と$B$は交互に交代します。最初はプレイヤーAからスタートします。
+各手番で1本、2本、3本の棒を山から取り除き、最後の棒を取り除いたプレーヤーがゲームに勝つとします。
+n=10の場合、次のようにゲームを進めることができます。
 
 For example, if $n=10$, the game may proceed as follows:
 \begin{itemize}[noitemsep]
-\item Player $A$ removes 2 sticks (8 sticks left).
-\item Player $B$ removes 3 sticks (5 sticks left).
-\item Player $A$ removes 1 stick (4 sticks left).
-\item Player $B$ removes 2 sticks (2 sticks left).
-\item Player $A$ removes 2 sticks and wins.
+\item プレイヤーAは2本取る(残り8本)
+\item プレイヤーBは3本取る(残り5本)
+\item プレイヤーAは1本取る(残り4本)
+\item プレイヤーBは2本取る(残り2本)
+\item プレイヤーAは2本取って勝ち
 \end{itemize}
 
-This game consists of states $0,1,2,\ldots,n$,
-where the number of the state corresponds to
-the number of sticks left.
+このゲームは$0,1,2,\ldots,n$の状態からなり、
+状態の数は残っているスティックの数に対応します。
 
-\subsubsection{Winning and losing states}
+\subsubsection{勝ち状態と負け状態 - Winning and losing states}
 
-\index{winning state}
-\index{losing state}
+\index{勝ち状態 - winning state}
+\index{負け状態 - losing state}
 
-A \key{winning state} is a state where
-the player will win the game if they
-play optimally,
-and a \key{losing state} is a state
-where the player will lose the game if the
-opponent plays optimally.
-It turns out that we can classify all states
-of a game so that each state is either
-a winning state or a losing state.
+\key{勝利状態} とは適切に動けば必ず勝ちが確定する状態です。
+\key{敗北状態} とは相手が最適なプレイをすればゲームに負ける状態である。
+このように、ゲームの状態をすべて分類することで、それぞれの状態が「勝ちの状態」と「負けの状態」のどちらかになることがわかります。
 
-In the above game, state 0 is clearly a
-losing state, because the player cannot make
-any moves.
-States 1, 2 and 3 are winning states,
-because we can remove 1, 2 or 3 sticks
-and win the game.
-State 4, in turn, is a losing state,
-because any move leads to a state that
-is a winning state for the opponent.
+上のゲームを考えます。
+状態0は明らかに負け状態で、プレイヤーは何も手を打てません。
+状態1、2、3は、最後の１つを取れるので勝ちの状態です。
+状態4は逆にどの手を打っても相手が勝ち状態になるため、負け状態と言えます。
+一般的には、現在の状態から負け状態にできる現在の状態は勝ち状態であり、
+そうでなければ、現在の状態は負け状態である。
+これを を利用して、可能な手がない負け状態から始まるゲームのすべての状態を分類 することができます。
 
-More generally, if there is a move that leads
-from the current state to a losing state,
-the current state is a winning state,
-and otherwise the current state is a losing state.
-Using this observation, we can classify all states
-of a game starting with losing states where
-there are no possible moves.
+状態 $0 \ldots 15$を分類します(Wは勝ち状態、Lは負け状態)。
 
-The states $0 \ldots 15$ of the above game
-can be classified as follows
-($W$ denotes a winning state and $L$ denotes a losing state):
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (16,1);
@@ -115,37 +84,20 @@ can be classified as follows
 \end{tikzpicture}
 \end{center}
 
-It is easy to analyze this game:
-a state $k$ is a losing state if $k$ is
-divisible by 4, and otherwise it
-is a winning state.
-An optimal way to play the game is
-to always choose a move after which
-the number of sticks in the heap
-is divisible by 4.
-Finally, there are no sticks left and
-the opponent has lost.
+このゲームは簡単で、
+$k$が4で割り切れる場合は負け。それ以外は勝ち状態です。
+このゲームの最適なプレイ方法は、スティックが4で割り切れる状態にすれば良いです。
+もちろん、こちらが動くときに棒の数が4で割り切れないことが条件です。
+もし4で割り切れるなら、相手が最適な手を打つ限り勝てません。
 
-Of course, this strategy requires that
-the number of sticks is \emph{not} divisible by 4
-when it is our move.
-If it is, there is nothing we can do,
-and the opponent will win the game if
-they play optimally.
+\subsubsection{状態グラフ - State graph}
 
-\subsubsection{State graph}
+ここで，別のゲームを考えます。
+各状態 $k$ において，$x$ が $k$ より小さく $k$ を割り切れる $x$ 本の棒を取り除けるとします。
+例えば，状態8では1本，2本，4本の棒を取り除くことができるが、状態7では1本の棒を取り除くことだけが許されるとします。
 
-Let us now consider another stick game,
-where in each state $k$, it is allowed to remove
-any number $x$ of sticks such that $x$
-is smaller than $k$ and divides $k$.
-For example, in state 8 we may remove
-1, 2 or 4 sticks, but in state 7 the only
-allowed move is to remove 1 stick.
 
-The following picture shows the states
-$1 \ldots 9$ of the game as a \key{state graph},
-whose nodes are the states and edges are the moves between them:
+次の図は、状態$1 \ldots 9$を状態グラフで表したもので、ノードが状態、エッジが取りうる移動です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -176,11 +128,9 @@ whose nodes are the states and edges are the moves between them:
 \end{tikzpicture}
 \end{center}
 
-The final state in this game is always state 1,
-which is a losing state, because there are no
-valid moves.
-The classification of states $1 \ldots 9$
-is as follows:
+このゲームの最終状態は常に状態1で、
+有効な手がないため負け状態です。
+状態$1 \ldots 9$の勝ち状態と負け状態は次のとおりです。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -209,83 +159,45 @@ is as follows:
 \end{tikzpicture}
 \end{center}
 
-Surprisingly, in this game,
-all even-numbered states are winning states,
-and all odd-numbered states are losing states.
+意外かもしれませんがこのゲームは、偶数の時勝ち状態で、奇数の時負け状態です。
 
-\section{Nim game}
+\section{Nim - Nim game}
 
-\index{nim game}
+\index{Nim - nim game}
 
-The \key{nim game} is a simple game that
-has an important role in game theory,
-because many other games can be played using
-the same strategy.
-First, we focus on nim,
-and then we generalize the strategy
-to other games.
+\key{Nim - nim game}は単純なゲームですが同じ戦略を用いて他の多くのゲームを行 うことができるため、
+ゲーム理論において重要な考え方です。
 
-There are $n$ heaps in nim,
-and each heap contains some number of sticks.
-The players move alternately,
-and on each turn, the player chooses
-a heap that still contains sticks
-and removes any number of sticks from it.
-The winner is the player who removes the last stick.
+nimには$n$個の山があり、各山にはある数の棒があります。
+プレイヤーは交互に移動し、まだ棒が入っている山を選び、そこから 任意の本数の棒を取り除きます。
+最後のスティックを取り除いたプレイヤーが勝者です。
 
-The states in nim are of the form
-$[x_1,x_2,\ldots,x_n]$,
-where $x_k$ denotes the number of sticks in heap $k$.
-For example, $[10,12,5]$ is a game where
-there are three heaps with 10, 12 and 5 sticks.
-The state $[0,0,\ldots,0]$ is a losing state,
-because it is not possible to remove any sticks,
-and this is always the final state.
+nimの初期状態は$[x_1,x_2,\ldots,x_n]$で与えられ、
+$x_k$ は$k$個目の山のスティックの数とします。
+例えば，$[10, 12, 5]$ は10，12，5のスティックを持つ三つの山がある初期状態です。
+$[0,0,\ldots,0]$の状態は，棒を1本も取り出せないので負け状態であり，これが常に最終状態です。
 
-\subsubsection{Analysis}
+\subsubsection{考察 - Analysis}
+
 \index{nim sum}
+nim sum　$s$を用いて分析を行うことができます\footnote{The optimal strategy
+for nim was published in 1901 by C. L. Bouton \cite{bou01}.}。
+$s = x_1 \oplus x_2 \oplus \cdots \oplus x_n$として$\oplus$はXOR演算です。
+$s$が0の時は負けでそれ以外は勝ち状態です。
+例えば$[10,12,5]$は$10 \oplus 12 \oplus 5 = 3$なので勝ち状態です。
 
-It turns out that we can easily classify
-any nim state by calculating
-the \key{nim sum} $s = x_1 \oplus x_2 \oplus \cdots \oplus x_n$,
-where $\oplus$ is the xor operation\footnote{The optimal strategy
-for nim was published in 1901 by C. L. Bouton \cite{bou01}.}.
-The states whose nim sum is 0 are losing states,
-and all other states are winning states.
-For example, the nim sum of
-$[10,12,5]$ is $10 \oplus 12 \oplus 5 = 3$,
-so the state is a winning state.
+ですがnim sumとnimゲームはどのように関係しているのでしょうか？
+nimの状態が変化したときに、nim sumがどのように変化するかを見ていいます。
+最終状態 $[0,0,\ldots,0]$ は負け状態で、その$s$は0です。
+他の負け状態を考えるとどのような動きも勝ち状態になります。
+なぜなら、一つの値$x_k$が変化すると、nim sumも変化するので、どんな作業の後もnim sumは0と異なるからです。
 
-But how is the nim sum related to the nim game?
-We can explain this by looking at how the nim
-sum changes when the nim state changes.
+勝ち組の状態を考えます。$x_k \oplus s < x_k$となる山$k$があれば，負け状態に遷移できます。つまり勝てます。
+この場合，山$k$からスティックを取り除き，$x_k \oplus s$のスティックを含むようにすれば，負け状態に移行できます。
+このような山は必ず存在し、いずれかの$x_k$ は s の 左端の1ビットの1ビットを持った数です。
 
-\textit{Losing states:}
-The final state $[0,0,\ldots,0]$ is a losing state,
-and its nim sum is 0, as expected.
-In other losing states, any move leads to
-a winning state, because when a single value $x_k$ changes,
-the nim sum also changes, so the nim sum
-is different from 0 after the move.
-
-\textit{Winning states:}
-We can move to a losing state if
-there is any heap $k$ for which $x_k \oplus s < x_k$.
-In this case, we can remove sticks from
-heap $k$ so that it will contain $x_k \oplus s$ sticks,
-which will lead to a losing state.
-There is always such a heap, where $x_k$
-has a one bit at the position of the leftmost
-one bit of $s$.
-
-As an example, consider the state $[10,12,5]$.
-This state is a winning state,
-because its nim sum is 3.
-Thus, there has to be a move which
-leads to a losing state.
-Next we will find out such a move.
-
-The nim sum of the state is as follows:
+$[10, 12, 5]$の状態を考えてみましょう。
+この状態はnim sumが3なので勝ちの状態であり、そのような 手を見つけます。
 
 \begin{center}
 \begin{tabular}{r|r}
@@ -297,10 +209,7 @@ The nim sum of the state is as follows:
 \end{tabular}
 \end{center}
 
-In this case, the heap with 10 sticks
-is the only heap that has a one bit
-at the position of the leftmost
-one bit of the nim sum:
+この場合、10本ある山がnim sumの左端の1ビットの位置に1ビットを持つ唯一の山です。
 
 \begin{center}
 \begin{tabular}{r|r}
@@ -312,11 +221,8 @@ one bit of the nim sum:
 \end{tabular}
 \end{center}
 
-The new size of the heap has to be
-$10 \oplus 3 = 9$,
-so we will remove just one stick.
-After this, the state will be $[9,12,5]$,
-which is a losing state:
+山の本数は $10 \oplus 3 = 9$にしたいので1本だけ取ります。
+この後、状態は$[9, 12, 5]$となり、負け状態に遷移できます。
 
 \begin{center}
 \begin{tabular}{r|r}
@@ -328,76 +234,56 @@ which is a losing state:
 \end{tabular}
 \end{center}
 
-\subsubsection{Misère game}
+\subsubsection{misere nim game - Misère game}
 
 \index{misère game}
 
-In a \key{misère game}, the goal of the game
-is opposite,
-so the player who removes the last stick
-loses the game.
-It turns out that the misère nim game can be
-optimally played almost like the standard nim game.
+\key{misere nim game - misère game}はゲームの目的が逆です。
+つまり、最後のスティックを取ったプレイヤーがゲームに負けます。
+misere nim gameは標準のnimとほぼ同じ様に考えられます。
 
-The idea is to first play the misère game
-like the standard game, but change the strategy
-at the end of the game.
-The new strategy will be introduced in a situation
-where each heap would contain at most one stick
-after the next move.
+最初は標準的なnimゲームのようを行うが、ゲームの終盤に戦略を変えます。
+戦略を変えるのは、次の手の後に各山が最大で1本の棒を含むような状況で導入されることになる。
 
-In the standard game, we should choose a move
-after which there is an even number of heaps with one stick.
-However, in the misère game, we choose a move so that
-there is an odd number of heaps with one stick.
+オリジナルのゲームでは、1本の棒を持つヒープが偶数個になるような手を選ぶべきです。
+しかし、misèreゲームでは、1本の棒で奇数個の山ができるようにします。
 
-This strategy works because a state where the
-strategy changes always appears in the game,
-and this state is a winning state, because
-it contains exactly one heap that has more than one stick
-so the nim sum is not 0.
+まず、この戦略が変化する状態が必ずゲームに現れます。
+この状態になったとき、ちょうど複数のスティックを持つ山が一つ含まれているので、
+ニムサムは0ではないので、勝利が確定します。
 
-\section{Sprague–Grundy theorem}
+\section{スプレイグ・グランディの定理 - Sprague–Grundy theorem}
 
-\index{Sprague–Grundy theorem}
+\index{スプレイグ・グランディの定理 - Sprague–Grundy theorem}
 
-The \key{Sprague–Grundy theorem}\footnote{The theorem was
-independently discovered by R. Sprague \cite{spr35} and P. M. Grundy \cite{gru39}.} generalizes the
-strategy used in nim to all games that fulfil
-the following requirements:
+\key{スプレイグ・グランディの定理 - Sprague–Grundy theorem}\footnote{The theorem was
+independently discovered by R. Sprague \cite{spr35} and P. M. Grundy \cite{gru39}.}
+により、nimで用いられている戦略は、以下の要件を満たすべてのゲームに一般化できます。
 
 \begin{itemize}[noitemsep]
-\item There are two players who move alternately.
-\item The game consists of states, and the possible moves
-in a state do not depend on whose turn it is.
-\item The game ends when a player cannot make a move.
-\item The game surely ends sooner or later.
-\item The players have complete information about
-the states and allowed moves, and there is no randomness in the game.
+\item 2人のプレイヤーが交互にプレイする
+\item ゲームは状態から構成される。ある状態において可能な手は誰の手番であるかには依存しないこと。
+\item プレイヤーが手を出せなくなるとゲーム終了となる
+\item ゲームは遅かれ早かれ必ず終わります。
+\item プレイヤーは状態と許容される手について完全な情報を持っており、ゲームにランダム性はない。
 \end{itemize}
-The idea is to calculate for each game state
-a Grundy number that corresponds to the number of
-sticks in a nim heap.
-When we know the Grundy numbers of all states,
-we can play the game like the nim game.
+このアイデアは、各ゲーム状態のグランディ数をnim山に紐づけて管理することにあります。
+すべての状態のグランディ数が分かれば、nimゲームのようにプレイができます。
 
-\subsubsection{Grundy numbers}
+\subsubsection{Grundy数 - Grundy numbers}
 
-\index{Grundy number}
-\index{mex function}
+\index{Grundy数 - Grundy number}
+\index{MEX - mex function}
 
-The \key{Grundy number} of a game state is
+ゲームの状態の\key{Grundy数 - Grundy number}とは次のように示されます。
 \[\textrm{mex}(\{g_1,g_2,\ldots,g_n\}),\]
-where $g_1,g_2,\ldots,g_n$ are the Grundy numbers of the
-states to which we can move,
-and the mex function gives the smallest
-nonnegative number that is not in the set.
-For example, $\textrm{mex}(\{0,1,3\})=2$.
-If there are no possible moves in a state,
-its Grundy number is 0, because
-$\textrm{mex}(\emptyset)=0$.
+ここで、$g_1,g_2,\ldots,g_n$
+は移動可能な状態のGrundy数で、mex関数はその集合に含まれない最小の非負の数のことです。
+例えば、$\textrm{mex}(\{0,1,3\})=2$です。
+ある状態で移動可能なものがない場合、$\textrm{mex}(\emptyset)=0$.
+なので、そのグランディ数は0とします。
 
-For example, in the state graph
+例えば、以下を考えます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {\phantom{0}};
@@ -417,7 +303,7 @@ For example, in the state graph
 \path[draw,thick,->,>=latex] (6) -- (2);
 \end{tikzpicture}
 \end{center}
-the Grundy numbers are as follows:
+このGrundy数は以下の通りです。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {0};
@@ -437,31 +323,18 @@ the Grundy numbers are as follows:
 \path[draw,thick,->,>=latex] (6) -- (2);
 \end{tikzpicture}
 \end{center}
-The Grundy number of a losing state is 0,
-and the Grundy number of a winning state is
-a positive number.
+負けた状態のGrundy数は0で勝った状態のGrundy数は正の数です。
 
-The Grundy number of a state corresponds to
-the number of sticks in a nim heap.
-If the Grundy number is 0, we can only move to
-states whose Grundy numbers are positive,
-and if the Grundy number is $x>0$, we can move
-to states whose Grundy numbers include all numbers
-$0,1,\ldots,x-1$.
+ある状態のGrundy数とは、nimの山のスティックの本数に相当します。
+Grundy数が0であれば、グランディ数が正である状態にのみ移動でき、
+Grundy数が$x > 0$であれば、Grundy数が$0,1,\ldots,x-1$のすべての数を含む状態に移動することが可能になります。
 
-As an example, consider a game where
-the players move a figure in a maze.
-Each square in the maze is either floor or wall.
-On each turn, the player has to move
-the figure some number
-of steps left or up.
-The winner of the game is the player who
-makes the last move.
+例として、迷路の中で図形を動かすゲームを考えます。
+迷路の各マスは、床か壁のどちらかです。
+手番で、プレイヤーは図形を左か上に何歩か移動させなければならないとします。
+最後に動かしたプレイヤーが勝者です。
 
-The following picture shows a possible initial state
-of the game, where @ denotes the figure and *
-denotes a square where it can move.
-
+次の図は、ゲームの初期状態の例です。@は図形、*は移動可能なマスを表します。
 \begin{center}
 \begin{tikzpicture}[scale=.65]
   \begin{scope}
@@ -472,7 +345,7 @@ denotes a square where it can move.
     \fill [color=black] (4, 3) rectangle (5, 4);
 
     \draw (0, 0) grid (5, 5);
-    
+
     \node at (4.5,0.5) {@};
     \node at (3.5,0.5) {*};
     \node at (2.5,0.5) {*};
@@ -480,15 +353,14 @@ denotes a square where it can move.
     \node at (0.5,0.5) {*};
     \node at (4.5,1.5) {*};
     \node at (4.5,2.5) {*};
-    
+
   \end{scope}
 \end{tikzpicture}
 \end{center}
 
-The states of the game are all floor squares
-of the maze.
-In the above maze, the Grundy numbers
-are as follows:
+ゲームの状態は、迷路のすべての床のマス目で表現できます。
+上の迷路では、Grundy数は以下の通りです。
+
 
 \begin{center}
 \begin{tikzpicture}[scale=.65]
@@ -500,7 +372,7 @@ are as follows:
     \fill [color=black] (4, 3) rectangle (5, 4);
 
     \draw (0, 0) grid (5, 5);
-    
+
     \node at (0.5,4.5) {0};
     \node at (1.5,4.5) {1};
     \node at (2.5,4.5) {};
@@ -534,43 +406,31 @@ are as follows:
 \end{tikzpicture}
 \end{center}
 
-Thus, each state of the maze game
-corresponds to a heap in the nim game.
-For example, the Grundy number for
-the lower-right square is 2,
-so it is a winning state.
-We can reach a losing state and
-win the game by moving
-either four steps left or
-two steps up.
+したがって、
+迷路ゲームの各状態は、nimゲームの山に対応する。
+例えば、右下のマスのGrundy数は2なので、
+勝利状態です。
+4歩左に移動するか、2歩上に移動するかで負け状態に遷移できるので、ゲームに勝つことができます。
 
-Note that unlike in the original nim game,
-it may be possible to move to a state whose
-Grundy number is larger than the Grundy number
-of the current state.
-However, the opponent can always choose a move
-that cancels such a move, so it is not possible
-to escape from a losing state.
+なお、本来のnimゲームとは異なり、現在の状態のGrundy数よりも大きなGrundy数を持つ状態に移動も可能です。
+ただし、相手はそれを打ち消す手を常に選べるので、負け状態から脱出することはできません。
 
-\subsubsection{Subgames}
+\subsubsection{サブゲーム - Subgames}
 
-Next we will assume that our game consists
-of subgames, and on each turn, the player
-first chooses a subgame and then a move in the subgame.
-The game ends when it is not possible to make any move
-in any subgame.
+次に、このゲームがサブゲームから構成されていると仮定します。
+各ターンにおいて、プレイヤーはまずサブゲームを選択し、
+次にサブゲームにおける一手を選択するものとしましょう。
+ゲームは、どのサブゲームでも手を打つことができなくなったときに終了します。
 
-In this case, the Grundy number of a game
-is the nim sum of the Grundy numbers of the subgames.
-The game can be played like a nim game by calculating
-all Grundy numbers for subgames and then their nim sum.
+この場合、複数のサブゲームから構成されるあるゲームのGrundy数は、
+サブゲームのGrundy数のNim和となります。
 
-As an example, consider a game that consists
-of three mazes.
-In this game, on each turn, the player chooses one
-of the mazes and then moves the figure in the maze.
-Assume that the initial state of the game is as follows:
+サブゲームのGrundy数をすべて計算し、そのNim和を計算することで、
+Nimゲームのようにプレイすることができます。
 
+例として、3つの迷路のサブゲームで構成されるゲームを考えてみましょう。
+このゲームでは、プレイヤーは手番ごとに迷路の一つを選び、その迷路の中で図形を移動させられるとします。
+ゲームの初期状態を次のように仮定しましょう。
 \begin{center}
 \begin{tabular}{ccc}
 \begin{tikzpicture}[scale=.55]
@@ -595,7 +455,7 @@ Assume that the initial state of the game is as follows:
     \fill [color=black] (4, 4) rectangle (5, 5);
 
     \draw (0, 0) grid (5, 5);
-    
+
     \node at (4.5,0.5) {@};
 
   \end{scope}
@@ -606,14 +466,14 @@ Assume that the initial state of the game is as follows:
     \fill [color=black] (1, 1) rectangle (4, 4);
 
     \draw (0, 0) grid (5, 5);
-    
+
     \node at (4.5,0.5) {@};
   \end{scope}
 \end{tikzpicture}
 \end{tabular}
 \end{center}
 
-The Grundy numbers for the mazes are as follows:
+各迷路に置けるGrundy数は以下の通りになります。
 
 \begin{center}
 \begin{tabular}{ccc}
@@ -739,49 +599,35 @@ The Grundy numbers for the mazes are as follows:
 \end{tabular}
 \end{center}
 
-In the initial state, the nim sum of the Grundy numbers
-is $2 \oplus 3 \oplus 3 = 2$, so
-the first player can win the game.
-One optimal move is to move two steps up
-in the first maze, which produces the nim sum
-$0 \oplus 3 \oplus 3 = 0$.
+初期状態が$2 \oplus 3 \oplus 3 = 2$
+であるため、先攻が勝利します。
+例えば、最初の1手で２マス上に進めば、$0 \oplus 3 \oplus 3 = 0$を生成して相手に渡せます。
 
-\subsubsection{Grundy's game}
+\subsubsection{Grundyゲーム - Grundy's game}
 
-Sometimes a move in a game divides the game
-into subgames that are independent of each other.
-In this case, the Grundy number of the game is
-
+ある対局の一手が、
+その対局を互いに独立した下位の対局に分割するとみなせることがあります。
+この場合、そのゲームのGrundy数は
 \[\textrm{mex}(\{g_1, g_2, \ldots, g_n \}),\]
-where $n$ is the number of possible moves and
+となり、$n$はゲームの可能な手の数です。
 \[g_k = a_{k,1} \oplus a_{k,2} \oplus \ldots \oplus a_{k,m},\]
-where move $k$ generates subgames with
-Grundy numbers $a_{k,1},a_{k,2},\ldots,a_{k,m}$.
+$k$の手順は$a_{k,1},a_{k,2},\ldots,a_{k,m}$のサブゲームを生成するとします。
 
-\index{Grundy's game}
+\index{Grundyゲーム - Grundy's game}
 
-An example of such a game is \key{Grundy's game}.
-Initially, there is a single heap that contains $n$ sticks.
-On each turn, the player chooses a heap and divides
-it into two nonempty heaps such that the heaps
-are of different size.
-The player who makes the last move wins the game.
+\key{Grundyゲーム - Grundy's game}はこのようなゲームの例です。
+初期状態では、$n$本の棒を含む一つの山があります。
+手番ごとに，プレイヤーは山を選び，それを空でない二つの山に分割し，
+その山の大きさが異なるようにしなければなりません。最後に手を打ったプレイヤーがゲームに勝ちます。
 
-Let $f(n)$ be the Grundy number of a heap
-that contains $n$ sticks.
-The Grundy number can be calculated by going
-through all ways to divide the heap into
-two heaps.
-For example, when $n=8$, the possibilities
-are $1+7$, $2+6$ and $3+5$, so
+$n$本の棒を含むヒープのGrundy数を$f (n)$としましょう。
+Grundy数は、
+山を2つの山に分割する方法をすべて調べれば計算できます。
+例えば，$n = 8$のとき$1+7$, $2+6$ , $3+5$の可能性があるので以下のようになります。
 \[f(8)=\textrm{mex}(\{f(1) \oplus f(7), f(2) \oplus f(6), f(3) \oplus f(5)\}).\]
 
-In this game, the value of $f(n)$ is based on the values
-of $f(1),\ldots,f(n-1)$.
-The base cases are $f(1)=f(2)=0$,
-because it is not possible to divide the heaps
-of 1 and 2 sticks.
-The first Grundy numbers are:
+このゲームでは，$f (n)$ の値は，$f(1),\ldots,f(n-1)$の値に基づいて決定されます。
+1本と2本の棒の山を分割することはできないので$f(1)=f(2)=0$であることに注意します。
 \[
 \begin{array}{lcl}
 f(1) & = & 0 \\
@@ -794,8 +640,5 @@ f(7) & = & 0 \\
 f(8) & = & 2 \\
 \end{array}
 \]
-The Grundy number for $n=8$ is 2,
-so it is possible to win the game.
-The winning move is to create heaps
-$1+7$, because $f(1) \oplus f(7) = 0$.
-
+$n=8$のときのグランディ数は2なので、ゲームに勝つことは可能です。
+$f(1) \oplus f(7) = 0$なので、勝ち手はヒープ$1+7$を作ることです。

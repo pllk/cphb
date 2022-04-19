@@ -1,42 +1,28 @@
-\chapter{Sorting}
+\chapter{ソートアルゴリズム - Sorting}
 
-\index{sorting}
+\index{ソートアルゴリズム - sorting}
 
-\key{Sorting}
-is a fundamental algorithm design problem.
-Many efficient algorithms
-use sorting as a subroutine,
-because it is often easier to process
-data if the elements are in a sorted order.
+\key{ソートアルゴリズム - Sorting}
+は典型的なアルゴリズムの問題です。
+多くのアルゴリズムはソートを使用しています。
+要素がソートされた順番になっていれば、データ処理が容易になる問題が多いからです。
 
-For example, the problem ''does an array contain
-two equal elements?'' is easy to solve using sorting.
-If the array contains two equal elements,
-they will be next to each other after sorting,
-so it is easy to find them.
-Also, the problem ''what is the most frequent element
-in an array?'' can be solved similarly.
+例えば、「配列の中に同じ要素が2つあるか」という問題はソートを使えば簡単に解くことができます。
+ソートされている配列に2つの等しい要素があれば隣り合っているので簡単に見つけることができます。
+また、「配列の中で最も頻度の高い要素は何か」という問題も同様に解くことができます。
 
-There are many algorithms for sorting, and they are
-also good examples of how to apply
-different algorithm design techniques.
-The efficient general sorting algorithms
-work in $O(n \log n)$ time,
-and many algorithms that use sorting
-as a subroutine also
-have this time complexity.
+ソートには多くのアルゴリズムがあり、様々なアルゴリズムを検討する良い例にもなっています。
+一般的に用いられるソートアルゴリズム は $O(n \log n)$時間で動作し、
+ソートをサブルーチンとして使用する多くのアルゴリズムもこの時間複雑性を持ちます。
 
-\section{Sorting theory}
+\section{ソートの理論 - Sorting theory}
 
-The basic problem in sorting is as follows:
+ソートの最も基本的な問題は次の通りです。
 \begin{framed}
 \noindent
-Given an array that contains $n$ elements,
-your task is to sort the elements
-in increasing order.
+ n個の要素を含む配列が与えられたとき、要素を昇順に並べ替えてください。
 \end{framed}
 \noindent
-For example, the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -50,7 +36,7 @@ For example, the array
 \node at (7.5,0.5) {$6$};
 \end{tikzpicture}
 \end{center}
-will be as follows after sorting:
+この配列を次のように操作します。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -65,25 +51,18 @@ will be as follows after sorting:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{$O(n^2)$ algorithms}
+\subsubsection{$O(n^2)$ アルゴリズム}
 
-\index{bubble sort}
+\index{バブルソート - bubble sort}
+配列をソートするための最も簡単なアルゴリズムは、$O(n^2)$ 時間で動作します。
+このアルゴリズムはシンプルに記述でき2つの入れ子ループで構成されます。
+有名な $O(n^2)$ のソートアルゴリズムを紹介します。
+\key{バブルソート - bubble sort}は各要素をその名の通りバブル(浮き上げ)させます。
 
-Simple algorithms for sorting an array
-work in $O(n^2)$ time.
-Such algorithms are short and usually
-consist of two nested loops.
-A famous $O(n^2)$ time sorting algorithm
-is \key{bubble sort} where the elements
-''bubble'' in the array according to their values.
+バブルソートは$n$回のラウンドで構成されて各ラウンドでは配列の要素を繰り返し処理します。
+連続する2つの要素で順序が正しくないペアが見つかるとそれを交換します。
+このアルゴリズムは以下のように実装することができます。
 
-Bubble sort consists of $n$ rounds.
-On each round, the algorithm iterates through
-the elements of the array.
-Whenever two consecutive elements are found
-that are not in correct order,
-the algorithm swaps them.
-The algorithm can be implemented as follows:
 \begin{lstlisting}
 for (int i = 0; i < n; i++) {
     for (int j = 0; j < n-1; j++) {
@@ -94,14 +73,9 @@ for (int i = 0; i < n; i++) {
 }
 \end{lstlisting}
 
-After the first round of the algorithm,
-the largest element will be in the correct position,
-and in general, after $k$ rounds, the $k$ largest
-elements will be in the correct positions.
-Thus, after $n$ rounds, the whole array
-will be sorted.
-
-For example, in the array
+最初のラウンドのあと、最大の値は正しい場所にあることが保証されます。
+そして、$k$ラウンドの後には、上から$k$個の要素は正しい位置にあることが保証されます。
+つまり、$n$ラウンド後にはソートが完了します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -119,8 +93,7 @@ For example, in the array
 \end{center}
 
 \noindent
-the first round of bubble sort swaps elements
-as follows:
+この時の最初のラウンドを見てみます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -186,25 +159,17 @@ as follows:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Inversions}
+\subsubsection{転置 - Inversions}
 
-\index{inversion}
+\index{転置 - inversion}
 
-Bubble sort is an example of a sorting
-algorithm that always swaps \emph{consecutive}
-elements in the array.
-It turns out that the time complexity
-of such an algorithm is \emph{always}
-at least $O(n^2)$, because in the worst case,
-$O(n^2)$ swaps are required for sorting the array.
+バブルソートは、配列中の連続した要素を常に入れ替えるソートアルゴリズムの一例です。
+このようなアルゴリズムの時間計算量は常に$O(n^2)$となります。
+なぜなら，最悪の場合，配列をソートするために $O(n^2)$のスワップが必要になるからです。
 
-A useful concept when analyzing sorting
-algorithms is an \key{inversion}:
-a pair of array elements
-$(\texttt{array}[a],\texttt{array}[b])$ such that
-$a<b$ and $\texttt{array}[a]>\texttt{array}[b]$,
-i.e., the elements are in the wrong order.
-For example, the array
+ソートアルゴリズムを解析する際に有用な概念に\key{転置 - inversion}があります。
+$a<b$かつ$\texttt{array}[a]>\texttt{array}[b]$であるような要素の数を示します。
+つまり、ソートされている順番に対して誤っているペアの数ともいえます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -218,55 +183,44 @@ For example, the array
 \node at (7.5,0.5) {$8$};
 \end{tikzpicture}
 \end{center}
-has three inversions: $(6,3)$, $(6,5)$ and $(9,8)$.
-The number of inversions indicates
-how much work is needed to sort the array.
-An array is completely sorted when
-there are no inversions.
-On the other hand, if the array elements
-are in the reverse order,
-the number of inversions is the largest possible:
+を考えると3つの転置があります。$(6,3)$, $(6,5)$ , $(9,8)$の値のペアです。
+反転の数は，配列の並べ替えにどれだけの作業が必要かを示します。
+転置がないとき、配列は完全にソートされています。
+一方，配列の要素が逆順（訳註：つまり降順）の場合に転地の数は最大となります.
 \[1+2+\cdots+(n-1)=\frac{n(n-1)}{2} = O(n^2)\]
 
-Swapping a pair of consecutive elements that are
-in the wrong order removes exactly one inversion
-from the array.
-Hence, if a sorting algorithm can only
-swap consecutive elements, each swap removes
-at most one inversion, and the time complexity
-of the algorithm is at least $O(n^2)$.
 
-\subsubsection{$O(n \log n)$ algorithms}
+隣り合う順序を入れ替えると配列からちょうど1つの反転だけが削除されます。
+つまり、ソートアルゴリズムが隣り合う要素の入れ替えしかできない場合に各入れ替えは最大でも1つの反転しか取り除けないため、
+アルゴリズムは少なくとも$O(n^2)$です。
 
-\index{merge sort}
+\subsubsection{$O(n \log n)$ アルゴリズム}
 
-It is possible to sort an array efficiently
-in $O(n \log n)$ time using algorithms
-that are not limited to swapping consecutive elements.
-One such algorithm is \key{merge sort}\footnote{According to \cite{knu983},
-merge sort was invented by J. von Neumann in 1945.},
-which is based on recursion.
+\index{マージソート - merge sort}
 
-Merge sort sorts a subarray \texttt{array}$[a \ldots b]$ as follows:
+連続した要素の入れ替えに限らないアルゴリズムを用いれば$O(n \log n)$で効率的に配列をソートすることが可能です。
+そのようなアルゴリズムの1つが 、再帰に基づくマージソート
+\footnote{According to \cite{knu983},merge sort was invented by J. von Neumann in 1945.}
+です。
 
+マージソートは部分配列\texttt{array}$[a \ldots b]$に対して以下のような操作を行います。
 \begin{enumerate}
-\item If $a=b$, do not do anything, because the subarray is already sorted.
-\item Calculate the position of the middle element: $k=\lfloor (a+b)/2 \rfloor$.
-\item Recursively sort the subarray \texttt{array}$[a \ldots k]$.
-\item Recursively sort the subarray \texttt{array}$[k+1 \ldots b]$.
-\item \emph{Merge} the sorted subarrays \texttt{array}$[a \ldots k]$ and
-\texttt{array}$[k+1 \ldots b]$
-into a sorted subarray \texttt{array}$[a \ldots b]$.
+\item $a=b$ならソートされているので何もしない
+\item 中間のインデックスを計算する $k=\lfloor (a+b)/2 \rfloor$
+\item 再帰的に \texttt{array}$[a \ldots k]$をソートする
+\item 再帰的に \texttt{array}$[k+1 \ldots b]$をソートする
+\item ソートされた\texttt{array}$[a \ldots k]$ と
+\texttt{array}$[k+1 \ldots b]$ を \emph{マージ - Merge} し、
+ソートされた配列\texttt{array}$[a \ldots b]$を作る
 \end{enumerate}
 
-Merge sort is an efficient algorithm, because it
-halves the size of the subarray at each step.
-The recursion consists of $O(\log n)$ levels,
-and processing each level takes $O(n)$ time.
-Merging the subarrays \texttt{array}$[a \ldots k]$ and \texttt{array}$[k+1 \ldots b]$
-is possible in linear time, because they are already sorted.
+マージソートは各ステップで部分配列のサイズを半分にすることで効率的に動作するアルゴリズムです。
+再帰は$O(\log n)$段の階層まで行われ、それぞれの段では$O(n)$の時間を要します。
+部分配列\texttt{array}$[a \ldots k]$と\texttt{array}$[k+1 \ldots b]$はソートされているので、
+線形時間でマージすることが可能です。
 
-For example, consider sorting the following array:
+例えば、次のような配列のソートを考えてみましょう。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -281,8 +235,7 @@ For example, consider sorting the following array:
 \end{tikzpicture}
 \end{center}
 
-The array will be divided into two subarrays
-as follows:
+まず、次のように分割されます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,1);
@@ -300,8 +253,7 @@ as follows:
 \end{tikzpicture}
 \end{center}
 
-Then, the subarrays will be sorted recursively
-as follows:
+それぞれを次のようにソートします。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,1);
@@ -319,8 +271,7 @@ as follows:
 \end{tikzpicture}
 \end{center}
 
-Finally, the algorithm merges the sorted
-subarrays and creates the final sorted array:
+最後にその２つのソートされた配列を結合します。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -335,20 +286,13 @@ subarrays and creates the final sorted array:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Sorting lower bound}
+\subsubsection{ソート時間の限界 - Sorting lower bound}
 
-Is it possible to sort an array faster
-than in $O(n \log n)$ time?
-It turns out that this is \emph{not} possible
-when we restrict ourselves to sorting algorithms
-that are based on comparing array elements.
+ソートの時間を$O(n \log n)$より速くすることは可能でしょうか？
+配列要素の比較に基づくソートアルゴリズムに限定すると不可能であることがわかります。
 
-The lower bound for the time complexity
-can be proved by considering sorting
-as a process where each comparison of two elements
-gives more information about the contents of the array.
-The process creates the following tree:
-
+ソートを２つの要素を比較するたびに配列全体の情報が得られる処理とみなし、時間計算量の限界を証明することができます。
+この処理を図にすると以下のような木が生成されます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) rectangle (3,1);
@@ -387,45 +331,30 @@ The process creates the following tree:
 \end{tikzpicture}
 \end{center}
 
-Here ''$x<y?$'' means that some elements
-$x$ and $y$ are compared.
-If $x<y$, the process continues to the left,
-and otherwise to the right.
-The results of the process are the possible
-ways to sort the array, a total of $n!$ ways.
-For this reason, the height of the tree
-must be at least
+ここで、''$x<y?$''
+とは、ある要素$x$と$y$が比較されることを意味します。
+$x < y$ ならば処理は左へ、そうでなければ右へ移動します。
+この処理の結果は配列の並べ替えの可能性を示しており、
+全部で$n!$のノードからなります。これより、木の高さは少なくとも次の通り示されます。
 \[ \log_2(n!) = \log_2(1)+\log_2(2)+\cdots+\log_2(n).\]
-We get a lower bound for this sum
-by choosing the last $n/2$ elements and
-changing the value of each element to $\log_2(n/2)$.
-This yields an estimate
+
+最後の$n/2$個の要素を選び、各要素の値を$\log_2(n/2)$に変更することと、
+この和の下界を得ることができます。
 \[ \log_2(n!) \ge (n/2) \cdot \log_2(n/2),\]
-so the height of the tree and the minimum
-possible number of steps in a sorting
-algorithm in the worst case
-is at least $n \log n$.
+このように、$n \log n$がソートの限界であることが示されました。
 
-\subsubsection{Counting sort}
+\subsubsection{カウントソート - Counting sort}
 
-\index{counting sort}
+\index{カウントソート - counting sort}
 
-The lower bound $n \log n$ does not apply to
-algorithms that do not compare array elements
-but use some other information.
-An example of such an algorithm is
-\key{counting sort} that sorts an array in
-$O(n)$ time assuming that every element in the array
-is an integer between $0 \ldots c$ and $c=O(n)$.
+ソートの計算量の限界が$n \log n$ということを示しましたが、
+配列の比較が不要である場合はこの限りではありません。
+\key{カウントソート - counting sort} は各要素$c$が
+$0 \ldots c$ であることを仮定したソートで、$O(n)$で動作します。
 
-The algorithm creates a \emph{bookkeeping} array,
-whose indices are elements of the original array.
-The algorithm iterates through the original array
-and calculates how many times each element
-appears in the array.
+このアルゴリズムは、元の配列を繰り返し処理し、各要素が配列中 に何回現れるかを計算します。
 \newpage
 
-For example, the array
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -439,7 +368,7 @@ For example, the array
 \node at (7.5,0.5) {$9$};
 \end{tikzpicture}
 \end{center}
-corresponds to the following bookkeeping array:
+この配列の例では出現回数の配列を次のように作ります。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (9,1);
@@ -467,96 +396,71 @@ corresponds to the following bookkeeping array:
 \end{tikzpicture}
 \end{center}
 
-For example, the value at position 3
-in the bookkeeping array is 2,
-because the element 3 appears 2 times
-in the original array.
+この配列の3の位置の値は2で、要素3が元の配列に2回現れるを意味します。
+この構築には$O(n)$の時間がかかり、各要素の出現回数を配列から取得できるため$O(n)$でソート済み配列を作成することができます。
+したがって、ソート全体は$O(n)$で動作します。
+カウントソートは非常に効率的なアルゴリズムですが定数$c$が十分に小さい場合にのみ使用することができ、
+あまりに大きいとカウントの配列を持つことができません。
 
-Construction of the bookkeeping array
-takes $O(n)$ time. After this, the sorted array
-can be created in $O(n)$ time because
-the number of occurrences of each element can be retrieved
-from the bookkeeping array.
-Thus, the total time complexity of counting
-sort is $O(n)$.
+\section{C++のソート - Sorting in C++}
 
-Counting sort is a very efficient algorithm
-but it can only be used when the constant $c$
-is small enough, so that the array elements can
-be used as indices in the bookkeeping array.
+\index{ソート - sort@\texttt{sort}}
 
-\section{Sorting in C++}
+ほぼ全てのプログラミング言語には優れた実装があるので、
+自作のソートアルゴリズムをコンテストで使用するのはほとんど良い考えとは言えません。
+C++の標準ライブラリには\texttt{sort} という関数があり、
+配列などのデータ構造のソートに簡単に利用することができます。
 
-\index{sort@\texttt{sort}}
+ライブラリ関数を使用することには多くの利点があります。
+まず、関数を実装する必要がないため、時間の節約になります。
+さらに、ライブラリの実装は正しく効率的です。
+自作のソート関数の方が良いということはまずあり得ないでしょう。
 
-It is almost never a good idea to use
-a home-made sorting algorithm
-in a contest, because there are good
-implementations available in programming languages.
-For example, the C++ standard library contains
-the function \texttt{sort} that can be easily used for
-sorting arrays and other data structures.
-
-There are many benefits in using a library function.
-First, it saves time because there is no need to
-implement the function.
-Second, the library implementation is
-certainly correct and efficient: it is not probable
-that a home-made sorting function would be better.
-
-In this section we will see how to use the
-C++ \texttt{sort} function.
-The following code sorts
-a vector in increasing order:
+C++の \texttt{sort} の使い方をみていきます。
+次のコードは配列をソートするものです。
 \begin{lstlisting}
 vector<int> v = {4,2,5,3,5,8,3};
 sort(v.begin(),v.end());
 \end{lstlisting}
-After the sorting, the contents of the
-vector will be
-$[2,3,3,4,5,5,8]$.
-The default sorting order is increasing,
-but a reverse order is possible as follows:
+この処理の後、配列自身が次のように変更されます。
+$[2,3,3,4,5,5,8]$となります。
+標準では昇順にソートされますが、
+つぎのようにすれば降順にできます。
 \begin{lstlisting}
 sort(v.rbegin(),v.rend());
 \end{lstlisting}
-An ordinary array can be sorted as follows:
+vectorでない配列も次のようにソート可能です。
 \begin{lstlisting}
 int n = 7; // array size
 int a[] = {4,2,5,3,5,8,3};
 sort(a,a+n);
 \end{lstlisting}
 \newpage
-The following code sorts the string \texttt{s}:
+文字列\texttt{s}をソートすることもできます。
 \begin{lstlisting}
 string s = "monkey";
 sort(s.begin(), s.end());
 \end{lstlisting}
-Sorting a string means that the characters
-of the string are sorted.
-For example, the string ''monkey'' becomes ''ekmnoy''.
+これは文字列の各文字をソートすることになり''monkey'' は ''ekmnoy''とソートされます。
 
-\subsubsection{Comparison operators}
+\subsubsection{比較演算子 - Comparison operators}
 
-\index{comparison operator}
+\index{比較演算子 - comparison operator}
 
-The function \texttt{sort} requires that
-a \key{comparison operator} is defined for the data type
-of the elements to be sorted.
-When sorting, this operator will be used
-whenever it is necessary to find out the order of two elements.
+\texttt{sort} の関数には
+\key{比較演算子 - comparison operator}が定義されていないといけません。
+ソートを行う際に2つの要素の比較に常にこの演算子が使用されます。
 
-Most C++ data types have a built-in comparison operator,
-and elements of those types can be sorted automatically.
-For example, numbers are sorted according to their values
-and strings are sorted in alphabetical order.
+C++のほとんどのデータ型には比較演算子が組み込まれていて
+独自の比較演算関数を用意することなくソートできます。
+例えば、数値はその値に従ってソートされ、文字列はアルファベット順にソートされるというようになっています。
 
-\index{pair@\texttt{pair}}
+\index{pair@\texttt{ペア - pair}}
 
-Pairs (\texttt{pair}) are sorted primarily according to their
-first elements (\texttt{first}).
-However, if the first elements of two pairs are equal,
-they are sorted according to their second elements (\texttt{second}):
+\texttt{ペア - pair}のソートは、
+主に最初の要素(\texttt{first})に従って並び替えられます。
+2つのペアの第1要素が等しい場合は、それらは第2要素(\texttt{second})を用いてソートされます。
+
 \begin{lstlisting}
 vector<pair<int,int>> v;
 v.push_back({1,5});
@@ -564,14 +468,13 @@ v.push_back({2,3});
 v.push_back({1,2});
 sort(v.begin(), v.end());
 \end{lstlisting}
-After this, the order of the pairs is
-$(1,2)$, $(1,5)$ and $(2,3)$.
+この場合は$(1,2)$, $(1,5)$, $(2,3)$と並び替えられます。
 
-\index{tuple@\texttt{tuple}}
+\index{tuple@\texttt{タプル - tuple}}
 
-In a similar way, tuples (\texttt{tuple})
-are sorted primarily by the first element,
-secondarily by the second element, etc.\footnote{Note that in some older compilers,
+\texttt{タプル - tuple}
+も似たようにソートされます。
+\footnote{Note that in some older compilers,
 the function \texttt{make\_tuple} has to be used to create a tuple instead of
 braces (for example, \texttt{make\_tuple(2,1,4)} instead of \texttt{\{2,1,4\}}).}:
 \begin{lstlisting}
@@ -581,26 +484,20 @@ v.push_back({1,5,3});
 v.push_back({2,1,3});
 sort(v.begin(), v.end());
 \end{lstlisting}
-After this, the order of the tuples is
-$(1,5,3)$, $(2,1,3)$ and $(2,1,4)$.
+以下のようにソートされます。
+$(1,5,3)$, $(2,1,3)$, $(2,1,4)$
 
-\subsubsection{User-defined structs}
+\subsubsection{ユーザ定義構造体 - User-defined structs}
 
-User-defined structs do not have a comparison
-operator automatically.
-The operator should be defined inside
-the struct as a function
-\texttt{operator<},
-whose parameter is another element of the same type.
-The operator should return \texttt{true}
-if the element is smaller than the parameter,
-and \texttt{false} otherwise.
+ユーザ定義した構造体は比較演算子を定義しなければなりません。
+構造体で
+\texttt{operator<}を定義する必要があり、
+これは引数に同じ型の他の変数を取ります。
+小さいと判断する場合に\texttt{true}を、
+そうでない場合に\texttt{false}と返すようにします（訳註: 同じ場合はfalseを返すようにします）。
 
-For example, the following struct \texttt{P}
-contains the x and y coordinates of a point.
-The comparison operator is defined so that
-the points are sorted primarily by the x coordinate
-and secondarily by the y coordinate.
+次の構造体\texttt{P}には点のx座標とy座標が格納されています。
+比較演算子が定義されているため、この構造体はまずxで比較されて同値ならyで判定されます。
 
 \begin{lstlisting}
 struct P {
@@ -612,16 +509,13 @@ struct P {
 };
 \end{lstlisting}
 
-\subsubsection{Comparison functions}
+\subsubsection{比較関数 - Comparison functions}
 
-\index{comparison function}
+\index{比較関数 - comparison function}
 
-It is also possible to give an external
-\key{comparison function} to the \texttt{sort} function
-as a callback function.
-For example, the following comparison function \texttt{comp}
-sorts strings primarily by length and secondarily
-by alphabetical order:
+\texttt{sort}には外部の
+\key{比較関数 - comparison function}をコールバック関数として与えることもできます。
+次の例では比較関数\texttt{comp}は第一に文字列長で比較し、同点の場合は辞書順で比較するソートを実現します。
 
 \begin{lstlisting}
 bool comp(string a, string b) {
@@ -629,21 +523,20 @@ bool comp(string a, string b) {
     return a < b;
 }
 \end{lstlisting}
-Now a vector of strings can be sorted as follows:
+この自作の比較関数を使って次のようにソートすることができます。
 \begin{lstlisting}
 sort(v.begin(), v.end(), comp);
 \end{lstlisting}
 
-\section{Binary search}
+\section{二分探索(バイナリサーチ) - Binary search}
 
-\index{binary search}
+\index{二分探索 - binary search}
+\index{バイナリサーチ}
 
-A general method for searching for an element
-in an array is to use a \texttt{for} loop
-that iterates through the elements of the array.
-For example, the following code searches for
-an element $x$ in an array:
+配列の要素を検索する最も一般な方法は、\texttt{for} ループを使用することでしょう
+たとえば、次のコードは、配列の要素 $x$ を検索します。
 
+\begin{samepage}
 \begin{lstlisting}
 for (int i = 0; i < n; i++) {
     if (array[i] == x) {
@@ -651,42 +544,26 @@ for (int i = 0; i < n; i++) {
     }
 }
 \end{lstlisting}
+\end{samepage}
+このコードは最悪の場合で配列の全要素をチェックするので時間計算量は$O(n)$となります。
+要素の順序が任意である場合は配列のどこを探せば要素 $x$ が見つかるかという追加情報はないためこの方法は最良の方法です。
 
-The time complexity of this approach is $O(n)$,
-because in the worst case, it is necessary to check
-all elements of the array.
-If the order of the elements is arbitrary,
-this is also the best possible approach, because
-there is no additional information available where
-in the array we should search for the element $x$.
+ただし、配列がソートされている状況では、より高速に探索を行うことが可能です。
+次の\key{二分探索 - binary search}アルゴリズムは，
+ソートされた配列の要素を$O(\log n)$で効率的に探索します.
 
-However, if the array is \emph{sorted},
-the situation is different.
-In this case it is possible to perform the
-search much faster, because the order of the
-elements in the array guides the search.
-The following \key{binary search} algorithm
-efficiently searches for an element in a sorted array
-in $O(\log n)$ time.
+\subsubsection{方法1 - Method 1}
 
-\subsubsection{Method 1}
+二分探索の通常の実装方法は、辞書の中の単語を探すような作業といえます。
+この方法は配列のアクティブな領域を維持します。まず最初はすべての配列要素を含んでいます。
+その後、各ステップで領域のサイズを半分にします。
 
-The usual way to implement binary search
-resembles looking for a word in a dictionary.
-The search maintains an active region in the array,
-which initially contains all array elements.
-Then, a number of steps is performed,
-each of which halves the size of the region.
+各ステップでは、アクティブな領域の中央の要素を確認します。
+中央の要素がターゲット要素であれば、探索は終了します。
+そうでない場合は、中央の要素の値に応じて、
+領域の左半分または右半分まで再帰的に探索をおこないます。
 
-At each step, the search checks the middle element
-of the active region.
-If the middle element is the target element,
-the search terminates.
-Otherwise, the search recursively continues
-to the left or right half of the region,
-depending on the value of the middle element.
-
-The above idea can be implemented as follows:
+この実装は以下のようになります。
 \begin{lstlisting}
 int a = 0, b = n-1;
 while (a <= b) {
@@ -699,28 +576,22 @@ while (a <= b) {
 }
 \end{lstlisting}
 
-In this implementation, the active region is $a \ldots b$,
-and initially the region is $0 \ldots n-1$.
-The algorithm halves the size of the region at each step,
-so the time complexity is $O(\log n)$.
+この実装ではアクティブな領域は $a \ldots b$で、
+初期値は $0 \ldots n-1$となります。
+各ステップで大きさを半分にするため、$O(\log n)$の計算量です。
 
-\subsubsection{Method 2}
+\subsubsection{方法2 - Method 2}
 
-An alternative method to implement binary search
-is based on an efficient way to iterate through
-the elements of the array.
-The idea is to make jumps and slow the speed
-when we get closer to the target element.
+もう一つの方法は見る配列を効率的にする方法があります。
+このアイデアは大きな動きをだんだん小さくしていき、最後に目的の要素を見つけ出します。
 
-The search goes through the array from left to
-right, and the initial jump length is $n/2$.
-At each step, the jump length will be halved:
-first $n/4$, then $n/8$, $n/16$, etc., until
-finally the length is 1.
-After the jumps, either the target element has
-been found or we know that it does not appear in the array.
+探索は配列の左から右へ進めます。最初のジャンプの長さは$n/2$です。
+各ステップでジャンプの長さは半分にし、次は $n/4$,
+次に $n/8$，$n/16$ .. となり，
+最終的に長さは 1 になります。
+この結果、目的の要素が見つかったか，配列に現れないことが分かります.
 
-The following code implements the above idea:
+この実装は次のようになります。
 \begin{lstlisting}
 int k = 0;
 for (int b = n/2; b >= 1; b /= 2) {
@@ -731,30 +602,22 @@ if (array[k] == x) {
 }
 \end{lstlisting}
 
-During the search, the variable $b$
-contains the current jump length.
-The time complexity of the algorithm is $O(\log n)$,
-because the code in the \texttt{while} loop
-is performed at most twice for each jump length.
+$b$には今のジャンプの長さが含まれ、これを半分にしていくので計算量は$O(\log n)$です。
+\texttt{while}は各ループに対して最大２回呼ばれます。
 
-\subsubsection{C++ functions}
+\subsubsection{C++の標準機能 - C++ functions}
 
-The C++ standard library contains the following functions
-that are based on binary search and work in logarithmic time:
+C++標準ライブラリには二分探索ベースのlogで動作する探索の関数が用意されています。
 
 \begin{itemize}
-\item \texttt{lower\_bound} returns a pointer to the
-first array element whose value is at least $x$.
-\item \texttt{upper\_bound} returns a pointer to the
-first array element whose value is larger than $x$.
-\item \texttt{equal\_range} returns both above pointers.
+\item \texttt{lower\_bound} $x$以上となる最初の要素へのポインタを返します.
+\item \texttt{upper\_bound} $x$よりも大きい最初の要素へのポインタを返します.
+\item \texttt{equal\_range} はこの両方へのポインタを返します.
 \end{itemize}
 
-The functions assume that the array is sorted.
-If there is no such element, the pointer points to
-the element after the last array element.
-For example, the following code finds out whether
-an array contains an element with value $x$:
+これらの関数は配列がソートされていることを前提として動作します。
+該当する要素がない場合，ポインタは配列の最後の要素の後を指します.
+次のコードは配列の中に値$x$の要素があるかどうかを調べるものです.
 
 \begin{lstlisting}
 auto k = lower_bound(array,array+n,x)-array;
@@ -763,8 +626,7 @@ if (k < n && array[k] == x) {
 }
 \end{lstlisting}
 
-Then, the following code counts the number of elements
-whose value is $x$:
+これらを活用すると次のコードは$x$の数をカウントすることができます。
 
 \begin{lstlisting}
 auto a = lower_bound(array, array+n, x);
@@ -772,26 +634,21 @@ auto b = upper_bound(array, array+n, x);
 cout << b-a << "\n";
 \end{lstlisting}
 
-Using \texttt{equal\_range}, the code becomes shorter:
+C++では\texttt{equal\_range}という関数によりもっと簡潔に書けます。
 
 \begin{lstlisting}
 auto r = equal_range(array, array+n, x);
 cout << r.second-r.first << "\n";
 \end{lstlisting}
 
-\subsubsection{Finding the smallest solution}
+\subsubsection{最小の解 - Finding the smallest solution}
 
-An important use for binary search is
-to find the position where the value of a \emph{function} changes.
-Suppose that we wish to find the smallest value $k$
-that is a valid solution for a problem.
-We are given a function $\texttt{ok}(x)$
-that returns \texttt{true} if $x$ is a valid solution
-and \texttt{false} otherwise.
-In addition, we know that $\texttt{ok}(x)$ is \texttt{false}
-when $x<k$ and \texttt{true} when $x \ge k$.
-The situation looks as follows:
+注意するのは、二分探索というのは関数の値が変化する位置を見つけるという点です。
+ある問題に対して有効な解となる最小の値$k$を求めたいとします。
+$x$が有効な解であれば真を、そうでなければ偽を返す関数$\texttt{ok}(x)$を考えます。
+さらに$\texttt{ok}(x)$は$x<k$のとき偽，$x \ge k$の時に真を返すとします。
 
+ここは次のように示せます。
 \begin{center}
 \begin{tabular}{r|rrrrrrrr}
 $x$ & 0 & 1 & $\cdots$ & $k-1$ & $k$ & $k+1$ & $\cdots$ \\
@@ -802,7 +659,7 @@ $\texttt{ok}(x)$ & \texttt{false} & \texttt{false}
 \end{center}
 
 \noindent
-Now, the value of $k$ can be found using binary search:
+このような関数がある場合に$k$の値は次のように二分探索で求めることができます。
 
 \begin{lstlisting}
 int x = -1;
@@ -812,42 +669,28 @@ for (int b = z; b >= 1; b /= 2) {
 int k = x+1;
 \end{lstlisting}
 
-The search finds the largest value of $x$ for which
-$\texttt{ok}(x)$ is \texttt{false}.
-Thus, the next value $k=x+1$
-is the smallest possible value for which
-$\texttt{ok}(k)$ is \texttt{true}.
-The initial jump length $z$ has to be
-large enough, for example some value
-for which we know beforehand that $\texttt{ok}(z)$ is \texttt{true}.
+この探索は、$\texttt{ok}(x)$ が偽となる最大の値$x$を探索します。
+次の値$k=x+1$は、$\texttt{ok}(x)$が真となる最小の値といえます。
+ジャンプの長さ$z$の初期値は十分大きくないといけないことに注意してください。
+$\texttt{ok}(z)$が真であるような値にしてはならないということです。
 
-The algorithm calls the function \texttt{ok}
-$O(\log z)$ times, so the total time complexity
-depends on the function \texttt{ok}.
-For example, if the function works in $O(n)$ time,
-the total time complexity is $O(n \log z)$.
+アルゴリズムは関数\texttt{ok}を$O(\log z)$ 回呼び出すので、
+時間計算量は関数$ok$の計算量に依存します。
+たとえば関数が$ O(n)$ 時間で動作するのであれば全体の時間複雑度は$O(n \log z)$となります。
 
-\subsubsection{Finding the maximum value}
-
-Binary search can also be used to find
-the maximum value for a function that is
-first increasing and then decreasing.
-Our task is to find a position $k$ such that
+\subsubsection{最大の解の探索 - Finding the maximum value}
+二項探索は、まず増加して次に減少する関数の最大値を求める場合にも使用できます。
+次のような$k$を見つけたいとします。
 
 \begin{itemize}
 \item
-$f(x)<f(x+1)$ when $x<k$, and
+$x<k$の時、$f(x)<f(x+1)$
 \item
-$f(x)>f(x+1)$ when $x \ge k$.
+$x \ge k$の時、$f(x)>f(x+1)$
 \end{itemize}
 
-The idea is to use binary search
-for finding the largest value of $x$
-for which $f(x)<f(x+1)$.
-This implies that $k=x+1$
-because $f(x+1)>f(x+2)$.
-The following code implements the search: 
-
+これを二分探索で見つけるためのアイデアは $f(x)<f(x+1)$となるような$x$の値を見つけることです。
+$k=x+1$であるため、$f(x+1)>f(x+2)$なることを意味します。次のように実装することができます。
 \begin{lstlisting}
 int x = -1;
 for (int b = z; b >= 1; b /= 2) {
@@ -856,8 +699,5 @@ for (int b = z; b >= 1; b /= 2) {
 int k = x+1;
 \end{lstlisting}
 
-Note that unlike in the ordinary binary search,
-here it is not allowed that consecutive values
-of the function are equal.
-In this case it would not be possible to know
-how to continue the search.
+ここで、連続する値が同値となるケースは動作しないことに注意してください。
+同値を引いた時にどちらに探索を続ければいいのかわからないためです。

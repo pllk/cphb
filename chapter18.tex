@@ -1,30 +1,27 @@
-\chapter{Tree queries}
+\chapter{木に対するクエリ - Tree queries}
 
-\index{tree query}
+\index{木に対するクエリ - tree query}
 
-This chapter discusses techniques for
-processing queries on
-subtrees and paths of a rooted tree.
-For example, such queries are:
+ここでは根付き木における部分木とパスに関するクエリについて説明します。
+例えば次のようなクエリを取り上げます。
 
 \begin{itemize}
-\item what is the $k$th ancestor of a node?
-\item what is the sum of values in the subtree of a node?
-\item what is the sum of values on a path between two nodes?
-\item what is the lowest common ancestor of two nodes?
+\item $k$番目の祖先(ancestor)はどのノード?
+\item ある部分木の値の合計は？
+\item 2つのノード間のパス上の値の和は？
+\item 2つのノードの共通祖先(LCA)は?
 \end{itemize}
 
-\section{Finding ancestors}
+\section{祖先の検索 - Finding ancestors}
 
-\index{ancestor}
+\index{祖先 - ancestor}
 
-The $k$th \key{ancestor} of a node $x$ in a rooted tree
-is the node that we will reach if we move $k$
-levels up from $x$.
-Let $\texttt{ancestor}(x,k)$ denote the $k$th ancestor of a node $x$
-(or $0$ if there is no such an ancestor).
-For example, in the following tree,
-$\texttt{ancestor}(2,1)=1$ and $\texttt{ancestor}(8,2)=4$.
+根付き木においてノード$x$の$k$番目の祖先とは
+$x$から$k$個だけ根の方向に移動したときのノードです。
+ノード$x$の$k$番目の祖先を$ancestor(x, k)$とします。(祖先が存在しない場合は0とする)。
+たとえば、次の木では、
+$\texttt{ancestor}(2,1)=1$ and $\texttt{ancestor}(8,2)=4$です。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -48,20 +45,11 @@ $\texttt{ancestor}(2,1)=1$ and $\texttt{ancestor}(8,2)=4$.
 \end{tikzpicture}
 \end{center}
 
-An easy way to calculate any value of $\texttt{ancestor}(x,k)$
-is to perform a sequence of $k$ moves in the tree.
-However, the time complexity of this method
-is $O(k)$, which may be slow, because a tree of $n$
-nodes may have a chain of $n$ nodes.
+$ancestor$を求める最もシンプルな方法は$k$回の移動を実際に行うことです。
+この方法の時間計算量は$O(k)$であり、$n$ 個のノード を持つ木では$n$個のノードの探索を持つ可能性があるため、高速に動作するとは言えません。
 
-Fortunately, using a technique similar to that
-used in Chapter 16.3, any value of $\texttt{ancestor}(x,k)$
-can be efficiently calculated in $O(\log k)$ time
-after preprocessing.
-The idea is to precalculate all values $\texttt{ancestor}(x,k)$
-where $k \le n$ is a power of two.
-For example, the values for the above tree
-are as follows:
+ここで16.3章で用いたのと同様の手法を用いれば、前処理を行うことで$ancestor(x, k)$を$O(\log k)$で効率的に求められます。
+$k \le n$となる$2$の累乗について$ancestor(x, k)$を事前計算します。例えば、上記の木に対する値は以下の通りになります。
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
@@ -74,20 +62,16 @@ $\cdots$ \\
 \end{tabular}
 \end{center}
 
-The preprocessing takes $O(n \log n)$ time,
-because $O(\log n)$ values are calculated for each node.
-After this, any value of $\texttt{ancestor}(x,k)$ can be calculated
-in $O(\log k)$ time by representing $k$
-as a sum where each term is a power of two.
+この前処理には各ノードに対して$O(\log n)$の計算が必要なので$O(n \log n)$の時間がかかります。
+この後、$ancestor(x, k)$ の任意の値は、$k$ を各項が2のべき乗である和として表現することで$O(\log k)$で計算可能となります。
 
-\section{Subtrees and paths}
+\section{部分木とパス - Subtrees and paths}
 
 \index{tree traversal array}
 
-A \key{tree traversal array} contains the nodes of a rooted tree
-in the order in which a depth-first search
-from the root node visits them.
-For example, in the tree
+\key{木の探索順 - tree traversal array}は根をもつ木のノードを、
+ルートノードからの深さ優先探索 で訪れる順番に並べたものです。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -110,7 +94,7 @@ For example, in the tree
 \path[draw,thick,-] (4) -- (9);
 \end{tikzpicture}
 \end{center}
-a depth-first search proceeds as follows:
+このような場合は深さ優先探索を行い、
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -152,7 +136,7 @@ a depth-first search proceeds as follows:
 
 \end{tikzpicture}
 \end{center}
-Hence, the corresponding tree traversal array is as follows:
+このように辿るため、木の探索順は次のようになります。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (9,1);
@@ -166,7 +150,7 @@ Hence, the corresponding tree traversal array is as follows:
 \node at (6.5,0.5) {$8$};
 \node at (7.5,0.5) {$9$};
 \node at (8.5,0.5) {$5$};
-% 
+%
 % \footnotesize
 % \node at (0.5,1.4) {$1$};
 % \node at (1.5,1.4) {$2$};
@@ -180,13 +164,12 @@ Hence, the corresponding tree traversal array is as follows:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Subtree queries}
+\subsubsection{部分木クエリ - Subtree queries}
 
-Each subtree of a tree corresponds to a subarray
-of the tree traversal array such that
-the first element of the subarray is the root node.
-For example, the following subarray contains the
-nodes of the subtree of node $4$:
+木における部分木は、木の探索順のある部分配列に対応し、
+その部分配列の 最初の要素がその部分木の根となるようにします。
+例えば、以下の部分配列は、ノード $4$ の部分木となります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (8,1);
@@ -201,7 +184,7 @@ nodes of the subtree of node $4$:
 \node at (6.5,0.5) {$8$};
 \node at (7.5,0.5) {$9$};
 \node at (8.5,0.5) {$5$};
-% 
+%
 % \footnotesize
 % \node at (0.5,1.4) {$1$};
 % \node at (1.5,1.4) {$2$};
@@ -214,20 +197,15 @@ nodes of the subtree of node $4$:
 % \node at (8.5,1.4) {$9$};
 \end{tikzpicture}
 \end{center}
-Using this fact, we can efficiently process queries
-that are related to subtrees of a tree.
-As an example, consider a problem where each node
-is assigned a value, and our task is to support
-the following queries:
+
+これを利用して、木の部分木対するクエリを効率的に処理できます。
+例として、各ノードに値があるとします。次のようなクエリを考えます。
 \begin{itemize}
-\item update the value of a node
-\item calculate the sum of values in the subtree of a node
+\item 単一ノードの値を更新する
+\item 単一の指定したノードの部分木の合計を計算する
 \end{itemize}
 
-Consider the following tree where the blue numbers
-are the values of the nodes.
-For example, the sum of the subtree of node $4$
-is $3+4+3+1=11$.
+次の図で青い数字がノードの値とします。例えば、ノード $4$の部分木の和は、$3+ 4+ 3+ 1= 11$となります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -262,10 +240,8 @@ is $3+4+3+1=11$.
 \end{tikzpicture}
 \end{center}
 
-The idea is to construct a tree traversal array that contains
-three values for each node: the identifier of the node,
-the size of the subtree, and the value of the node.
-For example, the array for the above tree is as follows:
+この問題を解くアイデアは各ノードに対して、ノードの番号、サブツリーのサイズ、ノードの値を持っておきます。
+次のようになります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -304,7 +280,7 @@ For example, the array for the above tree is as follows:
 \node at (6.5,-1.5) {$3$};
 \node at (7.5,-1.5) {$1$};
 \node at (8.5,-1.5) {$1$};
-% 
+%
 % \footnotesize
 % \node at (0.5,1.4) {$1$};
 % \node at (1.5,1.4) {$2$};
@@ -318,11 +294,10 @@ For example, the array for the above tree is as follows:
 \end{tikzpicture}
 \end{center}
 
-Using this array, we can calculate the sum of values
-in any subtree by first finding out the size of the subtree
-and then the values of the corresponding nodes.
-For example, the values in the subtree of node $4$
-can be found as follows:
+
+この配列によって、まずサブツリーの大きさを求め、
+次に対応するノードの値を求めれば、任意の部分木の値の合計を計算することができます。
+ノード$4$の部分木の値は以下のように求めます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -364,7 +339,7 @@ can be found as follows:
 \node at (6.5,-1.5) {$3$};
 \node at (7.5,-1.5) {$1$};
 \node at (8.5,-1.5) {$1$};
-% 
+%
 % \footnotesize
 % \node at (0.5,1.4) {$1$};
 % \node at (1.5,1.4) {$2$};
@@ -378,29 +353,23 @@ can be found as follows:
 \end{tikzpicture}
 \end{center}
 
-To answer the queries efficiently,
-it suffices to store the values of the
-nodes in a binary indexed or segment tree.
-After this, we can both update a value
-and calculate the sum of values in $O(\log n)$ time.
+クエリに効率的に答えるにはこれを格納する構造体を工夫することが必要です。
+バイナリインデックスまたはセグメントツリーなどが適切でしょう。
+これらを用いると値の更新と値の総和の計算の両方を$O(\log n)$で行うことができます。
 
-\subsubsection{Path queries}
 
-Using a tree traversal array, we can also efficiently
-calculate sums of values on
-paths from the root node to any
-node of the tree.
-Consider a problem where our task
-is to support the following queries:
+\subsubsection{パスクエリ - Path queries}
+
+
+また、木の探索順を用いると、根から木の任意のノードまでのパスの値の総和を効率的に計算することができます。
+次のようなクエリを考えましょう。
+
 \begin{itemize}
-\item change the value of a node
-\item calculate the sum of values on a path from
-the root to a node
+\item 単一ノードの値を変更する
+\item 根から単一ノードへの値の総和を考える
 \end{itemize}
 
-For example, in the following tree,
-the sum of values from the root node to node 7 is
-$4+5+5=14$:
+例えば、次の図では根からノード$7$へのコストは$4+5+5=14$となります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -434,6 +403,9 @@ $4+5+5=14$:
 \node[color=blue] at (2.5,-1-0.65) {1};
 \end{tikzpicture}
 \end{center}
+
+これは先ほど同様に解くことができますが、
+今度は配列の最後の行の各値が、ルートからノードへのパス上の値の合計となります。
 
 We can solve this problem like before,
 but now each value in the last row of the array is the sum of values
@@ -479,10 +451,8 @@ For example, the following array corresponds to the above tree:
 \end{tikzpicture}
 \end{center}
 
-When the value of a node increases by $x$,
-the sums of all nodes in its subtree increase by $x$.
-For example, if the value of node 4 increases by 1,
-the array changes as follows:
+あるノードの値が$x$増加した時、そのサブツリーの値は全て$x$増加します。
+例えば、ノード4が1増加した時、以下のように変化が起こります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -525,27 +495,19 @@ the array changes as follows:
 \end{tikzpicture}
 \end{center}
 
-Thus, to support both the operations,
-we should be able to increase all values
-in a range and retrieve a single value.
-This can be done in $O(\log n)$ time
-using a binary indexed
-or segment tree (see Chapter 9.4).
+この2つの操作をサポートするためには、区間更新が可能である値が取り出すデータ構造が必要です。
+これは、バイナリインデックスまたはセグメントツリーを使用して$O(\log n)$時間で行うことができます
+(9.4章参照)。
 
-\section{Lowest common ancestor}
+\section{最小共通祖先(LCA) - Lowest common ancestor}
 
-\index{lowest common ancestor}
+\index{最小共通祖先(LCA) - lowest common ancestor}
 
-The \key{lowest common ancestor}
-of two nodes of a rooted tree is the lowest node
-whose subtree contains both the nodes.
-A typical problem is to efficiently process
-queries that ask to find the lowest
-common ancestor of two nodes.
+根付き木の2つのノードの\key{最小共通祖先(LCA) - lowest common ancestor}とは、
+あるノードの部分木が2つのノードを含むような最も下のノードのことです。
+最も典型的な問題は2つのノードのペアが与えられるのでその問い合わせを効率的に行う問題です。
+例えば、以下の木では、ノード$5$と$8$のLCAはノード2です。
 
-For example, in the following tree,
-the lowest common ancestor of nodes 5 and 8
-is node 2:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -569,25 +531,15 @@ is node 2:
 \end{tikzpicture}
 \end{center}
 
-Next we will discuss two efficient techniques for
-finding the lowest common ancestor of two nodes.
+さて、LCAを求めるための2つの方法を紹介します。
 
-\subsubsection{Method 1}
+\subsubsection{手法1: ダブリング - Method 1}
 
-One way to solve the problem is to use the fact
-that we can efficiently find the $k$th
-ancestor of any node in the tree.
-Using this, we can divide the problem of
-finding the lowest common ancestor into two parts.
-
-We use two pointers that initially point to the
-two nodes whose lowest common ancestor we should find.
-First, we move one of the pointers upwards
-so that both pointers point to nodes at the same level.
-
-In the example scenario, we move the second pointer one
-level up so that it points to node 6
-which is at the same level with node 5:
+1つめの方法では、先ほど紹介した木の任意のノードの$k$番目の先祖は効率的に見つけることができる性質を利用します。
+これを利用してLCAを2つの問題として捉えられます。
+2つのポインタを使い、最初は対象の2つのノードを指します。
+ここで深い方のポインタの一方を上方に移動させ、両方のポインタが同じ深さとなるようにします。
+以下の2番目のポインタを1レベル上げて、ノード5と同じ深さにあるノード6を指すようにします。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -611,15 +563,9 @@ which is at the same level with node 5:
 \end{tikzpicture}
 \end{center}
 
-After this, we determine the minimum number of steps
-needed to move both pointers upwards so that
-they will point to the same node.
-The node to which the pointers point after this
-is the lowest common ancestor.
-
-In the example scenario, it suffices to move both pointers
-one step upwards to node 2,
-which is the lowest common ancestor:
+次に、両者のポインタを上方に移動させ、同じノードを指すようにするために必要な最小のステップ数を求めます。
+この後、ポインタが指すノードがLCAとなります。
+この例では、両方のポインタを一段階上のノード2(LCA)に移動させることになります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -644,19 +590,16 @@ which is the lowest common ancestor:
 \end{tikzpicture}
 \end{center}
 
-Since both parts of the algorithm can be performed in
-$O(\log n)$ time using precomputed information,
-we can find the lowest common ancestor of any two
-nodes in $O(\log n)$ time.
+このアルゴリズムは事前に計算された情報を使って$O(\log n)$ 時間で実行できるので、
+任意の2つのノードのLCAは$O(\log n)$で見つけることができます。
 
-\subsubsection{Method 2}
+\subsubsection{手法2: オイラーツアー - Method 2}
 
-Another way to solve the problem is based on
-a tree traversal array\footnote{This lowest common ancestor algorithm was presented in \cite{ben00}.
+
+この方法は木の探索順によってLCAを求めます。\footnote{This lowest common ancestor algorithm was presented in \cite{ben00}.
 This technique is sometimes called the \index{Euler tour technique}
-\key{Euler tour technique} \cite{tar84}.}.
-Once again, the idea is to traverse the nodes
-using a depth-first search:
+\key{Euler tour technique} \cite{tar84}.}
+これは深さ優先探索を有効に使う方法です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -693,19 +636,13 @@ using a depth-first search:
 \end{tikzpicture}
 \end{center}
 
-However, we use a different tree
-traversal array than before:
-we add each node to the array \emph{always}
-when the depth-first search walks through the node,
-and not only at the first visit.
-Hence, a node that has $k$ children appears $k+1$ times
-in the array and there are a total of $2n-1$
-nodes in the array.
+ここでは先ほどと異なるのとは別の木の探索配列を使っていることに注意します。
+深さ優先探索がノードを通過するときに
+最初の訪問した時間だけでなく、常に各ノードを配列に追加します。
+したがって、$k$個の子を持つノードは配列中に$k + 1$回出現し、
+配列中には合計$2n - 1$個のノードが存在することになります。
 
-We store two values in the array:
-the identifier of the node and the depth of the 
-node in the tree.
-The following array corresponds to the above tree:
+配列には、ノードの識別子と、そのノードの木における深さを持ちます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -766,11 +703,9 @@ The following array corresponds to the above tree:
 \end{tikzpicture}
 \end{center}
 
-Now we can find the lowest common ancestor
-of nodes $a$ and $b$ by finding the node with the \emph{minimum} depth
-between nodes $a$ and $b$ in the array.
-For example, the lowest common ancestor of nodes $5$ and $8$
-can be found as follows:
+ここで、ノード$a$とノード$b$のLCAは、
+配列のノード$a$とノード$b$の間の深さが最小のノードです。
+例えば、ノード$5$と$8$のLCAは次のようになります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -838,35 +773,25 @@ can be found as follows:
 \end{tikzpicture}
 \end{center}
 
-Node 5 is at position 2, node 8 is at position 5,
-and the node with minimum depth between
-positions $2 \ldots 5$ is node 2 at position 3
-whose depth is 2.
-Thus, the lowest common ancestor of
-nodes 5 and 8 is node 2.
+ノード5はindex 2にあり、ノード8はindex 5にあり、
+index $2 \ldots 5$の間の最小のノードを求めます
+従って、ノード5とノード8のLCAは深さ2であるノード$2$となります。
+2つのノードのLCAを見つけるには、区間最小を求めるクエリを処理すればよい。
+配列は静的なので、$O(n \log n)$の前処理をした後、
+$O(1)$時間でこのようなクエリを処理することができます。
+(訳注: Sparse Tableなどを用いることでこれが実現できます)
 
-Thus, to find the lowest common ancestor
-of two nodes it suffices to process a range
-minimum query.
-Since the array is static,
-we can process such queries in $O(1)$ time
-after an $O(n \log n)$ time preprocessing.
+\subsubsection{ノード間の距離 - Distances of nodes}
 
-\subsubsection{Distances of nodes}
+ノード$a$と$b$の距離とは$a$から$b$へのパスの長さです。
+ノード間の距離を計算する問題は、ノード間のLCAを見つけることが大切だとわかります。
+まず、木を根付きとして考えます。この後、ノード$a$、$b$の距離 は、次の式で計算できます。
 
-The distance between nodes $a$ and $b$
-equals the length of the path from $a$ to $b$.
-It turns out that the problem of calculating
-the distance between nodes reduces to
-finding their lowest common ancestor.
-
-First, we root the tree arbitrarily.
-After this, the distance of nodes $a$ and $b$
-can be calculated using the formula
 \[\texttt{depth}(a)+\texttt{depth}(b)-2 \cdot \texttt{depth}(c),\]
-where $c$ is the lowest common ancestor of $a$ and $b$
-and $\texttt{depth}(s)$ denotes the depth of node $s$.
-For example, consider the distance of nodes 5 and 8:
+
+ここで、$c$ は $a$ と $b$ のLCAノード、$\texttt{depth}(s)$ はノード $s$ の深さです。
+例えば、ノード 5 と 8 の距離を考えてみます。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -891,47 +816,34 @@ For example, consider the distance of nodes 5 and 8:
 \end{tikzpicture}
 \end{center}
 
-The lowest common ancestor of nodes 5 and 8 is node 2.
-The depths of the nodes are
+ノード5と8の最小公倍数の祖先はノード2である。ノードの深さは depth(5) = 3, depth(8) = 4, depth(2) = 2 なので、 ノード 5 と 8 の間の距離は 3 + 4 - 2 - 2 = 3 である。
+ノード5,8のLCAは2です。ここで、
 $\texttt{depth}(5)=3$, $\texttt{depth}(8)=4$ and $\texttt{depth}(2)=2$,
-so the distance between nodes 5 and 8 is
-$3+4-2\cdot2=3$.
+であるため、5,8の距離は
+$3+4-2\cdot2=3$となります。
 
-\section{Offline algorithms}
+\section{オフラインのアルゴリズム - Offline algorithms}
 
-So far, we have discussed \emph{online} algorithms
-for tree queries.
-Those algorithms are able to process
-queries one after another so that
-each query is answered before receiving the next query.
+これまで私たちは\emph{オンライン - online}な木クエリのアルゴリズムを考えてきました。
 
-However, in many problems, the online
-property is not necessary.
-In this section, we focus on \emph{offline} algorithms.
-Those algorithms are given a set of queries which can
-be answered in any order.
-It is often easier to design an offline algorithm
-compared to an online algorithm.
+オンラインアルゴリズムは、
+次のクエリがくる前にそのクエリに応答するように、
+クエリを順番に処理することができます。
+これらが必要ない\emph{オフライン - offline} なアルゴリズムに注目します。
+オフラインであるとは、任意の順序で回答可能な問い合わせのセットが与えられます。
+つまり、最初から全てのクエリが分かっているとします。
+一般にオンラインアルゴリズム と比較して、オフラインアルゴリズムの設計は容易になります。
 
-\subsubsection{Merging data structures}
+\subsubsection{データ構造のマージ - Merging data structures}
 
-One method to construct an offline algorithm
-is to perform a depth-first tree traversal
-and maintain data structures in nodes.
-At each node $s$, we create a data structure
-$\texttt{d}[s]$ that is based on the
-data structures of the children of $s$.
-Then, using this data structure,
-all queries related to $s$ are processed.
 
-As an example, consider the following problem:
-We are given a tree where each node has some value.
-Our task is to process queries of the form
-''calculate the number of nodes with value $x$
-in the subtree of node $s$''.
-For example, in the following tree,
-the subtree of node $4$ contains two nodes
-whose value is 3.
+オフラインのアルゴリズムの一例として、深さ優先の木探索によりノードにデータ構造を保持する方法があります。
+各ノード$s$において、$s$の子のデー タ構造に基づくデータ構造$\texttt{d}[s]$を作成し、
+このデータ構造を用いて、$s$に関連す る全ての問合せを処理していくのです。
+
+各ノードが何らかの値を持つ木があるとします。
+与えられた問題は「ノード$s$の部分木にある値$x$を持つノードの数を計算せよ」だとします。
+例えば、以下の木において、ノード$4$の 部分木には値が3であるノードが2つ含まれている。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -966,10 +878,8 @@ whose value is 3.
 \end{tikzpicture}
 \end{center}
 
-In this problem, we can use map structures
-to answer the queries.
-For example, the maps for node 4 and
-its children are as follows:
+この問題では、map構造を用いてクエリに答えることができます。
+例えば 、ノード4とその部分木のノードのmapは以下の通りになります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1016,27 +926,13 @@ its children are as follows:
 \end{tikzpicture}
 \end{center}
 
-If we create such a data structure for each node,
-we can easily process all given queries,
-because we can handle all queries related
-to a node immediately after creating its
-data structure. For example, the above
-map structure for node 4
-tells us that its subtree
-contains two nodes whose value is 3.
+このようなデータ構造を各ノードに対して作成すれば、作成した直後にノードに関連するすべての問い合わせを処理することができ、与えられたすべての問い合わせを容易に処理することができます。
+例えば 、ノード$4$に対する上記のマップ構造は、その部分木に値が3である2つのノ ードが含まれることがわかります。
 
-However, it would be too slow to create
-all data structures from scratch.
-Instead, at each node $s$,
-we create an initial data structure $\texttt{d}[s]$ 
-that only contains the value of $s$.
-After this, we go through the children of $s$ and
-\emph{merge} $\texttt{d}[s]$ and
-all data structures
-$\texttt{d}[u]$ where $u$ is a child of $s$.
-
-For example, in the above tree, the map
-for node $4$ is created by merging the following maps:
+ですが、これらすべてのデータ構造を一から作成するのは時間がかかりすぎます。
+そこで、各ノード$s$において、$s$の値のみを含む初期データ構造$\texttt{d}[s]$を作成し、
+その後に$s$の子を訪問して$u$が$s$の子であるすべてのデータ構造$\texttt{d}[u]$と$\texttt{d}[s]$をマージすることにします。
+例えば、ノード$4$のマップは、以下のマップをマージして作成されています。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1080,65 +976,43 @@ for node $4$ is created by merging the following maps:
 \end{tikzpicture}
 \end{center}
 
-Here the first map is the initial data structure
-for node 4,
-and the other three maps correspond to nodes 7, 8 and 9.
+ここでは、最初のマップがノード4の初期データ構造と、他の3つのマップ がそれぞれノード7、8、9に対応しています。
 
-The merging at node $s$ can be done as follows:
-We go through the children of $s$
-and at each child $u$ merge $\texttt{d}[s]$
-and $\texttt{d}[u]$.
-We always copy the contents from $\texttt{d}[u]$
-to $\texttt{d}[s]$.
-However, before this, we \emph{swap}
-the contents of $\texttt{d}[s]$ and $\texttt{d}[u]$
-if $\texttt{d}[s]$ is smaller than $\texttt{d}[u]$.
-By doing this, each value is copied only $O(\log n)$
-times during the tree traversal,
-which ensures that the algorithm is efficient.
+ノード$s$でのマージは次のようにします。
+$s$の子を訪問し、各$u$で $\texttt{d}[s]$と$\texttt{d}[u]$をマージする。
+$\texttt{d}[u]$から$\texttt{d}[s]$へは常に内容をコピーする。
+この前に、$\texttt{d}[s]$が$\texttt{d}[u]$よりも小さければ、$\texttt{d}[s]$と$\texttt{d}[u]$の内容を入れ替える。
+このようにすると、木の探索中に各値は$O(\log n)$回だけコピーされることになり、
+この アルゴリズムは効率的に動作します。
+2つのデータ構造a,bの内容を効率よく入れ替えるのは非常に簡単です。
 
-To swap the contents of two data structures $a$ and $b$
-efficiently, we can just use the following code:
 \begin{lstlisting}
 swap(a,b);
 \end{lstlisting}
-It is guaranteed that the above code works in constant time
-when $a$ and $b$ are C++ standard library data structures.
+$a$ と $b$ が C++ 標準ライブラリのデータ構造であるとき、
+上記のコードは定数時間で動作することが保証されています。
 
-\subsubsection{Lowest common ancestors}
+\subsubsection{LCA - Lowest common ancestors}
 
-There is also an offline algorithm
-for processing a set of
-lowest common ancestor queries\footnote{This
-algorithm was published by R. E. Tarjan in 1979 \cite{tar79}.}.
-The algorithm is based on the union-find data structure
-(see Chapter 15.2), and the benefit of the algorithm is
-that it is easier to implement than the
-algorithms discussed earlier in this chapter.
+また、LCAのクエリを処理するオフラインのアルゴリズム\footnote{This
+algorithm was published by R. E. Tarjan in 1979 \cite{tar79}.}もあります。
+このアルゴリズムはunion-findデータ構造(第15.2章参照)に基づいており、
+先ほどに説明したアルゴリズムよりも簡単に実装できます。
 
-The algorithm is given as input a set of pairs of nodes,
-and it determines for each such pair the
-lowest common ancestor of the nodes.
-The algorithm performs a depth-first tree traversal
-and maintains disjoint sets of nodes.
-Initially, each node belongs to a separate set.
-For each set, we also store the highest node in the
-tree that belongs to the set.
+このアルゴリズムは、入力としてノードのペアのセットが与えられ両ノードのLCAを決定します。
+まず、各ノードが別の集合に属する木を作り、深さ優先の木探索を行います。
+初期状態では、各ノードは別々の集合に属している。
+また、各集合に対して、その集合に属する木における最も高さが高い（根に近い）ノードを保存しておきます。
 
-When the algorithm visits a node $x$,
-it goes through all nodes $y$ such that
-the lowest common ancestor of $x$ and $y$
-has to be found.
-If $y$ has already been visited,
-the algorithm reports that the 
-lowest common ancestor of $x$ and $y$
-is the highest node in the set of $y$.
-Then, after processing node $x$,
-the algorithm joins the sets of $x$ and its parent.
+このアルゴリズムでは、$x$を訪問した時に、
+$y$が既に訪問されているなら、
+$y$の属する最も高いノードがLCAであると判断します。
+そして、ノード$x$を処理した後、アルゴリズムは$x$とその親の集合を結合します。
 
-For example, suppose that we want to find the lowest
-common ancestors of node pairs $(5,8)$
-and $(2,7)$ in the following tree:
+(訳注: このアルゴリズムはオイラーツアーを行い、戻りの処理の際に親の集合との結合を行います。
+そして、子側の集合の親は結合先の最も浅いノードだと情報を更新します。これはUnion-FindのLeaderに関して情報を持っておけば実装できます)
+
+今、２つのクエリ $(5,8)$, $(2,7)$ を受けこのLCAを求めたいとします。
 \begin{center}
 \begin{tikzpicture}[scale=0.85]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -1159,12 +1033,14 @@ and $(2,7)$ in the following tree:
 \end{tikzpicture}
 \end{center}
 
-In the following trees, gray nodes denote visited nodes
-and dashed groups of nodes belong to the same set.
-When the algorithm visits node 8, it notices that
-node 5 has been visited and the highest node
-in its set is 2. Thus, the lowest common ancestor
-of nodes 5 and 8 is 2:
+
+次の図で灰色のノードは既に訪問したノードを表し、
+破線で囲ったノードは同じ集合に属していることを示します。
+アルゴリズムがノード8を訪問します。
+この時にノード5が既に訪問済みであり、
+その集合の中で最も高いノードは2であることに気づきます。
+したがって、ノード5と8の最小公倍数の祖先は2となります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.85]
 \node[draw, circle, fill=lightgray] (1) at (0,3) {$1$};
@@ -1196,9 +1072,7 @@ of nodes 5 and 8 is 2:
 \end{tikzpicture}
 \end{center}
 
-Later, when visiting node 7,
-the algorithm determines that
-the lowest common ancestor of nodes 2 and 7 is 1:
+探索を進めノード7に到着した時が次の木です。同様にLCAは1であることがわかりました。
 \begin{center}
 \begin{tikzpicture}[scale=0.85]
 \node[draw, circle, fill=lightgray] (1) at (0,3) {$1$};

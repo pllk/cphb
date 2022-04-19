@@ -3,7 +3,7 @@
 \index{最短経路}
 
 グラフの2ノード間の最短経路を求めることは重要なトピックであり様々な応用が可能です。
-例えば，複数の都市があり、それぞれをつなぐ道路の長さが与えられたときに，
+複数の都市があって各道路の長さが与えられたときに，
 ある2つの都市を結ぶ路線の最短距離を計算する、などです。
 重みのないグラフでは、パスの長さはその辺の数に等しいので、単純な幅優先探索(BFS)で最短経路を求めることができます。
 
@@ -18,7 +18,7 @@ R. E. Bellman and L. R. Ford who published it independently
 in 1958 and 1956, respectively \cite{bel58,for56a}.} はあるノードから開始して
 全てのノードへの最短経路を計算します。
 このアルゴリズムは負のコストとなる閉路を持たない全てのグラフで利用できます。
-もし、負のコストとなる閉路が存在する場合、その検出を行います。
+負のコストとなる閉路が存在する場合はそれを検出します。
 
 このアルゴリズムは、開始ノードからすべてのノードまでの距離を調べます。
 まず、開始ノードまでの距離は0であり、他のすべてのノードまでの距離は無限とします。
@@ -48,11 +48,11 @@ in 1958 and 1956, respectively \cite{bel58,for56a}.} はあるノードから開
 \path[draw,thick,-] (1) -- node[font=\small,label=above:7] {} (4);
 \end{tikzpicture}
 \end{center}
-各ノードは距離を持ちます。
-開始ノードの距離は0と、それ以外の距離はINFです。
+各ノードは始点からの距離を持ちます。
+初期状態では開始ノードの距離は0で、それ以外の距離はINFです。
 
-The algorithm searches for edges that reduce distances.
-First, all edges from node 1 reduce distances:
+このアルゴリズムでは、あるノードから隣接するノードの距離を縮めることのできる辺を調べます。
+ノード1から始めるとしましょう。全ての隣接ノードへの距離は(初期値がINFなので)縮まります。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -78,9 +78,9 @@ First, all edges from node 1 reduce distances:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-After this, edges
-$2 \rightarrow 5$ and $3 \rightarrow 4$
-reduce distances:
+
+$2 \rightarrow 5$ と $3 \rightarrow 4$
+の２つの辺が距離を縮めます。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -105,7 +105,8 @@ reduce distances:
 \path[draw=red,thick,->,line width=2pt] (3) -- (4);
 \end{tikzpicture}
 \end{center}
-Finally, there is one more change:
+
+最後にもう１つ更新できます。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {1};
@@ -130,15 +131,11 @@ Finally, there is one more change:
 \end{tikzpicture}
 \end{center}
 
-After this, no edge can reduce any distance.
-This means that the distances are final,
-and we have successfully
-calculated the shortest distances
-from the starting node to all nodes of the graph.
 
-For example, the shortest distance 3
-from node 1 to node 5 corresponds to
-the following path:
+これ以上は距離を縮めることはできません。
+これは開始ノードからの最短距離が確定したことを意味します。
+
+例えば、ノード1からノード5までの最短距離3は、次のような経路となりました。
 
 \begin{center}
 \begin{tikzpicture}
@@ -166,25 +163,13 @@ the following path:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Implementation}
+\subsubsection{実装}
 
-The following implementation of the
-Bellman–Ford algorithm determines the shortest distances
-from a node $x$ to all nodes of the graph.
-The code assumes that the graph is stored
-as an edge list \texttt{edges}
-that consists of tuples of the form $(a,b,w)$,
-meaning that there is an edge from node $a$ to node $b$
-with weight $w$.
-
-The algorithm consists of $n-1$ rounds,
-and on each round the algorithm goes through
-all edges of the graph and tries to
-reduce the distances.
-The algorithm constructs an array \texttt{distance}
-that will contain the distances from $x$
-to all nodes of the graph.
-The constant \texttt{INF} denotes an infinite distance.
+ノード$x$からグラフの全ノードまでの最短距離を求める実装を以下に示します。
+この実装は、グラフが $(a, b, w)$ というタプルのリスト \texttt{edges} で表現されているとします。
+それぞれの要素は辺を表し、ノード $a$ からノード $b$向きに重み $w$ の辺があるとしましょう。
+Bellman–Fordは$n - 1$ラウンドで構成されます。各ラウンドはグラフのすべてのエッジを調べて隣接ノードへの距離を縮めようと試みます。
+始点$x$ からグラフの全ノードまでの距離を格納する配列 \texttt{distance} を定義します。なお、定数 \texttt{INF} は無限遠(十分に大きな数)を表します．
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) distance[i] = INF;
@@ -198,27 +183,18 @@ for (int i = 1; i <= n-1; i++) {
 }
 \end{lstlisting}
 
-The time complexity of the algorithm is $O(nm)$,
-because the algorithm consists of $n-1$ rounds and
-iterates through all $m$ edges during a round.
-If there are no negative cycles in the graph,
-all distances are final after $n-1$ rounds,
-because each shortest path can contain at most $n-1$ edges.
+時間計算量を考えると、先に述べた通り、$n - 1$ 回のラウンドで構成され，各ラウンドで $m$ 個の辺をすべて繰り返し処理するので$O(nm)$となります。
+グラフに負の閉路が存在しない場合、
+最も長い最短パスが$n - 1$の辺で構成されていても、$n - 1$回のラウンドで確定します。
+多くの場合は$n - 1$ラウンドよりも早く求められるのが普通でしょう。
+つまり、あるラウンドで距離を縮めることができなければアルゴリズムを打ち切って良いです。
 
-In practice, the final distances can usually
-be found faster than in $n-1$ rounds.
-Thus, a possible way to make the algorithm more efficient
-is to stop the algorithm if no distance
-can be reduced during a round.
-
-\subsubsection{Negative cycles}
+\subsubsection{負の閉路 - Negative cycles}
 
 \index{negative cycle}
 
-The Bellman–Ford algorithm can also be used to
-check if the graph contains a cycle with negative length.
-For example, the graph
-
+また、Bellman - Ford アルゴリズムは、グラフに負の閉路が含まれているかどうかを確認するために使用することができます。
+以下に例を示します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -234,46 +210,29 @@ For example, the graph
 \end{tikzpicture}
 \end{center}
 \noindent
-contains a negative cycle
+グラフに和が$-4$となる負の閉路
 $2 \rightarrow 3 \rightarrow 4 \rightarrow 2$
-with length $-4$.
+があります。このようにグラフに負の閉路がある場合、無限回にそのサイクルに関係するノードの距離は小さくなっていきます。
+すなわち、最短経路という概念は意味をなさないともいえます。
+負の閉路は、$Bellman–Ford$ を使用して、アルゴリズムを$n$ラウンド実行することによって検出することができます(訳註: $n-1$ではないことに注意)。
+この追加ラウンドで距離が縮まればそのグラフは負の閉路を含むと判定されます。
+これを用いて、グラフ上の負の閉路を探索することができます。
 
-If the graph contains a negative cycle,
-we can shorten infinitely many times
-any path that contains the cycle by repeating the cycle
-again and again.
-Thus, the concept of a shortest path
-is not meaningful in this situation.
-
-A negative cycle can be detected
-using the Bellman–Ford algorithm by
-running the algorithm for $n$ rounds.
-If the last round reduces any distance,
-the graph contains a negative cycle.
-Note that this algorithm can be used to
-search for
-a negative cycle in the whole graph
-regardless of the starting node.
-
-\subsubsection{SPFA algorithm}
+\subsubsection{SPFAアルゴリズム - SPFA algorithm}
 
 \index{SPFA algorithm}
 
-The \key{SPFA algorithm} (''Shortest Path Faster Algorithm'') \cite{fan94}
-is a variant of the Bellman–Ford algorithm,
-that is often more efficient than the original algorithm.
-The SPFA algorithm does not go through all the edges on each round,
-but instead, it chooses the edges to be examined
-in a more intelligent way.
+\key{SPFA アルゴリズム} (''Shortest Path Faster Algorithm'') \cite{fan94}は、
+Bellman-Fordアルゴリズムの亜種ですが、多くの場合より効率的です。
+SPFAアルゴリズムは、各ラウンドですべての辺を通過するのではなくて賢く見るべき辺を選択します。
 
-The algorithm maintains a queue of nodes that might
-be used for reducing the distances.
-First, the algorithm adds the starting node $x$
-to the queue.
-Then, the algorithm always processes the
-first node in the queue, and when an edge
-$a \rightarrow b$ reduces a distance,
-node $b$ is added to the queue.
+このアルゴリズムでは、距離を更新しうる可能性のあるノードをキューとして持ちます。
+まず、アルゴリズムは開始ノードxをキューに追加します。
+処理では常にキューの最初のノードをみて$a \rightarrow b$が距離を更新するとノード$b$をキューに追加します。
+SPFAアルゴリズムの効率はグラフの構造に依存します。
+
+
+% 訳註: このコードはなぜかコメントアウトされていた
 %
 % The following implementation uses a
 % \texttt{queue} \texttt{q}.
@@ -298,42 +257,24 @@ node $b$ is added to the queue.
 % }
 % \end{lstlisting}
 
-The efficiency of the SPFA algorithm depends
-on the structure of the graph:
-the algorithm is often efficient,
-but its worst case time complexity is still
-$O(nm)$ and it is possible to create inputs
-that make the algorithm as slow as the
-original Bellman–Ford algorithm.
+このアルゴリズムは多くの場合に効率的ですが最悪の場合の時間計算量は依然として$O(nm)$で
+Bellman-Fordと同変わらない処理時間となる入力を作成可能です。
 
-\section{Dijkstra's algorithm}
+\section{ダイクストラ法 - Dijkstra's algorithm}
 
 \index{Dijkstra's algorithm}
 
-\key{Dijkstra's algorithm}\footnote{E. W. Dijkstra published the algorithm in 1959 \cite{dij59};
-however, his original paper does not mention how to implement the algorithm efficiently.}
-finds shortest
-paths from the starting node to all nodes of the graph,
-like the Bellman–Ford algorithm.
-The benefit of Dijsktra's algorithm is that
-it is more efficient and can be used for
-processing large graphs.
-However, the algorithm requires that there
-are no negative weight edges in the graph.
+\key{ダイクストラ法 - Dijkstra's algorithm} \footnote{E. W. Dijkstra published the algorithm in 1959 \cite{dij59}}
+は、ベルマン-フォードと同様に、始点ノードからグラフの全ノードまでの最短経路を求める手法です。
+ダイクストラ法は、より大規模なグラフの処理に使用できます。
+注意すべき点として、このアルゴリズムはグラフ内に負の重みのエッジが存在しないことが必須の条件です。
 
-Like the Bellman–Ford algorithm,
-Dijkstra's algorithm maintains distances
-to the nodes and reduces them during the search.
-Dijkstra's algorithm is efficient, because
-it only processes
-each edge in the graph once, using the fact
-that there are no negative edges.
+ベルマンフォードと同様に、ダイクストラ法は各ノードまでの距離を維持して、探索中に距離を更新していきます。
+ダイクストラ法では、グラフに負のエッジがないことを利用して、各エッジをただ一度だけ処理するので高速に動作します。
 
-\subsubsection{Example}
+\subsubsection{例}
+次のグラフで、ノード1を始点とするとき、Dijkstraのアルゴリズムがどのように働くかをみていきます。
 
-Let us consider how Dijkstra's algorithm
-works in the following graph when the
-starting node is node 1:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -356,18 +297,10 @@ starting node is node 1:
 \path[draw,thick,-] (4) -- node[font=\small,label=below:1] {} (5);
 \end{tikzpicture}
 \end{center}
-Like in the Bellman–Ford algorithm,
-initially the distance to the starting node is 0
-and the distance to all other nodes is infinite.
-
-At each step, Dijkstra's algorithm selects a node
-that has not been processed yet and whose distance
-is as small as possible.
-The first such node is node 1 with distance 0.
-
-When a node is selected, the algorithm
-goes through all edges that start at the node
-and reduces the distances using them:
+初期値はベルマン-フォードと同様に開始ノードまでの距離は0、他のすべてのノードまでの距離はINFとします。
+各ステップにおいて、Dijkstraのアルゴリズムはまだ処理されていないノードの中から距離が最も小さいものを選択します。
+アルゴリズムが開始した際に選択される最初のノードは距離0のノード1です。
+ノードが選択されるとアルゴリズムはそのノードを始点とする全ての辺を調べて宛先ノードの距離を更新できるならば更新します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -394,12 +327,11 @@ and reduces the distances using them:
 \path[draw=red,thick,->,line width=2pt] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-In this case,
-the edges from node 1 reduced the distances of
-nodes 2, 4 and 5, whose distances are now 5, 9 and 1.
 
-The next node to be processed is node 5 with distance 1.
-This reduces the distance to node 4 from 9 to 3:
+この場合、ノード1からのエッジによって、ノード2、4、5の距離が更新され、その距離は5、9、1になりました。
+次の処理ノードは、距離 1 のノード 5 です。
+これを処理すると、ノード4までの距離が9から3になりました。
+
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (1,3) {3};
@@ -424,8 +356,9 @@ This reduces the distance to node 4 from 9 to 3:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-After this, the next node is node 4, which reduces
-the distance to node 3 to 9:
+
+次はノード4であり、ノード3までの距離が9になりました。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -451,14 +384,10 @@ the distance to node 3 to 9:
 \end{tikzpicture}
 \end{center}
 
-A remarkable property in Dijkstra's algorithm is that
-whenever a node is selected, its distance is final.
-For example, at this point of the algorithm,
-the distances 0, 1 and 3 are the final distances
-to nodes 1, 5 and 4.
+ダイクストラ法で注目する特徴は、あるノードの処理を開始するときはその距離が最終的な距離であることです。
+例えば、この時点では、距離0、1、3がノード1、5、4への最終的な距離である。
 
-After this, the algorithm processes the two
-remaining nodes, and the final distances are as follows:
+このように処理をすると最終的な距離は以下のようになります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -485,12 +414,9 @@ remaining nodes, and the final distances are as follows:
 
 \subsubsection{Negative edges}
 
-The efficiency of Dijkstra's algorithm is
-based on the fact that the graph does not
-contain negative edges.
-If there is a negative edge,
-the algorithm may give incorrect results.
-As an example, consider the following graph:
+ダイクストラのアルゴリズムの効率性はグラフに負のエッジが含まれないことを前提にしています。
+もし、負の辺があるとアルゴリズムは正しくない結果を出す可能性があります。
+これを次のようなグラフで考えてみましょう。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -506,42 +432,28 @@ As an example, consider the following graph:
 \end{tikzpicture}
 \end{center}
 \noindent
-The shortest path from node 1 to node 4 is
+ノード1からノード4への最短経路は
 $1 \rightarrow 3 \rightarrow 4$
-and its length is 1.
-However, Dijkstra's algorithm
-finds the path $1 \rightarrow 2 \rightarrow 4$
-by following the minimum weight edges.
-The algorithm does not take into account that
-on the other path, the weight $-5$
-compensates the previous large weight $6$.
+で、その長さは1です。
+しかし、ダイクストラのアルゴリズムでは最小の辺を辿って
+$1 \rightarrow 2 \rightarrow 4$
+の経路と確定します。
+このケースでは、重み6のあとに重み-5があることが考慮されていません。
 
-\subsubsection{Implementation}
+\subsubsection{実装}
 
-The following implementation of Dijkstra's algorithm
-calculates the minimum distances from a node $x$
-to other nodes of the graph.
-The graph is stored as adjacency lists
-so that \texttt{adj[$a$]} contains a pair $(b,w)$
-always when there is an edge from node $a$ to node $b$
-with weight $w$.
-
-An efficient implementation of Dijkstra's algorithm
-requires that it is possible to efficiently find the
-minimum distance node that has not been processed.
-An appropriate data structure for this is a priority queue
-that contains the nodes ordered by their distances.
-Using a priority queue, the next node to be processed
-can be retrieved in logarithmic time.
-
-In the following code, the priority queue
-\texttt{q} contains pairs of the form $(-d,x)$,
-meaning that the current distance to node $x$ is $d$.
-The array $\texttt{distance}$ contains the distance to
-each node, and the array $\texttt{processed}$ indicates
-whether a node has been processed.
-Initially the distance is $0$ to $x$ and $\infty$ to all other nodes.
-
+グラフは隣接リストとして保存され、ノード$a$からノード$b$に重み$w$のエッジがあるとき
+\texttt{adj[a]}には$(b, w)$のペアが含まれているとします。
+ダイクストラ法を効率的に実装するには未処理の最小距離のノードを効率的に見つけることが可能であることが最も重要です。
+このために距離でソートしたノードを取得可能な優先度付きキュー(priority queue)を用います。
+優先度付きキューを用いると、次に処理されるノードを対数時間(log)で検索することができます。
+以下のコードでは，優先度付きキュー\texttt{q}は，
+ノード$x$までの現在の距離が$d$であることを意味する，$(-d, x)$という形のpairを持ちます。
+配列\texttt{distance}は
+各ノードまでの距離を含み，
+配列\texttt{processed}は
+ノードが処理されたかどうかを持ちます。
+初期状態で$x$に対する距離は0であり、それ以外のノードに対する距離は$\infty$ です。
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) distance[i] = INF;
 distance[x] = 0;
@@ -560,48 +472,32 @@ while (!q.empty()) {
 }
 \end{lstlisting}
 
-Note that the priority queue contains \emph{negative}
-distances to nodes.
-The reason for this is that the
-default version of the C++ priority queue finds maximum
-elements, while we want to find minimum elements.
-By using negative distances,
-we can directly use the default priority queue\footnote{Of
+
+優先度付きキューにノードへの距離をマイナスで保持しているのは
+C++のデフォルトの優先度付きキューは最大要素を返すためです。最小要素を見つけるために負の距離を使用することで、
+デフォルトの優先度キューを直接使用することができます
+\footnote{Of
 course, we could also declare the priority queue as in Chapter 4.5
-and use positive distances, but the implementation would be a bit longer.}.
-Also note that there may be several instances of the same
-node in the priority queue; however, only the instance with the
-minimum distance will be processed.
+and use positive distances, but the implementation would be a bit longer.}。
+このキューには同じノードが入ることがありますが、距離が最小のものだけを処理すれば良いです。
 
-The time complexity of the above implementation is
-$O(n+m \log m)$, because the algorithm goes through
-all nodes of the graph and adds for each edge
-at most one distance to the priority queue.
+このアルゴリズムは、すべてのノードを処理し、各エッジに対して最大で1つの情報を優先順位キューに追加するため、上記の実装の時間計算量は$O(n + m log m)$となります。
 
-\section{Floyd–Warshall algorithm}
+\section{ワーシャルフロイド法 - Floyd–Warshall algorithm}
 
 \index{Floyd–Warshall algorithm}
 
-The \key{Floyd–Warshall algorithm}\footnote{The algorithm
+\key{ワーシャルフロイド法}\footnote{The algorithm
 is named after R. W. Floyd and S. Warshall
 who published it independently in 1962 \cite{flo62,war62}.}
-provides an alternative way to approach the problem
-of finding shortest paths.
-Unlike the other algorithms of this chapter,
-it finds all shortest paths between the nodes
-in a single run.
+は最短経路を求めるアルゴリズムですがこれまでの２つとはまた違ったアプローチです。
+1回の実行でグラフ上の全ての2点の最短経路を求めることができます(訳註:これまではある始点からの距離を求めていたことに注意してください)。
 
-The algorithm maintains a two-dimensional array
-that contains distances between the nodes.
-First, distances are calculated only using
-direct edges between the nodes,
-and after this, the algorithm reduces distances
-by using intermediate nodes in paths.
+ワーシャルフロイド法では、ノード間の距離を含む2次元の配列を保持します。
+まず、ノード間の直接のエッジのみを用いて距離を更新し、経由するノードを用いて距離を更新するというアプローチを取ります。
 
-\subsubsection{Example}
-
-Let us consider how the Floyd–Warshall algorithm
-works in the following graph:
+\subsubsection{例}
+以下のグラフでこの動きをみていきます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -620,12 +516,11 @@ works in the following graph:
 \end{tikzpicture}
 \end{center}
 
-Initially, the distance from each node to itself is $0$,
-and the distance between nodes $a$ and $b$ is $x$
-if there is an edge between nodes $a$ and $b$ with weight $x$.
-All other distances are infinite.
+初期状態では，各ノードからそれ自身への距離は$0$とします。
+ノード$a$とノード$b$の間に重み$x$をの辺が存在する場合はその距離は$x$です。
+それ以外の配列の要素は$INF$とします。
+このグラフにおいて、初期配列は次のようになります。
 
-In this graph, the initial array is as follows:
 \begin{center}
 \begin{tabular}{r|rrrrr}
  & 1 & 2 & 3 & 4 & 5 \\
@@ -638,16 +533,13 @@ In this graph, the initial array is as follows:
 \end{tabular}
 \end{center}
 \vspace{10pt}
-The algorithm consists of consecutive rounds.
-On each round, the algorithm selects a new node
-that can act as an intermediate node in paths from now on,
-and distances are reduced using this node.
 
-On the first round, node 1 is the new intermediate node.
-There is a new path between nodes 2 and 4
-with length 14, because node 1 connects them.
-There is also a new path
-between nodes 2 and 5 with length 6.
+このアルゴリズムは同じ操作を複数のラウンド実行します。
+各ラウンドにおいて、アルゴリズムは、パスの新しい中間ノードを選択し、このノードを用いて距離を減少させます。
+
+第1ラウンドでは、ノード1が新しい中間ノードとします。
+ノード 2 とノード 4 の間には、ノード 1 が接続しているため、長さ 14 の新しいパスがあります。
+ノード2とノード5の間にも、長さ6の新しいパスがあります。
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -662,9 +554,9 @@ between nodes 2 and 5 with length 6.
 \end{center}
 \vspace{10pt}
 
-On the second round, node 2 is the new intermediate node.
-This creates new paths between nodes 1 and 3
-and between nodes 3 and 5:
+
+2ラウンド目では、ノード2が新たな中間ノードとします。
+これにより、ノード1とノード3の間、ノード3とノード5の間に新しいパスができます。
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -679,8 +571,9 @@ and between nodes 3 and 5:
 \end{center}
 \vspace{10pt}
 
-On the third round, node 3 is the new intermediate round.
-There is a new path between nodes 2 and 4:
+
+3ラウンド目では、ノード3が新しい中間ラウンドとします。
+ノード2と4の間に新しいパスができます。
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -695,10 +588,10 @@ There is a new path between nodes 2 and 4:
 \end{center}
 \vspace{10pt}
 
-The algorithm continues like this,
-until all nodes have been appointed intermediate nodes.
-After the algorithm has finished, the array contains
-the minimum distances between any two nodes:
+
+
+このアルゴリズムは、すべてのノードが中間ノードに任命されるまで、このように続けられます(訳註: 上記の例のように$i$ラウンド目にはノード$i$が中間ノードとして計算します)。
+アルゴリズムが終了すると，配列には任意の2つのノード間の最小距離が格納されています。
 
 \begin{center}
 \begin{tabular}{r|rrrrr}
@@ -712,9 +605,9 @@ the minimum distances between any two nodes:
 \end{tabular}
 \end{center}
 
-For example, the array tells us that the
-shortest distance between nodes 2 and 4 is 8.
-This corresponds to the following path:
+
+
+この結果からノード2とノード4の間の最短距離は8であることがわかります。これを次に示します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -737,16 +630,11 @@ This corresponds to the following path:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Implementation}
+\subsubsection{実装}
 
-The advantage of the
-Floyd–Warshall algorithm that it is
-easy to implement.
-The following code constructs a
-distance matrix where $\texttt{distance}[a][b]$
-is the shortest distance between nodes $a$ and $b$.
-First, the algorithm initializes \texttt{distance}
-using the adjacency matrix \texttt{adj} of the graph:
+このアルゴリズムの最も大きな利点は実装が簡単なことです。
+以下のコードは、$\texttt{distance}[a][b]$をノード$a$と$b$間の最短距離とする距離行列とします。
+まず、この実装にはグラフの隣接行列\texttt{adj}で辺の情報を与えます。
 
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) {
@@ -757,7 +645,7 @@ for (int i = 1; i <= n; i++) {
     }
 }
 \end{lstlisting}
-After this, the shortest distances can be found as follows:
+この後，以下のようにして最短距離を求めます。
 \begin{lstlisting}
 for (int k = 1; k <= n; k++) {
     for (int i = 1; i <= n; i++) {
@@ -769,13 +657,8 @@ for (int k = 1; k <= n; k++) {
 }
 \end{lstlisting}
 
-The time complexity of the algorithm is $O(n^3)$,
-because it contains three nested loops
-that go through the nodes of the graph.
 
-Since the implementation of the Floyd–Warshall
-algorithm is simple, the algorithm can be
-a good choice even if it is only needed to find a
-single shortest path in the graph.
-However, the algorithm can only be used when the graph
-is so small that a cubic time complexity is fast enough.
+このアルゴリズムはグラフのノードを通過する3つの入れ子ループを含むため、時間計算量は$O(n^3)$です。
+
+この実装は単純なので、グラフの最短経路を1つだけ見つける必要がある場合でも、このアルゴリズムは使用できます。
+ただし、このアルゴリズムが使えるのはグラフが非常に小さく3乗の時間計算量で十分高速に動作する場合のみです。

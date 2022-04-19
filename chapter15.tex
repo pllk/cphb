@@ -1,16 +1,12 @@
-\chapter{Spanning trees}
+\chapter{全域木 - Spanning trees}
 
 \index{spanning tree}
 
-A \key{spanning tree} of a graph consists of
-all nodes of the graph and some of the
-edges of the graph so that there is a path
-between any two nodes.
-Like trees in general, spanning trees are
-connected and acyclic.
-Usually there are several ways to construct a spanning tree.
+\key{全域木(spanning tree)}は任意の2つのノード間にパスが存在するようなエッジで構成されている木です。
+一般的な木と同様、木は連結していてサイクルは存在しません。
+木を構成するにはいくつかの方法があります。
 
-For example, consider the following graph:
+次のようなグラフを考えてみましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -29,7 +25,7 @@ For example, consider the following graph:
 \path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-One spanning tree for the graph is as follows:
+例えば、１つの全域木は次のようになります。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -46,16 +42,12 @@ One spanning tree for the graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-The weight of a spanning tree is the sum of its edge weights.
-For example, the weight of the above spanning tree is
-$3+5+9+3+2=22$.
-
 \index{minimum spanning tree}
 
-A \key{minimum spanning tree}
-is a spanning tree whose weight is as small as possible.
-The weight of a minimum spanning tree for the example graph
-is 20, and such a tree can be constructed as follows:
+全域木の重さとはエッジの重みの合計です。
+上の全域木の重みは、$3+5+9+3+2 = 22$です。
+\key{最小全域木(minimum spanning tree)}は、全ての全域木の中で最も重さが小さな全域木です。
+先ほどの例では、次の最小全域木は重さが20です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -76,10 +68,8 @@ is 20, and such a tree can be constructed as follows:
 
 \index{maximum spanning tree}
 
-In a similar way, a \key{maximum spanning tree}
-is a spanning tree whose weight is as large as possible.
-The weight of a maximum spanning tree for the
-example graph is 32:
+\key{最大全域木(maximum spanning tree)}
+は重さが最大となる木です。先の例では次のように重さ32の最大全域木ができます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -97,46 +87,28 @@ example graph is 32:
 \end{tikzpicture}
 \end{center}
 
-Note that a graph may have several
-minimum and maximum spanning trees,
-so the trees are not unique.
+ここで、最小全域木・最大全域木になるグラフ（木）は複数存在することがあります。
+これらの全域木は貪欲な方法で求めることができます。この章では、2つのアルゴリズムについて説明します。
+説明では最小全域木のみに絞って説明を行いますが、最大全域木の場合は処理する辺の順を逆とすれば良いです。
 
-It turns out that several greedy methods
-can be used to construct minimum and maximum
-spanning trees.
-In this chapter, we discuss two algorithms
-that process
-the edges of the graph ordered by their weights.
-We focus on finding minimum spanning trees,
-but the same algorithms can find
-maximum spanning trees by processing the edges in reverse order.
-
-\section{Kruskal's algorithm}
+\section{クラスカル法 - Kruskal's algorithm}
 
 \index{Kruskal's algorithm}
 
-In \key{Kruskal's algorithm}\footnote{The algorithm was published in 1956
-by J. B. Kruskal \cite{kru56}.}, the initial spanning tree
-only contains the nodes of the graph
-and does not contain any edges.
-Then the algorithm goes through the edges
-ordered by their weights, and always adds an edge
-to the tree if it does not create a cycle.
+\key{Kruskal法}
+\footnote{このアルゴリズムは1956年にJ. B. Kruskalによって発表された \cite{kru56}.}
+は次のように動作します。
+まず、辺がなくノードだけのグラフを考えます。次に、このアルゴリズムは重みが小さい順に辺を調べて
+サイクルを作らない場合は常にグラフにエッジを追加します。
+このアルゴリズムは木を連結成分を保持してながら行います。
+初期状態は各ノードは別々の連結成分に属しており、
+木にエッジを追加する時にその2つの成分を結合します。
+最終的にすべてのノードは同じ成分に属し、最小全域木となります。
 
-The algorithm maintains the components
-of the tree.
-Initially, each node of the graph
-belongs to a separate component.
-Always when an edge is added to the tree,
-two components are joined.
-Finally, all nodes belong to the same component,
-and a minimum spanning tree has been found.
-
-\subsubsection{Example}
+\subsubsection{例}
 
 \begin{samepage}
-Let us consider how Kruskal's algorithm processes the
-following graph:
+次のグラフを考えます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -158,9 +130,7 @@ following graph:
 \end{samepage}
 
 \begin{samepage}
-The first step of the algorithm is to sort the
-edges in increasing order of their weights.
-The result is the following list:
+最初に全てのエッジを重みが小さい順にソートします。
 
 \begin{tabular}{ll}
 \\
@@ -178,11 +148,7 @@ edge & weight \\
 \end{tabular}
 \end{samepage}
 
-After this, the algorithm goes through the list
-and adds each edge to the tree if it joins
-two separate components.
-
-Initially, each node is in its own component:
+リストを上から処理し、各辺が2つの別の連結成分を結合するなら、その辺を接続します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -202,9 +168,8 @@ Initially, each node is in its own component:
 %\path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-The first edge to be added to the tree is
-the edge 5--6 that creates a component $\{5,6\}$
-by joining the components $\{5\}$ and $\{6\}$:
+まず、5--6 の処理は$\{5\}$ と $\{6\}$を連結し、
+$\{5,6\}$とします。
 
 \begin{center}
 \begin{tikzpicture}
@@ -225,7 +190,7 @@ by joining the components $\{5\}$ and $\{6\}$:
 %\path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-After this, the edges 1--2, 3--6 and 1--5 are added in a similar way:
+同じように、 1--2, 3--6, 1--5 が接続されます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -247,17 +212,13 @@ After this, the edges 1--2, 3--6 and 1--5 are added in a similar way:
 \end{tikzpicture}
 \end{center}
 
-After those steps, most components have been joined
-and there are two components in the tree:
-$\{1,2,3,5,6\}$ and $\{4\}$.
+これらのステップの後、ほとんどの連結成分は結合され、2つの連結成分が存在します。
+$\{1,2,3,5,6\}$と$\{4\}$です。
 
-The next edge in the list is the edge 2--3,
-but it will not be included in the tree, because
-nodes 2 and 3 are already in the same component.
-For the same reason, the edge 2--5 will not be included in the tree.
+次に処理するのは2--3ですが、同じ連結成分に含まれるので接続しません。 2--5も同様です。
 
 \begin{samepage}
-Finally, the edge 4--6 will be included in the tree:
+最後に、4--6が接続されます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -280,26 +241,15 @@ Finally, the edge 4--6 will be included in the tree:
 \end{center}
 \end{samepage}
 
-After this, the algorithm will not add any
-new edges, because the graph is connected
-and there is a path between any two nodes.
-The resulting graph is a minimum spanning tree
-with weight $2+3+3+5+7=20$.
+これで全ての点が同じ連結成分に含まれるので処理を終えます。
+重さが$2+3+3+5+7=20$の最小全域木ができました。
 
-\subsubsection{Why does this work?}
+\subsubsection{なぜこれで良いか？}
 
-It is a good question why Kruskal's algorithm works.
-Why does the greedy strategy guarantee that we
-will find a minimum spanning tree?
-
-Let us see what happens if the minimum weight edge of
-the graph is \emph{not} included in the spanning tree.
-For example, suppose that a spanning tree
-for the previous graph would not contain the
-minimum weight edge 5--6.
-We do not know the exact structure of such a spanning tree,
-but in any case it has to contain some edges.
-Assume that the tree would be as follows:
+これでなぜ最小全域木が求められるのでしょう？
+最小の重みの辺が含まれないことを考えます。
+例えば、先ほどの例で最小重みの辺5--6 が含まれないとします。
+そのようなグラフは複数考えられますが、例えば次のような木を考えましょう。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -318,12 +268,9 @@ Assume that the tree would be as follows:
 \end{tikzpicture}
 \end{center}
 
-However, it is not possible that the above tree
-would be a minimum spanning tree for the graph.
-The reason for this is that we can remove an edge
-from the tree and replace it with the minimum weight edge 5--6.
-This produces a spanning tree whose weight is
-\emph{smaller}:
+
+しかし、この木が最小全域木ではありません。
+木からある辺を取り除き、5--6に置き換えることができ、さらに重さの小さな木ができます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -342,24 +289,15 @@ This produces a spanning tree whose weight is
 \end{tikzpicture}
 \end{center}
 
-For this reason, it is always optimal
-to include the minimum weight edge
-in the tree to produce a minimum spanning tree.
-Using a similar argument, we can show that it
-is also optimal to add the next edge in weight order
-to the tree, and so on.
-Hence, Kruskal's algorithm works correctly and
-always produces a minimum spanning tree.
+このため、最小の重さの辺を最小全域木に含めることは妥当で最小のスパニングツリーが生成されます。
+重さが小さな順に辺を木に加えることが最適であることを示すことができ、
+クラスカルのアルゴリズムは正しく動作して常に最小全域木となることが示されました。
 
-\subsubsection{Implementation}
+\subsubsection{実装}
 
-When implementing Kruskal's algorithm,
-it is convenient to use
-the edge list representation of the graph.
-The first phase of the algorithm sorts the
-edges in the list in $O(m \log m)$ time.
-After this, the second phase of the algorithm
-builds the minimum spanning tree as follows:
+クラスカル法の実装は辺をリスト表現で持つのが便利です。
+最初に$O(m log m)$でリスト中のエッジを重さ順にソートし、
+次に以下のように最小スパニングツリーを構築します。
 
 \begin{lstlisting}
 for (...) {
@@ -367,55 +305,28 @@ for (...) {
 }
 \end{lstlisting}
 
-The loop goes through the edges in the list
-and always processes an edge $a$--$b$
-where $a$ and $b$ are two nodes.
-Two functions are needed:
-the function \texttt{same} determines
-if $a$ and $b$ are in the same component,
-and the function \texttt{unite}
-joins the components that contain $a$ and $b$.
+ループは$a,b$を処理します。$same$は同じ連結成分にいるかを判定する関数で、
+$unite$は互いに所属する連結成分を結合する操作です。これらをシンプルに書くと
+$O(log(n+m))$となってしまいますが$Union-Find$を用いるとこれらは$O(log n)$で実装することができるため、
+ソート後の計算量$O(m log n)$を実現できます。
 
-The problem is how to efficiently implement
-the functions \texttt{same} and \texttt{unite}.
-One possibility is to implement the function
-\texttt{same} as a graph traversal and check if
-we can get from node $a$ to node $b$.
-However, the time complexity of such a function
-would be $O(n+m)$
-and the resulting algorithm would be slow,
-because the function \texttt{same} will be called for each edge in the graph.
-
-We will solve the problem using a union-find structure
-that implements both functions in $O(\log n)$ time.
-Thus, the time complexity of Kruskal's algorithm
-will be $O(m \log n)$ after sorting the edge list.
-
-\section{Union-find structure}
+\section{Union-find構造 - Union-find structure}
 
 \index{union-find structure}
 
-A \key{union-find structure} maintains
-a collection of sets.
-The sets are disjoint, so no element
-belongs to more than one set.
-Two $O(\log n)$ time operations are supported:
-the \texttt{unite} operation joins two sets,
-and the \texttt{find} operation finds the representative
-of the set that contains a given element\footnote{The structure presented here
-was introduced in 1971 by J. D. Hopcroft and J. D. Ullman \cite{hop71}.
-Later, in 1975, R. E. Tarjan studied a more sophisticated variant
-of the structure \cite{tar75} that is discussed in many algorithm
-textbooks nowadays.}.
+\key{Union-find構造} は集合の集まりを管理するデータ構造です。
+どの要素もいずれかの集合に属し、2つ以上の集合に属しません。
+この構造は先にあげた$unite$と$same$を$O(\log n)$で実行できます。
+\footnote{ ここで紹介する構造は、1971年にJ. D. HopcroftとJ. D. Ullmanによって紹介されたもの \cite{hop71}。
+その後、1975年にR. E. Tarjanがこの構造のより洗練された変種を研究し\cite{tar75}、
+現在では 多くのアルゴリズムの教科書で議論されています。}
 
-\subsubsection{Structure}
+\subsubsection{構造}
 
-In a union-find structure, one element in each set
-is the representative of the set,
-and there is a chain from any other element of the
-set to the representative.
-For example, assume that the sets are
-$\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$:
+Union-findでは各集合の1つの要素がその集合の代表として存在します。
+そして、集合の他の要素は必ず代表への連鎖に辿ることができます。
+
+集合が$\{1, 4, 7\}$、\{5\}、\{2, 3, 6, 8\}としましょう。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,-1) {$1$};
@@ -436,22 +347,13 @@ $\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$:
 
 \end{tikzpicture}
 \end{center}
-In this case the representatives
-of the sets are 4, 5 and 2.
-We can find the representative of any element
-by following the chain that begins at the element.
-For example, the element 2 is the representative
-for the element 6, because
-we follow the chain $6 \rightarrow 3 \rightarrow 2$.
-Two elements belong to the same set exactly when
-their representatives are the same.
+この図では集合の代表は4、5、2です。
+あるの要素の代表は、その要素から木を辿ると発見できます。
+例えば、 $6 \rightarrow 3 \rightarrow 2$という連鎖をたどれば、要素2が要素6の代表です。
+2つの要素が同じ集合に属するのは、その代表が同じであるときだけです。
+2つの集合は、一方の集合の代表と他方の集合の代表を結ぶことで結合することができます。
+例えば、$\{1,4,7\}$ と $\{2,3,6,8\}$は以下のように結合することができます。
 
-Two sets can be joined by connecting the
-representative of one set to the
-representative of the other set.
-For example, the sets
-$\{1,4,7\}$ and $\{2,3,6,8\}$
-can be joined as follows:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (2,-1) {$1$};
@@ -473,46 +375,31 @@ can be joined as follows:
 \end{tikzpicture}
 \end{center}
 
-The resulting set contains the elements
-$\{1,2,3,4,6,7,8\}$.
-From this on, the element 2 is the representative
-for the entire set and the old representative 4
-points to the element 2.
+結果、$\{1,2,3,4,6,7,8\}$の要素が集合に含まれ、要素2がそれらの集合全体の代表となり、
+もともと代表要素4であった要素2を指すようになります。
+Union-findの操作の計算量は集合をどのように結合するかに依存します。
+良い工夫は小さい集合を大きい集合の代表要素に繋ぎます(同じ大きさの集合の場合どちらを大きい方とみなしてもよいです)。
+この方法を用いるとどのパスの長さも$O( \log n)$となるので、
+対応する辺を辿る中で任意の要素の代表を効率的に求めることができます。
 
-The efficiency of the union-find structure depends on
-how the sets are joined.
-It turns out that we can follow a simple strategy:
-always connect the representative of the
-\emph{smaller} set to the representative of the \emph{larger} set
-(or if the sets are of equal size,
-we can make an arbitrary choice).
-Using this strategy, the length of any chain
-will be $O(\log n)$, so we can
-find the representative of any element
-efficiently by following the corresponding chain.
+\subsubsection{実装 - Implementation}
 
-\subsubsection{Implementation}
+union-findは、
+配列を使用して実装できます。
+以下の実装では ，配列 \texttt{link} は各要素について，
+親となる要素(代表であればその要素自身)を含み，
+配列 \texttt{size} は
+各代表について，対応する集合の大きさを保持します。
 
-The union-find structure can be implemented
-using arrays.
-In the following implementation,
-the array \texttt{link} contains for each element
-the next element
-in the chain or the element itself if it is
-a representative,
-and the array \texttt{size} indicates for each representative
-the size of the corresponding set.
-
-Initially, each element belongs to a separate set:
+初期状態では、各要素は別々の集合に属しています。
 \begin{lstlisting}
 for (int i = 1; i <= n; i++) link[i] = i;
 for (int i = 1; i <= n; i++) size[i] = 1;
 \end{lstlisting}
 
-The function \texttt{find} returns
-the representative for an element $x$.
-The representative can be found by following
-the chain that begins at $x$.
+関数\texttt{find}は，
+ある要素$x$の代表を返します。
+代表は$x$から始まる鎖をたどって見つけることができます。
 
 \begin{lstlisting}
 int find(int x) {
@@ -521,10 +408,8 @@ int find(int x) {
 }
 \end{lstlisting}
 
-The function \texttt{same} checks
-whether elements $a$ and $b$ belong to the same set.
-This can easily be done by using the
-function \texttt{find}:
+関数\texttt{same} は要素$a$,$b$が同じ集合に属するかどうかをチェックする関数で、
+関数\texttt{find}を使うことで簡単に実現できます。
 
 \begin{lstlisting}
 bool same(int a, int b) {
@@ -533,12 +418,11 @@ bool same(int a, int b) {
 \end{lstlisting}
 
 \begin{samepage}
-The function \texttt{unite} joins the sets
-that contain elements $a$ and $b$
-(the elements have to be in different sets).
-The function first finds the representatives
-of the sets and then connects the smaller
-set to the larger set.
+関数 \texttt{unite}  は，
+要素 $a$ と $b$ を含む集合を結合する関数です。
+この時、要素は異なる集合に存 在しなければなりません。
+この関数は，まず集合の代表を求め，
+次に小さい方の集合を大きい方の集合に接続します.
 
 \begin{lstlisting}
 void unite(int a, int b) {
@@ -551,42 +435,36 @@ void unite(int a, int b) {
 \end{lstlisting}
 \end{samepage}
 
-The time complexity of the function \texttt{find}
-is $O(\log n)$ assuming that the length of each
-chain is $O(\log n)$.
-In this case, the functions \texttt{same} and \texttt{unite}
-also work in $O(\log n)$ time.
-The function \texttt{unite} makes sure that the
-length of each chain is $O(\log n)$ by connecting
-the smaller set to the larger set.
+関数\texttt{find}の時間計算量は、
+各鎖の長さが$O(\log n)$ であると仮定すると、
+$O(\log n)$ で動作します。
+この場合、関数\texttt{same} と \texttt{unite}も
+$O(\log n)$ の時間で動作します。
+関数 \texttt{unite} は、
+小さい集合を大きい集合に接続することで
+、各木の長さが最長で $O(\log n)$ であることを保証できます。
 
-\section{Prim's algorithm}
+\section{プリムのアルゴリズム - Prim's algorithm}
 
-\index{Prim's algorithm}
+\index{プリムのアルゴリズム - Prim's algorithm}
 
-\key{Prim's algorithm}\footnote{The algorithm is
+\key{プリムのアルゴリズム - Prim's algorithm}\footnote{The algorithm is
 named after R. C. Prim who published it in 1957 \cite{pri57}.
 However, the same algorithm was discovered already in 1930
-by V. Jarník.} is an alternative method
-for finding a minimum spanning tree.
-The algorithm first adds an arbitrary node
-to the tree.
-After this, the algorithm always chooses
-a minimum-weight edge that
-adds a new node to the tree.
-Finally, all nodes have been added to the tree
-and a minimum spanning tree has been found.
+by V. Jarník.} 
+は最小全域木を求めるための手法です。
+このアルゴリズムでは、
+まず各ノードを独立した木に追加します。
+その後は常に最小コストの辺を選択して新しいノードを木に追加します。
+最後に、すべてのノードが一つの木に追加され最小全域木が発見されます。
 
-Prim's algorithm resembles Dijkstra's algorithm.
-The difference is that Dijkstra's algorithm always
-selects an edge whose distance from the starting
-node is minimum, but Prim's algorithm simply selects
-the minimum weight edge that adds a new node to the tree.
+プリムのアルゴリズムはダイクストラのアルゴリズムに似ています。
+ダイクストラのアルゴリズムは常に開始ノードからの距離が最小となるエッジを選択しますが、
+プリムのアルゴリズムは単に新しいノードを木に追加する最小コストの辺を選んでいきます。
 
-\subsubsection{Example}
+\subsubsection{例 - Example}
 
-Let us consider how Prim's algorithm works
-in the following graph:
+動作を図で見ていきましょう。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -608,7 +486,7 @@ in the following graph:
 %\path[draw=red,thick,-,line width=2pt] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Initially, there are no edges between the nodes:
+最初は全てのノードは独立しています。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -627,10 +505,8 @@ Initially, there are no edges between the nodes:
 %\path[draw,thick,-] (3) -- node[font=\small,label=left:3] {} (6);
 \end{tikzpicture}
 \end{center}
-An arbitrary node can be the starting node,
-so let us choose node 1.
-First, we add node 2 that is connected by
-an edge of weight 3:
+任意のノードを開始ノードとしてよいのでノード1を選択したとします。
+まず、重み3のエッジで結ばれているノード2を追加しましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -650,9 +526,10 @@ an edge of weight 3:
 \end{tikzpicture}
 \end{center}
 
-After this, there are two edges with weight 5,
-so we can add either node 3 or node 5 to the tree.
-Let us add node 3 first:
+この後、重み5を持つ辺は2本あるので、
+ノード3かノード5のどちらかを木に追加できます。
+ノード3を追加します。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -673,7 +550,7 @@ Let us add node 3 first:
 \end{center}
 
 \begin{samepage}
-The process continues until all nodes have been included in the tree:
+これを繰り返します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1.5,2) {$1$};
@@ -694,19 +571,15 @@ The process continues until all nodes have been included in the tree:
 \end{center}
 \end{samepage}
 
-\subsubsection{Implementation}
+\subsubsection{実装 - Implementation}
 
-Like Dijkstra's algorithm, Prim's algorithm can be
-efficiently implemented using a priority queue.
-The priority queue should contain all nodes
-that can be connected to the current component using
-a single edge, in increasing order of the weights
-of the corresponding edges.
+ダイクストラのアルゴリズムと同様に、
+プリムのアルゴリズムも優先度付きキューを用いて効率的に実装できます。
+優先度付きキューには、1本のエッジを使って現在のコンポーネントに接続できるすべてのノードと
+そのエッジの重みの昇順に格納しておきます。
 
-The time complexity of Prim's algorithm is
-$O(n + m \log m)$ that equals the time complexity
-of Dijkstra's algorithm.
-In practice, Prim's and Kruskal's algorithms
-are both efficient, and the choice of the algorithm
-is a matter of taste.
-Still, most competitive programmers use Kruskal's algorithm.
+プリムのアルゴリズムの時間計算量は$O(n + m \log m)$で、
+ダイクストラのアルゴリズムの時間計算量と同じです。
+実際には、プリムのアルゴリズムとクラシカルのアルゴリズムはどちらも効率的で、
+アルゴリズムの選択は好みの問題です。
+ただし、クラシカル法が用いられることが多いです。

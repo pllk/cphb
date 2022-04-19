@@ -1,31 +1,23 @@
-\chapter{Sweep line algorithms}
+\chapter{掃引線アルゴリズム - Sweep line algorithms}
 
-\index{sweep line}
+\index{掃引線 - sweep line}
 
-Many geometric problems can be solved using
-\key{sweep line} algorithms.
-The idea in such algorithms is to represent
-an instance of the problem as a set of events that correspond
-to points in the plane.
-The events are processed in increasing order
-according to their x or y coordinates.
+幾何学的な問題のいくつかは、\key{掃引線 - sweep line}を用いたアルゴリズムで解くことができます。
+これは問題を、平面上の点に対応するイベントの集合として表現するアイデアです。
+イベントは、その$x$または$y$に従って昇順に処理します。
 
-As an example, consider the following problem:
-There is a company that has $n$ employees,
-and we know for each employee their arrival and
-leaving times on a certain day.
-Our task is to calculate the maximum number of
-employees that were in the office at the same time.
+例えば、従業員数$n$人の会社があり、
+各従業員のある日の出社・退社時刻が わかっているとします。
+我々の仕事は、同時にオフィスにいた 従業員の最大人数を計算することです。
 
-The problem can be solved by modeling the situation
-so that each employee is assigned two events that
-correspond to their arrival and leaving times.
-After sorting the events, we go through them
-and keep track of the number of people in the office.
-For example, the table
+この問題は、各従業員に出社時間と退社時間に対応する2つのイベントを割り当てるようにして解決できます。
+イベントを分類した後、そのイベントを調べて、オフィスにいる人数を把握します。
+
+例を示します。
+
 \begin{center}
 \begin{tabular}{ccc}
-person & arrival time & leaving time \\
+名前 & 出社 & 退社 \\
 \hline
 John & 10 & 15 \\
 Maria & 6 & 12 \\
@@ -33,7 +25,7 @@ Peter & 14 & 16 \\
 Lisa & 5 & 13 \\
 \end{tabular}
 \end{center}
-corresponds to the following events:
+これは次のようなイベントです。
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \draw (0,0) rectangle (17,-6.5);
@@ -57,16 +49,12 @@ corresponds to the following events:
 \node at (2,-5.5) {Lisa};
 \end{tikzpicture}
 \end{center}
-We go through the events from left to right
-and maintain a counter.
-Always when a person arrives, we increase
-the value of the counter by one,
-and when a person leaves,
-we decrease the value of the counter by one.
-The answer to the problem is the maximum
-value of the counter during the algorithm.
+このとき、左から右へイベントを辿り、カウンタを管理します。
+出社イベントの時、カウンタをインクリメントします。
+退社イベントの時はカウンタをデクリメントします。
+こうすると答えはその間の最大値になります。
 
-In the example, the events are processed as follows:
+この例では次のように処理が行われます。
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \path[draw,thick,->] (0.5,0.5) -- (16.5,0.5);
@@ -118,24 +106,21 @@ In the example, the events are processed as follows:
 \node at (13,-8) {$1$};
 \end{tikzpicture}
 \end{center}
-The symbols $+$ and $-$ indicate whether the
-value of the counter increases or decreases,
-and the value of the counter is shown below.
-The maximum value of the counter is 3
-between John's arrival and Maria's leaving.
 
-The running time of the algorithm is $O(n \log n)$,
-because sorting the events takes $O(n \log n)$ time
-and the rest of the algorithm takes $O(n)$ time.
+各記号はカウンターの値が増加するか減少するかを示し、
+カウンターの値は記号の下に示すようになります。
+カウンターの最大値は、ジョンが到着してからマリアが帰るまでの間の3です。
 
-\section{Intersection points}
+イベントのソートに$O(n \log n)$の時間がかかり、残りのアルゴリズムに
+$O(n)$の時間がかかるため、このアルゴリズムの実行時間は$O(n \log n)$である。
 
-\index{intersection point}
+\section{交差点 - Intersection points}
 
-Given a set of $n$ line segments, each of them being either
-horizontal or vertical, consider the problem of
-counting the total number of intersection points.
-For example, when the line segments are
+\index{交差点 - intersection point}
+
+
+各々が水平または垂直な$n$本の線分の集合があるとき、交点の総数を数える問題を考えましょう。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 \path[draw,thick,-] (0,2) -- (5,2);
@@ -145,7 +130,7 @@ For example, when the line segments are
 \path[draw,thick,-] (8,2) -- (8,5);
 \end{tikzpicture}
 \end{center}
-there are three intersection points:
+この場合の交差点は３つです。
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 \path[draw,thick,-] (0,2) -- (5,2);
@@ -161,23 +146,19 @@ there are three intersection points:
 \end{tikzpicture}
 \end{center}
 
-It is easy to solve the problem in $O(n^2)$ time,
-because we can go through all possible pairs of line segments
-and check if they intersect.
-However, we can solve the problem more efficiently
-in $O(n \log n)$ time using a sweep line algorithm
-and a range query data structure.
+この問題を$O(n^2)$時間で解くのは簡単です。
+全ての線分の組を調べて、それらが交差しているかどうかをチェックします。
+しかし、掃引線アルゴリズムと区間クエリデータ構造を用いれば、
+$O(n \log n)$の時間で解けます。
+線分の端点を左から右へ処理し、次の3種類の事象に注目するというものです。
 
-The idea is to process the endpoints of the line
-segments from left to right and 
-focus on three types of events:
 \begin{enumerate}[noitemsep]
-\item[(1)] horizontal segment begins
-\item[(2)] horizontal segment ends
-\item[(3)] vertical segment
+\item[(1)] 水平線の開始
+\item[(2)] 水平線の終了
+\item[(3)] 垂直線
 \end{enumerate}
 
-The following events correspond to the example:
+先ほどの例では次のようなイベントの対応になります。
 \begin{center}
 \begin{tikzpicture}[scale=0.6]
 \path[draw,dashed] (0,2) -- (5,2);
@@ -198,34 +179,28 @@ The following events correspond to the example:
 \end{tikzpicture}
 \end{center}
 
-We go through the events from left to right
-and use a data structure that maintains a set of
-y coordinates where there is an active horizontal segment.
-At event 1, we add the y coordinate of the segment
-to the set, and at event 2, we remove the
-y coordinate from the set.
+イベントを左から右へみていき、
+アクティブな水平線が存在する$y$座標のセットを保持するデータ構造を持ちます。
+イベント1 では、セグメントの $y$ 座標をセットに追加し、
+イベント2 では、その $y$ 座標をセットから削除します。
 
-Intersection points are calculated at event 3.
-When there is a vertical segment between points
-$y_1$ and $y_2$, we count the number of active
-horizontal segments whose y coordinate is between
-$y_1$ and $y_2$, and add this number to the total
-number of intersection points.
+イベント3 を処理する時に交点を計算します。
+点$y_1$と$y_2$ の間に垂直セグメントがある場合、
+$y$座標が$y_1$ と$y_2$ の間にあるアクティブな水平セグメントの数を数え、
+この数を交点の総数に加えればよいです。
 
-To store y coordinates of horizontal segments,
-we can use a binary indexed or segment tree,
-possibly with index compression.
-When such structures are used, processing each event
-takes $O(\log n)$ time, so the total running
-time of the algorithm is $O(n \log n)$.
+水平線の $y$ 座標を格納するために、
+BITまたは セグメントツリーを使用し、
+場合によっては座標圧縮を行います。
+このような構造を使用する場合、各イベントの処理に $O(\log n)$ の時間がかかるため、
+アルゴリズムの総実行時間は $O(n \log n)$ となります。
 
-\section{Closest pair problem}
+\section{近接ペア問題 - Closest pair problem}
 
-\index{closest pair}
+\index{近接ペア - closest pair}
 
-Given a set of $n$ points, our next problem is
-to find two points whose Euclidean distance is minimum.
-For example, if the points are
+$n$個の点の集合が与えられ、ユークリッド距離が最小となる2点を見つける問題を考えます。
+例えば、点が
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0)--(12,0)--(12,4)--(0,4)--(0,0);
@@ -247,7 +222,7 @@ For example, if the points are
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-we should find the following points:
+のとき、以下の２点を見つけます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0)--(12,0)--(12,4)--(0,4)--(0,0);
@@ -270,35 +245,25 @@ we should find the following points:
 \end{center}
 \end{samepage}
 
-This is another example of a problem
-that can be solved in $O(n \log n)$ time
-using a sweep line algorithm\footnote{Besides this approach,
+これも掃引線アルゴリズムを用いると
+$O(n \log n)$ の時間で解ける問題の一例です
+\footnote{Besides this approach,
 there is also an
 $O(n \log n)$ time divide-and-conquer algorithm \cite{sha75}
 that divides the points into two sets and recursively
-solves the problem for both sets.}.
-We go through the points from left to right
-and maintain a value $d$: the minimum distance
-between two points seen so far.
-At each point, we find the nearest point to the left.
-If the distance is less than $d$, it is the
-new minimum distance and we update
-the value of $d$.
+solves the problem for both sets.}。
+左から右へと点を巡り、これまでに見た2点間の最小距離である値dを保持します。
+このとき各点で、左側に最も近い点を探します。
+その距離が$d$より小さい場合、それが新しい最小距離となり、$d$の値を更新します。
 
-If the current point is $(x,y)$
-and there is a point to the left
-within a distance of less than $d$,
-the x coordinate of such a point must
-be between $[x-d,x]$ and the y coordinate
-must be between $[y-d,y+d]$.
-Thus, it suffices to only consider points
-that are located in those ranges,
-which makes the algorithm efficient.
+現在の点が$(x, y)$として、左側に$d$以下の距離に点がある場合、
+その点のx座標は$[x-d,x]$の間でなければなく、
+y座標は$[y-d,y+d]$の間でなければなりません。
+そのため、これらの範囲に位置する点のみを考慮すれば十分であり、
+このアルゴリズムは効率的に動作します。
 
-For example, in the following picture, the
-region marked with dashed lines contains
-the points that can be within a distance of $d$
-from the active point:
+例えば、以下の図において破線で示した領域は、
+現在の値からd以内の距離に存在しうる点を表すことになります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -331,29 +296,24 @@ from the active point:
 \end{tikzpicture}
 \end{center}
 
-The efficiency of the algorithm is based on the fact
-that the region always contains
-only $O(1)$ points.
-We can go through those points in $O(\log n)$ time
-by maintaining a set of points whose x coordinate
-is between $[x-d,x]$, in increasing order according
-to their y coordinates.
 
-The time complexity of the algorithm is $O(n \log n)$,
-because we go through $n$ points and
-find for each point the nearest point to the left
-in $O(\log n)$ time.
+このアルゴリズムが効率的に動くのは、
+各領域には常に$O(1)$個の点しか含まれないという事実に基づいています。
+$x$座標が$[x-d,x]$の間にある点の集合を、
+$y$座標に従って昇順に保持することにより、
+$O(\log n)$時間でそれらの点を走査することができるのです。
 
-\section{Convex hull problem}
+このアルゴリズムの時間計算量は$O(n \log n)$です。
+$n$の各点について左に最も近い点を$O(\log n)$時間で求められます。
 
-A \key{convex hull} is the smallest convex polygon
-that contains all points of a given set.
-Convexity means that a line segment between
-any two vertices of the polygon is completely
-inside the polygon.
+\section{凸包問題 - Convex hull problem}
+
+\key{凸包 - convex hull}とは、
+与えられた集合のすべての点を含む最小の凸の多角形のことです。
+凸とは、多角形の任意の2つの頂点を結ぶ線分が完全にある多角形の内部にあることを意味します。
 
 \begin{samepage}
-For example, for the points
+例えば以下の点を考えます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) circle [radius=0.1];
@@ -373,7 +333,7 @@ For example, for the points
 \end{tikzpicture}
 \end{center}
 \end{samepage}
-the convex hull is as follows:
+この時の凸包は
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0)--(4,-1)--(7,1)--(6,3)--(2,4)--(0,2)--(0,0);
@@ -395,32 +355,19 @@ the convex hull is as follows:
 \end{tikzpicture}
 \end{center}
 
-\index{Andrew's algorithm}
+\index{アンドリューのアルゴリズム - Andrew's algorithm}
 
-\key{Andrew's algorithm} \cite{and79} provides
-an easy way to
-construct the convex hull for a set of points
-in $O(n \log n)$ time.
-The algorithm first locates the leftmost
-and rightmost points, and then
-constructs the convex hull in two parts:
-first the upper hull and then the lower hull.
-Both parts are similar, so we can focus on
-constructing the upper hull.
+\key{アンドリューのアルゴリズム - Andrew's algorithm} \cite{and79}
+は、点群に対する凸包を$O(n \log n)$時間構成するアルゴリズムです。
+このアルゴリズムでは，まず左端と右端の点を求め，凸包を上包と下包の2つに分けます。
+このとき、まず上部の構築に集中します。
 
-First, we sort the points primarily according to
-x coordinates and secondarily according to y coordinates.
-After this, we go through the points and
-add each point to the hull.
-Always after adding a point to the hull,
-we make sure that the last line segment
-in the hull does not turn left.
-As long as it turns left, we repeatedly remove the
-second last point from the hull.
+まず、点を主に$x$座標で、次に$y$座標の順で並べ替えます。
+その後、各ポイントを凸包に追加していきます。
+点を追加した後は、常に、凸包の最後の線分が左に曲がらないようにします。
+左に曲がっているならば、最後から2つ目の点を凸包から取り除いていきます。
+以下の図は、Andrewのアルゴリズムがどのように動作するかを示しています。
 
-The following pictures show how
-Andrew's algorithm works:
-\\
 \begin{tabular}{ccccccc}
 \\
 \begin{tikzpicture}[scale=0.3]
@@ -841,7 +788,3 @@ Andrew's algorithm works:
 \\
 17 & & 18 & & 19 & & 20
 \end{tabular}
-
-
-
-

@@ -1,19 +1,15 @@
-\chapter{Number theory}
+\chapter{整数論 - Number theory}
 
 \index{number theory}
 
-\key{Number theory} is a branch of mathematics
-that studies integers.
-Number theory is a fascinating field,
-because many questions involving integers
-are very difficult to solve even if they
-seem simple at first glance.
+\key{整数論(Number theory)}は、整数を研究する数学の分野です。
+整数論は、一見単純そうに見えるかもしれませんが、
+整数に関わる多くの問題は非常に難しく、しかし興味深い分野です。
 
-As an example, consider the following equation:
+例として、次のような式を考えてみましょう。
 \[x^3 + y^3 + z^3 = 33\]
-It is easy to find three real numbers $x$, $y$ and $z$
-that satisfy the equation.
-For example, we can choose
+
+実数の範囲では$x$, $y$ and $z$の例を見つけるのは簡単で、例えば以下のものが思い浮かびます。
 \[
 \begin{array}{lcl}
 x = 3, \\
@@ -21,145 +17,114 @@ y = \sqrt[3]{3}, \\
 z = \sqrt[3]{3}.\\
 \end{array}
 \]
-However, it is an open problem in number theory
-if there are any three
-\emph{integers} $x$, $y$ and $z$
-that would satisfy the equation \cite{bec07}.
+ところが、
+\emph{整数(integers)}である $x$, $y$ and $z$を見つけるというのは未解決問題です。\cite{bec07}
 
-In this chapter, we will focus on basic concepts
-and algorithms in number theory.
-Throughout the chapter, we will assume that all numbers
-are integers, if not otherwise stated.
+この章では、整数論の基本的な概念とアルゴリズムに焦点を当てていきます。
+この章では特に断らない限り、すべての数は整数であると仮定します。
 
-\section{Primes and factors}
+\section{素数と因数 - Primes and factors}
 
 \index{divisibility}
 \index{factor}
 \index{divisor}
 
-A number $a$ is called a \key{factor} or a \key{divisor} of a number $b$
-if $a$ divides $b$.
-If $a$ is a factor of $b$,
-we write $a \mid b$, and otherwise we write $a \nmid b$.
-For example, the factors of 24 are
-1, 2, 3, 4, 6, 8, 12 and 24.
 
-\index{prime}
+$a$が$b$の因数であるとき、 $a \mid b$と表記し、そうでなければ$a \nmid b$と記載します。
+
+例えば24の因数は1, 2, 3, 4, 6, 8, 12, 24です。
+
+\index{素数 - prime}
 \index{prime decomposition}
 
-A number $n>1$ is a \key{prime}
-if its only positive factors are 1 and $n$.
-For example, 7, 19 and 41 are primes,
-but 35 is not a prime, because $5 \cdot 7 = 35$.
-For every number $n>1$, there is a unique
-\key{prime factorization}
+$n>1$である数が1または$n$以外の因数を持たない場合\key{素数}です。
+例えば、7、19、41は素数ですが、35は$5 \cdot 7 = 35$なので素数ではありません。
+$n>1$である数には、\key{素因数分解 - prime factorization}が唯一に存在します。
 \[ n = p_1^{\alpha_1} p_2^{\alpha_2} \cdots p_k^{\alpha_k},\]
-where $p_1,p_2,\ldots,p_k$ are distinct primes and
-$\alpha_1,\alpha_2,\ldots,\alpha_k$ are positive numbers.
-For example, the prime factorization for 84 is
+ここで、$p_1,p_2,\ldots,p_k$は異なる素数であり、$\alpha_1,\alpha_2,\ldots,\alpha_k$は正の数である。
+例えば、84の素因数分解は次のようになります。
 \[84 = 2^2 \cdot 3^1 \cdot 7^1.\]
 
+ある数$n$の素因数の個数を
 The \key{number of factors} of a number $n$ is
 \[\tau(n)=\prod_{i=1}^k (\alpha_i+1),\]
-because for each prime $p_i$, there are
-$\alpha_i+1$ ways to choose how many times
-it appears in the factor.
-For example, the number of factors
-of 84 is
-$\tau(84)=3 \cdot 2 \cdot 2 = 12$.
-The factors are
-1, 2, 3, 4, 6, 7, 12, 14, 21, 28, 42 and 84.
+とします。
+なぜなら、各素数$p_i$ に対して、
+因数に何回現れるかを選ぶ方法は$\alpha_i+1$通りあるからです
+。例えば、84の因子の数は、$\tau(84)=3 \cdot 2 \cdot 2 = 12$です。
+実際に因数分解する と、1、2、3、4、6、7、12、14、21、28、42、84となります。
 
-The \key{sum of factors} of $n$ is
+$n$ の \key{因数の和 - sum of factors} は
 \[\sigma(n)=\prod_{i=1}^k (1+p_i+\ldots+p_i^{\alpha_i}) = \prod_{i=1}^k \frac{p_i^{a_i+1}-1}{p_i-1},\]
-where the latter formula is based on the geometric progression formula.
-For example, the sum of factors of 84 is
+ここで、後者の式は幾何級数式(TODO: geometric progression formula)によります。
+例えば、84の因数の和は次の通りとなります。
 \[\sigma(84)=\frac{2^3-1}{2-1} \cdot \frac{3^2-1}{3-1} \cdot \frac{7^2-1}{7-1} = 7 \cdot 4 \cdot 8 = 224.\]
 
-The \key{product of factors} of $n$ is
+$n$の \key{因数の積 - product of factors} は
 \[\mu(n)=n^{\tau(n)/2},\]
-because we can form $\tau(n)/2$ pairs from the factors,
+となります。
+TODO:  because we can form $\tau(n)/2$ pairs from the factors,
 each with product $n$.
-For example, the factors of 84
-produce the pairs
-$1 \cdot 84$, $2 \cdot 42$, $3 \cdot 28$, etc.,
-and the product of the factors is $\mu(84)=84^6=351298031616$.
+たとえば84の因数の積は次のようなペアで示されます。
+$1 \cdot 84$, $2 \cdot 42$, $3 \cdot 28$などなど。
+この結果、因数は積は$\mu(84)=84^6=351298031616$となります。
 
-\index{perfect number}
+\index{完全数 - perfect number}
+$n=\sigma(n)-n$の場合、$n$は\key{完全数(perfect number)}と呼ばれます。
+つまり、$n$が$1$から$n - 1$までの因数の和に等しい場合です。例えば、28は、$28=1+2+4+7+14$なので、完全数です。
 
-A number $n$ is called a \key{perfect number} if $n=\sigma(n)-n$,
-i.e., $n$ equals the sum of its factors
-between $1$ and $n-1$.
-For example, 28 is a perfect number,
-because $28=1+2+4+7+14$.
+\subsubsection{素数は無限に存在する - Number of primes}
 
-\subsubsection{Number of primes}
-
-It is easy to show that there is an infinite number
-of primes.
-If the number of primes would be finite,
-we could construct a set $P=\{p_1,p_2,\ldots,p_n\}$
-that would contain all the primes.
-For example, $p_1=2$, $p_2=3$, $p_3=5$, and so on.
-However, using $P$, we could form a new prime
+素数が無限にあることを示します。
+もし、素数の数が有限であれば、素数全ての集合である
+$P=\{p_1,p_2,\ldots,p_n\}$で構成することができます。
+すべての素 数を含むことになる。
+例えば、$p_1=2$, $p_2=3$, $p_3=5$です。
+ですが、$P$の要素を使って以下のPに含まれるのよりも大きな素数を作ることができます。
 \[p_1 p_2 \cdots p_n+1\]
-that is larger than all elements in $P$.
-This is a contradiction, and the number of primes
-has to be infinite.
+これは矛盾するため、素数の数は無限となります。
 
-\subsubsection{Density of primes}
+\subsubsection{素数の密度 - Density of primes}
 
-The density of primes means how often there are primes
-among the numbers.
-Let $\pi(n)$ denote the number of primes between
-$1$ and $n$. For example, $\pi(10)=4$, because
-there are 4 primes between $1$ and $10$: 2, 3, 5 and 7.
+素数の密度とは、数字の中にどれくらいの頻度で素数が含まれているかのことです。
+$\pi(n)$を1から$N$までに含まれる素数の数とします。
+例えば、$\pi(10)=4$です。1から10までの間に$2、3、5、7$の4つの素数があることを意味します。
 
-It is possible to show that
+これは次のように示すことができます。
 \[\pi(n) \approx \frac{n}{\ln n},\]
-which means that primes are quite frequent.
-For example, the number of primes between
-$1$ and $10^6$ is $\pi(10^6)=78498$,
-and $10^6 / \ln 10^6 \approx 72382$.
+この式からわかる通り、素数の密度は高いです。
+例えば$1$ から $10^6$ の実際の素数の数は$\pi(10^6)=78498$であり、
+$10^6 / \ln 10^6 \approx 72382$でおおよそ一致します。
 
-\subsubsection{Conjectures}
+\subsubsection{予想 - Conjectures}
 
-There are many \emph{conjectures} involving primes.
-Most people think that the conjectures are true,
-but nobody has been able to prove them.
-For example, the following conjectures are famous:
+素数に関する \emph{予想(conjectures)} がいくつも存在します。
+これらのほとんどが正しいとされていますが証明はされていません。
+例えば以下のような予想が有名です。
 
 \begin{itemize}
 \index{Goldbach's conjecture}
-\item \key{Goldbach's conjecture}:
-Each even integer $n>2$ can be represented as a
-sum $n=a+b$ so that both $a$ and $b$ are primes.
+\item \key{ゴールドバッハ予想 - Goldbach's conjecture}:
+$n > 2$は偶数である場合、$a$および$b$がともに素数であるような、$n = a + b$の和で表すことができる。
 \index{twin prime}
-\item \key{Twin prime conjecture}:
-There is an infinite number of pairs
-of the form $\{p,p+2\}$,
-where both $p$ and $p+2$ are primes.
+\item \key{双子の予想(TODO) (Twin prime conjecture)}:
+$\{p,p+2\}$であるようなペアは無限に存在する。ただし、$p$ and $p+2$は素数である。
 \index{Legendre's conjecture}
-\item \key{Legendre's conjecture}:
-There is always a prime between numbers
-$n^2$ and $(n+1)^2$, where $n$ is any positive integer.
+\item \key{ルジャンドル予想 TODO (Legendre's conjecture)}:
+$n^2$ and $(n+1)^2$の間には必ず素数が存在する。なお、$n$は生成数where $n$ is any positive integer.
 \end{itemize}
 
-\subsubsection{Basic algorithms}
+\subsubsection{基本的なアルゴリズム - Basic algorithms}
 
-If a number $n$ is not prime,
-it can be represented as a product $a \cdot b$,
-where $a \le \sqrt n$ or $b \le \sqrt n$,
-so it certainly has a factor between $2$ and $\lfloor \sqrt n \rfloor$.
-Using this observation, we can both test
-if a number is prime and find the prime factorization
-of a number in $O(\sqrt n)$ time.
+素数でない$n$は$a \cdot b$という積で表すことができ、 $a \le \sqrt n$ か $b \le \sqrt n$であるから、
+確実に$2$ 以上 $\lfloor \sqrt n \rfloor$以下の因数を持ちます。
+この性質を利用すれば、ある数が素数であるかどうかの判定および
+ある数の素因数分解を$O(\sqrt n)$時間で求められます。
 
-The following function \texttt{prime} checks
-if the given number $n$ is prime.
-The function attempts to divide $n$ by
-all numbers between $2$ and $\lfloor \sqrt n \rfloor$,
-and if none of them divides $n$, then $n$ is prime.
+次の関数 \texttt{prime} は、
+与えられた数$n$が素数かどうかを判定します。
+この関数は$n$を$2$から$\lfloor \sqrt n \rfloor$の数で割ろうとし、
+どれでも割り切れなければ$n$は素数だとします。
 
 \begin{lstlisting}
 bool prime(int n) {
@@ -172,15 +137,10 @@ bool prime(int n) {
 \end{lstlisting}
 
 \noindent
-The following function \texttt{factors}
-constructs a vector that contains the prime
-factorization of $n$.
-The function divides $n$ by its prime factors,
-and adds them to the vector.
-The process ends when the remaining number $n$
-has no factors between $2$ and $\lfloor \sqrt n \rfloor$.
-If $n>1$, it is prime and the last factor.
-
+次に示す関数\texttt{factors}は$n$の素因数分解を行います。
+これは数を順に割れるか判定していき、割れた数をvectorに追加していきます。
+この関数は$n$が$2$ から $\lfloor \sqrt n \rfloor$の因数を持たないようにします。
+この処理が終わったのちに$n>1$であるならば、それは最後の素因数です。
 \begin{lstlisting}
 vector<int> factors(int n) {
     vector<int> f;
@@ -195,38 +155,30 @@ vector<int> factors(int n) {
 }
 \end{lstlisting}
 
-Note that each prime factor appears in the vector
-as many times as it divides the number.
-For example, $24=2^3 \cdot 3$,
-so the result of the function is $[2,2,2,3]$.
+この関数は、その素因数で数を割った回数だけvectorに現れるます。
+例えば、 $24$について、$24=2^3 \cdot 3$,
+ですからこれを素因数分解した結果は$[2,2,2,3]$となります。
 
-\subsubsection{Sieve of Eratosthenes}
+\subsubsection{エラトステネスの篩Sieve of Eratosthenes}
 
 \index{sieve of Eratosthenes}
 
-The \key{sieve of Eratosthenes}
+\key{エラトステネスの篩(ふるい)(sieve of Eratosthenes)}
 %\footnote{Eratosthenes (c. 276 BC -- c. 194 BC) was a Greek mathematician.}
-is a preprocessing
-algorithm that builds an array using which we
-can efficiently check if a given number between $2 \ldots n$
-is prime and, if it is not, find one prime factor of the number.
+は、$2 \ldots n$の間の数が素数かどうかチェックし、
+素数でない場合はその数の素因数を見つけることができる配列を
+構築する効率的な前処理アルゴリズムです。
 
-The algorithm builds an array $\texttt{sieve}$
-whose positions $2,3,\ldots,n$ are used.
-The value $\texttt{sieve}[k]=0$ means
-that $k$ is prime,
-and the value $\texttt{sieve}[k] \neq 0$
-means that $k$ is not a prime and one
-of its prime factors is $\texttt{sieve}[k]$.
+このアルゴリズムは、インデックス$2,3,\ldots,n$を持つ配列の$\texttt{篩}$を構築する。
+$\texttt{sieve}[k]=0$ であるとき $k$ が素であることを意味し、
+$\texttt{sieve}[k] \neq 0$ であるときは $k$ が素でなく、
+素因数の1つが  $\texttt{sieve}[k]$ であることを意味します。
 
-The algorithm iterates through the numbers
-$2 \ldots n$ one by one.
-Always when a new prime $x$ is found,
-the algorithm records that the multiples
-of $x$ ($2x,3x,4x,\ldots$) are not primes,
-because the number $x$ divides them.
+このアルゴリズムは、$2 \ldots n$ 順番にを1回ずつみていきます。
+新しい素数$x$が見つかると、
+$x$の倍数($2x,3x,4x,\ldots$) は $x$で割れてしまうため素数ではないとマークします。
 
-For example, if $n=20$, the array is as follows:
+例えば$n=20$の場合は次のような配列がつくられます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -277,10 +229,7 @@ For example, if $n=20$, the array is as follows:
 \end{tikzpicture}
 \end{center}
 
-The following code implements the sieve of
-Eratosthenes.
-The code assumes that each element of
-\texttt{sieve} is initially zero.
+以下のコードでは、篩の各要素は最初はゼロであると仮定している。
 
 \begin{lstlisting}
 for (int x = 2; x <= n; x++) {
@@ -291,46 +240,44 @@ for (int x = 2; x <= n; x++) {
 }
 \end{lstlisting}
 
-The inner loop of the algorithm is executed
-$n/x$ times for each value of $x$.
-Thus, an upper bound for the running time
-of the algorithm is the harmonic sum
+内側のループの計算量は$x$を回す際には$n/x$となります。
+このアルゴリズムの実行時間は以下の通りで$ O(n \log n)$に非常に近い時間計算量であることが示されます。
 \[\sum_{x=2}^n n/x = n/2 + n/3 + n/4 + \cdots + n/n = O(n \log n).\]
 
 \index{harmonic sum}
 
-In fact, the algorithm is more efficient,
-because the inner loop will be executed only if
-the number $x$ is prime.
-It can be shown that the running time of the
-algorithm is only $O(n \log \log n)$,
-a complexity very near to $O(n)$. 
+このアルゴリズムは、数$x$が素数の場合にのみ内側ループが実行されるのでより効率的に動作します。
+このアルゴリズムの実行時間は$O(n \log \log n)$で、$O(n)$に近い動作をします。
 
-\subsubsection{Euclid's algorithm}
+\subsubsection{ユークリッドの互除法 - Euclid's algorithm}
 
 \index{greatest common divisor}
 \index{least common multiple}
 \index{Euclid's algorithm}
 
-The \key{greatest common divisor} of
-numbers $a$ and $b$, $\gcd(a,b)$,
-is the greatest number that divides both $a$ and $b$,
-and the \key{least common multiple} of
-$a$ and $b$, $\textrm{lcm}(a,b)$,
-is the smallest number that is divisible by
-both $a$ and $b$.
-For example,
-$\gcd(24,36)=12$ and
-$\textrm{lcm}(24,36)=72$.
 
-The greatest common divisor and the least common multiple
-are connected as follows:
+$a$と $b$の
+\key{最大公約数(greatest common divisor)}は
+$a$, $b$を割り切れる最大の数で、
+ $\gcd(a,b)$と表現します。
+ また、同様に
+ \key{最小公倍数(least common multiple)}は
+$a$, $b$で割り切れる最小の数で、
+ $\textrm{lcm}(a,b)$,
+で表現します。
+例として、
+$\gcd(24,36)=12$であり、
+$\textrm{lcm}(24,36)=72$です。
+
+この２つの関係を示します。
 \[\textrm{lcm}(a,b)=\frac{ab}{\textrm{gcd}(a,b)}\]
 
-\key{Euclid's algorithm}\footnote{Euclid was a Greek mathematician who
-lived in about 300 BC. This is perhaps the first known algorithm in history.} provides an efficient way
-to find the greatest common divisor of two numbers.
-The algorithm is based on the following formula:
+さて、
+\key{ユークリッドの互除法
+- Euclid's algorithm}\footnote{Euclid was a Greek mathematician who
+lived in about 300 BC. This is perhaps the first known algorithm in history.}
+は２つの数間の最大公約数を求める効率的な手法です。
+このアルゴリズムは以下に基づきます。
 \begin{equation*}
     \textrm{gcd}(a,b) = \begin{cases}
                a        & b = 0\\
@@ -338,11 +285,11 @@ The algorithm is based on the following formula:
            \end{cases}
 \end{equation*}
 
-For example,
+例えば、以下の通りになります。
 \[\textrm{gcd}(24,36) = \textrm{gcd}(36,24)
 = \textrm{gcd}(24,12) = \textrm{gcd}(12,0)=12.\]
 
-The algorithm can be implemented as follows:
+このアルゴリズムは以下のように実装されます。
 \begin{lstlisting}
 int gcd(int a, int b) {
     if (b == 0) return a;
@@ -350,53 +297,36 @@ int gcd(int a, int b) {
 }
 \end{lstlisting}
 
-It can be shown that Euclid's algorithm works
-in $O(\log n)$ time, where $n=\min(a,b)$.
-The worst case for the algorithm is
-the case when $a$ and $b$ are consecutive Fibonacci numbers.
-For example,
+ユークリッドの互除法は、$n=\min(a,b)$のとき、$O(\log n)$の時間で動きます。
+最悪のケースは$a$と$b$が連続したフィボナッチ数の時です。例を示します。
 \[\textrm{gcd}(13,8)=\textrm{gcd}(8,5)
 =\textrm{gcd}(5,3)=\textrm{gcd}(3,2)=\textrm{gcd}(2,1)=\textrm{gcd}(1,0)=1.\]
 
-\subsubsection{Euler's totient function}
+\subsubsection{オイラー関数, Euler's totient function}
 
 \index{coprime}
 \index{Euler's totient function}
 
-Numbers $a$ and $b$ are \key{coprime}
-if $\textrm{gcd}(a,b)=1$.
-\key{Euler's totient function} $\varphi(n)$
+$\textrm{gcd}(a,b)=1$であるとき、$a$と$b$は互いに素です。
+\key{オイラー関数(Euler's totient function), オイラーのφ関数やオイラーのトーシェント関数とも呼ばれる} は
+$\varphi(n)$ で示され、
 %\footnote{Euler presented this function in 1763.}
-gives the number of coprime numbers to $n$
-between $1$ and $n$.
-For example, $\varphi(12)=4$,
-because 1, 5, 7 and 11
-are coprime to 12.
+$1$ から $n$の$n$と素な個数です。
+例えば、$\varphi(12)=4$でこれは、
+1, 5, 7, 11の4つが12と素であるためです。
 
-The value of $\varphi(n)$ can be calculated
-from the prime factorization of $n$
-using the formula
+$\varphi(n)$の値は$n$を素因数分解した結果から計算できます。
 \[ \varphi(n) = \prod_{i=1}^k p_i^{\alpha_i-1}(p_i-1). \]
-For example, $\varphi(12)=2^1 \cdot (2-1) \cdot 3^0 \cdot (3-1)=4$.
-Note that $\varphi(n)=n-1$ if $n$ is prime.
+例えば、$\varphi(12)=2^1 \cdot (2-1) \cdot 3^0 \cdot (3-1)=4$.
+ここで、$n$が素数なら$\varphi(n)=n-1$となります。
 
-\section{Modular arithmetic}
+\section{modの計算 - Modular arithmetic}
 
 \index{modular arithmetic}
 
-In \key{modular arithmetic},
-the set of numbers is limited so
-that only numbers $0,1,2,\ldots,m-1$ are used,
-where $m$ is a constant.
-Each number $x$ is
-represented by the number $x \bmod m$:
-the remainder after dividing $x$ by $m$.
-For example, if $m=17$, then $75$
-is represented by $75 \bmod 17 = 7$.
-
-Often we can take remainders before doing
-calculations.
-In particular, the following formulas hold:
+\key{modの計算(modular arithmetic)}では、ある定数$m$に対して数が
+$0,1,2,\ldots,m-1$だけを使うようにします。。例えば、＄$m=17$のとき、$75$は$75 \bmod 17 = 7$となります。
+いくつか代表的な式を表します。
 \[
 \begin{array}{rcl}
 (x+y) \bmod m & = & (x \bmod m + y \bmod m) \bmod m \\
@@ -406,12 +336,11 @@ x^n \bmod m & = & (x \bmod m)^n \bmod m \\
 \end{array}
 \]
 
-\subsubsection{Modular exponentiation}
+\subsubsection{累乗のmod - Modular exponentiation}
 
-There is often need to efficiently calculate
-the value of $x^n \bmod m$.
-This can be done in $O(\log n)$ time
-using the following recursion:
+$x^n \bmod m$を高速に求めることができます。
+以下のように$O(\log n)$で求めることできます。
+
 \begin{equation*}
     x^n = \begin{cases}
                1        & n = 0\\
@@ -420,14 +349,9 @@ using the following recursion:
            \end{cases}
 \end{equation*}
 
-It is important that in the case of an even $n$,
-the value of $x^{n/2}$ is calculated only once.
-This guarantees that the time complexity of the
-algorithm is $O(\log n)$, because $n$ is always halved
-when it is even.
-
-The following function calculates the value of
-$x^n \bmod m$:
+ここで重要なのは、偶数$n$の場合、$x^{n/2}$ の値を一度だけ計算していることです。
+$n$が偶数の場合、$n$は常に半分になるので、$O(\log n)$となります。
+$x^n \bmod m$の実装例を示します。
 
 \begin{lstlisting}
 int modpow(int x, int n, int m) {
@@ -439,89 +363,80 @@ int modpow(int x, int n, int m) {
 }
 \end{lstlisting}
 
-\subsubsection{Fermat's theorem and Euler's theorem}
+\subsubsection{フェルマーの定理とオイラーの定理 - Fermat's theorem and Euler's theorem}
 
 \index{Fermat's theorem}
 \index{Euler's theorem}
 
-\key{Fermat's theorem}
+\key{フェルマーの定理}
 %\footnote{Fermat discovered this theorem in 1640.}
-states that
+は、$m$が素数　かつ　$x$と$m$が互いに素である時、
 \[x^{m-1} \bmod m = 1\]
-when $m$ is prime and $x$ and $m$ are coprime.
-This also yields
+となる。また、以下の通りとなります。
 \[x^k \bmod m = x^{k \bmod (m-1)} \bmod m.\]
-More generally, \key{Euler's theorem}
+\key{オイラーの定理 - Euler's theorem}
 %\footnote{Euler published this theorem in 1763.}
-states that
+は、$x$と$m$が素であるとき、以下のように示されます。
 \[x^{\varphi(m)} \bmod m = 1\]
-when $x$ and $m$ are coprime.
-Fermat's theorem follows from Euler's theorem,
-because if $m$ is a prime, then $\varphi(m)=m-1$.
+オイラーの定理では、$m$が素数である時、$\varphi(m)=m-1$であるため、
+フェルマーの定理が導かれます。
 
-\subsubsection{Modular inverse}
+\subsubsection{modでの逆数 - Modular inverse}
 
 \index{modular inverse}
 
-The inverse of $x$ modulo $m$
-is a number $x^{-1}$ such that
+モジュロ$m$における$x$の逆数である$x^{-1}$は以下のようなものです。
 \[ x x^{-1} \bmod m = 1. \]
-For example, if $x=6$ and $m=17$,
-then $x^{-1}=3$, because $6\cdot3 \bmod 17=1$.
+例えば$x=6$ で $m=17$であるとき、$6\cdot3 \bmod 17=1$であり、$x^{-1}=3$となります。
 
-Using modular inverses, we can divide numbers
-modulo $m$, because division by $x$
-corresponds to multiplication by $x^{-1}$.
-For example, to evaluate the value of $36/6 \bmod 17$,
-we can use the formula $2 \cdot 3 \bmod 17$,
-because $36 \bmod 17 = 2$ and $6^{-1} \bmod 17 = 3$.
+modの逆数とは、modの状態における除算相当であるので、$x^{-1}$をかけると
+$m$の環境下で$x$で割った値を求めることができます。
+例えば、$36/6 \bmod 17$というのは、
+$36 \bmod 17 = 2$ かつ、$6^{-1} \bmod 17 = 3$なので、
+$2 \cdot 3 \bmod 17$として求めることができる。
 
-However, a modular inverse does not always exist.
-For example, if $x=2$ and $m=4$, the equation
+注意しなければいけないのは、modの逆数とは常に存在するわけではないことです。
+例えば、$x=2$、$m=4$とすると、
 \[ x x^{-1} \bmod m = 1 \]
-cannot be solved, because all multiples of 2
-are even and the remainder can never be 1 when $m=4$.
-It turns out that the value of $x^{-1} \bmod m$
-can be calculated exactly when $x$ and $m$ are coprime.
+であり、解けません。なぜなら、2の倍数はすべて偶数なので、
+$m = 4$のときあまりは1とはなりません
+ $x^{-1} \bmod m$は、$x$と$m$が共に素のときだけ存在することに気をつけてください。
 
-If a modular inverse exists, it can be
-calculated using the formula
+もし、modの逆元が存在する時、以下がなりたちます。
 \[
 x^{-1} = x^{\varphi(m)-1}.
 \]
 If $m$ is prime, the formula becomes
+もし、$m$が素数であるなら、次のようにいえます。
 \[
 x^{-1} = x^{m-2}.
 \]
-For example,
+例を示します。
 \[6^{-1} \bmod 17 =6^{17-2} \bmod 17 = 3.\]
 
-This formula allows us to efficiently calculate
-modular inverses using the modular exponentation algorithm.
-The formula can be derived using Euler's theorem.
-First, the modular inverse should satisfy the following equation:
+modの累乗でみたアルゴリズムを用いて、
+モジュロの逆数は効率的に計算することができます。
+これにはオイラーの定理を利用します。
+まず、モジュロの逆数は次の式を満たす必要があります。
 \[
 x x^{-1} \bmod m = 1.
 \]
-On the other hand, according to Euler's theorem,
+一方、オイラーの定理によれば、
 \[
 x^{\varphi(m)} \bmod m =  xx^{\varphi(m)-1} \bmod m = 1,
 \]
-so the numbers $x^{-1}$ and $x^{\varphi(m)-1}$ are equal.
+このため、$x^{-1}$と$x^{\varphi(m)-1}$は等しいことがわかります。
 
-\subsubsection{Computer arithmetic}
+\subsubsection{コンピュータ上での演算について - Computer arithmetic}
 
-In programming, unsigned integers are represented modulo $2^k$,
-where $k$ is the number of bits of the data type.
-A usual consequence of this is that a number wraps around
-if it becomes too large.
+プログラミング上では、
+$k$をデータ型 のビット数とするときに、
+符号なし整数とは$2^k$で表現されます。これは、数値が大きくなりすぎると、折り返されてしまうのが普通です。
 
-For example, in C++, numbers of type \texttt{unsigned int}
-are represented modulo $2^{32}$.
-The following code declares an \texttt{unsigned int}
-variable whose value is $123456789$.
-After this, the value will be multiplied by itself,
-and the result is
+例えば、C++において、\texttt{unsigned int}というのは、
+モジュロ$2^{32}$で表現されます。
+例えば次のコードは\texttt{unsigned int}の$123456789$である変数を定義します。
+この数を二乗すると以下のようになります。
 $123456789^2 \bmod 2^{32} = 2537071545$.
 
 \begin{lstlisting}
@@ -529,53 +444,43 @@ unsigned int x = 123456789;
 cout << x*x << "\n"; // 2537071545
 \end{lstlisting}
 
-\section{Solving equations}
+\section{方程式を解く - Solving equations}
 
-\subsubsection*{Diophantine equations}
+\subsubsection*{ディオファントス方程式 - Diophantine equations}
 
 \index{Diophantine equation}
 
-A \key{Diophantine equation}
+\key{ディオファントス方程式 - Diophantine equation}は次のような方程式のことです。
 %\footnote{Diophantus of Alexandria was a Greek mathematician who lived in the 3th century.}
-is an equation of the form
 \[ ax + by = c, \]
-where $a$, $b$ and $c$ are constants
-and the values of $x$ and $y$ should be found.
+$a$, $b$ と $c$は定数で$x$ と $y$ を求めたいとします。
 Each number in the equation has to be an integer.
-For example, one solution for the equation
-$5x+2y=11$ is $x=3$ and $y=-2$.
+例えば、
+$5x+2y=11$ の時、$x=3$,  $y=-2$です。
 
 \index{extended Euclid's algorithm}
 
-We can efficiently solve a Diophantine equation
-by using Euclid's algorithm.
-It turns out that we can extend Euclid's algorithm
-so that it will find numbers $x$ and $y$
-that satisfy the following equation:
+この方程式はユークリッドの互除法を活用することで効果的に解くことができます。
+ユークリッドの互除法を拡張することで$x$, $y$を次のようにみつけることができます。
 \[
 ax + by = \textrm{gcd}(a,b)
 \]
 
-A Diophantine equation can be solved if
-$c$ is divisible by
+この方程式は、$c$が
 $\textrm{gcd}(a,b)$,
-and otherwise it cannot be solved.
+で割り切れる場合に解が存在し、そうでなければ解は存在しません。
 
-As an example, let us find numbers $x$ and $y$
-that satisfy the following equation:
+例えば次の方程式を考えます。
 \[
 39x + 15y = 12
 \]
-The equation can be solved, because
-$\textrm{gcd}(39,15)=3$ and $3 \mid 12$.
-When Euclid's algorithm calculates the
-greatest common divisor of 39 and 15,
-it produces the following sequence of function calls:
+$\textrm{gcd}(39,15)=3$ で $3 \mid 12$であるため、この式は解けます。
+さて、ユークリッドのアルゴリズムが39 と15の最大公約数を計算するときは、次のような関数呼び出しが行われます。
 \[
 \textrm{gcd}(39,15) = \textrm{gcd}(15,9)
 = \textrm{gcd}(9,6) = \textrm{gcd}(6,3)
 = \textrm{gcd}(3,0) = 3 \]
-This corresponds to the following equations:
+これは次のような式ということができます。
 \[
 \begin{array}{lcl}
 39 - 2 \cdot 15 & = & 9 \\
@@ -583,30 +488,26 @@ This corresponds to the following equations:
 9 - 1 \cdot 6 & = & 3 \\
 \end{array}
 \]
-Using these equations, we can derive
+これにより、次のようになります。
 \[
 39 \cdot 2 + 15 \cdot (-5) = 3
 \]
-and by multiplying this by 4, the result is
+そして、それぞれを4倍すると、
 \[
 39 \cdot 8 + 15 \cdot (-20) = 12,
 \]
-so a solution to the equation is
-$x=8$ and $y=-20$.
+ということから、
+$x=8$, $y=-20$が導けました。
 
-A solution to a Diophantine equation is not unique,
-because we can form an infinite number of solutions
-if we know one solution.
-If a pair $(x,y)$ is a solution, then also all pairs
-\[(x+\frac{kb}{\textrm{gcd}(a,b)},y-\frac{ka}{\textrm{gcd}(a,b)})\]
-are solutions, where $k$ is any integer.
+尚、ディオファントス方程式の解は一意ではないことに注意してください。
+一つの解がわかれば、無限に解を作ることができます。ある組$(x,y)$が解であるとき、
+全ての解のペアは以下のように示ます。
 
-\subsubsection{Chinese remainder theorem}
+\subsubsection{中国人余剰定理 - Chinese remainder theorem}
 
 \index{Chinese remainder theorem}
 
-The \key{Chinese remainder theorem} solves
-a group of equations of the form
+\key{中国人余剰定理(Chinese remainder theorem)}は次のような式を解きます。
 \[
 \begin{array}{lcl}
 x & = & a_1 \bmod m_1 \\
@@ -615,21 +516,19 @@ x & = & a_2 \bmod m_2 \\
 x & = & a_n \bmod m_n \\
 \end{array}
 \]
-where all pairs of $m_1,m_2,\ldots,m_n$ are coprime.
+$m_1,m_2,\ldots,m_n$は互いに素だとします。.
 
-Let $x^{-1}_m$ be the inverse of $x$ modulo $m$, and
+$x^{-1}_m$ はモジュロ$m$における$x$の逆数とします。
 \[ X_k = \frac{m_1 m_2 \cdots m_n}{m_k}.\]
-Using this notation, a solution to the equations is
+この表記法を用いると、方程式の解は以下のようになります。
 \[x = a_1 X_1 {X_1}^{-1}_{m_1} + a_2 X_2 {X_2}^{-1}_{m_2} + \cdots + a_n X_n {X_n}^{-1}_{m_n}.\]
-In this solution, for each $k=1,2,\ldots,n$,
+各$k=1,2,\ldots,n$に対して、
 \[a_k X_k {X_k}^{-1}_{m_k} \bmod m_k = a_k,\]
-because
+となり、なぜなら、
 \[X_k {X_k}^{-1}_{m_k} \bmod m_k = 1.\]
-Since all other terms in the sum are divisible by $m_k$,
-they have no effect on the remainder,
-and $x \bmod m_k = a_k$.
+和の他の項はすべて$m_k$で割り切れるので、余りには影響しないため、$x \bmod m_k = a_k$となります。
 
-For example, a solution for
+例えば以下の式を考えましょう。
 \[
 \begin{array}{lcl}
 x & = & 3 \bmod 5 \\
@@ -637,90 +536,65 @@ x & = & 4 \bmod 7 \\
 x & = & 2 \bmod 3 \\
 \end{array}
 \]
-is
+以下のようになります。
 \[ 3 \cdot 21 \cdot 1 + 4 \cdot 15 \cdot 1 + 2 \cdot 35 \cdot 2 = 263.\]
 
-Once we have found a solution $x$,
-we can create an infinite number of other solutions,
-because all numbers of the form
+一旦、解$x$が見つかれば、他の解を無限に見つかります。
+なぜなら、以下の形の全てが解となるためです。
 \[x+m_1 m_2 \cdots m_n\]
-are solutions.
 
-\section{Other results}
+\section{その他 - Other results}
 
 \subsubsection{Lagrange's theorem}
 
-\index{Lagrange's theorem}
+\index{ラグランジュの定理 - Lagrange's theorem}
 
-\key{Lagrange's theorem}
+\key{楽ランジュの定理(Lagrange's theorem)}
 %\footnote{J.-L. Lagrange (1736--1813) was an Italian mathematician.}
-states that every positive integer
-can be represented as a sum of four squares, i.e.,
-$a^2+b^2+c^2+d^2$.
-For example, the number 123 can be represented
-as the sum $8^2+5^2+5^2+3^2$.
+とは、すべての正の整数が4つの二乗の和示せるというもので、例えば、123は以下のように示ます。
 
-\subsubsection{Zeckendorf's theorem}
+\subsubsection{ゼッケンドルフの定理 - Zeckendorf's theorem}
 
 \index{Zeckendorf's theorem}
 \index{Fibonacci number}
 
-\key{Zeckendorf's theorem}
+\key{ゼッケンドルフの定理(Zeckendorf's theorem)}
 %\footnote{E. Zeckendorf published the theorem in 1972 \cite{zec72}; however, this was not a new result.}
-states that every
-positive integer has a unique representation
-as a sum of Fibonacci numbers such that
-no two numbers are equal or consecutive
-Fibonacci numbers.
-For example, the number 74 can be represented
-as the sum $55+13+5+1$.
+は、すべての正の整数がフィボナッチ数の和として一意に表現され、
+数字が等しいフィボナッチ数あるいは連続したフィボナッチ数にはならない、という定理です。
+例えば、74は$55+13+5+1$です。
 
-\subsubsection{Pythagorean triples}
+\subsubsection{TODO: Pythagorean triples}
 
-\index{Pythagorean triple}
+\index{ピタゴラスの定理 - Pythagorean triple}
 \index{Euclid's formula}
 
-A \key{Pythagorean triple} is a triple $(a,b,c)$
-that satisfies the Pythagorean theorem
-$a^2+b^2=c^2$, which means that there is a right triangle
-with side lengths $a$, $b$ and $c$.
-For example, $(3,4,5)$ is a Pythagorean triple.
+\key{ピタゴラスの定理(Pythagorean triple)}は、
+$a^2+b^2=c^2$を満たす$(a,b,c)$の辺を持つ三角形は直角三角形であるというものです。
+例えば、$(3,4,5)$はこれを満たす組です。
 
-If $(a,b,c)$ is a Pythagorean triple,
-all triples of the form $(ka,kb,kc)$
-are also Pythagorean triples where $k>1$.
-A Pythagorean triple is \emph{primitive} if
-$a$, $b$ and $c$ are coprime,
-and all Pythagorean triples can be constructed
-from primitive triples using a multiplier $k$.
+$(a, b, c)$ がピタゴラスの定理を満たす組であるとき、$(ka, kb, kc)$ もまた、ピタゴラスの定理を満たす久美です
+これらの組みは$a, b, c$ が共に素数であれば\emph{原始項(primitive)}であり、
+乗数$k$を用いて$a,b,c$の組を原始項から作ることができます。
+ここで、\key{ユークリッドの公式}を使えば、すべてのピタゴラスの定理を満たす原始項を作り出すことができる。
 
-\key{Euclid's formula} can be used to produce
-all primitive Pythagorean triples.
-Each such triple is of the form
 \[(n^2-m^2,2nm,n^2+m^2),\]
-where $0<m<n$, $n$ and $m$ are coprime
-and at least one of $n$ and $m$ is even.
-For example, when $m=1$ and $n=2$, the formula
-produces the smallest Pythagorean triple
+ここで、$0<m<n$であり、$n$ と $m$は互いに素です。また、$n$か$m$の最低1つは偶数である必要があります。
+$m = 1$, $n = 2$の時、最小のピタゴラスの定理の組がつくられます。
 \[(2^2-1^2,2\cdot2\cdot1,2^2+1^2)=(3,4,5).\]
 
-\subsubsection{Wilson's theorem}
+\subsubsection{ウィルソンの定理 - Wilson's theorem}
 
 \index{Wilson's theorem}
 
-\key{Wilson's theorem}
+\key{ウイルソンの定理(Wilson's theorem)}は
 %\footnote{J. Wilson (1741--1793) was an English mathematician.}
-states that a number $n$
-is prime exactly when
+$n$が素数のとき以下が成り立つというものです。
 \[(n-1)! \bmod n = n-1.\]
-For example, the number 11 is prime, because
+素数である、11を例に挙げると、
 \[10! \bmod 11 = 10,\]
-and the number 12 is not prime, because
+素数でない、12を挙げると、
 \[11! \bmod 12 = 0 \neq 11.\]
 
-Hence, Wilson's theorem can be used to find out
-whether a number is prime. However, in practice, the theorem cannot be
-applied to large values of $n$, because it is difficult
-to calculate values of $(n-1)!$ when $n$ is large.
-
-
+ウィルソンの定理は、ある数が素数であるかどうかを調べるために用いることができますが、$n$が大きいときには、
+$(n - 1) !$の値を計算することは難しいので実際に素数を求めるために使うのは困難です。

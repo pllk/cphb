@@ -1,21 +1,14 @@
-\chapter{Strong connectivity}
+\chapter{強連結 - Strong connectivity}
 
-\index{strongly connected graph}
+\index{強連結グラフ - strongly connected graph}
 
-In a directed graph,
-the edges can be traversed in one direction only,
-so even if the graph is connected,
-this does not guarantee that there would be
-a path from a node to another node.
-For this reason, it is meaningful to define a new concept
-that requires more than connectivity.
+有向グラフは辺は一方向にしか進めないのでために、
+あるグラフ上のあるノードから別のノードへの経路が存在することは保証されません。
+そこでノードとノードに辺があるとは違う新しい概念の定義に意味があります。
 
-A graph is \key{strongly connected}
-if there is a path from any node to all
-other nodes in the graph.
-For example, in the following picture,
-the left graph is strongly connected
-while the right graph is not.
+グラフ内の任意のノードから他のすべてのノードへのパスが存在する場合、
+グラフは\key{強連結 - strongly connected}であるといいます。
+次の図では左のグラフは強連結ですが右のグラフは強連結ではありません。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -41,21 +34,15 @@ while the right graph is not.
 \end{tikzpicture}
 \end{center}
 
-The right graph is not strongly connected
-because, for example, there is no path
-from node 2 to node 1.
+具体的には、右のグラフは2から1へ到達できないために強連結グラフといえません。
 
-\index{strongly connected component}
-\index{component graph}
+\index{強連結成分 - strongly connected component}
+\index{成分グラフ - component graph}
 
-The \key{strongly connected components}
-of a graph divide the graph into strongly connected
-parts that are as large as possible.
-The strongly connected components form an
-acyclic \key{component graph} that represents
-the deep structure of the original graph.
+\key{強連結成分 - strongly connected components}は、
+グラフをできるだけ大きな強連結な部分である成分グラフで、
+元のグラフの閉路を含まない成分グラフから形成されます。
 
-For example, for the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -78,7 +65,7 @@ For example, for the graph
 \path[draw,thick,->] (6) -- (7);
 \end{tikzpicture}
 \end{center}
-the strongly connected components are as follows:
+強連結成分は以下のようになります。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -106,7 +93,7 @@ the strongly connected components are as follows:
 \draw [red,thick,dashed,line width=2pt] (-6.5,0.5) rectangle (-7.5,-0.5);
 \end{tikzpicture}
 \end{center}
-The corresponding component graph is as follows:
+これに対応する成分グラフは次の通りとなります。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (-3,1) {$B$};
@@ -121,15 +108,13 @@ The corresponding component graph is as follows:
 \path[draw,thick,->] (3) -- (4);
 \end{tikzpicture}
 \end{center}
-The components are $A=\{1,2\}$,
-$B=\{3,6,7\}$, $C=\{4\}$ and $D=\{5\}$.
+ここでの成分は $A=\{1,2\}$,
+$B=\{3,6,7\}$, $C=\{4\}$, $D=\{5\}$となります。
 
-A component graph is an acyclic, directed graph,
-so it is easier to process than the original graph.
-Since the graph does not contain cycles,
-we can always construct a topological sort and
-use dynamic programming techniques like those
-presented in Chapter 16.
+この成分グラフは閉路を含まない有向グラフであるため、
+元のグラフよりも処理しやすくなります。
+閉路が含まれないので確実にトポロジカルソートの操作ができ、
+16章で紹介したのような動的計画法を利用することができます。
 
 \section{Kosaraju's algorithm}
 
@@ -138,27 +123,18 @@ presented in Chapter 16.
 \key{Kosaraju's algorithm}\footnote{According to \cite{aho83},
 S. R. Kosaraju invented this algorithm in 1978
 but did not publish it. In 1981, the same algorithm was rediscovered
-and published by M. Sharir \cite{sha81}.} is an efficient
-method for finding the strongly connected components
-of a directed graph.
-The algorithm performs two depth-first searches:
-the first search constructs a list of nodes
-according to the structure of the graph,
-and the second search forms the strongly connected components.
+and published by M. Sharir \cite{sha81}.}
+は有向グラフの強連結成分を効率的に求める方法です。
+このアルゴリズムでは、2回の深さ優先探索を行います。
+１回目の探索で探索でグラ フの構造に従ってノードのリストを構築し、
+２回目の探索で強連結成分を求めます。
 
-\subsubsection{Search 1}
+\subsubsection{1回目の探索 - Search 1}
 
-The first phase of Kosaraju's algorithm constructs
-a list of nodes in the order in which a
-depth-first search processes them.
-The algorithm goes through the nodes,
-and begins a depth-first search at each 
-unprocessed node.
-Each node will be added to the list
-after it has been processed.
+まず、深さ優先探索が処理する順番にノードのリストを構築します。
+未処理の 各ノードで深さ優先探索をし、リストに追加します。
+このグラフの例では、以下の順序でノードが処理されていきます。
 
-In the example graph, the nodes are processed
-in the following order:
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -190,14 +166,11 @@ in the following order:
 \end{tikzpicture}
 \end{center}
 
-The notation $x/y$ means that
-processing the node started
-at time $x$ and finished at time $y$.
-Thus, the corresponding list is as follows:
+$x/y$という表記は$x$に探索が始まり、$y$に探索が終わったことを示します。
 
 \begin{tabular}{ll}
 \\
-node & processing time \\
+ノード番号 & 処理完了時間 \\
 \hline
 4 & 5 \\
 5 & 6 \\
@@ -208,24 +181,18 @@ node & processing time \\
 3 & 14 \\
 \\
 \end{tabular}
-% 
+%
 % In the second phase of the algorithm,
 % the nodes will be processed
 % in reverse order: $[3,7,6,1,2,5,4]$.
 
-\subsubsection{Search 2}
+\subsubsection{2回目の探索 - Search 2}
 
-The second phase of the algorithm
-forms the strongly connected components
-of the graph.
-First, the algorithm reverses every
-edge in the graph.
-This guarantees that during the second search,
-we will always find strongly connected
-components that do not have extra nodes.
+次に強連結成分を求めていきます。
+まず、グラフのすべてのエッジを逆向きに反転させます。
+これによって、余分なノードを持たない強連結成分を必ず見つけることが保証されます。
+辺を反転させると次のようなグラフになります。
 
-After reversing the edges,
-the example graph is as follows:
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
 \node[draw, circle] (1) at (-1,1) {$7$};
@@ -249,17 +216,13 @@ the example graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-After this, the algorithm goes through
-the list of nodes created by the first search,
-in \emph{reverse} order.
-If a node does not belong to a component,
-the algorithm creates a new component
-and starts a depth-first search
-that adds all new nodes found during the search
-to the new component.
-
-In the example graph, the first component
-begins at node 3:
+この後、
+最初の検索で作成されたノードのリストを逆順に捜査します。
+ノードが成分に属さない場合、
+新しい成分を作成してその探索中に見つかったすべての新しいノードを
+新しい成分に追加する深さ優先探索を行います。
+このグラフの例では、最初のコンポーネントはノード3から始まっています
+(最初の探索で最後のノードは3だったことを思い出してください)。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -286,13 +249,12 @@ begins at node 3:
 \end{tikzpicture}
 \end{center}
 
-Note that since all edges are reversed,
-the component does not ''leak'' to other parts in the graph.
+全てのグラフは反転しているため、成分が他の成分にリークすることはありません。
 
 \begin{samepage}
-The next nodes in the list are nodes 7 and 6,
-but they already belong to a component,
-so the next new component begins at node 1:
+リストの次のノードは$7$と$6$ですが、
+これらは既に成分に属しているのでこの成分の探索は完了します。
+次にノード1から新しい成分の探索を開始します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -324,8 +286,8 @@ so the next new component begins at node 1:
 \end{samepage}
 
 \begin{samepage}
-Finally, the algorithm processes nodes 5 and 4
-that create the remaining strongly connected components:
+
+同じように次の成分として5。そして4が処理されます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -356,34 +318,31 @@ that create the remaining strongly connected components:
 \end{center}
 \end{samepage}
 
-The time complexity of the algorithm is $O(n+m)$,
-because the algorithm
-performs two depth-first searches.
+これは深さ優先探索を2回行うだけなので計算量は$O(n+m)$となります。
 
-\section{2SAT problem}
+\section{2-SAT 問題 - 2SAT problem}
 
-\index{2SAT problem}
+\index{2-SAT 問題 - 2SAT problem}
 
-Strong connectivity is also linked with the
-\key{2SAT problem}\footnote{The algorithm presented here was
+強連結は
+\key{2-SAT 問題 - 2SAT problem}\footnote{The algorithm presented here was
 introduced in \cite{asp79}.
 There is also another well-known linear-time algorithm \cite{eve75}
 that is based on backtracking.}.
-In this problem, we are given a logical formula
+と深く関係します。これは次のような式で与えられる問題です。
 \[
 (a_1 \lor b_1) \land (a_2 \lor b_2) \land \cdots \land (a_m \lor b_m),
 \]
-where each $a_i$ and $b_i$ is either a logical variable
+各$a_i$と$b_i$はそれぞれ論理変数
 ($x_1,x_2,\ldots,x_n$)
-or a negation of a logical variable
+あるいは論理変数の否定
 ($\lnot x_1, \lnot x_2, \ldots, \lnot x_n$).
-The symbols ''$\land$'' and ''$\lor$'' denote
-logical operators ''and'' and ''or''.
-Our task is to assign each variable a value
-so that the formula is true, or state
-that this is not possible.
+で示されます。
+ここで使ったシンボルの''$\land$'' と ''$\lor$''
+はそれぞれ論理演算の''and'' と ''or'' です。
 
-For example, the formula
+2-SAT問題はこの解となる答えを求めるか、そのような組み合わせは存在しないと示す問題です。
+
 \[
 L_1 = (x_2 \lor \lnot x_1) \land
       (\lnot x_1 \lor \lnot x_2) \land
@@ -391,7 +350,7 @@ L_1 = (x_2 \lor \lnot x_1) \land
       (\lnot x_2 \lor \lnot x_3) \land
       (x_1 \lor x_4)
 \]
-is true when the variables are assigned as follows:
+という問題を考えると次の割り当て例は条件を満たします。
 
 \[
 \begin{cases}
@@ -402,35 +361,29 @@ x_4 = \textrm{true} \\
 \end{cases}
 \]
 
-However, the formula
+次の式は答えが存在しません。
 \[
 L_2 = (x_1 \lor x_2) \land
       (x_1 \lor \lnot x_2) \land
       (\lnot x_1 \lor x_3) \land
       (\lnot x_1 \lor \lnot x_3)
 \]
-is always false, regardless of how we
-assign the values.
-The reason for this is that we cannot
-choose a value for $x_1$
-without creating a contradiction.
-If $x_1$ is false, both $x_2$ and $\lnot x_2$
-should be true which is impossible,
-and if $x_1$ is true, both $x_3$ and $\lnot x_3$
-should be true which is also impossible.
 
-The 2SAT problem can be represented as a graph
-whose nodes correspond to
-variables $x_i$ and negations $\lnot x_i$,
-and edges determine the connections
-between the variables.
-Each pair $(a_i \lor b_i)$ generates two edges:
-$\lnot a_i \to b_i$ and $\lnot b_i \to a_i$.
-This means that if $a_i$ does not hold,
-$b_i$ must hold, and vice versa.
+これはどのような割り当てを行ったとしても$x_1$に矛盾が生じてしまうのです。
 
-The graph for the formula $L_1$ is:
-\\
+$x_1$がfalseなら$x_2$ と $\lnot x_2$がtrueでないといけませんがこれは不可能です。
+$x_1$がtrueなら$x_2$ と $\lnot x_2$がfalseでないといけませんがこれも不可能です。
+
+2-SAT問題はノードが次の対応するグラフとして表現することができます。
+論理変数$x_i$とその否定$\lnot x_i$のノードがあり、
+エッジは変数間の接続だとします。
+それぞれの$(a_i \lor b_i)$は次の2つのエッジを生成します。
+$\lnot a_i \to b_i$と$\lnot b_i \to a_i$です。。
+これは、$a_i$ が成立しない場合に$b_i$ は必ず成立し、
+その逆も必ず成立することを意味します。
+
+$L_1$をグラフで表現すると次のようになります。
+
 \begin{center}
 \begin{tikzpicture}[scale=1.0,minimum size=2pt]
 \node[draw, circle, inner sep=1.3pt] (1) at (1,2) {$\lnot x_3$};
@@ -441,7 +394,7 @@ The graph for the formula $L_1$ is:
 \node[draw, circle] (6) at (7,2) {$x_4$};
 \node[draw, circle, inner sep=1.3pt] (7) at (5,0) {$\lnot x_2$};
 \node[draw, circle] (8) at (7,0) {$x_3$};
- 
+
 \path[draw,thick,->] (1) -- (4);
 \path[draw,thick,->] (4) -- (2);
 \path[draw,thick,->] (2) -- (1);
@@ -454,7 +407,7 @@ The graph for the formula $L_1$ is:
 \path[draw,thick,->] (7) -- (5);
 \end{tikzpicture}
 \end{center}
-And the graph for the formula $L_2$ is:
+同じように$L_2$も次のように表現できます。
 \\
 \begin{center}
 \begin{tikzpicture}[scale=1.0,minimum size=2pt]
@@ -476,47 +429,24 @@ And the graph for the formula $L_2$ is:
 \end{tikzpicture}
 \end{center}
 
-The structure of the graph tells us whether
-it is possible to assign the values
-of the variables so
-that the formula is true.
-It turns out that this can be done
-exactly when there are no nodes
-$x_i$ and $\lnot x_i$ such that
-both nodes belong to the
-same strongly connected component.
-If there are such nodes,
-the graph contains
-a path from $x_i$ to $\lnot x_i$
-and also a path from $\lnot x_i$ to $x_i$,
-so both $x_i$ and $\lnot x_i$ should be true
-which is not possible.
+グラフを用いて式が真となるように変数の値を割り当てることが可能かどうかを調べられます。
+ある強連結成分に論理変数$x_i$とその否定$\lnot x_i$が同時に所属しなければ、
+この式を成立させる組み合わせが存在するといえます。
+逆に両ノードが同じ強連結成分に所属す
+る時、その２つの変数は同時に満たされなければならず、
+成立する組み合わせがないといえます。
+この条件によって式 $L_1$ のグラフはその解が存在することがわかり、
+$L_2$は成立する組み合わせがないことがわかります。
 
-In the graph of the formula $L_1$
-there are no nodes $x_i$ and $\lnot x_i$
-such that both nodes 
-belong to the same strongly connected component,
-so a solution exists.
-In the graph of the formula $L_2$
-all nodes belong to the same strongly connected component,
-so a solution does not exist.
+解が存在する場合は成分グラフをトポロジカルソートの逆順に見ていくことで、
+変数の割り当てを求めることができます。
+各ステップで、未処理成分に含まれる処理をしていきます。
+ある成分をみて値が割り当て割れていなければ、
+成分内の変数に値が割り当てられていない場合、
+その値は成分内の値に従って決定します。
+もし割り当てが決まっているならばなにもしません。
 
-If a solution exists, the values for the variables
-can be found by going through the nodes of the
-component graph in a reverse topological sort order.
-At each step, we process a component 
-that does not contain edges that lead to an
-unprocessed component.
-If the variables in the component
-have not been assigned values,
-their values will be determined
-according to the values in the component,
-and if they already have values,
-they remain unchanged.
-The process continues until each variable
-has been assigned a value.
-
-The component graph for the formula $L_1$ is as follows:
+例えば、$L_1$のグラフのトポロジカルソート後の接続は以下のようになっていました。
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
 \node[draw, circle] (1) at (0,0) {$A$};
@@ -530,34 +460,27 @@ The component graph for the formula $L_1$ is as follows:
 \end{tikzpicture}
 \end{center}
 
-The components are
+各成分は次の通りです。
 $A = \{\lnot x_4\}$,
 $B = \{x_1, x_2, \lnot x_3\}$,
-$C = \{\lnot x_1, \lnot x_2, x_3\}$ and
-$D = \{x_4\}$.
-When constructing the solution,
-we first process the component $D$
-where $x_4$ becomes true.
-After this, we process the component $C$
-where $x_1$ and $x_2$ become false
-and $x_3$ becomes true.
-All variables have been assigned values,
-so the remaining components $A$ and $B$
-do not change the variables.
+$C = \{\lnot x_1, \lnot x_2, x_3\}$,
+$D = \{x_4\}$。
 
-Note that this method works, because the
-graph has a special structure:
-if there are paths from node $x_i$ to node $x_j$
-and from node $x_j$ to node $\lnot x_j$,
-then node $x_i$ never becomes true.
-The reason for this is that there is also
-a path from node $\lnot x_j$ to node $\lnot x_i$,
-and both $x_i$ and $x_j$ become false.
+この解となる割り当てを決める時、
+まず$x_4$がtrueとなる成分$D$を処理します。
+その後、構成要素 $C$を処理し、$x_1$ と $x_2$ がfalse、$x_3$ がtrueとなります。
 
-\index{3SAT problem}
+これで全ての論理変数に値が割り当てられたので、
+残りの構成要素$A$と$B$は割り当てを変更しません。
 
-A more difficult problem is the \key{3SAT problem},
-where each part of the formula is of the form
-$(a_i \lor b_i \lor c_i)$.
-This problem is NP-hard, so no efficient algorithm
-for solving the problem is known.
+このような割り当てができるのはグラフが特殊な構造だからです。
+ノード$x_i$  からノード$x_j$  へ、
+ノード$x_j$からノード$\lnot x_j$ へのパスがある場合、
+ノード$x_i$ は決して真にはなりません。
+この理由は、ノード
+ $\lnot x_j$からノード$\lnot x_i$　そして $x_i$ and $x_j$  の両方が偽になるからです。
+
+ \index{3SAT problem}
+
+さらに難しい問題として、式の各部分が (ai ∨ bi ∨ ci ) のような形になる3-SAT
+問題があります。ただしこの問題はNP困難であり、この問題を解く効率的なアルゴリズムは知られていない。

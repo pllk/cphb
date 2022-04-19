@@ -1,70 +1,49 @@
-\chapter{Bit manipulation}
+\chapter{ビット操作 - Bit manipulation}
 
-All data in computer programs is internally stored as bits,
-i.e., as numbers 0 and 1.
-This chapter discusses the bit representation
-of integers, and shows examples
-of how to use bit operations.
-It turns out that there are many uses for
-bit manipulation in algorithm programming.
+コンピュータの中のデータは0と1で扱われています。
+この章では，整数のビット表現について説明し，ビット演算の使用例を見ていきます。
+ビット操作には、アルゴリズムにおいて多くの使い道があることがわかります。
 
-\section{Bit representation}
+\section{ビット表現 - Bit representation}
 
-\index{bit representation}
+\index{ビット表現 - bit representation}
 
-In programming, an $n$ bit integer is internally
-stored as a binary number that consists of $n$ bits.
-For example, the C++ type \texttt{int} is
-a 32-bit type, which means that every \texttt{int}
-number consists of 32 bits.
+プログラミングでは、
+$n$ビットの整数は内部的に$n$ビットからなる2進数として格納されています。
+例えばC++の\texttt{int} 型は32ビット型であり、すべての\texttt{int}型数値は32ビットで構成されます。
 
-Here is the bit representation of
-the \texttt{int} number 43: 
+以下に、\texttt{int} 型で43という数値をビットで表現した例を記載します。
 \[00000000000000000000000000101011\]
-The bits in the representation are indexed from right to left.
-To convert a bit representation $b_k \cdots b_2 b_1 b_0$ into a number,
-we can use the formula
+表現中のビットは右から左へインデックスされています。
+ビット表現$b_k \cdots b_2 b_1 b_0$  を数値に変換するには、次の式を使用します。
 \[b_k 2^k + \ldots + b_2 2^2 + b_1 2^1 + b_0 2^0.\]
-For example,
+例の場合次のようになります。
 \[1 \cdot 2^5 + 1 \cdot 2^3 + 1 \cdot 2^1 + 1 \cdot 2^0 = 43.\]
 
-The bit representation of a number is either
-\key{signed} or \key{unsigned}.
-Usually a signed representation is used,
-which means that both negative and positive
-numbers can be represented.
-A signed variable of $n$ bits can contain any
-integer between $-2^{n-1}$ and $2^{n-1}-1$.
-For example, the \texttt{int} type in C++ is
-a signed type, so an \texttt{int} variable can contain any
-integer between $-2^{31}$ and $2^{31}-1$.
+また、\key{signed}と\key{unsigned}という符号つき、符号なしの型があります。
+通常は符号つきが使われることが多く、
+$n$ビットのデータ型であれば
+$-2^{n-1}$ から $2^{n-1}-1$
+が扱えます。
+C++で単に\texttt{int}とすると符号つきと扱われて
+$-2^{31}$ から $2^{31}-1$が利用できます。
 
-The first bit in a signed representation
-is the sign of the number (0 for nonnegative numbers
-and 1 for negative numbers), and
-the remaining $n-1$ bits contain the magnitude of the number.
-\key{Two's complement} is used, which means that the
-opposite number of a number is calculated by first
-inverting all the bits in the number,
-and then increasing the number by one.
+ここでビットの最初は符号に使われます。0の場合は非負で1の場合は負を示します。
+そして、残りの$n-1$ビットで数値が表現されます。
+負を表現するときには\key{2の補数表現 - Two's complement}が使われます。
+これは元の数に対して足し合わせると桁が１つ増え、それ以外が0となるような数値となります。
 
-For example, the bit representation of
-the \texttt{int} number $-43$ is
+\texttt{int} で表現した $-43$ は次のようになります。
 \[11111111111111111111111111010101.\]
 
-In an unsigned representation, only nonnegative
-numbers can be used, but the upper bound for the values is larger.
-An unsigned variable of $n$ bits can contain any
-integer between $0$ and $2^n-1$.
-For example, in C++, an \texttt{unsigned int} variable
-can contain any integer between $0$ and $2^{32}-1$.
 
-There is a connection between the
-representations:
-a signed number $-x$ equals an unsigned number $2^n-x$.
-For example, the following code shows that
-the signed number $x=-43$ equals the unsigned
-number $y=2^{32}-43$:
+符号なし表現では、非負の数しか使えない代わりに値の上限は大きくなります。
+$n$ビットの符号なし変数には$0$から$2^n-1$.までの任意の整数を格納することができます。
+例えば、C++では\texttt{unsigned int}変数は、$0$から$2^{32}-1$の間の任意の整数を含むことができます。
+
+符号付き数$-x$は符号なし数$2^n-x$に等しくなります。
+例えば、次のコードは、符号付き$x = -43$が符号なし$y=2^{32}-43$に等しいことを確かめています。
+
 \begin{lstlisting}
 int x = -43;
 unsigned int y = x;
@@ -72,13 +51,11 @@ cout << x << "\n"; // -43
 cout << y << "\n"; // 4294967253
 \end{lstlisting}
 
-If a number is larger than the upper bound
-of the bit representation, the number will overflow.
-In a signed representation,
-the next number after $2^{n-1}-1$ is $-2^{n-1}$,
-and in an unsigned representation,
-the next number after $2^n-1$ is $0$.
-For example, consider the following code:
+数値がビット表現の上限より大きくなった時にオーバーフローが発生します。
+符号付きでは$2^{n-1}-1$の次の数値は$-2^{n-1}$ですが、
+符号なしでは$2^n-1$の次の数値は$0$となることに注意します。
+
+例えば、次のコードを考えてみましょう。
 \begin{lstlisting}
 int x = 2147483647
 cout << x << "\n"; // 2147483647
@@ -86,25 +63,19 @@ x++;
 cout << x << "\n"; // -2147483648
 \end{lstlisting}
 
-Initially, the value of $x$ is $2^{31}-1$.
-This is the largest value that can be stored
-in an \texttt{int} variable,
-so the next number after $2^{31}-1$ is $-2^{31}$.
+初期状態では、$x$の値は$2^{31}-1$で、
+これは\texttt{int}型変数に格納できる最大の値 なので、$2^{31}-1$ の次の数は $-2^{31}$となるのです。
 
-
-\section{Bit operations}
+\section{ビット操作 - Bit operations}
 
 \newcommand\XOR{\mathbin{\char`\^}}
 
-\subsubsection{And operation}
+\subsubsection{AND演算 - And operation}
 
-\index{and operation}
+\index{AND演算 - and operation}
 
-The \key{and} operation $x$ \& $y$ produces a number
-that has one bits in positions where both
-$x$ and $y$ have one bits.
-For example, $22$ \& $26$ = 18, because
-
+\key{and} 演算 $x$ \& $y$は、各のビットが1である場合に1であるような数値を返します。
+$22$ \& $26$ = 18となります。これは
 \begin{center}
 \begin{tabular}{rrr}
 & 10110 & (22)\\
@@ -114,21 +85,19 @@ For example, $22$ \& $26$ = 18, because
 \end{tabular}
 \end{center}
 
-Using the and operation, we can check if a number
-$x$ is even because
-$x$ \& $1$ = 0 if $x$ is even, and
-$x$ \& $1$ = 1 if $x$ is odd.
-More generally, $x$ is divisible by $2^k$
-exactly when $x$ \& $(2^k-1)$ = 0.
+であるためです。and演算は偶奇を判別するのにも利用できます。
+$x$ \& $1$=0の時に$x$は偶数で
+$x$ \& $1$=1の時に$x$は奇数です。
+一般的に、$x$が$2^k$で割り切れるという状態は、
+$x$ \& $(2^k-1)$ = 0である状態です。
 
-\subsubsection{Or operation}
+\subsubsection{OR演算 - Or operation}
 
-\index{or operation}
+\index{OR演算 - or operation}
 
-The \key{or} operation $x$ | $y$ produces a number
-that has one bits in positions where at least one
-of $x$ and $y$ have one bits.
-For example, $22$ | $26$ = 30, because
+\key{or}演算 $x$ | $y$は、
+どちらかが1出ある場合に1であるような数値を返します。
+$22$ | $26$ = 30となります。これは以下のように示せるためです。
 
 \begin{center}
 \begin{tabular}{rrr}
@@ -139,14 +108,12 @@ For example, $22$ | $26$ = 30, because
 \end{tabular}
 \end{center}
 
-\subsubsection{Xor operation}
+\subsubsection{XOR演算 - Xor operation}
 
-\index{xor operation}
+\index{XOR演算 - xor operation}
 
-The \key{xor} operation $x$ $\XOR$ $y$ produces a number
-that has one bits in positions where exactly one
-of $x$ and $y$ have one bits.
-For example, $22$ $\XOR$ $26$ = 12, because
+\key{xor}演算 $x$ $\XOR$ $y$は1である数が1つであるときに1となる値を返します。
+$22$ $\XOR$ $26$ = 12となります。これは以下のように示せるためです。
 
 \begin{center}
 \begin{tabular}{rrr}
@@ -157,22 +124,17 @@ $\XOR$ & 11010 & (26) \\
 \end{tabular}
 \end{center}
 
-\subsubsection{Not operation}
+\subsubsection{NOT演算 - Not operation}
 
-\index{not operation}
+\index{NOT演算 - not operation}
 
-The \key{not} operation \textasciitilde$x$
-produces a number where all the bits of $x$
-have been inverted.
-The formula \textasciitilde$x = -x-1$ holds,
-for example, \textasciitilde$29 = -30$.
+\key{not} 演算は\textasciitilde$x$と表され、
+全てのビットを反転させた数値を返します。
+\textasciitilde$x = -x-1$であり、例えば、
+\textasciitilde$29 = -30$です。
 
-The result of the not operation at the bit level
-depends on the length of the bit representation,
-because the operation inverts all bits.
-For example, if the numbers are 32-bit
-\texttt{int} numbers, the result is as follows:
-
+ビットレベルでのnot操作の結果は、その型の長さに依存することに注意しましょう。
+ビット表現では、演算によってすべてのビットが反転されるからです。例えば、32ビットの\texttt{int}型数値の場合、結果は次のようになります。
 \begin{center}
 \begin{tabular}{rrrr}
 $x$ & = & 29 &   00000000000000000000000000011101 \\
@@ -180,34 +142,28 @@ $x$ & = & 29 &   00000000000000000000000000011101 \\
 \end{tabular}
 \end{center}
 
-\subsubsection{Bit shifts}
+\subsubsection{ビットシフト - Bit shifts}
 
-\index{bit shift}
+\index{ビットシフト - bit shift}
 
-The left bit shift $x < < k$ appends $k$
-zero bits to the number,
-and the right bit shift $x > > k$
-removes the $k$ last bits from the number.
-For example, $14 < < 2 = 56$,
-because $14$ and $56$ correspond to 1110 and 111000.
-Similarly, $49 > > 3 = 6$,
-because $49$ and $6$ correspond to 110001 and 110.
+左ビットシフト$x < < k$は最後に$k$個の0を追加し、
+右ビットシフト$x > > k$は最後の$k$ビットを削除する操作です。
+$14$ と $56$ は 1110 と 111000 で表現でき、$14 < < 2 = 56$です。
+同様に
+$49$ と $6$ は 110001 と 110であるので $49 > > 3 = 6$です。
 
-Note that $x < < k$
-corresponds to multiplying $x$ by $2^k$,
-and $x > > k$
-corresponds to dividing $x$ by $2^k$
-rounded down to an integer.
+また$x < < k$
+という操作は$x$を $2^k$倍することに等しく、
+$x > > k$
+という操作は
+という操作は$x$を $2^k$で割る(切り捨て)ことに等しくなります。
 
-\subsubsection{Applications}
+\subsubsection{応用 - Applications}
 
-A number of the form $1 < < k$ has a one bit
-in position $k$ and all other bits are zero,
-so we can use such numbers to access single bits of numbers.
-In particular, the $k$th bit of a number is one
-exactly when $x$ \& $(1 < < k)$ is not zero.
-The following code prints the bit representation
-of an \texttt{int} number $x$:
+$1 < < k$は$k$の位置に$1$ビットがあり他のビットはすべて0な整数を示すので
+ある1ビットにアクセスすることができます。
+特に、$x$ \& $(1 < < k)$は0でないとき、数値のk番目のビットが1だと判定できます。
+例えば、次のコードは、\texttt{int}型の数値xのビット表現を表示することが出来ます。
 
 \begin{lstlisting}
 for (int i = 31; i >= 0; i--) {
@@ -216,48 +172,40 @@ for (int i = 31; i >= 0; i--) {
 }
 \end{lstlisting}
 
-It is also possible to modify single bits
-of numbers using similar ideas.
-For example, the formula $x$ | $(1 < < k)$
-sets the $k$th bit of $x$ to one,
-the formula
+また、同様に、
+数値の1ビットを変更することが可能です。
+例えば、$x$ | $(1 < < k)$は$x$の$k$ビット目を1にし、
 $x$ \& \textasciitilde $(1 < < k)$
-sets the $k$th bit of $x$ to zero,
-and the formula
-$x$ $\XOR$ $(1 < < k)$
-inverts the $k$th bit of $x$.
 
-The formula $x$ \& $(x-1)$ sets the last
-one bit of $x$ to zero,
-and the formula $x$ \& $-x$ sets all the
-one bits to zero, except for the last one bit.
-The formula $x$ | $(x-1)$
-inverts all the bits after the last one bit.
-Also note that a positive number $x$ is
-a power of two exactly when $x$ \& $(x-1) = 0$.
+$x$ の $k$ ビット目を 0 にし
+$x$ $\XOR$ $(1 < < k)$は
+$x$の$k$番目のビット目を反転させます。
 
-\subsubsection*{Additional functions}
+$x$ \& $(x-1)$は$x$の最後の1ビットを0にし、
+$x$ \& $-x$は最後の1ビットを除き、すべての1ビットを0にします。
+$x$ | $(x-1)$は、最後の1ビット以降のビットをすべて反転させます。
+また、正の数$x$は、$x$ \& $(x-1) = 0$のとき2の累乗です。
 
-The g++ compiler provides the following
-functions for counting bits:
+\subsubsection*{拡張機能 - Additional functions}
 
+C++は以下のような組み込み関数を持っています。
 \begin{itemize}
 \item
 $\texttt{\_\_builtin\_clz}(x)$:
-the number of zeros at the beginning of the number
+数値の先頭のゼロの個数
 \item
 $\texttt{\_\_builtin\_ctz}(x)$:
-the number of zeros at the end of the number
+数値の末尾にあるゼロの個数
 \item
 $\texttt{\_\_builtin\_popcount}(x)$:
-the number of ones in the number
+数値に含まれる1の数
 \item
 $\texttt{\_\_builtin\_parity}(x)$:
-the parity (even or odd) of the number of ones
+1の数のパリティ（偶奇） 
 \end{itemize}
 \begin{samepage}
 
-The functions can be used as follows:
+例を示します。
 \begin{lstlisting}
 int x = 5328; // 00000000000000000001010011010000
 cout << __builtin_clz(x) << "\n"; // 19
@@ -267,35 +215,26 @@ cout << __builtin_parity(x) << "\n"; // 1
 \end{lstlisting}
 \end{samepage}
 
-While the above functions only support \texttt{int} numbers,
-there are also \texttt{long long} versions of
-the functions available with the suffix \texttt{ll}.
+これらは\texttt{int}のみに対応した関数です。
+\texttt{long long}に対応した関数も用意されており、最後に\texttt{ll}を付けて使用することができます。
 
-\section{Representing sets}
+\section{集合の表現 - Representing sets}
 
-Every subset of a set
-$\{0,1,2,\ldots,n-1\}$
-can be represented as an $n$ bit integer
-whose one bits indicate which
-elements belong to the subset.
-This is an efficient way to represent sets,
-because every element requires only one bit of memory,
-and set operations can be implemented as bit operations.
+集合$\{0,1,2,\ldots,n-1\}$のすべての部分集合は、
+1ビットがどの要素が部分集合に属するかを示す$n$ビットの整数として表現することができます。
+各要素が1ビットのメモリしか必要とせず集合演算をビット演算として実装できるため、これは集合を表現する効率的な方法といえます。
 
-For example, since \texttt{int} is a 32-bit type,
-an \texttt{int} number can represent any subset
-of the set $\{0,1,2,\ldots,31\}$.
-The bit representation of the set $\{1,3,4,8\}$ is
+例えば、\texttt{int}は32ビット型なので、\texttt{int}型数値は集合
+$\{0,1,2,\ldots,31\}$の任意の部分集合を表現出来ます。
+集合$\{1,3,4,8\}$のビット表現としては
 \[00000000000000000000000100011010,\]
-which corresponds to the number $2^8+2^4+2^3+2^1=282$.
+となり、$2^8+2^4+2^3+2^1=282$という数に対応します。
 
-\subsubsection{Set implementation}
+\subsubsection{集合の実装 - Set implementation}
 
-The following code declares an \texttt{int}
-variable $x$ that can contain
-a subset of $\{0,1,2,\ldots,31\}$.
-After this, the code adds the elements 1, 3, 4 and 8
-to the set and prints the size of the set.
+以下のコードは \texttt{int}型の$x$
+で表現できる$\{0,1,2,\ldots,31\}$の操作を意味します。
+次のコードは1, 3, 4, 8を集合にいれてそのサイズを表示しています。
 \begin{lstlisting}
 int x = 0;
 x |= (1<<1);
@@ -304,8 +243,7 @@ x |= (1<<4);
 x |= (1<<8);
 cout << __builtin_popcount(x) << "\n"; // 4
 \end{lstlisting}
-Then, the following code prints all
-elements that belong to the set:
+そして、次のコードは、その集合に属するすべての要素を表示します
 \begin{lstlisting}
 for (int i = 0; i < 32; i++) {
     if (x&(1<<i)) cout << i << " ";
@@ -313,9 +251,9 @@ for (int i = 0; i < 32; i++) {
 // output: 1 3 4 8
 \end{lstlisting}
 
-\subsubsection{Set operations}
+\subsubsection{集合への操作 - Set operations}
 
-Set operations can be implemented as follows as bit operations:
+ビットを使って集合の操作を以下のように行うことが出来ます。
 
 \begin{center}
 \begin{tabular}{lll}
@@ -328,9 +266,8 @@ difference & $a \setminus b$ & $a$ \& (\textasciitilde$b$) \\
 \end{tabular}
 \end{center}
 
-For example, the following code first constructs
-the sets $x=\{1,3,4,8\}$ and $y=\{3,6,8,9\}$,
-and then constructs the set $z = x \cup y = \{1,3,4,6,8,9\}$:
+次の操作は$x=\{1,3,4,8\}$ と $y=\{3,6,8,9\}$を作成したのちに、
+$z = x \cup y = \{1,3,4,6,8,9\}$を計算します。
 
 \begin{lstlisting}
 int x = (1<<1)|(1<<3)|(1<<4)|(1<<8);
@@ -339,18 +276,16 @@ int z = x|y;
 cout << __builtin_popcount(z) << "\n"; // 6
 \end{lstlisting}
 
-\subsubsection{Iterating through subsets}
+\subsubsection{反復作業 - Iterating through subsets}
 
-The following code goes through
-the subsets of $\{0,1,\ldots,n-1\}$:
+以下の操作は$\{0,1,\ldots,n-1\}$の部分集合全てへの処理ができます。
 
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
     // process subset b
 }
 \end{lstlisting}
-The following code goes through
-the subsets with exactly $k$ elements:
+ちょうど$k$個の要素を含む部分集合に関する処理は次のように行えます。
 \begin{lstlisting}
 for (int b = 0; b < (1<<n); b++) {
     if (__builtin_popcount(b) == k) {
@@ -358,8 +293,7 @@ for (int b = 0; b < (1<<n); b++) {
     }
 }
 \end{lstlisting}
-The following code goes through the subsets
-of a set $x$:
+次のコードは集合$x$の部分集合を操作します。
 \begin{lstlisting}
 int b = 0;
 do {
@@ -369,43 +303,32 @@ do {
 
 \section{Bit optimizations}
 
-Many algorithms can be optimized using
-bit operations.
-Such optimizations do not change the
-time complexity of the algorithm,
-but they may have a large impact
-on the actual running time of the code.
-In this section we discuss examples
-of such situations.
+多くのアルゴリズムで、ビット演算を利用して最適化することができます。
+このような最適化はアルゴリズムの時間計算量のオーダーを変えるものではありませんが、
+コードの実際の実行時間に大きな影響を与える可能性があります。
+このセクションでは、そのような状況の例について見ていきます。
 
-\subsubsection{Hamming distances}
+\subsubsection{ハミング距離 - Hamming distances}
 
-\index{Hamming distance}
-The \key{Hamming distance}
-$\texttt{hamming}(a,b)$ between two
-strings $a$ and $b$ of equal length is
-the number of positions where the strings differ.
-For example,
+\index{ハミング距離 - Hamming distance}
+\key{ハミング距離 - Hamming distance}
+$\texttt{hamming}(a,b)$は
+文字列$a$, $b$の文字が異なる箇所の数です。例えば、以下の通りです。
 \[\texttt{hamming}(01101,11001)=2.\]
 
-Consider the following problem: Given
-a list of $n$ bit strings, each of length $k$,
-calculate the minimum Hamming distance
-between two strings in the list.
-For example, the answer for $[00111,01101,11110]$
-is 2, because
+長さ$k$の$n$個のビット列のリストがあるとき、リスト中の2つの文字列間の最小のハミング距離を計算しなさいという問題を考えます。
+例えば、$[00111, 01101, 11110]$の答えは以下の通り2です。
 \begin{itemize}[noitemsep]
-\item $\texttt{hamming}(00111,01101)=2$,
-\item $\texttt{hamming}(00111,11110)=3$, and
-\item $\texttt{hamming}(01101,11110)=3$.
+\item $\texttt{hamming}(00111,01101)=2$
+\item $\texttt{hamming}(00111,11110)=3$
+\item $\texttt{hamming}(01101,11110)=3$
 \end{itemize}
 
-A straightforward way to solve the problem is
-to go through all pairs of strings and calculate
-their Hamming distances,
-which yields an $O(n^2 k)$ time algorithm.
-The following function can be used to
-calculate distances:
+この問題を解く簡単な方法は、
+すべての文字列のペアを調べて、そのハミング距離を計算することで、
+$O(n^2 k)$で実行可能です。
+
+ハミング距離の計算には以下の関数を用いることができます。
 \begin{lstlisting}
 int hamming(string a, string b) {
     int d = 0;
@@ -416,40 +339,28 @@ int hamming(string a, string b) {
 }
 \end{lstlisting}
 
-However, if $k$ is small, we can optimize the code
-by storing the bit strings as integers and
-calculating the Hamming distances using bit operations.
-In particular, if $k \le 32$, we can just store
-the strings as \texttt{int} values and use the
-following function to calculate distances:
+しかし、$k$が小さい場合は、
+ビット列を整数として格納し、ビット演算でハミング距離を計算することで、コードを最適化することができます。
+$k \le 32$と仮定すると文字列を\texttt{int}として格納し、
+以下の関数で距離を計算できます。
 \begin{lstlisting}
 int hamming(int a, int b) {
     return __builtin_popcount(a^b);
 }
 \end{lstlisting}
-In the above function, the xor operation constructs
-a bit string that has one bits in positions
-where $a$ and $b$ differ.
-Then, the number of bits is calculated using
-the \texttt{\_\_builtin\_popcount} function.
+上記の関数では、xor演算により、
+$a$,$b$が異なる位置に1ビットを持つビット列が構成されます。
+そして、そのビット数を\texttt{\_\_builtin\_popcount}関数でカウントします。
 
-To compare the implementations, we generated
-a list of 10000 random bit strings of length 30.
-Using the first approach, the search took
-13.5 seconds, and after the bit optimization,
-it only took 0.5 seconds.
-Thus, the bit optimized code was almost
-30 times faster than the original code.
+実装を比較するために、長さ30のランダムなビット列10000個のリストを生成した。
+最初のアプローチでは、検索に13.5秒かかりましたが、
+ビット最適化した関数のアプローチでは0.5秒しかかかりませんでした。
+このように、ビット最適化後のコードは、元のコードに比べて約30倍高速になりました
 
-\subsubsection{Counting subgrids}
+\subsubsection{サブグリッドのカウント - Counting subgrids}
 
-As another example, consider the
-following problem:
-Given an $n \times n$ grid whose
-each square is either black (1) or white (0),
-calculate the number of subgrids
-whose all corners are black.
-For example, the grid
+各マスが黒(1)か白(0)である$n \times n$個のグリッドがあるときに、すべての角が黒であるサブグリッドの数を計算する問題を考えます。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 \fill[black] (1,1) rectangle (2,2);
@@ -463,7 +374,7 @@ For example, the grid
 \draw (0,0) grid (5,5);
 \end{tikzpicture}
 \end{center}
-contains two such subgrids:
+次のようなサブグリッドが存在します。
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 \fill[black] (1,1) rectangle (2,2);
@@ -491,64 +402,53 @@ contains two such subgrids:
 \end{tikzpicture}
 \end{center}
 
-There is an $O(n^3)$ time algorithm for solving the problem:
-go through all $O(n^2)$ pairs of rows and for each pair
-$(a,b)$ calculate the number of columns that contain a black
-square in both rows in $O(n)$ time.
-The following code assumes that $\texttt{color}[y][x]$
-denotes the color in row $y$ and column $x$:
+この問題を解く$O(n^3)$時間のアルゴリズムは簡単です。
+行のすべての$O(n^2)$組を調べ、各組$(a, b)$について、
+両方の行で黒マスを含む列の数を$O(n)$時間で算出します。
+以下のコードでは、$\texttt{color}[y][x]$が $y$ 行 $x$ 列の色を表すと仮定しています。
 \begin{lstlisting}
 int count = 0;
 for (int i = 0; i < n; i++) {
     if (color[a][i] == 1 && color[b][i] == 1) count++;
 }
 \end{lstlisting}
-Then, those columns
-account for $\texttt{count}(\texttt{count}-1)/2$ subgrids with black corners,
-because we can choose any two of them to form a subgrid.
+そして、$\texttt{count}(\texttt{count}-1)/2$個の黒い角を持つサブグリッドが答えです。
+サブグリッドを形成するために、そのうちの任意の2個を選んでいるためです。
 
-To optimize this algorithm, we divide the grid into blocks
-of columns such that each block consists of $N$
-consecutive columns. Then, each row is stored as
-a list of $N$-bit numbers that describe the colors
-of the squares. Now we can process $N$ columns at the same time
-using bit operations. In the following code,
-$\texttt{color}[y][k]$ represents
-a block of $N$ colors as bits.
+このアルゴリズムを最適化するために、
+グリッドを列のブロックに分割し、
+各ブロックが連続する$N$個の列で構成されるようにしましょう。
+そして、各列は、正方形の色を表す$N$ビット数のリストとして格納します。
+これで、$N$個の列をビット演算で同時に処理できるようになりました。
+以下のコードでは、$\texttt{color}[y][k]$が$N$個の色のブロックをビットで表しています。
+
 \begin{lstlisting}
 int count = 0;
 for (int i = 0; i <= n/N; i++) {
     count += __builtin_popcount(color[a][i]&color[b][i]);
 }
 \end{lstlisting}
-The resulting algorithm works in $O(n^3/N)$ time.
+これは$O(n^3/N)$で動作します。
 
-We generated a random grid of size $2500 \times 2500$
-and compared the original and bit optimized implementation.
-While the original code took $29.6$ seconds,
-the bit optimized version only took $3.1$ seconds
-with $N=32$ (\texttt{int} numbers) and $1.7$ seconds
-with $N=64$ (\texttt{long long} numbers).
+サイズ$2500 \times 2500$のランダムなグリッドを生成し、
+オリジナルとビット最適化された実装を比較しました。
+オリジナルのコードが$29.6$秒かかったのに対し、
+ビット最適化版は$N = 32$ (int 数)で$3.1$秒、$N = 64$ (long 長数)で$1.7$ 秒で済みました。
 
-\section{Dynamic programming}
+\section{動的計画法へのビット演算の利用 - Dynamic programming}
 
-Bit operations provide an efficient and convenient
-way to implement dynamic programming algorithms
-whose states contain subsets of elements,
-because such states can be stored as integers.
-Next we discuss examples of combining
-bit operations and dynamic programming.
+ビット演算は動的計画法においても要素の部分集合を含む状態を整数で保存できるため、
+効率的で便利な実装出来ることがあります。
+ビット演算と動的計画法の組み合わせの例について見ていきましょう。
 
-\subsubsection{Optimal selection}
+\subsubsection{最適な選択 - Optimal selection}
 
-As a first example, consider the following problem:
-We are given the prices of $k$ products
-over $n$ days, and we want to buy each product
-exactly once.
-However, we are allowed to buy at most one product
-in a day.
-What is the minimum total price?
-For example, consider the following scenario ($k=3$ and $n=8$):
+最初の例として、次の問題を考えます。
+$n$日間にわたる$k$個の商品の価格が与えられており、
+各商品をちょうど1回買いたい。
+しかし1日に買うことができるのは1個までである。最小の合計金額は？
+例えば，次のようなシナリオを考えることにします。（$k = 3$, $n = 8$）．
+
 \begin{center}
 \begin{tikzpicture}[scale=.65]
     \draw (0, 0) grid (8,3);
@@ -566,7 +466,7 @@ For example, consider the following scenario ($k=3$ and $n=8$):
         {\node at (\x+0.5,0.5) {\v};}
 \end{tikzpicture}
 \end{center}
-In this scenario, the minimum total price is $5$:
+このシナリオでは$5$が答えです。
 \begin{center}
 \begin{tikzpicture}[scale=.65]
     \fill [color=lightgray] (1, 1) rectangle (2, 2);
@@ -588,47 +488,43 @@ In this scenario, the minimum total price is $5$:
 \end{tikzpicture}
 \end{center}
 
-Let $\texttt{price}[x][d]$ denote the price of product $x$
-on day $d$.
-For example, in the above scenario $\texttt{price}[2][3] = 7$.
-Then, let $\texttt{total}(S,d)$ denote the minimum total
-price for buying a subset $S$ of products by day $d$.
-Using this function, the solution to the problem is
-$\texttt{total}(\{0 \ldots k-1\},n-1)$.
+例えば，上のシナリオでは price[2][3] = 7です。
+この関数を用いると，問題の解は total({0 ... k - 1}, n - 1) となります。
+空集合を買うにはコストがかからないのでtotal((/), d) = 0、
+初日に商品を1つ買う方法は1つなのでtotal({x}, 0) = price[x][0] として良いです。
+そうすると、次のような漸化式をが利用できます。
 
-First, $\texttt{total}(\emptyset,d) = 0$,
-because it does not cost anything to buy an empty set,
-and $\texttt{total}(\{x\},0) = \texttt{price}[x][0]$,
-because there is one way to buy one product on the first day.
-Then, the following recurrence can be used:
+ここでは$\texttt{price}[x][d]$は$d$での$x$の価格を示すとしましょう。
+例えば，上のシナリオでは$\texttt{price}[2][3] = 7$です。
+$\texttt{total}(S,d)$を、$d$日目時点での部分集合$S$を買うための最小のコストとしましょう。
+これを用いると$\texttt{total}(\{0 \ldots k-1\},n-1)$が求めたい値となります。
+
+まず、空集合を買うにはコストがかからないので$\texttt{total}(\emptyset,d) = 0$として良いです。
+初日に商品を1つ買う方法は1つなので$\texttt{total}(\{x\},0) = \texttt{price}[x][0]$です。
+そうすると、次のような漸化式となります。
 \begin{equation*}
 \begin{split}
 \texttt{total}(S,d) = \min( & \texttt{total}(S,d-1), \\
 & \min_{x \in S} (\texttt{total}(S \setminus x,d-1)+\texttt{price}[x][d]))
 \end{split}
 \end{equation*}
-This means that we either do not buy any product on day $d$
-or buy a product $x$ that belongs to $S$.
-In the latter case, we remove $x$ from $S$ and add the
-price of $x$ to the total price.
+これは、$d$日にどの商品も買わないか、$S$に属する商品$x$を買うかのどちらかを意味します。
+後者の場合、$x$を$S$から外し、$x$の価格を合計価格に加算します。
 
-The next step is to calculate the values of the function
-using dynamic programming.
-To store the function values, we declare an array
+では動的計画法で関数の値を計算するための配列を用意しましょう。
 \begin{lstlisting}
 int total[1<<K][N];
 \end{lstlisting}
-where $K$ and $N$ are suitably large constants.
-The first dimension of the array corresponds to a bit
-representation of a subset.
+ここで、$K$と$N$は適当な大きさの定数です。
+配列の最初の次元は，部分集合のビット表現に対応します。
 
-First, the cases where $d=0$ can be processed as follows:
+まず、$d=0$の場合は、以下のように処理することができます。
 \begin{lstlisting}
 for (int x = 0; x < k; x++) {
     total[1<<x][0] = price[x][0];
 }
 \end{lstlisting}
-Then, the recurrence translates into the following code:
+そして次のように書くことが出来ます。
 \begin{lstlisting}
 for (int d = 1; d < n; d++) {
     for (int s = 0; s < (1<<k); s++) {
@@ -642,32 +538,22 @@ for (int d = 1; d < n; d++) {
     }
 }
 \end{lstlisting}
-The time complexity of the algorithm is $O(n 2^k k)$.
+これは$O(n 2^k k)$で動作します。
 
-\subsubsection{From permutations to subsets}
+\subsubsection{順列からの集合 - From permutations to subsets}
 
-Using dynamic programming, it is often possible
-to change an iteration over permutations into
-an iteration over subsets\footnote{This technique was introduced in 1962
-by M. Held and R. M. Karp \cite{hel62}.}.
-The benefit of this is that
-$n!$, the number of permutations,
-is much larger than $2^n$, the number of subsets.
-For example, if $n=20$, then
-$n! \approx 2.4 \cdot 10^{18}$ and $2^n \approx 10^6$.
-Thus, for certain values of $n$,
-we can efficiently go through the subsets but not through the permutations.
+動的計画法を用いると、
+順列の繰り返しを部分集合の繰り返しに変更することができる場合があります。\footnote{This technique was introduced in 1962
+by M. Held and R. M. Karp \cite{hel62}.}
+順列の組み合わせ数である$n!$はとても大きな数となり、部分集合の組み合わせ数である$2^n$ よりもずっと大きくなるので非常に有効な方法です。
+たとえば、$n = 20$として$n! \approx 2.4 \cdot 10^{18}$ であり、 $2^n \approx 10^6$です。
+したがって、ある種の$n$の値に対して、部分集合は効率的に調べられるが、順列を調べることは困難です。
 
-As an example, consider the following problem:
-There is an elevator with maximum weight $x$,
-and $n$ people with known weights
-who want to get from the ground floor
-to the top floor.
-What is the minimum number of rides needed
-if the people enter the elevator in an optimal order?
+最大重量$x$のエレベータがあり、
+1階から最上階まで行きたい体重が既知の$n$人がいるとする問題を考えます。
+人々が最適な順序でエレベーターに乗り込む場合、必要な最小の乗車回数は何回ですか？
 
-For example, suppose that $x=10$, $n=5$
-and the weights are as follows:
+例えば、$x＝10$、$n＝5$で、重みは以下の通りだとしましょう。
 \begin{center}
 \begin{tabular}{ll}
 person & weight \\
@@ -679,61 +565,40 @@ person & weight \\
 4 & 6 \\
 \end{tabular}
 \end{center}
-In this case, the minimum number of rides is 2.
-One optimal order is $\{0,2,3,1,4\}$,
-which partitions the people into two rides:
-first $\{0,2,3\}$ (total weight 10),
-and then $\{1,4\}$ (total weight 9).
+この場合、最小の解は2です。最適な順序の1つは
+$\{0,2,3,1,4\}$で、これは人々を2分割し、最初に
+$\{0,2,3\}$（合計重量10）、次に
+$\{1,4\}$(合計重量9)で運べば良いです。
 
-The problem can be easily solved in $O(n! n)$ time
-by testing all possible permutations of $n$ people.
-However, we can use dynamic programming to get
-a more efficient $O(2^n n)$ time algorithm.
-The idea is to calculate for each subset of people
-two values: the minimum number of rides needed and
-the minimum weight of people who ride in the last group.
+この問題は、$n$人の可能な順列をすべてテストすることにより、$O(n! n)$時間で簡単に解くことがでます。
+しかし、動的計画法を使って、より効率的な$O(2^n n)$時間のアルゴリズムを得ることもできます。
+そのアイデアは、人の各サブセットについて、必要な最小乗車数と最後のグループで乗車する人々の最小重量という2つの値を計算することです。
 
-Let $\texttt{weight}[p]$ denote the weight of
-person $p$.
-We define two functions:
-$\texttt{rides}(S)$ is the minimum number of
-rides for a subset $S$,
-and $\texttt{last}(S)$ is the minimum weight
-of the last ride.
-For example, in the above scenario
-\[ \texttt{rides}(\{1,3,4\})=2 \hspace{10px} \textrm{and}
+ここで、$\texttt{weight}[p]$を人物 $p$ の重みとしましょう。
+また、部分集合 $S$ の最小乗車数を$\texttt{rides}(S)$ 、最後の乗車の重みを $\texttt{last}(S)$  とします。
+
+例えば、上記のシナリオの場合は以下のようになります。
+\[ \texttt{rides}(\{1,3,4\})=2 \hspace{10px} \textrm{かつ}
 \hspace{10px} \texttt{last}(\{1,3,4\})=5,\]
-because the optimal rides are $\{1,4\}$ and $\{3\}$,
-and the second ride has weight 5.
-Of course, our final goal is to calculate the value
-of $\texttt{rides}(\{0 \ldots n-1\})$.
+なぜなら最適な乗り物は$\{1,4\}$ と $\{3\}$であり、
+2番目の乗り物は重み5だからである。もちろん、我々の最終目標は$\texttt{rides}(\{0 \ldots n-1\})$の値を計算することです。
 
-We can calculate the values
-of the functions recursively and then apply
-dynamic programming.
-The idea is to go through all people
-who belong to $S$ and optimally
-choose the last person $p$ who enters the elevator.
-Each such choice yields a subproblem
-for a smaller subset of people.
-If $\texttt{last}(S \setminus p)+\texttt{weight}[p] \le x$,
-we can add $p$ to the last ride.
-Otherwise, we have to reserve a new ride
-that initially only contains $p$.
-
-To implement dynamic programming,
-we declare an array
+関数の値を再帰的に計算し、
+動的計画法を適用すればよいです。
+これは、$S$に属するすべての人を調べて、
+最後にエレベーターに入る人$p$を最適に選ぶというアルゴリズムです。
+そのような選択のたびに，より小さな人々の部分集合に対する部分問題が生じます。
+$\texttt{last}(S \setminus p)+\texttt{weight}[p] \le x$ならば、$p$ を最後に乗る人に加えることができます。
+そうでなければ、最初はpしか乗っていない新しいカゴを確保しないとなりません。動的計画法を実装するために、次のような配列を用意します。
 \begin{lstlisting}
 pair<int,int> best[1<<N];
 \end{lstlisting}
-that contains for each subset $S$
-a pair $(\texttt{rides}(S),\texttt{last}(S))$.
-We set the value for an empty group as follows:
+各分割集合 $S$ に対して$(\texttt{rides}(S),\texttt{last}(S))$のペアを含みます。
+空のグループに対する値を以下のように設定します。
 \begin{lstlisting}
 best[0] = {1,0};
 \end{lstlisting}
-Then, we can fill the array as follows:
-
+そして次のように計算ができます。
 \begin{lstlisting}
 for (int s = 1; s < (1<<n); s++) {
     // initial value: n+1 rides are needed
@@ -754,22 +619,20 @@ for (int s = 1; s < (1<<n); s++) {
     }
 }
 \end{lstlisting}
-Note that the above loop guarantees that
-for any two subsets $S_1$ and $S_2$
-such that $S_1 \subset S_2$, we process $S_1$ before $S_2$.
-Thus, the dynamic programming values are calculated in the
-correct order.
+このループは、$S_1$ and $S_2$のような任意の2つの部分集合$S_1$ と$S_2$
+に対して、$S_2$ の前に$S_1$ を処理することを保証できます。
+動的計画法は正しい順序で値を計算されます。
 
-\subsubsection{Counting subsets}
+\subsubsection{サブセットのカウントCounting subsets}
 
-Our last problem in this chapter is as follows:
-Let $X=\{0 \ldots n-1\}$, and each subset $S \subset X$
-is assigned an integer $\texttt{value}[S]$.
-Our task is to calculate for each $S$
+最後の問題です。
+$X=\{0 \ldots n-1\}$として$S \subset X$
+ここで各サブセットには$\texttt{value}[S]$の価値割り当てられているとします。
+私たちのタスクは全ての$S$に対して以下を計算することです。
 \[\texttt{sum}(S) = \sum_{A \subset S} \texttt{value}[A],\]
-i.e., the sum of values of subsets of $S$.
+つまり、$S$の部分集合の価値総和です。
 
-For example, suppose that $n=3$ and the values are as follows:
+例えば、$n=3$の時、以下のように値を割り当てます。
 \begin{multicols}{2}
 \begin{itemize}
 \item $\texttt{value}[\emptyset] = 3$
@@ -782,7 +645,7 @@ For example, suppose that $n=3$ and the values are as follows:
 \item $\texttt{value}[\{0,1,2\}] = 3$
 \end{itemize}
 \end{multicols}
-In this case, for example,
+このケースでは、以下のように計算できます。
 \begin{equation*}
 \begin{split}
 \texttt{sum}(\{0,2\}) &= \texttt{value}[\emptyset]+\texttt{value}[\{0\}]+\texttt{value}[\{2\}]+\texttt{value}[\{0,2\}] \\ 
@@ -790,51 +653,43 @@ In this case, for example,
 \end{split}
 \end{equation*}
 
-Because there are a total of $2^n$ subsets,
-one possible solution is to go through all
-pairs of subsets in $O(2^{2n})$ time.
-However, using dynamic programming, we
-can solve the problem in $O(2^n n)$ time.
-The idea is to focus on sums where the
-elements that may be removed from $S$ are restricted.
+サブセットは全部$2^n$あるので、
+1つの可能な解決策は、サブセットのすべてのペアを$O(2^{2n})$時間で処理することです。
+動的計画法を用いると、$O(2^n n)$時間で解くことができます。
+このアイデアは、$S$から削除される可能性のある要素が制限されているということです。
 
-Let $\texttt{partial}(S,k)$ denote the sum of
-values of subsets of $S$ with the restriction
-that only elements $0 \ldots k$
-may be removed from $S$.
-For example,
+例えば，Sから要素0 ... kだけを取り除いてもよいという制限のあるSの部分集合の値の総和をpartial(S, k)とする．
+ここで、$\texttt{partial}(S,k)$を、
+集合Sから$0 \ldots k$取り除いて良いものとしましょう。
 \[\texttt{partial}(\{0,2\},1)=\texttt{value}[\{2\}]+\texttt{value}[\{0,2\}],\]
-because we may only remove elements $0 \ldots 1$.
-We can calculate values of \texttt{sum} using
-values of \texttt{partial}, because
+
+というのは、要素$0 \ldots 1$だけを削除することができるからです
+ここで、\texttt{sum}は\texttt{partial}を使って表現できます。
 \[\texttt{sum}(S) = \texttt{partial}(S,n-1).\]
-The base cases for the function are
+初期値は
 \[\texttt{partial}(S,-1)=\texttt{value}[S],\]
-because in this case no elements can be removed from $S$.
-Then, in the general case we can use the following recurrence:
+とします。この場合、$S$から要素を削除することはできないからです。
+一般的な場合、以下の再帰で表現できます。
 \begin{equation*}
     \texttt{partial}(S,k) = \begin{cases}
                \texttt{partial}(S,k-1) & k \notin S \\
                \texttt{partial}(S,k-1) + \texttt{partial}(S \setminus \{k\},k-1) & k \in S
            \end{cases}
 \end{equation*}
-Here we focus on the element $k$.
-If $k \in S$, we have two options: we may either keep $k$ in $S$
-or remove it from $S$.
+ここで $k$に注目します。
+ $k \in S$の場合、$S$から$k$消すか残すかを選択することが出来ます。
 
-There is a particularly clever way to implement the
-calculation of sums. We can declare an array
+ここで和の計算を実装するのに特に賢い方法があります。
 \begin{lstlisting}
 int sum[1<<N];
 \end{lstlisting}
-that will contain the sum of each subset.
-The array is initialized as follows:
+各サブセットの合計を含むことになります。配列は以下のように初期化されます。
 \begin{lstlisting}
 for (int s = 0; s < (1<<n); s++) {
     sum[s] = value[s];
 }
 \end{lstlisting}
-Then, we can fill the array as follows:
+次のように処理を行います。
 \begin{lstlisting}
 for (int k = 0; k < n; k++) {
     for (int s = 0; s < (1<<n); s++) {
@@ -842,8 +697,6 @@ for (int k = 0; k < n; k++) {
     }
 }
 \end{lstlisting}
-This code calculates the values of $\texttt{partial}(S,k)$
-for $k=0 \ldots n-1$ to the array \texttt{sum}.
-Since $\texttt{partial}(S,k)$ is always based on
-$\texttt{partial}(S,k-1)$, we can reuse the array
-\texttt{sum}, which yields a very efficient implementation.
+このコードは、$k=0 \ldots n-1$の
+$\texttt{partial}(S,k)$の値を配列の和に計算します。
+$\texttt{partial}(S,k)$は常に$\texttt{partial}(S,k-1)$に基づいているので、配列\texttt{sum}を再利用でき、非常に効率的に動作します。

@@ -1,31 +1,23 @@
-\chapter{Matrices}
+\chapter{行列 - Matrices}
 
-\index{matrix}
+\index{行列 - matrix}
 
-A \key{matrix} is a mathematical concept
-that corresponds to a two-dimensional array
-in programming. For example,
+\key{行列(matrix)} は、プログラミングにおける2次元配列に相当する数学の用語です。
 \[
-A = 
+A =
  \begin{bmatrix}
   6 & 13 & 7 & 4 \\
   7 & 0 & 8 & 2 \\
   9 & 5 & 4 & 18 \\
  \end{bmatrix}
 \]
-is a matrix of size $3 \times 4$, i.e.,
-it has 3 rows and 4 columns.
-The notation $[i,j]$ refers to
-the element in row $i$ and column $j$
-in a matrix.
-For example, in the above matrix,
-$A[2,3]=8$ and $A[3,1]=9$.
+はサイズ$3 \times 4$の行列であり、3行4列の行列と呼ばれます。
+$[i, j]$という表記がよく用いられ、行列の$i$行$j$列を意味します。
+例えば、上の行列では、$A[2,3]=8$ and $A[3,1]=9$です。
+行列の特殊な例として、大きさが1次元の行列である\key{ベクトル}があります
+つまり、$n \times 1$の行列のことで以下の様になります。
+\index{ベクトル - vector}
 
-\index{vector}
-
-A special case of a matrix is a \key{vector}
-that is a one-dimensional matrix of size $n \times 1$.
-For example,
 \[
 V =
 \begin{bmatrix}
@@ -34,15 +26,15 @@ V =
 5 \\
 \end{bmatrix}
 \]
-is a vector that contains three elements.
 
-\index{transpose}
+これは3つの要素からなるベクトルです。
 
-The \key{transpose} $A^T$ of a matrix $A$
-is obtained when the rows and columns of $A$
-are swapped, i.e., $A^T[i,j]=A[j,i]$:
+\index{転置行列 - transpose}
+
+\key{転置行列 - transpose} $A^T$ は $A$の行と列が入れ替わったものです。
+つまり、$A^T[i,j]=A[j,i]$になります。例をみてみましょう。
 \[
-A^T = 
+A^T =
  \begin{bmatrix}
   6 & 7 & 9 \\
   13 & 0 & 5 \\
@@ -51,15 +43,13 @@ A^T =
  \end{bmatrix}
 \]
 
-\index{square matrix}
+\index{正方行列 - square matrix}
 
-A matrix is a \key{square matrix} if it
-has the same number of rows and columns.
-For example, the following matrix is a
-square matrix:
+\key{正方行列 - square matrix}行と列が同じ数の行列は
+正方行列と呼ばれます。例を示します。
 
 \[
-S = 
+S =
  \begin{bmatrix}
   3 & 12 & 4  \\
   5 & 9 & 15  \\
@@ -67,15 +57,12 @@ S =
  \end{bmatrix}
 \]
 
-\section{Operations}
+\section{行列の演算 - Operations}
 
-The sum $A+B$ of matrices $A$ and $B$
-is defined if the matrices are of the same size.
-The result is a matrix where each element
-is the sum of the corresponding elements
-in $A$ and $B$.
+行列$A$と$B$の和$A+B$は、
+行列が同じ大きさである場合に操作できます。
+$A$と$B$の同じ行と列の要素の和が答えとなります。
 
-For example,
 \[
  \begin{bmatrix}
   6 & 1 & 4 \\
@@ -98,9 +85,8 @@ For example,
  \end{bmatrix}.
 \]
 
-Multiplying a matrix $A$ by a value $x$ means
-that each element of $A$ is multiplied by $x$.
-For example,
+行列$A$に対する$x$での乗算は
+各要素に$x$をかけたものとなります。
 \[
  2 \cdot \begin{bmatrix}
   6 & 1 & 4 \\
@@ -118,23 +104,18 @@ For example,
  \end{bmatrix}.
 \]
 
-\subsubsection{Matrix multiplication}
+\subsubsection{行列の乗算 - Matrix multiplication}
 
-\index{matrix multiplication}
+\index{行列の乗算 - matrix multiplication}
 
-The product $AB$ of matrices $A$ and $B$
-is defined if $A$ is of size $a \times n$
-and $B$ is of size $n \times b$, i.e.,
-the width of $A$ equals the height of $B$.
-The result is a matrix of size $a \times b$
-whose elements are calculated using the formula
+行列$A$と$B$の積$AB$は，$A$がサイズ$a \times n$であり、
+Bがサイズ$n \times b$の時に定義されます。
+言い換えれば、$A$の幅が$B$の高さに等しい時、と言えます。
 \[
 AB[i,j] = \sum_{k=1}^n A[i,k] \cdot B[k,j].
 \]
 
-The idea is that each element of $AB$
-is a sum of products of elements of $A$ and $B$
-according to the following picture:
+$AB$の各要素は、Aの要素の積の和であるという考え方をします。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -151,8 +132,6 @@ according to the following picture:
 \draw[thick,red,line width=2pt] (6.5,1.5) circle (0.4);
 \end{tikzpicture}
 \end{center}
-
-For example,
 
 \[
  \begin{bmatrix}
@@ -179,18 +158,20 @@ For example,
  \end{bmatrix}.
 \]
 
+行列の乗算において$A(BC)=(AB)C$は成立します。
+ただし、可換ではないので、$AB=BA$は成立するとは限りません。
+
 Matrix multiplication is associative,
 so $A(BC)=(AB)C$ holds,
 but it is not commutative,
 so $AB = BA$ does not usually hold.
 
-\index{identity matrix}
+\index{単位行列 - identity matrix}
 
-An \key{identity matrix} is a square matrix
-where each element on the diagonal is 1
-and all other elements are 0.
-For example, the following matrix
-is the $3 \times 3$ identity matrix:
+\key{単位行列 - identity matrix}とは、対角線上の各要素が1で、
+それ以外の要素を0とする正方行列です。
+例えば、次の行列は、$3 \times 3$の単位行列です
+
 \[
  I = \begin{bmatrix}
   1 & 0 & 0 \\
@@ -200,8 +181,7 @@ is the $3 \times 3$ identity matrix:
 \]
 
 \begin{samepage}
-Multiplying a matrix by an identity matrix
-does not change it. For example,
+行列に単位行列をかけても行列は変わりません。
 \[
  \begin{bmatrix}
   1 & 0 & 0 \\
@@ -239,31 +219,20 @@ does not change it. For example,
 \]
 \end{samepage}
 
-Using a straightforward algorithm,
-we can calculate the product of
-two $n \times n$ matrices
-in $O(n^3)$ time.
-There are also more efficient algorithms
-for matrix multiplication\footnote{The first such
-algorithm was Strassen's algorithm,
-published in 1969 \cite{str69},
-whose time complexity is $O(n^{2.80735})$;
-the best current algorithm \cite{gal14}
-works in $O(n^{2.37286})$ time.},
-but they are mostly of theoretical interest
-and such algorithms are not necessary
-in competitive programming.
+基本的なアルゴリズムを用いると、２つの$n \times n$の行列の積は$O(n^3)$ で計算できます。
+行列の乗算にはより効率的なアルゴリズムがあります。しかし、それは数学的なものであり、競技プログラミングでは使われません。
+\footnote{
+最も最初のこの工夫は1969年に発表されたStrassenのアルゴリズム\cite{str69}で、
+$O(n^{2.80735})$です。現在の最も優れたアルゴリズム \cite{gal14}は$O(n^{2.37286})$です。}
 
+\subsubsection{行列の累乗 - Matrix power}
 
-\subsubsection{Matrix power}
+\index{行列の累乗 - matrix power}
 
-\index{matrix power}
-
-The power $A^k$ of a matrix $A$ is defined
-if $A$ is a square matrix.
-The definition is based on matrix multiplication:
+$A^k$ は$A$が正方行列の時に定義されます。
+これは次の様になります。
 \[ A^k = \underbrace{A \cdot A \cdot A \cdots A}_{\textrm{$k$ times}} \]
-For example,
+例をあげます。
 
 \[
  \begin{bmatrix}
@@ -287,7 +256,7 @@ For example,
   33 & 114 \\
  \end{bmatrix}.
 \]
-In addition, $A^0$ is an identity matrix. For example,
+また、$A^0$は単位行列とします。
 \[
  \begin{bmatrix}
   2 & 5 \\
@@ -299,9 +268,7 @@ In addition, $A^0$ is an identity matrix. For example,
  \end{bmatrix}.
 \]
 
-The matrix $A^k$ can be efficiently calculated
-in $O(n^3 \log k)$ time using the
-algorithm in Chapter 21.2. For example,
+$A^k$ は21.2のアルゴリズムを使えば$O(n^3 \log k)$で求められます。
 \[
  \begin{bmatrix}
   2 & 5 \\
@@ -317,36 +284,28 @@ algorithm in Chapter 21.2. For example,
  \end{bmatrix}^4.
 \]
 
-\subsubsection{Determinant}
+\subsubsection{行列式 - Determinant}
 
-\index{determinant}
+\index{行列式 - determinant}
 
-The \key{determinant} $\det(A)$ of a matrix $A$
-is defined if $A$ is a square matrix.
-If $A$ is of size $1 \times 1$,
-then $\det(A)=A[1,1]$.
-The determinant of a larger matrix is
-calculated recursively using the formula \index{cofactor}
+\key{行列式 - determinant}は、Aが正方行列である場合に定義されます。
+Aが$1 \times 1$の大きさであれば、$\det(A)=A[1,1]$となります。
+より大きな行列の行列式 は、次の式を用いて再帰的に計算されます
+この時に\index{余因子 - cofactor}が用いられいます
 \[\det(A)=\sum_{j=1}^n A[1,j] C[1,j],\]
-where $C[i,j]$ is the \key{cofactor} of $A$
-at $[i,j]$.
-The cofactor is calculated using the formula
+$C[i,j]$は$A$における$[i,j]$の余因子で次の様に示されます。
 \[C[i,j] = (-1)^{i+j} \det(M[i,j]),\]
-where $M[i,j]$ is obtained by removing
-row $i$ and column $j$ from $A$.
-Due to the coefficient $(-1)^{i+j}$ in the cofactor,
-every other determinant is positive
-and negative.
-For example,
+$M[i,j]$は A から $i$ 行 $j$ 列を削除して得られる行列です。
+係数$(-1)^{i+j}$により符号は毎回入れ替わります。
 \[
 \det(
  \begin{bmatrix}
   3 & 4 \\
   1 & 6 \\
  \end{bmatrix}
-) = 3 \cdot 6 - 4 \cdot 1 = 14 
+) = 3 \cdot 6 - 4 \cdot 1 = 14
 \]
-and
+であり、
 \[
 \det(
  \begin{bmatrix}
@@ -354,7 +313,7 @@ and
   5 & 1 & 6 \\
   7 & 2 & 4 \\
  \end{bmatrix}
-) = 
+) =
 2 \cdot
 \det(
  \begin{bmatrix}
@@ -378,19 +337,12 @@ and
 ) = 81.
 \]
 
-\index{inverse matrix}
+\index{逆行列 - inverse matrix}
 
-The determinant of $A$ tells us
-whether there is an \key{inverse matrix}
-$A^{-1}$ such that $A \cdot A^{-1} = I$,
-where $I$ is an identity matrix.
-It turns out that $A^{-1}$ exists
-exactly when $\det(A) \neq 0$,
-and it can be calculated using the formula
+$A$の行列式は、$A \cdot A^{-1} = I$($I$は単位行列)となる逆行列$A^{-1}$が存在するかどうかを教えてくれます。
+$A^{-1}$は$\det(A) \neq 0$のときに正確に存在し、次式で計算できます。
 
 \[A^{-1}[i,j] = \frac{C[j,i]}{det(A)}.\]
-
-For example,
 
 \[
 \underbrace{
@@ -419,32 +371,24 @@ For example,
 }_{I}.
 \]
 
-\section{Linear recurrences}
+\section{線型回帰 - Linear recurrences}
 
-\index{linear recurrence}
+\index{線形漸化式 - linear recurrence}
 
-A \key{linear recurrence}
-is a function $f(n)$
-whose initial values are
-$f(0),f(1),\ldots,f(k-1)$
-and larger values
-are calculated recursively using the formula
+\key{線形漸化式 - linear recurrence}
+は$f(n)$に対して$f(0),f(1),\ldots,f(k-1)$などの初期値が与えられている時に、
+大きな$n$である
 \[f(n) = c_1 f(n-1) + c_2 f(n-2) + \ldots + c_k f (n-k),\]
-where $c_1,c_2,\ldots,c_k$ are constant coefficients.
+を求めたいとします。ここで $c_1,c_2,\ldots,c_k$ は定数です。
 
-Dynamic programming can be used to calculate
-any value of $f(n)$ in $O(kn)$ time by calculating
-all values of $f(0),f(1),\ldots,f(n)$ one after another.
-However, if $k$ is small, it is possible to calculate
-$f(n)$ much more efficiently in $O(k^3 \log n)$
-time using matrix operations.
+動的計画法では、$f(0),f(1),\ldots,f(n)$を順次計算することで、任意の$f(n)$を $O(kn)$で計算できる。
+ですが、$k$ が小さい場合には行列演算を用いると、$O(k^3 \log n)$で求められ効率的なことがあります。
 
-\subsubsection{Fibonacci numbers}
+\subsubsection{フィボナッチ数 - Fibonacci numbers}
 
-\index{Fibonacci number}
+\index{フィボナッチ数 - Fibonacci number}
 
-A simple example of a linear recurrence is the
-following function that defines the Fibonacci numbers:
+線形漸化式としてよくあるのはフィボナッチ数です。
 \[
 \begin{array}{lcl}
 f(0) & = & 0 \\
@@ -452,14 +396,11 @@ f(1) & = & 1 \\
 f(n) & = & f(n-1)+f(n-2) \\
 \end{array}
 \]
-In this case, $k=2$ and $c_1=c_2=1$.
+$k=2$ の時、 $c_1=c_2=1$です。
 
 \begin{samepage}
-To efficiently calculate Fibonacci numbers,
-we represent the
-Fibonacci formula as a
-square matrix $X$ of size $2 \times 2$,
-for which the following holds:
+フィボナッチ数の計算を効率的に行うために、
+フィボナッチ式をサイズ$2 \times 2$の 正方行列$X$で表現すると、次のようになります。
 \[ X \cdot
  \begin{bmatrix}
   f(i) \\
@@ -471,13 +412,12 @@ for which the following holds:
   f(i+2) \\
  \end{bmatrix}
  \]
-Thus, values $f(i)$ and $f(i+1)$ are given as
-''input'' for $X$,
-and $X$ calculates values $f(i+1)$ and $f(i+2)$
-from them.
-It turns out that such a matrix is
+$f(i)$ と $f(i+1)$は
+ $X$に対する''入力''で
+$X$から$f(i+1)$ と $f(i+2)$
+を求めていきます。
 
-\[ X = 
+\[ X =
  \begin{bmatrix}
   0 & 1 \\
   1 & 1 \\
@@ -485,7 +425,7 @@ It turns out that such a matrix is
 \]
 \end{samepage}
 \noindent
-For example,
+例としては、
 \[
  \begin{bmatrix}
   0 & 1 \\
@@ -517,7 +457,7 @@ For example,
   f(7) \\
  \end{bmatrix}.
 \]
-Thus, we can calculate $f(n)$ using the formula
+こうして$f(n)$を計算できます。
 \[
  \begin{bmatrix}
   f(n) \\
@@ -540,18 +480,13 @@ X^n \cdot
   1 \\
  \end{bmatrix}.
 \]
-The value of $X^n$ can be calculated in
-$O(\log n)$ time,
-so the value of $f(n)$ can also be calculated
-in $O(\log n)$ time.
+$X^n$ の値は $O(\log n)$  時間で計算できるため、$f(n)$ の値も $O(\log n)$  時間で計算できます。
 
-\subsubsection{General case}
+\subsubsection{一般化 - General case}
 
-Let us now consider the general case where
-$f(n)$ is any linear recurrence.
-Again, our goal is to construct a matrix $X$
-for which
 
+では$f(n)$が任意の線形漸化式である一般的なケースを考えていきます。
+目的は、以下のような行列 $X$ を構成することです。
 \[ X \cdot
  \begin{bmatrix}
   f(i) \\
@@ -567,7 +502,7 @@ for which
   f(i+k) \\
  \end{bmatrix}.
 \]
-Such a matrix is
+この様な行列は次の様になります。
 \[
 X =
  \begin{bmatrix}
@@ -579,16 +514,12 @@ X =
   c_k & c_{k-1} & c_{k-2} & c_{k-3} & \cdots & c_1 \\
  \end{bmatrix}.
 \]
-In the first $k-1$ rows, each element is 0
-except that one element is 1.
-These rows replace $f(i)$ with $f(i+1)$,
-$f(i+1)$ with $f(i+2)$, and so on.
-The last row contains the coefficients of the recurrence
-to calculate the new value $f(i+k)$.
-
+最初の$k - 1$行は、1つの要素が1であることを除いて、
+各要素が0である。これらの 行は、$f (i)$ を$f (i + 1)$、$f (i + 1)$ を$f (i + 2)$、
+と置き換えていきます。
+最後の行には、 新しい値$f(i+k)$を計算するための漸化式の係数が含まれます。
 \begin{samepage}
-Now, $f(n)$ can be calculated in
-$O(k^3 \log n)$ time using the formula
+さて、$f (n)$ は次の式を用いて $O(k^3 \log n)$  時間で計算できます。
 \[
  \begin{bmatrix}
   f(n) \\
@@ -607,17 +538,14 @@ X^n \cdot
 \]
 \end{samepage}
 
-\section{Graphs and matrices}
+\section{グラフと行列 - Graphs and matrices}
 
-\subsubsection{Counting paths}
+\subsubsection{パスのカウント - Counting paths}
 
-The powers of an adjacency matrix of a graph
-have an interesting property.
-When $V$ is an adjacency matrix of an unweighted graph,
-the matrix $V^n$ contains the numbers of paths of
-$n$ edges between the nodes in the graph.
+グラフの隣接行列の累乗には、興味深い性質があります。
+$V$が重みなしグラフの隣接行列であるとき、
+行列 $V^n$ は、グラフのノード間の $n$ 本のエッジのパス の数を含んでいます。
 
-For example, for the graph
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -637,7 +565,7 @@ For example, for the graph
 \path[draw,thick,->,>=latex] (6) -- (5);
 \end{tikzpicture}
 \end{center}
-the adjacency matrix is
+この場合の隣接行列は、
 \[
 V= \begin{bmatrix}
   0 & 0 & 0 & 1 & 0 & 0 \\
@@ -648,7 +576,7 @@ V= \begin{bmatrix}
   0 & 0 & 1 & 0 & 1 & 0 \\
  \end{bmatrix}.
 \]
-Now, for example, the matrix
+ここで、次を考えます。
 \[
 V^4= \begin{bmatrix}
   0 & 0 & 1 & 1 & 1 & 0 \\
@@ -661,25 +589,24 @@ V^4= \begin{bmatrix}
 \]
 contains the numbers of paths of 4 edges
 between the nodes.
-For example, $V^4[2,5]=2$,
-because there are two paths of 4 edges
-from node 2 to node 5:
+これは、パスが4のノードを示します。
+例えば、$V^4[2,5]=2$ですが、
+これはノード2とノード5の長さ4のパスは2つであることを示します。
 $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$
-and 
+と
 $2 \rightarrow 6 \rightarrow 3 \rightarrow 2 \rightarrow 5$.
+です。
 
-\subsubsection{Shortest paths}
+\subsubsection{最短経路 - Shortest paths}
 
-Using a similar idea in a weighted graph,
-we can calculate for each pair of nodes the minimum
-length of a path
-between them that contains exactly $n$ edges.
-To calculate this, we have to define matrix multiplication
-in a new way, so that we do not calculate the numbers
-of paths but minimize the lengths of paths.
+重み付きグラフも同様の考え方で、
+ノードのペアごとに、
+その間にちょうど $n$本のエッジを含むパスの最小の長さを計算することができます。
+これを計算するためには、パスの数を計算するのではなくてパスの長さを最小にするように、
+行列の乗算を新たに定義する必要があります。
 
 \begin{samepage}
-As an example, consider the following graph:
+以下の例を考えます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -701,10 +628,9 @@ As an example, consider the following graph:
 \end{center}
 \end{samepage}
 
-Let us construct an adjacency matrix where
-$\infty$ means that an edge does not exist,
-and other values correspond to edge weights.
-The matrix is
+
+$\infty$は辺が存在しないとし、各パスの重さを隣接グラフで表現します。
+
 \[
 V= \begin{bmatrix}
   \infty & \infty & \infty & 4 & \infty & \infty \\
@@ -716,22 +642,18 @@ V= \begin{bmatrix}
  \end{bmatrix}.
 \]
 
-Instead of the formula
+ここで、
 \[
 AB[i,j] = \sum_{k=1}^n A[i,k] \cdot B[k,j]
 \]
-we now use the formula
+という乗算を以下の様に定義します。
 \[
 AB[i,j] = \min_{k=1}^n A[i,k] + B[k,j]
 \]
-for matrix multiplication, so we calculate
-a minimum instead of a sum,
-and a sum of elements instead of a product.
-After this modification,
-matrix powers correspond to
-shortest paths in the graph.
 
-For example, as
+の代わりに最小値を、積の代わりに要素の和を計算します。
+これだけで、行列の累乗はグラフの最短経路に対応します。
+
 \[
 V^4= \begin{bmatrix}
   \infty & \infty & 10 & 11 & 9 & \infty \\
@@ -742,23 +664,20 @@ V^4= \begin{bmatrix}
   \infty & \infty & 12 & 13 & 11 & \infty \\
  \end{bmatrix},
 \]
-we can conclude that the minimum length of a path
-of 4 edges
-from node 2 to node 5 is 8.
-Such a path is
+
+ノード2からノード5までの4辺のパスの最小長は8です。
+このようなパスは、
 $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$.
 
-\subsubsection{Kirchhoff's theorem}
+\subsubsection{キルヒホッフの定理 - Kirchhoff's theorem}
 
-\index{Kirchhoff's theorem}
-\index{spanning tree}
+\index{キルヒホッフの定理 - Kirchhoff's theorem}
+\index{全域木 - spanning tree}
 
-\key{Kirchhoff's theorem}
+\key{キルヒホッフの定理 - Kirchhoff's theorem}
 %\footnote{G. R. Kirchhoff (1824--1887) was a German physicist.}
-provides a way
-to calculate the number of spanning trees
-of a graph as a determinant of a special matrix.
-For example, the graph
+グラフの全域木の数を特殊な行列の行列式として計算する方法です。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -772,7 +691,8 @@ For example, the graph
 \path[draw,thick,-] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-has three spanning trees:
+これは3つの全域木があります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1a) at (1,3) {$1$};
@@ -807,12 +727,11 @@ has three spanning trees:
 \end{tikzpicture}
 \end{center}
 \index{Laplacean matrix}
-To calculate the number of spanning trees,
-we construct a \key{Laplacean matrix} $L$,
-where $L[i,i]$ is the degree of node $i$
-and $L[i,j]=-1$ if there is an edge between
-nodes $i$ and $j$, and otherwise $L[i,j]=0$.
-The Laplacean matrix for the above graph is as follows:
+全域木の数を計算するために、
+$L[i, i]$ をノード $i$ の次数とし、ノード $i$ と $j$ の間にエッジがあれば
+$L[i, j] = -1$、なければ $L[i, j] = 0$ の\key{ラプラシアン行列 - Laplacean matrix} を構成します。
+上記のグラフのラプラシアン行列は次の様になります。
+
 \[
 L= \begin{bmatrix}
   3 & -1 & -1 & -1 \\
@@ -822,12 +741,7 @@ L= \begin{bmatrix}
  \end{bmatrix}
 \]
 
-It can be shown that
-the number of spanning trees equals
-the determinant of a matrix that is obtained
-when we remove any row and any column from $L$.
-For example, if we remove the first row
-and column, the result is
+全域木の数は、$L$から任意の行と列を削除したときに得られる行列の行列式に等しいです。
 
 \[ \det(
 \begin{bmatrix}
@@ -836,12 +750,10 @@ and column, the result is
   0 & -1 & 2 \\
  \end{bmatrix}
 ) =3.\]
-The determinant is always the same,
-regardless of which row and column we remove from $L$.
 
-Note that Cayley's formula in Chapter 22.5 is
-a special case of Kirchhoff's theorem,
-because in a complete graph of $n$ nodes
+$L$からどの行と列を削除しても、行列式は常に同じです。
+
+なお、22.5章のCayleyの公式はKirchhoffの定理の特殊な例で、ノード数$n$の完全グラフです。
 
 \[ \det(
 \begin{bmatrix}
@@ -851,6 +763,3 @@ because in a complete graph of $n$ nodes
   -1 & -1 & \cdots & n-1 \\
  \end{bmatrix}
 ) =n^{n-2}.\]
-
-
-

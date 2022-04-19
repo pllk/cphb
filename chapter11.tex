@@ -1,35 +1,23 @@
-\chapter{Basics of graphs}
+\chapter{グラフの基礎知識 - Basics of graphs}
 
-Many programming problems can be solved by
-modeling the problem as a graph problem
-and using an appropriate graph algorithm.
-A typical example of a graph is a network
-of roads and cities in a country.
-Sometimes, though, the graph is hidden
-in the problem and it may be difficult to detect it.
+競技プログラミング問題のいくつかは、問題をグラフの問題としてモデル化して適切なアルゴリズムを用いることで解決することができます。
+グラフの典型的な例として、街を道路でつなぐネットワークとみなして最短の経路を求める問題などあります。
+しかし、コンテストではグラフが問題の中に隠れていてグラフを用いるという発見が難しいことも多々あります。
 
-This part of the book discusses graph algorithms,
-especially focusing on topics that
-are important in competitive programming.
-In this chapter, we go through concepts
-related to graphs,
-and study different ways to represent graphs in algorithms.
+このパートでは、特に競技プログラミングで重要となるトピックを中心に解説します。
+この章では、グラフに関する概念を述べ、実装で必要になるグラフのさまざまな表現方法について述べます。
 
-\section{Graph terminology}
+\section{グラフの用語 - Graph terminolog}
 
-\index{graph}
+\index{Graph}
 \index{node}
 \index{edge}
 
-A \key{graph} consists of \key{nodes}
-and \key{edges}. In this book,
-the variable $n$ denotes the number of nodes
-in a graph, and the variable $m$ denotes
-the number of edges.
-The nodes are numbered
-using integers $1,2,\ldots,n$.
+\key{グラフ - graph}は\key{ノード - node}と\key{辺 - edge}から構成されます。
+本書では以降、変数$n$はグラフのノード数、変数$m$は辺の数を表します。
+ノードには$1,2,v \ldots ,n$の整数を用いて表します(訳註: 0-indexedではありません)。
 
-For example, the following graph consists of 5 nodes and 7 edges:
+例えば、次のグラフは5つのノードと7つのエッジから構成されています。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -51,14 +39,11 @@ For example, the following graph consists of 5 nodes and 7 edges:
 
 \index{path}
 
-A \key{path} leads from node $a$ to node $b$
-through edges of the graph.
-The \key{length} of a path is the number of
-edges in it.
-For example, the above graph contains
-a path $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$
-of length 3
-from node 1 to node 5:
+ノード$a$からノード$b$まで、グラフの辺を通る経路(パス - path)があります。
+パスの長さは、その中に含まれる辺の数とします。
+例えば、上のグラフにはノード1からノード5まで長さ3のパス
+ $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$
+ が存在します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -84,15 +69,14 @@ from node 1 to node 5:
 
 \index{cycle}
 
-A path is a \key{cycle} if the first and last
-node is the same.
-For example, the above graph contains
-a cycle $1 \rightarrow 3 \rightarrow 4 \rightarrow 1$.
-A path is \key{simple} if each node appears
-at most once in the path.
+最初と最後のノードが同じものは\texttt{閉路(サイクル, Cycle)}と呼ばれます。
+例えば、 上のグラフは
+$1 \rightarrow 3 \rightarrow 4 \rightarrow 1$.
+という閉路を含みます。
 
+各ノードの出現回数が せいぜい1回であるパスは\texttt{単純}と呼ばれます。
 
-% 
+%
 % \begin{itemize}
 % \item $1 \rightarrow 2 \rightarrow 5$ (length 2)
 % \item $1 \rightarrow 4 \rightarrow 5$ (length 2)
@@ -102,13 +86,13 @@ at most once in the path.
 % \item $1 \rightarrow 3 \rightarrow 4 \rightarrow 2 \rightarrow 5$ (length 4)
 % \end{itemize}
 
-\subsubsection{Connectivity}
+\subsubsection{連結 - Connectivity}
 
 \index{connected graph}
 
-A graph is \key{connected} if there is a path
-between any two nodes.
-For example, the following graph is connected:
+グラフは、ある任意の2つのノード間にパスが存在する場合、\key{連結}といいます。
+例えば 、次のようなグラフは連結と呼ばれます。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -123,9 +107,9 @@ For example, the following graph is connected:
 \end{tikzpicture}
 \end{center}
 
-The following graph is not connected,
-because it is not possible to get
-from node 4 to any other node:
+次のグラフは、ノード4から他のノードに行くことができないので、
+連結ではないグラフです（非連結）。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -140,13 +124,13 @@ from node 4 to any other node:
 
 \index{component}
 
-The connected parts of a graph are
-called its \key{components}.
-For example, the following graph
-contains three components:
+グラフの各連結な部分を\key{成分(components)}を成分と呼びます。
+例えば、次のグラフは3つの成分を含
+んでいます。
 $\{1,\,2,\,3\}$,
-$\{4,\,5,\,6,\,7\}$ and
-$\{8\}$.
+$\{4,\,5,\,6,\,7\}$,
+$\{8\}$です。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -172,11 +156,9 @@ $\{8\}$.
 
 \index{tree}
 
-A \key{tree} is a connected graph
-that consists of $n$ nodes and $n-1$ edges.
-There is a unique path
-between any two nodes of a tree.
-For example, the following graph is a tree:
+\key{木(tree})は、$n$個のノードと$n - 1$個の辺からなる連結グラフのことです。
+木の任意の2つのノード間にはちょうど一本のパスが存在します。
+例えば、次のグラフは木である。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -195,14 +177,13 @@ For example, the following graph is a tree:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Edge directions}
+\subsubsection{有向と無向 - Edge directions}
 
 \index{directed graph}
 
-A graph is \key{directed}
-if the edges can be traversed
-in one direction only.
-For example, the following graph is directed:
+グラフの辺が決まった方向にしか移動できない場合、\key{有向(directed)}と呼ばれます。
+例えば、次のようなグラフは有向です。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -219,19 +200,19 @@ For example, the following graph is directed:
 \end{tikzpicture}
 \end{center}
 
-The above graph contains
-a path $3 \rightarrow 1 \rightarrow 2 \rightarrow 5$
-from node $3$ to node $5$,
-but there is no path from node $5$ to node $3$.
+このグラフには、ノード3からノード5へのパス
+$3 \rightarrow 1 \rightarrow 2 \rightarrow 5$
+がありますが、
+ノード5からノード3へのパスは存在しません。
 
-\subsubsection{Edge weights}
+\subsubsection{辺の重み - Edge weights}
 
 \index{weighted graph}
 
-In a \key{weighted} graph, each edge is assigned
-a \key{weight}.
-The weights are often interpreted as edge lengths.
-For example, the following graph is weighted:
+\key{重み付きグラフ}では、各辺に\key{重み}が割り当てられています。
+重みは辺の長さのようなものです。
+重み付きグラフの例を次に示します。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -248,27 +229,20 @@ For example, the following graph is weighted:
 \end{tikzpicture}
 \end{center}
 
-The length of a path in a weighted graph
-is the sum of the edge weights on the path.
-For example, in the above graph,
-the length of the path
-$1 \rightarrow 2 \rightarrow 5$ is $12$,
-and the length of the path
-$1 \rightarrow 3 \rightarrow 4 \rightarrow 5$ is $11$.
-The latter path is the \key{shortest} path from node $1$ to node $5$.
+重み付きグラフのパスの長さは、パス上の辺の重みの和で表します。
+例えば、上のグラフでは、$1 \rightarrow 2 \rightarrow 5$ のパスの長さは$12$。
+$1 \rightarrow 3 \rightarrow 4 \rightarrow 5$のパスの長さは$11$です。
+後者の経路はこのグラフのノード1からノード5への\key{最短経路}です。
 
-\subsubsection{Neighbors and degrees}
+\subsubsection{隣接ノードと次数 - Neighbors and degrees}
 
 \index{neighbor}
 \index{degree}
 
-Two nodes are \key{neighbors} or \key{adjacent}
-if there is an edge between them.
-The \key{degree} of a node
-is the number of its neighbors.
-For example, in the following graph,
-the neighbors of node 2 are 1, 4 and 5,
-so its degree is 3.
+
+2つのノードは、その間にエッジがある場合、\key{隣接(neighbors, adjacent)}であるといいます。
+\key{次数(degree)}は、ノードの隣接するノードの数です。
+例えば、次のグラフでは、ノード2の近傍は1、4、5なので、その次数は3です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -288,33 +262,25 @@ so its degree is 3.
 \end{tikzpicture}
 \end{center}
 
-The sum of degrees in a graph is always $2m$,
-where $m$ is the number of edges,
-because each edge
-increases the degree of exactly two nodes by one.
-For this reason, the sum of degrees is always even.
+グラフに含まれる頂点の次数の和は常に$2m$($m$は辺の数)となります。
+なぜなら、各辺はちょうど2つのノードの度数を1つずつ増加させるからです。
+このため、次数の和は常に偶数となります。
 
 \index{regular graph}
 \index{complete graph}
 
-A graph is \key{regular} if the
-degree of every node is a constant $d$.
-A graph is \key{complete} if the
-degree of every node is $n-1$, i.e.,
-the graph contains all possible edges
-between the nodes.
+グラフは、すべてのノードの次数が同じ(例えば定数$d$)であれば\key{正則(regular)}グラフです。
+すべてのノードの次数が$n - 1$であれば、すなわちグラフがノード間の可能なすべての辺を含んでいれば、
+\key{完全(complete)}グラフです。
 
 \index{indegree}
 \index{outdegree}
 
-In a directed graph, the \key{indegree}
-of a node is the number of edges
-that end at the node,
-and the \key{outdegree} of a node
-is the number of edges that start at the node.
-For example, in the following graph,
-the indegree of node 2 is 2,
-and the outdegree of node 2 is 1.
+
+有向グラフでにおいて各頂点には入次数と出次数があります。
+\key{入次数(indegree)}とはそのノードで終わる辺の数、
+\key{出次数(outdegree)}そのノードで始まる辺の数です。
+例えば、次のグラフでは、ノード2の入次数は2、ノード2の出次数は1です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -333,21 +299,17 @@ and the outdegree of node 2 is 1.
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Colorings}
+\subsubsection{グラフの着色 - Colorings}
 
 \index{coloring}
 \index{bipartite graph}
 
-In a \key{coloring} of a graph,
-each node is assigned a color so that
-no adjacent nodes have the same color.
+グラフの\key{色付け(coloring)}は、隣接するノードが同じ色にならないように、各ノードに色を割り当てることをいいます。
+グラフを2色で色付けできる場合、\key{二部グラフ(bipartite graph)} であるといいます。
+なお、二部グラフである条件として奇数本の辺で構成される閉路が存在しないグラフに限られることが分かっています。
 
-A graph is \key{bipartite} if
-it is possible to color it using two colors.
-It turns out that a graph is bipartite
-exactly when it does not contain a cycle
-with an odd number of edges.
-For example, the graph
+例を示します。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -364,7 +326,7 @@ For example, the graph
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-is bipartite, because it can be colored as follows:
+このグラフは次のように着色でき、二部グラフです。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle, fill=blue!40] (1) at (1,3) {$2$};
@@ -381,7 +343,7 @@ is bipartite, because it can be colored as follows:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-However, the graph
+次のグラフはどうでしょうか？
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -399,8 +361,7 @@ However, the graph
 \path[draw,thick,-] (1) -- (6);
 \end{tikzpicture}
 \end{center}
-is not bipartite, because it is not possible to color
-the following cycle of three nodes using two colors:
+は2分割ではありません。なぜなら、以下の閉路を２色で色塗りできないためです。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -423,16 +384,15 @@ the following cycle of three nodes using two colors:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Simplicity}
+\subsubsection{単純グラフ - Simplicity}
 
 \index{simple graph}
 
-A graph is \key{simple}
-if no edge starts and ends at the same node,
-and there are no multiple
-edges between two nodes.
-Often we assume that graphs are simple.
-For example, the following graph is \emph{not} simple:
+始点と終点が同じノードの辺がなく、
+ある2つのノード間に複数の辺が存在しない場合、グラフは\key{単純グラフ(simple graph)}と呼ばれます。
+大半の場合、グラフは単純でと仮定されます。
+例えば、次のようなグラフは単純ではありません。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$2$};
@@ -456,36 +416,24 @@ For example, the following graph is \emph{not} simple:
 \end{tikzpicture}
 \end{center}
 
-\section{Graph representation}
+\section{グラフの表現方法 - Graph representation}
 
-There are several ways to represent graphs
-in algorithms.
-The choice of a data structure
-depends on the size of the graph and
-the way the algorithm processes it.
-Next we will go through three common representations.
+実装する上でグラフを表現する方法はいくつかあります。
+どのようなデータ構造を使うというのはグラフの大きさやアルゴリズムの実装方法に依存します。
+一般的な3つの表現方法を説明する。
 
-\subsubsection{Adjacency list representation}
+\subsubsection{隣接リスト形式 - Adjacency list representation}
 
 \index{adjacency list}
 
-In the adjacency list representation,
-each node $x$ in the graph is assigned an \key{adjacency list}
-that consists of nodes
-to which there is an edge from $x$.
-Adjacency lists are the most popular
-way to represent graphs, and most algorithms can be
-efficiently implemented using them.
-
-A convenient way to store the adjacency lists is to declare
-an array of vectors as follows:
+隣接リストでは、グラフの各ノード$x$に、$x$から張られている辺の先をリストで持ちます。
+これは非常に一般的な表現手法で、ほとんどのアルゴリズムはこれを用いて効率的に実装できます。
+隣接リストを格納する便利な方法は、次のようにvectorの配列を宣言します。
 \begin{lstlisting}
 vector<int> adj[N];
 \end{lstlisting}
-
-The constant $N$ is chosen so that all
-adjacency lists can be stored.
-For example, the graph
+定数$N$はグラフの頂点の数です。
+例えば次のグラフを考えます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -501,7 +449,7 @@ For example, the graph
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-can be stored as follows:
+これは隣接リストで次のように表現できます。
 \begin{lstlisting}
 adj[1].push_back(2);
 adj[2].push_back(3);
@@ -510,20 +458,18 @@ adj[3].push_back(4);
 adj[4].push_back(1);
 \end{lstlisting}
 
-If the graph is undirected, it can be stored in a similar way,
-but each edge is added in both directions.
+グラフが無向の場合は両方から互いに対して辺を張ることで表現できます。
 
-For a weighted graph, the structure can be extended
-as follows:
+重み付きグラフの場合は少し持たせ方を変えます。
 
 \begin{lstlisting}
 vector<pair<int,int>> adj[N];
 \end{lstlisting}
 
-In this case, the adjacency list of node $a$
-contains the pair $(b,w)$
-always when there is an edge from node $a$ to node $b$
-with weight $w$. For example, the graph
+
+このとき、ノード$a$の隣接リストには、ノード$a$からノード$b$へ重み$w$の辺
+があるとき、$(b, w)$のpairを作ります。
+例えば、次の例を考えます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -539,7 +485,7 @@ with weight $w$. For example, the graph
 \path[draw,thick,->,>=latex] (4) -- node[font=\small,label=left:2] {} (1);
 \end{tikzpicture}
 \end{center}
-can be stored as follows:
+これは次のように表現できます。
 \begin{lstlisting}
 adj[1].push_back({2,5});
 adj[2].push_back({3,7});
@@ -548,11 +494,10 @@ adj[3].push_back({4,5});
 adj[4].push_back({1,2});
 \end{lstlisting}
 
-The benefit of using adjacency lists is that
-we can efficiently find the nodes to which
-we can move from a given node through an edge.
-For example, the following loop goes through all nodes
-to which we can move from node $s$:
+
+隣接リストを用いる利点は、
+あるノードから辺を経由して移動できるノードを効率的に見つけられることです。
+例えば、以下のfor文で、ノード$s$から移動できるすべてのノードを処理できます。
 
 \begin{lstlisting}
 for (auto u : adj[s]) {
@@ -560,25 +505,21 @@ for (auto u : adj[s]) {
 }
 \end{lstlisting}
 
-\subsubsection{Adjacency matrix representation}
+\subsubsection{隣接行列形式 - Adjacency matrix representation}
 
 \index{adjacency matrix}
 
-An \key{adjacency matrix} is a two-dimensional array
-that indicates which edges the graph contains.
-We can efficiently check from an adjacency matrix
-if there is an edge between two nodes.
-The matrix can be stored as an array
+\key{隣接行列}は、
+辺を2次元の配列で表現します。
+2つのノード間にエッジがあるかどうかを効率的に調べることができます。
 \begin{lstlisting}
 int adj[N][N];
 \end{lstlisting}
-where each value $\texttt{adj}[a][b]$ indicates
-whether the graph contains an edge from
-node $a$ to node $b$.
-If the edge is included in the graph,
-then $\texttt{adj}[a][b]=1$,
-and otherwise $\texttt{adj}[a][b]=0$.
-For example, the graph
+ここで、$\texttt{adj}[a][b]$ は、グラフにノード $a$ からノード $b$ への辺が含まれるかをしめし、
+$\texttt{adj}[a][b]=1$なら辺があることを、
+$\texttt{adj}[a][b]=0$なら辺がないことを示します。
+
+例えば次のグラフを考えます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -593,7 +534,7 @@ For example, the graph
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-can be represented as follows:
+次のように示せます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,4);
@@ -624,11 +565,9 @@ can be represented as follows:
 \end{tikzpicture}
 \end{center}
 
-If the graph is weighted, the adjacency matrix
-representation can be extended so that
-the matrix contains the weight of the edge
-if the edge exists.
-Using this representation, the graph
+辺に重みがある場合は隣接行列の表現を拡張します。
+$adj[a][b]$の値としてエッジの重みが含まれるようにします。
+例を示します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -645,7 +584,7 @@ Using this representation, the graph
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-corresponds to the following matrix:
+これは次のように表現できます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (4,4);
@@ -677,30 +616,24 @@ corresponds to the following matrix:
 \end{center}
 \end{samepage}
 
-The drawback of the adjacency matrix representation
-is that the matrix contains $n^2$ elements,
-and usually most of them are zero.
-For this reason, the representation cannot be used
-if the graph is large.
+隣接行列表現の欠点として行列が$n^2$要素分のメモリを必要とし、
+通常はそのほとんどが$0$となってしまうためです。
+このため、グラフが大きい場合はこの表現は適しません。
 
-\subsubsection{Edge list representation}
+\subsubsection{エッジリスト形式 - Edge list representation}
 
 \index{edge list}
 
-An \key{edge list} contains all edges of a graph
-in some order.
-This is a convenient way to represent a graph
-if the algorithm processes all edges of the graph
-and it is not needed to find edges that start
-at a given node.
+\key{エッジリスト}形式は、全ての辺を順序通りに保管したものです。
+アルゴリズムがグラフのすべてのエッジを処理する必要に便利です。
+ただし、あるノードから始まるエッジを見つける必要がない場合は適しません。
 
-The edge list can be stored in a vector
+次のように情報を持たせます。
 \begin{lstlisting}
 vector<pair<int,int>> edges;
 \end{lstlisting}
-where each pair $(a,b)$ denotes that
-there is an edge from node $a$ to node $b$.
-Thus, the graph
+$(a,b)$ に辺があることを示します。
+例を示します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -716,7 +649,7 @@ Thus, the graph
 \path[draw,thick,->,>=latex] (4) -- (1);
 \end{tikzpicture}
 \end{center}
-can be represented as follows:
+これは次のように表現できます。
 \begin{lstlisting}
 edges.push_back({1,2});
 edges.push_back({2,3});
@@ -726,15 +659,12 @@ edges.push_back({4,1});
 \end{lstlisting}
 
 \noindent
-If the graph is weighted, the structure can
-be extended as follows:
+グラフに重みがある場合、以下のように持たせることができます。
 \begin{lstlisting}
 vector<tuple<int,int,int>> edges;
 \end{lstlisting}
-Each element in this list is of the
-form $(a,b,w)$, which means that there
-is an edge from node $a$ to node $b$ with weight $w$.
-For example, the graph
+各要素は$(a, b, w)$であり、ノード$a$からノード$b$へ重み$w$の辺があることを意味します。
+例を示します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -751,7 +681,7 @@ For example, the graph
 \end{tikzpicture}
 \end{center}
 \begin{samepage}
-can be represented as follows\footnote{In some older compilers, the function
+これは次のように表現できます。\footnote{In some older compilers, the function
 \texttt{make\_tuple} must be used instead of the braces (for example,
 \texttt{make\_tuple(1,2,5)} instead of \texttt{\{1,2,5\}}).}:
 \begin{lstlisting}

@@ -1,259 +1,189 @@
-\chapter{Probability}
+\chapter{確率 - Probability}
 
-\index{probability}
+\index{確率 - probability}
 
-A \key{probability} is a real number between $0$ and $1$
-that indicates how probable an event is.
-If an event is certain to happen,
-its probability is 1,
-and if an event is impossible,
-its probability is 0.
-The probability of an event is denoted $P(\cdots)$
-where the three dots describe the event.
+\key{確率 - probability}は0から1の間の実数で表されるある事象がどの程度の確率で起こりうるかを示すものです。
+ある事象が確実に起こるなら確率は1であり、確実にあり得ないならその確率は0です。
+ある事象の確率は$P(\cdots)$と表記され、3つの点がその事象を表します。
 
-For example, when throwing a dice,
-the outcome is an integer between $1$ and $6$,
-and the probability of each outcome is $1/6$.
-For example, we can calculate the following probabilities:
+サイコロを投げるとき、その結果は1から6の整数で、それぞれの結果が 出る確率は1/6です。
+このため、次のような確率が計算できる。
 
 \begin{itemize}[noitemsep]
-\item $P(\textrm{''the outcome is 4''})=1/6$
-\item $P(\textrm{''the outcome is not 6''})=5/6$
-\item $P(\textrm{''the outcome is even''})=1/2$
+\item $P(\textrm{''4がでる''})=1/6$
+\item $P(\textrm{''6以外''})=5/6$
+\item $P(\textrm{''偶数''})=1/2$
 \end{itemize}
 
-\section{Calculation}
+\section{確率の計算 - Calculation}
 
-To calculate the probability of an event,
-we can either use combinatorics
-or simulate the process that generates the event.
-As an example, let us calculate the probability
-of drawing three cards with the same value
-from a shuffled deck of cards
-(for example, $\spadesuit 8$, $\clubsuit 8$ and $\diamondsuit 8$).
 
-\subsubsection*{Method 1}
+ある確率を計算するには、組合せ論を用いるか、その事象が発生する過程をシミュレートする方法があります。
+例えば、シャッフルした山札から同じ数字のカードを3枚引く確率を計算してみます。(例えば、$\spadesuit 8$, $\clubsuit 8$, $\diamondsuit 8$)。
 
-We can calculate the probability using the formula
+\subsubsection*{方法1}
 
-\[\frac{\textrm{number of desired outcomes}}{\textrm{total number of outcomes}}.\]
+次の式を使うことができます。
 
-In this problem, the desired outcomes are those
-in which the value of each card is the same.
-There are $13 {4 \choose 3}$ such outcomes,
-because there are $13$ possibilities for the
-value of the cards and ${4 \choose 3}$ ways to
-choose $3$ suits from $4$ possible suits.
+\[\frac{\textrm{望ましい数量}}{\textrm{あり得る全体の数}}.\]
 
-There are a total of ${52 \choose 3}$ outcomes,
-because we choose 3 cards from 52 cards.
-Thus, the probability of the event is
+この問題では、各カードの価値は同じです。
+このような結果は，$13 {4 \choose 3}$あります。
+ある数を引く可能性は 13 パターンがあり、
+その中で4つのスーツのうちから3つを引くのは
+${4 \choose 3}$のパターンがあります。
+ここで、全体の引くパターンは52枚のカードから3枚のカードを選ぶので、
+${52 \choose 3}$です。
+このため、この確率は以下の様になります。
 
 \[\frac{13 {4 \choose 3}}{{52 \choose 3}} = \frac{1}{425}.\]
 
-\subsubsection*{Method 2}
+\subsubsection*{方法2}
 
-Another way to calculate the probability is
-to simulate the process that generates the event.
-In this example, we draw three cards, so the process
-consists of three steps.
-We require that each step of the process is successful.
-
-Drawing the first card certainly succeeds,
-because there are no restrictions.
-The second step succeeds with probability $3/51$,
-because there are 51 cards left and 3 of them
-have the same value as the first card.
-In a similar way, the third step succeeds with probability $2/50$.
-
-The probability that the entire process succeeds is
+今度はプロセスをシミュレ ーションするアプローチを考えます。
+この例では、3枚のカードを引くので、3回のプロセスを実行します。
+まず、1枚目のカードは何を選んでも良いです。
+第2段階は， 51枚のカードが残っていて，そのうち3枚が最初のカードと同じ数なので$3/51$の確率で成功です。
+同様に，3番目のステップも$2/50$の確率で 成功です。つまり、全体の処理が成功する確率は以下の様になります。
 
 \[1 \cdot \frac{3}{51} \cdot \frac{2}{50} = \frac{1}{425}.\]
 
-\section{Events}
+\section{事象 - Events}
 
-An event in probability theory can be represented as a set
-\[A \subset X,\]
-where $X$ contains all possible outcomes
-and $A$ is a subset of outcomes.
-For example, when drawing a dice, the outcomes are
-\[X = \{1,2,3,4,5,6\}.\]
-Now, for example, the event ''the outcome is even''
-corresponds to the set
-\[A = \{2,4,6\}.\]
+確率における事象は集合として表現できます。
+\[A \subset X\]
+$X$はすべての可能な結果全体で、$A$は結果の部分集合です。
+例えば、サイコロを振るとその結果は
+\[X = \{1,2,3,4,5,6\}\]
+となり、''偶数である''という集合は以下の通りです。
+\[A = \{2,4,6\}\]
 
-Each outcome $x$ is assigned a probability $p(x)$.
-Then, the probability $P(A)$ of an event
-$A$ can be calculated as a sum
-of probabilities of outcomes using the formula
+ある事象$x$には確率$p(x)$が割り当てられています。
+そして、ある事象Aの確率P(A)は、次ように結果の確率の総和として計算することができます。
 \[P(A) = \sum_{x \in A} p(x).\]
-For example, when throwing a dice,
-$p(x)=1/6$ for each outcome $x$,
-so the probability of the event
-''the outcome is even'' is
+例えば、サイコロを投げる場合、各結果$x$に対して$p(x)=1/6$であるから、
+''偶数である''という事象の確率は以下の通りです。
 \[p(2)+p(4)+p(6)=1/2.\]
 
-The total probability of the outcomes in $X$ must
-be 1, i.e., $P(X)=1$.
-
-Since the events in probability theory are sets,
-we can manipulate them using standard set operations:
+$X$ の確率は 1、つまり$P(X )=1$ です。
+各事象は集合なので、標準的な集合演算で操作できます。
 
 \begin{itemize}
-\item The \key{complement} $\bar A$ means
-''$A$ does not happen''.
-For example, when throwing a dice,
-the complement of $A=\{2,4,6\}$ is
-$\bar A = \{1,3,5\}$.
-\item The \key{union} $A \cup B$ means
-''$A$ or $B$ happen''.
-For example, the union of
-$A=\{2,5\}$
-and $B=\{4,5,6\}$ is
-$A \cup B = \{2,4,5,6\}$.
-\item The \key{intersection} $A \cap B$ means
-''$A$ and $B$ happen''.
-For example, the intersection of
-$A=\{2,5\}$ and $B=\{4,5,6\}$ is
-$A \cap B = \{5\}$.
+\item \key{補集合 - complement} $\bar A$ は
+''$A$ が起こらない''という意味です。
+例えばサイコロにおいて、$A=\{2,4,6\}$の補集合は
+$\bar A = \{1,3,5\}$です。
+\item \key{集合和 - union} $A \cup B$ は
+''$A$ か $B$ が起きる''という意味です。
+$A=\{2,5\}$と$B=\{4,5,6\}$の和は、
+$A \cup B = \{2,4,5,6\}$です。
+\item The \key{集合積 - intersection} $A \cap B$は
+''$A$ と $B$ が起きる''という意味です。
+$A=\{2,5\}$ と $B=\{4,5,6\}$の集合積は
+$A \cap B = \{5\}$です。
 \end{itemize}
 
-\subsubsection{Complement}
+\subsubsection{補集合 - Complement}
 
-The probability of the complement
-$\bar A$ is calculated using the formula
+補集合$\bar A$は次の様に計算できます。
 \[P(\bar A)=1-P(A).\]
 
-Sometimes, we can solve a problem easily
-using complements by solving the opposite problem.
-For example, the probability of getting
-at least one six when throwing a dice ten times is
+補集合を使うと、ある問題の逆を解くことで簡単に解けることがあります。
+たとえば、サイコロを10回投げたとき、少なくとも1回6が出る確率は次の様に簡単に求められます。
 \[1-(5/6)^{10}.\]
 
-Here $5/6$ is the probability that the outcome
-of a single throw is not six, and
-$(5/6)^{10}$ is the probability that none of
-the ten throws is a six.
-The complement of this is the answer to the problem.
+ここで、$5/6$は一投の結果が$6$でない確率です。
+このため、$(5/6)^{10}$は10投のうちただの一回も1投も6でない確率である。これの補数が問題の答えとなります。
 
-\subsubsection{Union}
+\subsubsection{集合和}
 
-The probability of the union $A \cup B$
-is calculated using the formula
+$A \cup B$の確率は以下の様に示ます。
 \[P(A \cup B)=P(A)+P(B)-P(A \cap B).\]
-For example, when throwing a dice,
-the union of the events
-\[A=\textrm{''the outcome is even''}\]
-and
-\[B=\textrm{''the outcome is less than 4''}\]
-is
-\[A \cup B=\textrm{''the outcome is even or less than 4''},\]
-and its probability is
+例えば、サイコロを考えて、
+\[A=\textrm{''偶数である''}\]
+と
+\[B=\textrm{''４未満である''}\]
+であるとき、
+\[A \cup B=\textrm{''偶数であるか４未満である''},\]
+という確率は、
 \[P(A \cup B) = P(A)+P(B)-P(A \cap B)=1/2+1/2-1/6=5/6.\]
 
-If the events $A$ and $B$ are \key{disjoint}, i.e.,
-$A \cap B$ is empty,
-the probability of the event $A \cup B$ is simply
+事象$A$と$B$が\key{不連続,排他的 - disjoint}、すなわち$A \cap B$ が空である場合は事象$A \cup B$の確率は、単純に以下の様に示ます。
 
 \[P(A \cup B)=P(A)+P(B).\]
 
-\subsubsection{Conditional probability}
 
-\index{conditional probability}
+\subsubsection{条件付き確率 - Conditional probability}
 
-The \key{conditional probability}
+\index{条件付き確率 - conditional probability}
+
+\key{条件付き確率 - conditional probability}
 \[P(A | B) = \frac{P(A \cap B)}{P(B)}\]
-is the probability of $A$
-assuming that $B$ happens.
-Hence, when calculating the
-probability of $A$, we only consider the outcomes
-that also belong to $B$.
-
-Using the previous sets,
+というのは$B$が起こったと仮定した場合の$A$の確率である。
+したがって、$A$の確率を計算するときは、$B$に属する結果だけを考えます。
+先ほどのセットを使うと、
 \[P(A | B)= 1/3,\]
-because the outcomes of $B$ are
-$\{1,2,3\}$, and one of them is even.
-This is the probability of an even outcome
-if we know that the outcome is between $1 \ldots 3$.
+となります。Bの結果は$\{1,2,3\}$で、そのうちの1つは偶数だからです。
+つまり、結果が$1 \ldots 3$となった場合の偶数の結果の確率です。
 
-\subsubsection{Intersection}
+\subsubsection{共通部分 - Intersection}
 
-\index{independence}
+\index{独立 - independence}
 
-Using conditional probability,
-the probability of the intersection
-$A \cap B$ can be calculated using the formula
+条件付き確率を用いると共通部分である
+$A \cap B$の確率は以下の様に求めることができます。
 \[P(A \cap B)=P(A)P(B|A).\]
-Events $A$ and $B$ are \key{independent} if
+$A$と$B$が\key{独立 - independent}なのは次のときです。
 \[P(A|B)=P(A) \hspace{10px}\textrm{and}\hspace{10px} P(B|A)=P(B),\]
-which means that the fact that $B$ happens does not
-change the probability of $A$, and vice versa.
-In this case, the probability of the intersection is
+
+ということは、$B$が起こっても$A$の確率は変わらず、その逆も同様ということです。
+さて、この場合、共通部分の確率は
 \[P(A \cap B)=P(A)P(B).\]
-For example, when drawing a card from a deck, the events
+例えば、山札からトランプを引く場合、
 \[A = \textrm{''the suit is clubs''}\]
-and
 \[B = \textrm{''the value is four''}\]
-are independent. Hence the event
-\[A \cap B = \textrm{''the card is the four of clubs''}\]
-happens with probability
+は独立です。このため、
+\[A \cap B = \textrm{''クラブの４である''}\]
+という確率は次の様に示ます。
 \[P(A \cap B)=P(A)P(B)=1/4 \cdot 1/13 = 1/52.\]
 
-\section{Random variables}
+\section{確率変数 - Random variables}
 
-\index{random variable}
+\index{確率変数 - random variable}
 
-A \key{random variable} is a value that is generated
-by a random process.
-For example, when throwing two dice,
-a possible random variable is
-\[X=\textrm{''the sum of the outcomes''}.\]
-For example, if the outcomes are $[4,6]$
-(meaning that we first throw a four and then a six),
-then the value of $X$ is 10.
+\key{ランダムな値 - random variable} はランダムに生成される値のことです。
+例えば、2回サイコロを投げるとき、考えられる確率変数は
+\[X=\textrm{''出た目の和''}.\]
 
-We denote $P(X=x)$ the probability that
-the value of a random variable $X$ is $x$.
-For example, when throwing two dice,
-$P(X=10)=3/36$,
-because the total number of outcomes is 36
-and there are three possible ways to obtain
-the sum 10: $[4,6]$, $[5,5]$ and $[6,4]$.
+例えば、結果が$[4, 6]$(最初に4で次に6だったという意味)であれば、$X$ の値は10とします。
 
-\subsubsection{Expected value}
+例えば、2つのサイコロを投げるとき、$P(X=10)=3/36$です。
+結果の総数は36であり、合計10を得るには、$[4,6]$, $[5,5]$, $[6,4]$ という3通りの可能性があるからです。
 
-\index{expected value}
+\subsubsection{期待値 - Expected value}
 
-The \key{expected value} $E[X]$ indicates the
-average value of a random variable $X$.
-The expected value can be calculated as the sum
+\index{期待値 - expected value}
+
+\key{期待値 - expected value} $E[X]$ 確率変数 $X$ の平均値を示します。期待値は，以下の和として計算できます。
 \[\sum_x P(X=x)x,\]
-where $x$ goes through all possible values of $X$.
+$x$は$X$でありうる全ての数です。
 
-For example, when throwing a dice,
-the expected outcome is
+例えばサイコロを投げるとき、期待値は以下の通りです。
 \[1/6 \cdot 1 + 1/6 \cdot 2 + 1/6 \cdot 3 + 1/6 \cdot 4 + 1/6 \cdot 5 + 1/6 \cdot 6 = 7/2.\]
 
-A useful property of expected values is \key{linearity}.
-It means that the sum
+期待値の面白い性質は\key{線形性 - linearity}です。
 $E[X_1+X_2+\cdots+X_n]$
-always equals the sum
+は常に
 $E[X_1]+E[X_2]+\cdots+E[X_n]$.
-This formula holds even if random variables
-depend on each other.
+と等しいです。
+この式は、確率変数が互いに依存しあっていても成り立ちます。
 
-For example, when throwing two dice,
-the expected sum is
+例えば、2つのサイコロを投げるとき、期待される和は以下の通りです。
 \[E[X_1+X_2]=E[X_1]+E[X_2]=7/2+7/2=7.\]
 
-Let us now consider a problem where
-$n$ balls are randomly placed in $n$ boxes,
-and our task is to calculate the expected
-number of empty boxes.
-Each ball has an equal probability to
-be placed in any of the boxes.
-For example, if $n=2$, the possibilities
-are as follows:
+ここで、$n$個のボールが$n$個の箱にランダムに入れられ、
+空箱の期待個数を計算する問題を考えます。
+各球は等しい確率でどの箱にも入ります。$n = 2$の場合，次の様に考えられます。
 \begin{center}
 \begin{tikzpicture}
 \draw (0,0) rectangle (1,1);
@@ -275,27 +205,22 @@ are as follows:
 \draw[fill=red] (10.95,0.2) circle (0.1);
 \end{tikzpicture}
 \end{center}
-In this case, the expected number of
-empty boxes is
+このとき、空の箱の数は以下の通りです。
 \[\frac{0+0+1+1}{4} = \frac{1}{2}.\]
-In the general case, the probability that a
-single box is empty is
+一般に１つの箱が空の確率は、
 \[\Big(\frac{n-1}{n}\Big)^n,\]
-because no ball should be placed in it.
-Hence, using linearity, the expected number of
-empty boxes is
+で求められます。その箱にボールが入っていないからです。
+ここで線形性を利用すると期待値は次の様になります。
 \[n \cdot \Big(\frac{n-1}{n}\Big)^n.\]
 
-\subsubsection{Distributions}
+\subsubsection{分布 - Distributions}
 
-\index{distribution}
+\index{分布 - distribution}
 
-The \key{distribution} of a random variable $X$
-shows the probability of each value that
-$X$ may have.
-The distribution consists of values $P(X=x)$.
-For example, when throwing two dice,
-the distribution for their sum is:
+\key{分布 - distribution}とは$X$が持ちうる各値の確率を示します。
+分布は、値 $P(X=x)$ から構成されます。
+2つのサイコロを投げるとき、その和の分布は次のようになります。
+
 \begin{center}
 \small {
 \begin{tabular}{r|rrrrrrrrrrrrr}
@@ -305,81 +230,57 @@ $P(X=x)$ & $1/36$ & $2/36$ & $3/36$ & $4/36$ & $5/36$ & $6/36$ & $5/36$ & $4/36$
 }
 \end{center}
 
-\index{uniform distribution}
-In a \key{uniform distribution},
-the random variable $X$ has $n$ possible
-values $a,a+1,\ldots,b$ and the probability of each value is $1/n$.
-For example, when throwing a dice,
-$a=1$, $b=6$ and $P(X=x)=1/6$ for each value $x$.
-
-The expected value of $X$ in a uniform distribution is
+\index{一様分布 - uniform distribution}
+\key{一様分布 - uniform distribution}では、
+確率変数$X$は$n$個の値 $a,a+1,\ldots,b$を取る時、
+各値を取る確率は$1/n$とします。
+サイコロをに当てはめれば$a = 1, b = 6$ で、各値 $x$ に対 して $P(X = x) = 1/6$ です。
+この様な一様分布における$X$の期待値は
 \[E[X] = \frac{a+b}{2}.\]
 
-\index{binomial distribution}
-In a \key{binomial distribution}, $n$ attempts
-are made
-and the probability that a single attempt succeeds
-is $p$.
-The random variable $X$ counts the number of
-successful attempts,
-and the probability of a value $x$ is
+\index{二項分布 - binomial distribution}
+\key{二項分布 - binomial distribution}において、$n$回の試行があった時、
+1回の試行が成功する確率を$p$とすると、確率変数$X$は試行の成功回数を数ることになります。
+つまり、ある値$x$の確率は次のとおりです。
 \[P(X=x)=p^x (1-p)^{n-x} {n \choose x},\]
-where $p^x$ and $(1-p)^{n-x}$ correspond to
-successful and unsuccessful attemps,
-and ${n \choose x}$ is the number of ways
-we can choose the order of the attempts.
+ここで、$p^x$ と $(1-p)^{n-x}$ はそれぞれ成功と失敗に対応しています。
+${n \choose x}$ はその試行が選ばれる回数です。
 
-For example, when throwing a dice ten times,
-the probability of throwing a six exactly
-three times is $(1/6)^3 (5/6)^7 {10 \choose 3}$.
+例えばサイコロを10回投げ、6が3回出る確率は、
+$(1/6)^3 (5/6)^7 {10 \choose 3}$です。
 
-The expected value of $X$ in a binomial distribution is
+二項分布における$X$の期待値は次の通りです。
 \[E[X] = pn.\]
 
-\index{geometric distribution}
-In a \key{geometric distribution},
-the probability that an attempt succeeds is $p$,
-and we continue until the first success happens.
-The random variable $X$ counts the number
-of attempts needed, and the probability of
-a value $x$ is
+\index{幾何分布 - geometric distribution}
+\key{幾何分布 - geometric distribution}とは、
+試行が成功する確率を$p$とし、最初の成功が起こるまで続けます。
+確率変数$X$は必要な試行回数を数えるもので、ある値$x$の確率は
 \[P(X=x)=(1-p)^{x-1} p,\]
-where $(1-p)^{x-1}$ corresponds to the unsuccessful attemps
-and $p$ corresponds to the first successful attempt.
+先ほどと同様に$(1-p)^{x-1}$は失敗した試行に対応し、$p$ は最初の成功した試行に対応します。
 
-For example, if we throw a dice until we throw a six,
-the probability that the number of throws
-is exactly 4 is $(5/6)^3 1/6$.
+ここでサイコロを6が出るまで振るとして、投げた回数がちょうど4回である確率は
+$(5/6)^3 1/6$となります。
 
-The expected value of $X$ in a geometric distribution is
+幾何分布における$X$の期待値は次の通りです。
 \[E[X]=\frac{1}{p}.\]
 
-\section{Markov chains}
+\section{マルコフ連鎖 - Markov chains}
 
-\index{Markov chain}
+\index{マルコフ連鎖 - Markov chain}
 
-A \key{Markov chain}
-% \footnote{A. A. Markov (1856--1922)
-% was a Russian mathematician.}
-is a random process
-that consists of states and transitions between them.
-For each state, we know the probabilities
-for moving to other states.
-A Markov chain can be represented as a graph
-whose nodes are states and edges are transitions.
+\key{マルコフ連鎖 - Markov chain}は状態とその間の遷移からなるランダムなプロセスのことです。
+ここで、各状態から他の状態に移行する確率は定義されています。
+マルコフ連鎖は、状態をノード、遷移をエッジとするグラフで表現することができます。
 
-As an example, consider a problem
-where we are in floor 1 in an $n$ floor building.
-At each step, we randomly walk either one floor
-up or one floor down, except that we always
-walk one floor up from floor 1 and one floor down
-from floor $n$.
-What is the probability of being in floor $m$
-after $k$ steps?
 
-In this problem, each floor of the building
-corresponds to a state in a Markov chain.
-For example, if $n=5$, the graph is as follows:
+例として、次のような問題を考えます。
+最初、$n$階建ての建物の1階にいます。
+各ステップにおいて、ランダムに1階上か1階下を歩きます。
+ただし、1階からは上にしか、$n$階からは下にしかいけないとします。
+さて、$k$ 歩いた後に $m$ 階にいる確率は何%か？
+
+この問題はマルコフ連鎖の1つで、$n=5$の場合、グラフは以下のようになる。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -403,33 +304,17 @@ For example, if $n=5$, the graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-The probability distribution
-of a Markov chain is a vector
-$[p_1,p_2,\ldots,p_n]$, where $p_k$ is the
-probability that the current state is $k$.
-The formula $p_1+p_2+\cdots+p_n=1$ always holds.
+マルコフ連鎖の確率分布はベクトル $[p_1,p_2,\ldots,p_n]$ で、
+$p_k$ は現在の状態が $k$ である確率です。この時、$p_1+p_2+\cdots+p_n=1$は常に成立します。
 
-In the above scenario, the initial distribution is
-$[1,0,0,0,0]$, because we always begin in floor 1.
-The next distribution is $[0,1,0,0,0]$,
-because we can only move from floor 1 to floor 2.
-After this, we can either move one floor up
-or one floor down, so the next distribution is
-$[1/2,0,1/2,0,0]$, and so on.
+上記のシナリオでは、最初は1階にいるので初期分布は $[1,0,0,0,0]$ です。
+次の瞬間、フロア1からフロア2にしか移動できないので、次の分布 は$[0,1,0,0,0]$です。
+この後は1階上か1階下に移動できるので、次の分布は $[1/2,0,1/2,0,0]$となり、以下同様です。
 
-An efficient way to simulate the walk in
-a Markov chain is to use dynamic programming.
-The idea is to maintain the probability distribution,
-and at each step go through all possibilities
-how we can move.
-Using this method, we can simulate
-a walk of $m$ steps in $O(n^2 m)$ time.
+これをシミュレーションする効率的な方法は、動的計画法 です。
+各ステップで、どのように動くことができるかのすべての可能性を調べていけば、$m$ステップの歩みを $O(n^2 m)$ 時間でシミュレートすることができる。
 
-The transitions of a Markov chain can also be
-represented as a matrix that updates the
-probability distribution.
-In the above scenario, the matrix is
-
+また、この遷移は、確率分布を更新する行列として表現することもできます。次の様にします。
 \[
  \begin{bmatrix}
   0 & 1/2 & 0 & 0 & 0 \\
@@ -440,11 +325,8 @@ In the above scenario, the matrix is
  \end{bmatrix}.
 \]
 
-When we multiply a probability distribution by this matrix,
-we get the new distribution after moving one step.
-For example, we can move from the distribution
-$[1,0,0,0,0]$ to the distribution
-$[0,1,0,0,0]$ as follows:
+確率分布にこの行列を掛けると、1ステップ移動した後の新しい分布が得られます。
+例えば、分布$[1,0,0,0,0]$から分布$[0,1,0,0,0]$へは、次の様になります。
 
 \[
  \begin{bmatrix}
@@ -471,9 +353,7 @@ $[0,1,0,0,0]$ as follows:
  \end{bmatrix}.
 \]
 
-By calculating matrix powers efficiently,
-we can calculate the distribution after $m$ steps
-in $O(n^3 \log m)$ time.
+行列の累乗を効率的に計算することで、$m$ステップ後の分布 を $O(n^3 \log m)$ で計算することができます。
 
 \section{乱択}
 
@@ -519,7 +399,6 @@ $a > k$ の時は左側部分の $k$番目の数を再帰的に求め，
 $a < k$ の時は右側部分の $r$ 番目の数$（r = k - a）$を再帰的に求め，
 要素が見つかるまで同様の方法で探索を見つければ良いのです。
 
-
 $x$ がランダムに選ばれるため，配列のサイズは各ステップで約半分と期待できるので，この時間計算量は次のようになります。
 \[n+n/2+n/4+n/8+\cdots < 2n = O(n).\]
 
@@ -527,41 +406,31 @@ $x$ がランダムに選ばれるため，配列のサイズは各ステップ�
 これは$x$ が配列の最小または最大の要素の1つになるように常に選択される場合で$O(n)$ ステップが必要になるからです．
 しかし、その確率は非常に小さいので、実際にはこのようなことは起こらないでしょう。
 
-\subsubsection{Verifying matrix multiplication}
+\subsubsection{行列の乗算の検証 - Verifying matrix multiplication}
 
-\index{matrix multiplication}
+\index{行列の乗算の検証 - matrix multiplication}
 
-Our next problem is to \emph{verify}
-if $AB=C$ holds when $A$, $B$ and $C$
-are matrices of size $n \times n$.
-Of course, we can solve the problem
-by calculating the product $AB$ again
-(in $O(n^3)$ time using the basic algorithm),
-but one could hope that verifying the
-answer would by easier than to calculate it from scratch.
 
-It turns out that we can solve the problem
-using a Monte Carlo algorithm\footnote{R. M. Freivalds published
+次の問題は、\emph{検証}です。
+$A,B,C$が$n \times n$である時に、$AB=C$が成り立つかどうかを調べます。
+もちろん、$AB$を$O(n^3)$で計算すれば良いです。
+しかし、これをもっと簡単に求めたいです。
+
+この問題は、モンテカルロアルゴリズム\footnote{R. M. Freivalds published
 this algorithm in 1977 \cite{fre77}, and it is sometimes
-called \index{Freivalds' algoritm} \key{Freivalds' algorithm}.} whose
-time complexity is only $O(n^2)$.
-The idea is simple: we choose a random vector
-$X$ of $n$ elements, and calculate the matrices
-$ABX$ and $CX$. If $ABX=CX$, we report that $AB=C$,
-and otherwise we report that $AB \neq C$.
+called \index{Freivalds' algoritm} \key{Freivalds' algorithm}.}
+で解くことができます。
+この計算量は$O(n^2)$です。
+考え方は簡単で、$n$この要素の$X$はランダムなベクトルを選びます。
+そして、$ABX$ と $CX$ を計算する。$ABX=CX$なら、$AB=C$です。
+そうでなければ$AB \neq C$です。
 
-The time complexity of the algorithm is
-$O(n^2)$, because we can calculate the matrices
-$ABX$ and $CX$ in $O(n^2)$ time.
-We can calculate the matrix $ABX$ efficiently
-by using the representation $A(BX)$, so only two
-multiplications of $n \times n$ and $n \times 1$
-size matrices are needed.
+このアルゴリズムの時間計算量は$O(n^2)$です。$ABX$と$CX$を$O(n^2)$の時間で計算できるためです。
+行列$ABX$を効率よく計算するには、以下の様にします。
+$A(BX)$という様に計算することで、$n \times n$ と$n \times 1$の演算をすれば良いからです。
 
-The drawback of the algorithm is
-that there is a small chance that the algorithm
-makes a mistake when it reports that $AB=C$.
-For example,
+このアルゴリズムの欠点は、わずかな確率で間違いを犯す可能性があります。
+
 \[
  \begin{bmatrix}
   6 & 8 \\
@@ -573,7 +442,7 @@ For example,
   3 & 2 \\
  \end{bmatrix},
 \]
-but
+ですが、
 \[
  \begin{bmatrix}
   6 & 8 \\
@@ -593,22 +462,16 @@ but
   6 \\
  \end{bmatrix}.
 \]
-However, in practice, the probability that the
-algorithm makes a mistake is small,
-and we can decrease the probability by
-verifying the result using multiple random vectors $X$
-before reporting that $AB=C$.
+しかし、実際にはアルゴリズムが誤りを犯す確率は小さいので、$AB=C$と報告する前に、
+さらにいくつかののランダムベクトル$X$を用いて結果を検証することで確率を下げることができます。
 
-\subsubsection{Graph coloring}
+\subsubsection{グラフの彩色 - Graph coloring}
 
-\index{coloring}
+\index{彩色 - coloring}
 
-Given a graph that contains $n$ nodes and $m$ edges,
-our task is to find a way to color the nodes
-of the graph using two colors so that
-for at least $m/2$ edges, the endpoints
-have different colors.
-For example, in the graph
+$n$個のノードと$m$個のエッジを持つグラフが与えられたとき、
+少なくとも$m/2$個 の辺の両端同士が異なる色になるように、
+グラフのノードを2色で彩色する方法を見つける問題です。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {$1$};
@@ -626,7 +489,7 @@ For example, in the graph
 \path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-a valid coloring is as follows:
+一例は
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle, fill=blue!40] (1) at (1,3) {$1$};
@@ -644,20 +507,11 @@ a valid coloring is as follows:
 \path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-The above graph contains 7 edges, and for 5 of them,
-the endpoints have different colors,
-so the coloring is valid.
+このグラフには7本の辺があり、そのうち5本は両端の色が異なるので有効です。
 
-The problem can be solved using a Las Vegas algorithm
-that generates random colorings until a valid coloring
-has been found.
-In a random coloring, the color of each node is
-independently chosen so that the probability of
-both colors is $1/2$.
+この問題は、有効な彩色が見つかるまでランダムに点を選ぶ生成するラスベガス・アルゴリズムを使って解けます。
+各ノードの色は独立に選ばれ、両方の色の確率が1/2になるようにします。
 
-In a random coloring, the probability that the endpoints
-of a single edge have different colors is $1/2$.
-Hence, the expected number of edges whose endpoints
-have different colors is $m/2$.
-Since it is expected that a random coloring is valid,
-we will quickly find a valid coloring in practice.
+一つの辺の端点が異なる色になる確率は$1/2$なのでしたがって，
+端点の色が異なる辺の数の期待値は$m/2$です。
+このため、何度か試せば成立すると期待できます。

@@ -11,9 +11,9 @@
 
 \key{深さ優先探索(Depth-first search)} (DFS)は直線的なグラフ探索技法です。
 開始ノードからエッジを使用して到達可能な他のすべてのノードに進みます。
-深さ優先探索は、新しいノードが見つかる限り、常にグラフ内の単一経路をたどります。
-行き止まりになったら、前のノードに戻り、グラフの他の部分の探索を開始します。
-このアルゴリズムは、訪問したノードを記録しておき、各ノードを一度だけ処理するようにします。
+深さ優先探索は、新しいノードがある限り常にグラフ内の下側に辿ります。
+行き止まりになったら、前のノードに戻りグラフの他の部分の探索を開始します。
+このアルゴリズムは、訪問したノードを記録しておき各ノードを一度だけ処理するようにします。
 
 \subsubsection*{例}
 次のグラフを深さ優先探索で処理する方法を考えます。
@@ -76,7 +76,7 @@
 \end{center}
 ノード5の隣接ノードは2と3ですが、
 すでにその両方を訪れているので、前のノードに戻ります。
-また、ノード3と2の隣接ノードは訪問済みなので、
+また、ノード3と2の隣接ノードは全て訪問済みなので、
 次はノード1からノード4へ移動することになります。
 \begin{center}
 \begin{tikzpicture}
@@ -96,9 +96,9 @@
 \end{tikzpicture}
 \end{center}
 
-これですべてのノードを訪問したため、探索は終了します。
+これですべてのノードを訪問したので探索は終了します。
 
-深さ優先探索の時間計算量は $O(n + m)$ （n はノードの数、m はエッジの数）です。
+深さ優先探索の時間計算量は $O(n + m)$ （$n$ はノードの数、$m$ はエッジの数）です。
 なぜなら全てのノードと辺が１回ずつ辿るからです。
 
 \subsubsection*{DFSの実装}
@@ -127,31 +127,18 @@ void dfs(int s) {
 }
 \end{lstlisting}
 
-\section{Breadth-first search}
+\section{幅優先探索 - Breadth-first search}
 
 \index{breadth-first search}
 
-\key{Breadth-first search} (BFS) visits the nodes
-in increasing order of their distance
-from the starting node.
-Thus, we can calculate the distance
-from the starting node to all other
-nodes using breadth-first search.
-However, breadth-first search is more difficult
-to implement than depth-first search.
+\key{幅優先探索 - Breadth-first search} （BFS）は、開始ノードからの距離順が小さい順にノードを訪問していきます。
+つまり、BFSを用いると始点ノードから他のすべてのノードまでの距離を計算することができます(訳註: これはDFSでも可能です)。
+ただし、BFSは深さ優先探索よりも実装が複雑になります。
+BFSはノードを深さごとに見ていきます。まず、開始ノードからの距離が1であるノードを探索し、次に距離が2であるノードを探索し、
+というようにすべてのノードが訪問されるまで続けられます。
 
-Breadth-first search goes through the nodes
-one level after another.
-First the search explores the nodes whose
-distance from the starting node is 1,
-then the nodes whose distance is 2, and so on.
-This process continues until all nodes
-have been visited.
-
-\subsubsection*{Example}
-
-Let us consider how breadth-first search processes
-the following graph:
+\subsubsection*{例}
+次のようなグラフに対して、幅優先探索がどのように処理されるかを考えてみよう。
 
 \begin{center}
 \begin{tikzpicture}
@@ -170,9 +157,8 @@ the following graph:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Suppose that the search begins at node 1.
-First, we process all nodes that can be reached
-from node 1 using a single edge:
+
+ノード1から探索を開始したとします。最初に、ノード1から直接つながっている1つの辺で到達可能なすべてのノードを探索します。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -198,7 +184,8 @@ from node 1 using a single edge:
 \path[draw=red,thick,->,line width=2pt] (1) -- (4);
 \end{tikzpicture}
 \end{center}
-After this, we proceed to nodes 3 and 5:
+その後、ノード3、ノード5を探索します。
+
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -224,7 +211,8 @@ After this, we proceed to nodes 3 and 5:
 \path[draw=red,thick,->,line width=2pt] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-Finally, we visit node 6:
+最後に、ノード6が探索されます。
+
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (1) at (1,5) {$1$};
@@ -250,9 +238,8 @@ Finally, we visit node 6:
 \path[draw=red,thick,->,line width=2pt] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Now we have calculated the distances
-from the starting node to all nodes of the graph.
-The distances are as follows:
+
+開始ノードからグラフの全ノードまでの距離を以下のように計算できました。
 
 \begin{tabular}{ll}
 \\
@@ -267,44 +254,29 @@ node & distance \\
 \\
 \end{tabular}
 
-Like in depth-first search,
-the time complexity of breadth-first search
-is $O(n+m)$, where $n$ is the number of nodes
-and $m$ is the number of edges.
 
-\subsubsection*{Implementation}
+BFSもDFSと同様に$O(n+m)$の計算量で実行できます。先ほどと同様に$n$が辺の数、
+$m$が頂点とします。
 
-Breadth-first search is more difficult
-to implement than depth-first search,
-because the algorithm visits nodes
-in different parts of the graph.
-A typical implementation is based on
-a queue that contains nodes.
-At each step, the next node in the queue
-will be processed.
+\subsubsection*{実装}
 
-The following code assumes that the graph is stored
-as adjacency lists and maintains the following
-data structures:
+BFSは今探索しているノードとは異なる部分のノードを訪問するため、DFSよりも実装が少し複雑になります。
+最もシンプルなアプローチは探索するノードのキューを持ち、各ステップではキュー内の最初のノードを処理します。
+
+以下のコードはグラフが隣接リストとして格納され、以下の変数を保持することを想定しています。
+
 \begin{lstlisting}
 queue<int> q;
 bool visited[N];
 int distance[N];
 \end{lstlisting}
 
-The queue \texttt{q}
-contains nodes to be processed
-in increasing order of their distance.
-New nodes are always added to the end
-of the queue, and the node at the beginning
-of the queue is the next node to be processed.
-The array \texttt{visited} indicates
-which nodes the search has already visited,
-and the array \texttt{distance} will contain the
-distances from the starting node to all nodes of the graph.
+キュー\texttt{q} には処理すべきノードが距離の昇順に並んでいます。
+新しいノードは常にキューの末尾に追加されて待ち行列の先頭にあるノードが次に処理されるノードとなる。
+配列\texttt{visited}は訪問済みのノードであるかを持ち、
+配列\texttt{distance}は開始ノードからグラフの全ノードまでの距離を持ちます。
 
-The search can be implemented as follows,
-starting at node $x$:
+ノード\texttt{x} から始まる探索は，以下のように実装できます。
 \begin{lstlisting}
 visited[x] = true;
 distance[x] = 0;
@@ -321,29 +293,22 @@ while (!q.empty()) {
 }
 \end{lstlisting}
 
-\section{Applications}
 
-Using the graph traversal algorithms,
-we can check many properties of graphs.
-Usually, both depth-first search and
-breadth-first search may be used,
-but in practice, depth-first search
-is a better choice, because it is
-easier to implement.
-In the following applications we will
-assume that the graph is undirected.
+\section{応用 - Applications}
 
-\subsubsection{Connectivity check}
+
+グラフの探索アルゴリズムを用いると、いくつかのグラフの特性を確認することができます。
+多くのケースでDFS,BFSの両方を用いることができますが、実装が簡易性からDFSを選択することが多いでしょう。
+以下の応用例では、グラフは無向であると仮定する。
+
+\subsubsection{連結性チェック - Connectivity check}
 
 \index{connected graph}
 
-A graph is connected if there is a path
-between any two nodes of the graph.
-Thus, we can check if a graph is connected
-by starting at an arbitrary node and
-finding out if we can reach all other nodes.
+グラフの任意の2つのノード間にパスが存在するとき、グラフは連結していると言えます。
+つまり任意のノードから出発して、他のすべてのノードに到達できるかどうかを調べれば、グラフが連結されているかどうかを調べることができます。
 
-For example, in the graph
+例えば次のようなグラフを考えます。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (7,5) {$2$};
@@ -358,8 +323,8 @@ For example, in the graph
 \path[draw,thick,-] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-a depth-first search from node $1$ visits
-the following nodes:
+
+DFSをノード1から実行します。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (7,5) {$2$};
@@ -379,22 +344,17 @@ the following nodes:
 \end{tikzpicture}
 \end{center}
 
-Since the search did not visit all the nodes,
-we can conclude that the graph is not connected.
-In a similar way, we can also find all connected components
-of a graph by iterating through the nodes and always
-starting a new depth-first search if the current node
-does not belong to any component yet.
+この結果、すべてのノードが訪問されなかったので、このグラフは連結されていないと結論づけられます。
+このあと、探索されていないノードからさらに新しい深さ優先探索を開始することにより、グラフのすべての連結成分を見つけることもできます。
 
-\subsubsection{Finding cycles}
+
+\subsubsection{閉路の検出 - Finding cycles}
 
 \index{cycle}
 
-A graph contains a cycle if during a graph traversal,
-we find a node whose neighbor (other than the
-previous node in the current path) has already been
-visited.
-For example, the graph
+あるノードの探索中に、（現在のパスの前のノード以外の）その隣接ノードがすでに訪問されている場合、グラフはサイクルを含んでいることになります。
+
+これも例で示します。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (7,5) {$2$};
@@ -411,8 +371,8 @@ For example, the graph
 \path[draw,thick,-] (3) -- (5);
 \end{tikzpicture}
 \end{center}
-contains two cycles and we can find one
-of them as follows:
+
+これには２つの閉路が含まれます。例えばこの１つを見つけるのは以下のように行われます。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=lightgray] (2) at (7,5) {$2$};
@@ -434,39 +394,31 @@ of them as follows:
 
 \end{tikzpicture}
 \end{center}
-After moving from node 2 to node 5 we notice that
-the neighbor 3 of node 5 has already been visited.
-Thus, the graph contains a cycle that goes through node 3,
-for example, $3 \rightarrow 2 \rightarrow 5 \rightarrow 3$.
 
-Another way to find out whether a graph contains a cycle
-is to simply calculate the number of nodes and edges
-in every component.
-If a component contains $c$ nodes and no cycle,
-it must contain exactly $c-1$ edges
-(so it has to be a tree).
-If there are $c$ or more edges, the component
-surely contains a cycle.
 
-\subsubsection{Bipartiteness check}
+ノード2からノード5に移動した後、ノード5の隣接ノード3はすでに訪問済みであるとわかります。
+したがって，このグラフには，例えば
+$3 \rightarrow 2 \rightarrow 5 \rightarrow 3$
+のような3を含む閉路があるとわかります。
+
+グラフが閉路を含むかどうかを調べるにはもう１つ方法があります。
+各要素のノードとエッジの数を数えます．
+$c$個のノードの連結のグラフは閉路がなければちょうど$c - 1$本のエッジを含むはずです（つまり、木でなければならない）。
+c個以上の辺があれば、この連結成分には必ず閉路が含まれます。
+
+
+\subsubsection{二部グラフチェック - Bipartiteness check}
 
 \index{bipartite graph}
 
-A graph is bipartite if its nodes can be colored
-using two colors so that there are no adjacent
-nodes with the same color.
-It is surprisingly easy to check if a graph
-is bipartite using graph traversal algorithms.
+グラフを同じ色のノードが隣接しないようにノードが2色で着色できる場合二部グラフと呼ばれます。
+グラフの探索アルゴリズムを用いて二部グラフかどうかを調べるのは非常に簡単です。
 
-The idea is to color the starting node blue,
-all its neighbors red, all their neighbors blue, and so on.
-If at some point of the search we notice that
-two adjacent nodes have the same color,
-this means that the graph is not bipartite.
-Otherwise the graph is bipartite and one coloring
-has been found.
+例えば、開始ノードを青、その隣をすべて赤、その隣をすべて青、といった具合に色分けしていきます。
+探索のある時点で、隣接する2つのノードが同じ色であることに気づいたら、そのグラフは二部グラフでありません。
+そうでなければ、グラフは二部グラフにでき、その1つの色付けが見つけたことになります。
 
-For example, the graph
+例えば以下のグラフがあります。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (2) at (5,5) {$2$};
@@ -483,8 +435,8 @@ For example, the graph
 \path[draw,thick,-] (5) -- (3);
 \end{tikzpicture}
 \end{center}
-is not bipartite, because a search from node 1
-proceeds as follows:
+
+これはノード1からの探索が次のようになるので条件を満たしません。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle,fill=red!40] (2) at (5,5) {$2$};
@@ -506,20 +458,10 @@ proceeds as follows:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-We notice that the color of both nodes 2 and 5
-is red, while they are adjacent nodes in the graph.
-Thus, the graph is not bipartite.
+隣接するノード2と5は共に赤です。したがって、このグラフは二部グラフにはできません。
 
-This algorithm always works, because when there
-are only two colors available,
-the color of the starting node in a component
-determines the colors of all other nodes in the component.
-It does not make any difference whether the
-starting node is red or blue.
+利用可能な色が2色しかない場合、コンポーネントの開始ノードの色がそのコンポーネントの他のすべてのノードの色を決定します。
+開始ノードが赤であろうと青であろうと、結果は変わりません。
 
-Note that in the general case,
-it is difficult to find out if the nodes
-in a graph can be colored using $k$ colors
-so that no adjacent nodes have the same color.
-Even when $k=3$, no efficient algorithm is known
-but the problem is NP-hard.
+ここで注意があります。グラフのノードを$k$色で着色して，隣接するノードが同じ色にならないようにできるかどうかを調べることは非常に困難です。
+$k = 3$ の場合でも、効率的なアルゴリズムは知られておらず、この問題は NP困難$(NP-hard)$ です。

@@ -1,23 +1,21 @@
-\chapter{Range queries}
+\chapter{区間クエリ - Range queries}
 
-\index{range query}
-\index{sum query}
-\index{minimum query}
-\index{maximum query}
+\index{区間クエリ - range query}
+\index{和のクエリ - sum query}
+\index{最小クエリ - minimum query}
+\index{最大クエリ - maximum query}
 
-In this chapter, we discuss data structures
-that allow us to efficiently process range queries.
-In a \key{range query},
-our task is to calculate a value
-based on a subarray of an array.
-Typical range queries are:
+この章では\key{区間クエリ - range query}を効率的に処理するためのデータ構造について取り上げます。
+区間クエリとは配列の部分配列の値を計算することが課題となります。
+典型的なレンジクエリをいくつか紹介します。
+
 \begin{itemize}
-\item $\texttt{sum}_q(a,b)$: calculate the sum of values in range $[a,b]$
-\item $\texttt{min}_q(a,b)$: find the minimum value in range $[a,b]$
-\item $\texttt{max}_q(a,b)$: find the maximum value in range $[a,b]$
+\item $\texttt{sum}_q(a,b)$: $[a,b]$ の和を求めます
+\item $\texttt{min}_q(a,b)$: $[a,b]$ に含まれる最小の値を求めます
+\item $\texttt{max}_q(a,b)$: $[a,b]$ に含まれる最大の値を求めます
 \end{itemize}
 
-For example, consider the range $[3,6]$ in the following array:
+例えば以下の$[3,6]$の区間を考えます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -43,13 +41,12 @@ For example, consider the range $[3,6]$ in the following array:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-In this case, $\texttt{sum}_q(3,6)=14$,
-$\texttt{min}_q(3,6)=1$ and $\texttt{max}_q(3,6)=6$.
+この例では$\texttt{sum}_q(3,6)=14$,
+$\texttt{min}_q(3,6)=1$, $\texttt{max}_q(3,6)=6$となります。
 
-A simple way to process range queries is to use
-a loop that goes through all array values in the range.
-For example, the following function can be
-used to process sum queries on an array:
+区間クエリを処理する簡単な方法は、
+レンジ内のすべての配列値を通過するループを使用することです。
+たとえば、配列に対する sum クエリは以下のように書けます。
 
 \begin{lstlisting}
 int sum(int a, int b) {
@@ -61,36 +58,27 @@ int sum(int a, int b) {
 }
 \end{lstlisting}
 
-This function works in $O(n)$ time,
-where $n$ is the size of the array.
-Thus, we can process $q$ queries in $O(nq)$
-time using the function.
-However, if both $n$ and $q$ are large, this approach
-is slow. Fortunately, it turns out that there are
-ways to process range queries much more efficiently.
+この関数は配列のサイズ$n$に対して$O(n)$時間で動作します。
+つまり、$q$のクエリがあれば$O(nq)$で処理できます。
+この場合、$n$と$q$が大きいと計算は遅くなります。
+この章ではより効率的なレンジクエリの求め方を見ていきましょう。
 
-\section{Static array queries}
+\section{静的なクエリ - Static array queries}
 
-We first focus on a situation where
-the array is \emph{static}, i.e.,
-the array values are never updated between the queries.
-In this case, it suffices to construct
-a static data structure that tells us
-the answer for any possible query.
+まず、配列が\emph{静的 - static}である場合を考えます。
+静的な配列とは、クエリで配列の値が更新されることがない場合を指します。
+どのようなクエリに対しても高速に答えを教えてくれる静的なデータ構造を構築すれば十分です。
 
-\subsubsection{Sum queries}
+\subsubsection{和のクエリSum queries}
 
-\index{prefix sum array}
+\index{累積和 - prefix sum array}
 
-We can easily process
-sum queries on a static array
-by constructing a \key{prefix sum array}.
-Each value in the prefix sum array equals
-the sum of values in the original array up to that position,
-i.e., the value at position $k$ is $\texttt{sum}_q(0,k)$.
-The prefix sum array can be constructed in $O(n)$ time.
+静的配列に対するsumクエリは、
+\key{累積和 - prefix sum array}の配列を作成することで簡単に処理することができます。
+位置$k$の値は$\texttt{sum}_q(0,k)$となります。
+この配列は $O(n)$ 時間で構築できます.
 
-For example, consider the following array:
+例えば、次のような配列を考えてみましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -116,7 +104,7 @@ For example, consider the following array:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-The corresponding prefix sum array is as follows:
+対応する累積和の配列は以下の通りです。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 %\fill[color=lightgray] (3,0) rectangle (7,1);
@@ -143,15 +131,12 @@ The corresponding prefix sum array is as follows:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-Since the prefix sum array contains all values
-of $\texttt{sum}_q(0,k)$,
-we can calculate any value of
-$\texttt{sum}_q(a,b)$ in $O(1)$ time as follows:
+sum 配列には$\texttt{sum}_q(0,k)$ のすべての値が含まれているので、
+以下のように 任意の値$\texttt{sum}_q(a,b)$ を$O(1)$時間で計算することが可能です。
 \[ \texttt{sum}_q(a,b) = \texttt{sum}_q(0,b) - \texttt{sum}_q(0,a-1)\]
-By defining $\texttt{sum}_q(0,-1)=0$,
-the above formula also holds when $a=0$.
+$\texttt{sum}_q(0,-1)=0$と定義することで、$a = 0$のときにも上式が成り立ちます。
 
-For example, consider the range $[3,6]$:
+例えば、$[3, 6]$の範囲を考えてみましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (3,0) rectangle (7,1);
@@ -177,9 +162,8 @@ For example, consider the range $[3,6]$:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-In this case $\texttt{sum}_q(3,6)=8+6+1+4=19$.
-This sum can be calculated from
-two values of the prefix sum array:
+この場合、$\texttt{sum}_q(3,6)=8+6+1+4=19$.
+であるため、この和は、sum配列の2つの値から計算できることがわかりました。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (3,1);
@@ -206,19 +190,15 @@ two values of the prefix sum array:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-Thus, $\texttt{sum}_q(3,6)=\texttt{sum}_q(0,6)-\texttt{sum}_q(0,2)=27-8=19$.
+$\texttt{sum}_q(3,6)=\texttt{sum}_q(0,6)-\texttt{sum}_q(0,2)=27-8=19$.
+です。
 
-It is also possible to generalize this idea
-to higher dimensions.
-For example, we can construct a two-dimensional
-prefix sum array that can be used to calculate
-the sum of any rectangular subarray in $O(1)$ time.
-Each sum in such an array corresponds to
-a subarray
-that begins at the upper-left corner of the array.
+このアイデアは多次元に一般化することもできます。
+例えば、任意の矩形部分配列の和を $O(1)$時間で計算できる2次元累積和配列が構築できます。
+このような配列の各和は、配列の左上隅から始まる部分配列に対応します。
 
 \begin{samepage}
-The following picture illustrates the idea:
+このイメージを次に示します。
 \begin{center}
 \begin{tikzpicture}[scale=0.54]
 \draw[fill=lightgray] (3,2) rectangle (7,5);
@@ -231,38 +211,29 @@ The following picture illustrates the idea:
 \end{center}
 \end{samepage}
 
-The sum of the gray subarray can be calculated
-using the formula
+これは、以下の式で計算できます。
 \[S(A) - S(B) - S(C) + S(D),\]
-where $S(X)$ denotes the sum of values
-in a rectangular
-subarray from the upper-left corner
-to the position of $X$.
+ここで、$S(X )$は左上から $X$ の位置までの長方形の和を表します。
 
-\subsubsection{Minimum queries}
+\subsubsection{最小クエリ - Minimum queries}
 
-\index{sparse table}
+\index{スパーステーブル - sparse table}
 
-Minimum queries are more difficult to process
-than sum queries.
-Still, there is a quite simple 
-$O(n \log n)$ time preprocessing
-method after which we can answer any minimum
-query in $O(1)$ time\footnote{This technique
+最小クエリは和クエリよりも処理が困難です。
+それでも、$O(n \log n)$時間の非常に簡単な前処理法を行い、
+その後、$O(1)$で任意の最小クエリ答えることができます。
+\footnote{This technique
 was introduced in \cite{ben00} and sometimes
 called the \key{sparse table} method.
 There are also more sophisticated techniques \cite{fis06} where
 the preprocessing time is only $O(n)$, but such algorithms
-are not needed in competitive programming.}.
-Note that since minimum and maximum queries can
-be processed similarly,
-we can focus on minimum queries.
+are not needed in competitive programming.}
+最大と最小は同じように考えられますがここでは最小に焦点をあてて考えていきます。
 
-The idea is to precalculate all values of
-$\textrm{min}_q(a,b)$ where
-$b-a+1$ (the length of the range) is a power of two.
-For example, for the array
-
+このアイデアは、
+$b - a + 1$ (範囲の長さ)が2の累乗である$\textrm{min}_q(a,b)$
+のすべての値を事前に計算することです。
+これは、スパーステーブルと呼ばれるデータ構造です。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -287,8 +258,8 @@ For example, for the array
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-the following values are calculated:
 
+この場合、以下のようにテーブルを持ちます。
 \begin{center}
 \begin{tabular}{ccc}
 
@@ -338,24 +309,22 @@ $a$ & $b$ & $\texttt{min}_q(a,b)$ \\
 \end{tabular}
 \end{center}
 
-The number of precalculated values is $O(n \log n)$,
-because there are $O(\log n)$ range lengths
-that are powers of two.
-The values can be calculated efficiently
-using the recursive formula
+2の累乗である$O(n \log n)$個の範囲長が存在するため、
+事前計算される値の数 は$O(n \log n)$個です。
+クエリの値は再帰的な式を使って効率的に計算することができます。
 \[\texttt{min}_q(a,b) = \min(\texttt{min}_q(a,a+w-1),\texttt{min}_q(a+w,b)),\]
-where $b-a+1$ is a power of two and $w=(b-a+1)/2$.
-Calculating all those values takes $O(n \log n)$ time.
 
-After this, any value of $\texttt{min}_q(a,b)$ can be calculated
-in $O(1)$ time as a minimum of two precalculated values.
-Let $k$ be the largest power of two that does not exceed $b-a+1$.
-We can calculate the value of $\texttt{min}_q(a,b)$ using the formula
+$b - a + 1 $を2の累乗として$w=(b-a+1)/2$である。
+これらの値をすべて計算す ると$O(n \log n)$の時間がかかります。
+
+この後、$\texttt{min}_q(a,b)$の任意の値は、
+事前に計算された2つの値の最小値として$O(1)$ で計算できます。
+b$ - a + 1$ を超えない最大の2の累乗をkとしましょう。
+$\texttt{min}_q(a,b)$の値は次の式で計算することができます。
 \[\texttt{min}_q(a,b) = \min(\texttt{min}_q(a,a+k-1),\texttt{min}_q(b-k+1,b)).\]
-In the above formula, the range $[a,b]$ is represented
-as the union of the ranges $[a,a+k-1]$ and $[b-k+1,b]$, both of length $k$.
+上式では、範囲$[a，b]$は、長さkの範囲$[a，a+k - 1]$と$[b-k+1，b]$のを結合したものです。
 
-As an example, consider the range $[1,6]$:
+例として、$[1, 6]$の範囲を考えてみましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (7,1);
@@ -381,11 +350,9 @@ As an example, consider the range $[1,6]$:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-The length of the range is 6,
-and the largest power of two that does
-not exceed 6 is 4.
-Thus the range $[1,6]$ is
-the union of the ranges $[1,4]$ and $[3,6]$:
+範囲の長さは6であり，6を超えない2の最大累乗は4である。
+したがって，範囲
+$[1，6]$は範囲$[1，4]$と$[3，6]$を結合したものとなります。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -437,46 +404,35 @@ the union of the ranges $[1,4]$ and $[3,6]$:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-Since $\texttt{min}_q(1,4)=3$ and $\texttt{min}_q(3,6)=1$,
-we conclude that $\texttt{min}_q(1,6)=1$.
+$\texttt{min}_q(1,4)=3$ で $\texttt{min}_q(3,6)=1$のため、
+$\texttt{min}_q(1,6)=1$ ということがわかりました。
 
-\section{Binary indexed tree}
+\section{BIT - Binary indexed tree}
 
-\index{binary indexed tree}
-\index{Fenwick tree}
+\index{BIT - binary indexed tree}
+\index{フェニック木 - Fenwick tree}
 
-A \key{binary indexed tree} or a \key{Fenwick tree}\footnote{The
+\key{BIT - binary indexed tree} あるいは \key{フェニック木 - Fenwick tree}\footnote{The
 binary indexed tree structure was presented by P. M. Fenwick in 1994 \cite{fen94}.}
-can be seen as a dynamic variant of a prefix sum array.
-It supports two $O(\log n)$ time operations on an array:
-processing a range sum query and updating a value.
+は動的な操作が可能な累積の配列です。
+この構造は配列に対して2つの$O(\log n)$時間の範囲和のクエリと単一値の更新をサポートします。
 
-The advantage of a binary indexed tree is
-that it allows us to efficiently update
-array values between sum queries.
-This would not be possible using a prefix sum array,
-because after each update, it would be necessary to build the
-whole prefix sum array again in $O(n)$ time.
+BITの利点は、
+これは先ほど述べた累積和では不可能なクエリの途中の配列の値の更新を効率的にできることです。
+累積話は更新のたびに配列全体を再び構築する必要があり、$O(n)$時間かかるからです。
 
-\subsubsection{Structure}
+\subsubsection{構造 - Structure}
 
-Even if the name of the structure is a binary indexed \emph{tree},
-it is usually represented as an array.
-In this section we assume that all arrays are one-indexed,
-because it makes the implementation easier.
+BITはbinary indexed \emph{tree}という(木のつく)名前ではありますが配列で表現されます。
+また、実装を容易にするためにBITでは配列が1インデックスで扱うことに注意してください。
 
-Let $p(k)$ denote the largest power of two that
-divides $k$.
-We store a binary indexed tree as an array \texttt{tree}
-such that
+$p(k)$は$k$を割る2の最大累乗を表すとしましょう。この時に以下のようになります。
 \[ \texttt{tree}[k] = \texttt{sum}_q(k-p(k)+1,k),\]
-i.e., each position $k$ contains the sum of values
-in a range of the original array whose length is $p(k)$
-and that ends at position $k$.
-For example, since $p(6)=2$, $\texttt{tree}[6]$
-contains the value of $\texttt{sum}_q(5,6)$.
+各位置 $k$ には、元の配列の長さを$p(k)$ とし、位置$k$で終わる範囲までの値の合計が含まれます。
+例えば、$p(6) = 2$ なので、$\texttt{tree}[6]$ には 
+$\texttt{sum}_q(5,6)$の 値が含まれます。
 
-For example, consider the following array:
+例えば、次のような配列を考えてみましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -502,7 +458,7 @@ For example, consider the following array:
 \end{tikzpicture}
 \end{center}
 
-The corresponding binary indexed tree is as follows:
+これに対応するBITは次のようになります。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -528,9 +484,7 @@ The corresponding binary indexed tree is as follows:
 \end{tikzpicture}
 \end{center}
 
-The following picture shows more clearly
-how each value in the binary indexed tree
-corresponds to a range in the original array:
+元の図との対応をわかりやすく表現したのが次の図です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -575,14 +529,10 @@ corresponds to a range in the original array:
 \end{tikzpicture}
 \end{center}
 
-Using a binary indexed tree,
-any value of $\texttt{sum}_q(1,k)$
-can be calculated in $O(\log n)$ time,
-because a range $[1,k]$ can always be divided into
-$O(\log n)$ ranges whose sums are stored in the tree.
+BITを用いると、$\texttt{sum}_q(1,k)$の任意の値を $O(\log n)$時間で計算できます。
+これは、範囲 $[1, k]$ が常に$O(\log n)$の範囲に分割されて木に格納されているからです。
 
-For example, the range $[1,7]$ consists of
-the following ranges:
+例えば、範囲$[1, 7]$は、以下の範囲から構成されます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -625,21 +575,15 @@ the following ranges:
 \draw (0,-4) -- (8,-4) -- (8,-4.5) -- (0,-4.5) -- (0,-4);
 \end{tikzpicture}
 \end{center}
-Thus, we can calculate the corresponding sum as follows:
+このため、次のように対応する区間を足せば良いです。
 \[\texttt{sum}_q(1,7)=\texttt{sum}_q(1,4)+\texttt{sum}_q(5,6)+\texttt{sum}_q(7,7)=16+7+4=27\]
 
-To calculate the value of $\texttt{sum}_q(a,b)$ where $a>1$,
-we can use the same trick that we used with prefix sum arrays:
+$\texttt{sum}_q(a,b)$  で $a > 1 $の値を計算するには、累積和のときと同じように求めます。
 \[ \texttt{sum}_q(a,b) = \texttt{sum}_q(1,b) - \texttt{sum}_q(1,a-1).\]
-Since we can calculate both $\texttt{sum}_q(1,b)$
-and $\texttt{sum}_q(1,a-1)$ in $O(\log n)$ time,
-the total time complexity is $O(\log n)$.
+$\texttt{sum}_q(1,b)$ と $\texttt{sum}_q(1,a-1)$の両方は
+$O(\log n)$で計算できるのでこの時間計算量は$O(\log n)$となります。
 
-Then, after updating a value in the original array,
-several values in the binary indexed tree
-should be updated.
-For example, if the value at position 3 changes,
-the sums of the following ranges change:
+次は更新を見ていきます。例えば、位置3の値が変化した場合、以下の範囲に変化が生じます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -683,19 +627,16 @@ the sums of the following ranges change:
 \end{tikzpicture}
 \end{center}
 
-Since each array element belongs to $O(\log n)$
-ranges in the binary indexed tree,
-it suffices to update $O(\log n)$ values in the tree.
+この操作もBITでは$O(\log n)$個の要素を更新すれば良いため、
+更新の時間計算量は$O(\log n)$であるとわかります。
 
-\subsubsection{Implementation}
+\subsubsection{実装 - Implementation}
 
-The operations of a binary indexed tree can be
-efficiently implemented using bit operations.
-The key fact needed is that we can
-calculate any value of $p(k)$ using the formula
+BITはビット演算を用いて効率的に実装することができます。
+ここで用いる重要なことは$p(k)$の任意の値を次の式で計算できることです。
 \[p(k) = k \& -k.\]
 
-The following function calculates the value of $\texttt{sum}_q(1,k)$:
+次の関数は、$\texttt{sum}_q(1,k)$の値を計算するものです。
 \begin{lstlisting}
 int sum(int k) {
     int s = 0;
@@ -707,9 +648,7 @@ int sum(int k) {
 }
 \end{lstlisting}
 
-The following function increases the
-array value at position $k$ by $x$
-($x$ can be positive or negative):
+次の関数は，位置 $k$ の配列の値を $x$ だけ増加させます(x は正でも負でも良いです)
 \begin{lstlisting}
 void add(int k, int x) {
     while (k <= n) {
@@ -719,53 +658,39 @@ void add(int k, int x) {
 }
 \end{lstlisting}
 
-The time complexity of both the functions is
-$O(\log n)$, because the functions access $O(\log n)$
-values in the binary indexed tree, and each move
-to the next position takes $O(1)$ time.
+この時間計算量は$O(\log n)$です。
+BIT内の$\log n$個の値にアクセスし、次の位置に移動するたびに$O(1)$時間の時間がかかるためです。
 
-\section{Segment tree}
+\section{セグメントツリー - Segment tree}
 
-\index{segment tree}
+\index{セグメントツリー - segment tree}
 
-A \key{segment tree}\footnote{The bottom-up-implementation in this chapter corresponds to
+\key{セグメントツリー - segment tree}\footnote{The bottom-up-implementation in this chapter corresponds to
 that in \cite{sta06}. Similar structures were used
-in late 1970's to solve geometric problems \cite{ben80}.} is a data structure
-that supports two operations:
-processing a range query and
-updating an array value.
-Segment trees can support
-sum queries, minimum and maximum queries and many other
-queries so that both operations work in $O(\log n)$ time.
+in late 1970's to solve geometric problems \cite{ben80}.}
+も区間クエリと値の更新をサポートするデータ構造です。
+セグメントツリーは、和、最小、最大の問い合わせ、その他多くの問い合わせをサポートできて
+区間クエリと単一値の操作を$O(\log n)$時間で実行できるデータ構造です。
 
-Compared to a binary indexed tree,
-the advantage of a segment tree is that it is
-a more general data structure.
-While binary indexed trees only support
-sum queries\footnote{In fact, using \emph{two} binary
+BITと比較して、セグメント木はより一般的なデータ構造であることが利点である。
+BITは和の問い合わせのみをサポートします\footnote{In fact, using \emph{two} binary
 indexed trees it is possible to support minimum queries \cite{dim15},
-but this is more complicated than to use a segment tree.},
-segment trees also support other queries.
-On the other hand, a segment tree requires more
-memory and is a bit more difficult to implement.
+but this is more complicated than to use a segment tree.}。
+一方でセグメントツリーは、他のクエリもサポートしますが
+より多くのメモリを必要とし、実装が少し複雑になります。
 
-\subsubsection{Structure}
+\subsubsection{構造 - Structure}
 
-A segment tree is a binary tree
-such that the nodes on the bottom level of the tree
-correspond to the array elements,
-and the other nodes
-contain information needed for processing range queries.
+セグメントツリーは、
+最下層のノードが配列要素に対応し、
+その他のノードは区間クエリに必要な情報を含む二分木の構造を持ちます。
 
-In this section, we assume that the size
-of the array is a power of two and zero-based
-indexing is used, because it is convenient to build
-a segment tree for such an array.
-If the size of the array is not a power of two,
-we can always append extra elements to it.
+ここでは配列のサイズが2の累乗で、
+ゼロベースでインデックスを作成することを想定します。
+配列のサイズが 2 の累乗でない場合は、余分なノードを追加してこれを作ります。
 
-We will first discuss segment trees that support sum queries.
-As an example, consider the following array:
+まず、sumクエリをサポートするセグメントツリーについて説明します。例として、次のような配列を考えてみましょう。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -790,7 +715,7 @@ As an example, consider the following array:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-The corresponding segment tree is as follows:
+これに対応するセグメントツリーを示します。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -830,18 +755,14 @@ The corresponding segment tree is as follows:
 \end{tikzpicture}
 \end{center}
 
-Each internal tree node
-corresponds to an array range
-whose size is a power of two.
-In the above tree, the value of each internal
-node is the sum of the corresponding array values,
-and it can be calculated as the sum of
-the values of its left and right child node.
 
-It turns out that any range $[a,b]$
-can be divided into $O(\log n)$ ranges
-whose values are stored in tree nodes.
-For example, consider the range [2,7]:
+内部のツリーの各ノードは、
+サイズが2のべき乗である配列の範囲に対応しています。
+上記のツリーでは，各内部ノードの値は対応する配列の値の合計で、
+その左右の子ノードの値の合計として計算されていきます。
+
+任意の範囲$[a, b]$は、その値が木のノードに格納される$O(\log n)$ 個の範囲に分割できることは明らかです。
+例えば、範囲$[2,7]$を考えてみよう。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=gray!50] (2,0) rectangle (8,1);
@@ -867,9 +788,8 @@ For example, consider the range [2,7]:
 \node at (7.5,1.4) {$7$};
 \end{tikzpicture}
 \end{center}
-Here $\texttt{sum}_q(2,7)=6+3+2+7+2+6=26$.
-In this case, the following two tree nodes
-correspond to the range:
+$\texttt{sum}_q(2,7)=6+3+2+7+2+6=26$.
+となりますが、ここでツリー上の以下のノードに注目しましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -908,24 +828,15 @@ correspond to the range:
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-Thus, another way to calculate the sum is $9+17=26$.
+これを利用すると$9+17=26$と求めることができます。
 
-When the sum is calculated using nodes
-located as high as possible in the tree,
-at most two nodes on each level
-of the tree are needed.
-Hence, the total number of nodes
-is $O(\log n)$.
+木のできるだけ高い位置にあるノードを用いて和を計算すると、各レベルに必要なノードは最大で2つ利用すれば良いです。
+従って、処理する最大のノードの総数は$O(\log n)$です。
 
-After an array update,
-we should update all nodes
-whose value depends on the updated value.
-This can be done by traversing the path
-from the updated array element to the top node
-and updating the nodes along the path.
+ここで更新の処理を考えましょう。配列の更新を行った後には更新された値に値が依存するすべてのノードを更新する必要があります。
+こ更新された配列の要素から根のノードまでの経路に沿ったノードを更新すればよいです。
 
-The following picture shows which tree nodes
-change if the array value 7 changes:
+次の図は、配列の値7が変化した場合に、どのツリーノードが変化するかを 示しています。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -967,25 +878,22 @@ change if the array value 7 changes:
 \end{tikzpicture}
 \end{center}
 
-The path from bottom to top
-always consists of $O(\log n)$ nodes,
-so each update changes $O(\log n)$ nodes in the tree.
+根から葉へは$O(\log n)$のノードで構成されるので、
+更新に必要な処理は$O(\log n)$ であることがわかります。
 
-\subsubsection{Implementation}
+\subsubsection{実装 - Implementation}
 
-We store a segment tree as an array
-of $2n$ elements where $n$ is the size of
-the original array and a power of two.
-The tree nodes are stored from top to bottom:
-$\texttt{tree}[1]$ is the top node,
-$\texttt{tree}[2]$ and $\texttt{tree}[3]$
-are its children, and so on.
-Finally, the values from $\texttt{tree}[n]$
-to $\texttt{tree}[2n-1]$ correspond to
-the values of the original array
-on the bottom level of the tree.
+セグメントツリーは，$2n$個の要素からなる配列として格納されます。
+ここで$n$は元の配列のサイズであり、2の累乗とします。
+ツリーのノードは、上から下に向かって格納されます。
 
-For example, the segment tree
+
+$\texttt{tree}[1]$ は根となるノード。
+$\texttt{tree}[2]$ と $\texttt{tree}[3]$
+はその子、というようにしましょう。
+すると、$\texttt{tree}[n]$
+から$\texttt{tree}[2n-1]$が元の値を表す最下段のノードとなります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -1024,7 +932,7 @@ For example, the segment tree
 \path[draw,thick,-] (m) -- (j);
 \end{tikzpicture}
 \end{center}
-is stored as follows:
+というセグメントツリーは次のような配列に格納ができます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (15,1);
@@ -1063,16 +971,14 @@ is stored as follows:
 \node at (14.5,1.4) {$15$};
 \end{tikzpicture}
 \end{center}
-Using this representation,
-the parent of $\texttt{tree}[k]$
-is $\texttt{tree}[\lfloor k/2 \rfloor]$,
-and its children are $\texttt{tree}[2k]$
-and $\texttt{tree}[2k+1]$.
-Note that this implies that the position of a node
-is even if it is a left child and odd if it is a right child.
+この表現を用いると、$\texttt{tree}[k]$の親は 
+$\texttt{tree}[\lfloor k/2 \rfloor]$であり、
+その子は$\texttt{tree}[2k]$
+と$\texttt{tree}[2k+1]$.
+になります。
+これはノードの位置が左の子であれば偶数、右の子であれば奇数であることを意味することを意味します。
 
-The following function
-calculates the value of $\texttt{sum}_q(a,b)$:
+次の関数は$\texttt{sum}_q(a,b)$を計算します。
 \begin{lstlisting}
 int sum(int a, int b) {
     a += n; b += n;
@@ -1085,15 +991,10 @@ int sum(int a, int b) {
     return s;
 }
 \end{lstlisting}
-The function maintains a range
-that is initially $[a+n,b+n]$.
-Then, at each step, the range is moved
-one level higher in the tree,
-and before that, the values of the nodes that do not
-belong to the higher range are added to the sum.
+この関数は、初期値として$[a+n,b+n]$の範囲を設定します。
+各ステップではノードの値が合計に追加し、その範囲は木で1レベル上に移動します。
 
-The following function increases the array value
-at position $k$ by $x$:
+では更新の作業をみてみましょう。次の関数は，位置 $k$ の配列値を $x$ だけ増加させます.
 \begin{lstlisting}
 void add(int k, int x) {
     k += n;
@@ -1103,31 +1004,22 @@ void add(int k, int x) {
     }
 }
 \end{lstlisting}
-First the function updates the value
-at the bottom level of the tree.
-After this, the function updates the values of all
-internal tree nodes, until it reaches
-the top node of the tree.
+まず、ツリーの最下層の値を更新します。
+その後、木の根に到達するまでのすべての内部ノードの値を更新していきます。
 
-Both the above functions work
-in $O(\log n)$ time, because a segment tree
-of $n$ elements consists of $O(\log n)$ levels,
-and the functions move one level higher
-in the tree at each step.
+この関数は$O(\log n)$で動作します。
+$n$個の要素を持つセグメントツリーは$O(\log n)$ 個のレベルから構成され，
+この関数は各ステップでツリーの1レベル上を移動するためです。
 
-\subsubsection{Other queries}
+\subsubsection{和以外のクエリ - Other queries}
 
-Segment trees can support all range queries
-where it is possible to divide a range into two parts,
-calculate the answer separately for both parts
-and then efficiently combine the answers.
-Examples of such queries are
-minimum and maximum, greatest common divisor,
-and bit operations and, or and xor.
+セグメントツリーは、
+範囲を2つに分割し、それぞれについて別々に計算し、
+その答えを効率的に組み合わせることが可能な、
+色々な範囲クエリをサポートすることができます。
+このようなクエリの例としては、最小値と最大値、 最大公約数、ビット演算のand、or、xorなどが可能です。
 
-For example, the following segment tree
-supports minimum queries:
-
+たとえば、次のセグメントツリーは最小限のクエリーをサポートします。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -1167,23 +1059,17 @@ supports minimum queries:
 \end{tikzpicture}
 \end{center}
 
-In this case, every tree node contains
-the smallest value in the corresponding
-array range.
-The top node of the tree contains the smallest
-value in the whole array.
-The operations can be implemented like previously,
-but instead of sums, minima are calculated.
+この場合，すべてのツリーノードには，
+対応する配列の範囲内で最小の値が含まれます.
+根のノードには，配列全体の中で最小の値が格納されることになります.
+この演算は前述と同様に実装できますが，和の代わりに最小値を計算します。
 
-The structure of a segment tree also allows us
-to use binary search for locating array elements.
-For example, if the tree supports minimum queries,
-we can find the position of an element
-with the smallest value in $O(\log n)$ time.
+また、セグメントツリーの構造から、
+配列要素の位置決めに二分探索を使用することができます。
+例えば、最小クエリをサポートするツリーであれば、最小値を持つ要素の位置を$O(\log n)$時間で見つけることができます。
 
-For example, in the above tree, an
-element with the smallest value 1 can be found
-by traversing a path downwards from the top node:
+上の木では、一番上のノードから下に向かってパスをたどることで、
+最小の値1を持つ要素を見つけることができます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1228,39 +1114,28 @@ by traversing a path downwards from the top node:
 \end{tikzpicture}
 \end{center}
 
-\section{Additional techniques}
+\section{さらなるテクニック - Additional techniques}
 
-\subsubsection{Index compression}
+\subsubsection{座標圧縮 - Index compression}
 
-A limitation in data structures that
-are built upon an array is that
-the elements are indexed using
-consecutive integers.
-Difficulties arise when large indices
-are needed.
-For example, if we wish to use the index $10^9$,
-the array should contain $10^9$
-elements which would require too much memory.
+配列の上に構築されるデータ構造には留意すべき点があります。
+要素が連続した整数インデックスを持つことです。
+例えば、インデックス$10^9$を使いたい場合、
+配列には$10^9$の要素が必要となるため、メモリが不足します。
+このため大きなインデックスが必要な場合は工夫が必要になります。
 
-\index{index compression}
+\index{座標圧縮 - index compression}
 
-However, we can often bypass this limitation
-by using \key{index compression},
-where the original indices are replaced
-with indices $1,2,3,$ etc.
-This can be done if we know all the indices
-needed during the algorithm beforehand.
+元のインデックスをインデックス1、2、3などに置き換える\key{座標圧縮 - index compression}を利用することで、
+この制限を回避できます。
+これはアルゴリズムに必要なすべてのインデックスを事前に知っていれば可能です。
 
-The idea is to replace each original index $x$
-with $c(x)$ where $c$ is a function that
-compresses the indices.
-We require that the order of the indices
-does not change, so if $a<b$, then $c(a)<c(b)$.
-This allows us to conveniently perform queries
-even if the indices are compressed.
+このアイデアは、元のインデックス$x$を$c(x)$で置き換えるというもので、
+$c$は インデックス番号を圧縮する関数す。
+この関数にはインデックスの順序が変わらないことを要求します。
+この関数があればインデックスが圧縮されていても簡単に問い合わせができます。
 
-For example, if the original indices are
-$555$, $10^9$ and $8$, the new indices are:
+例えば、元のインデックスが$555$, $10^9$ and $8$の場合、新しいインデックスは次のようになります。
 
 \[
 \begin{array}{lcl}
@@ -1270,29 +1145,19 @@ c(10^9) & = & 3 \\
 \end{array}
 \]
 
-\subsubsection{Range updates}
+\subsubsection{区間更新 - Range updates}
 
-So far, we have implemented data structures
-that support range queries and updates
-of single values.
-Let us now consider an opposite situation,
-where we should update ranges and
-retrieve single values.
-We focus on an operation that increases all
-elements in a range $[a,b]$ by $x$.
+これまで、区間クエリと単一の値の更新が可能なデータ構造を実装してきました。
+ここで、範囲の更新と単一の値の取得を行うことはできるでしょうか？
+ここでは、範囲$[a, b]$に含まれるすべての要素を$x$だけ増加させる操作を考えています。
 
-\index{difference array}
+\index{差分配列 - difference array}
 
-Surprisingly, we can use the data structures
-presented in this chapter also in this situation.
-To do this, we build a \key{difference array}
-whose values indicate
-the differences between consecutive values
-in the original array.
-Thus, the original array is the
-prefix sum array of the
-difference array.
-For example, consider the following array:
+実はこの章で紹介したデータ構造は、このような状況でも使うことができるのです。
+そのために、元の配列の連続した値の差分を示す
+\key{差分配列 - difference array}を作成します。
+つまり、元の配列は差分配列の累積和の配列ということになります。
+次のような配列を考えてみましょう。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -1320,7 +1185,7 @@ For example, consider the following array:
 \end{tikzpicture}
 \end{center}
 
-The difference array for the above array is as follows:
+この差分配列を考えます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -1347,21 +1212,13 @@ The difference array for the above array is as follows:
 \end{tikzpicture}
 \end{center}
 
-For example, the value 2 at position 6 in the original array
-corresponds to the sum $3-2+4-3=2$ in the difference array.
+元の配列の6の位置の値2は差分配列の和$3-2+4-3=2$に対応します。
 
-The advantage of the difference array is
-that we can update a range
-in the original array by changing just
-two elements in the difference array.
-For example, if we want to 
-increase the original array 
-values between positions 1 and 4 by 5,
-it suffices to increase the
-difference array value at position 1 by 5
-and decrease the value at position 5 by 5.
-The result is as follows:
+差分配列の利点は、範囲を更新する際に差分配列の2つの要素を変更するだけで元の配列が完成するという特徴です。
+元の配列の1から4までの値を5つ増やしたい場合は、
+差分配列の位置1の値を5増やして位置5の値を5減らせばよいです。
 
+この結果、以下のように示せます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -1387,17 +1244,8 @@ The result is as follows:
 \end{tikzpicture}
 \end{center}
 
-More generally, to increase the values
-in range $[a,b]$ by $x$,
-we increase the value at position $a$ by $x$
-and decrease the value at position $b+1$ by $x$.
-Thus, it is only needed to update single values
-and process sum queries,
-so we can use a binary indexed tree or a segment tree.
+より一般的には、範囲$[a, b]$の値を$x$だけ増やすには、
+位置$a$の値を$x$だけ増やし、位置$b + 1$の値を$x$だけ減らせばよいです。
+したがって、単一の値の更新と和クエリの処理だけが必要なので、BITやセグメント木を使用して実装できます。
 
-A more difficult problem is to support both
-range queries and range updates.
-In Chapter 28 we will see that even this is possible.
-
-
-
+より困難な問題は区間クエリ可能な区間更新ですが、これについては第28章で取り上げましょう。

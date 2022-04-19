@@ -1,132 +1,80 @@
-\chapter{Greedy algorithms}
+\chapter{貪欲アルゴリズム - Greedy algorithms}
 
-\index{greedy algorithm}
+\index{貪欲アルゴリズム -greedy algorithm}
 
-A \key{greedy algorithm}
-constructs a solution to the problem
-by always making a choice that looks
-the best at the moment.
-A greedy algorithm never takes back
-its choices, but directly constructs
-the final solution.
-For this reason, greedy algorithms
-are usually very efficient.
+A \key{貪欲アルゴリズム -greedy algorithm}は、
+常にその時点で最善と思われる選択をすることで、問題の解を構築する方法の総称です。
+貪欲なアルゴリズムは選択を取り消すことはなく、最終的な解を次々に直接構築していきます。
+このため、貪欲アルゴリズムは非常に効率的に動作します。
 
-The difficulty in designing greedy algorithms
-is to find a greedy strategy
-that always produces an optimal solution
-to the problem.
-The locally optimal choices in a greedy
-algorithm should also be globally optimal.
-It is often difficult to argue that
-a greedy algorithm works.
+貪欲アルゴリズムの設計で難しいのは、常に問題の最適解を生成すると保証できるアルゴリズムを見つけ出すことです。
+貪欲アルゴリズムにおける局所的に最適な選択は大域的にも最適でなければならないからです。
+貪欲なアルゴリズムを証明するのはしばしば困難でもあります。
 
-\section{Coin problem}
+\section{コイン問題 - Coin problem}
 
-As a first example, we consider a problem
-where we are given a set of coins
-and our task is to form a sum of money $n$
-using the coins.
-The values of the coins are
-$\texttt{coins}=\{c_1,c_2,\ldots,c_k\}$,
-and each coin can be used as many times we want.
-What is the minimum number of coins needed?
+コインの組が与えられ金額$n$を形成する問題を考えましょう。
+コインの値は$\texttt{coins}=\{c_1,c_2,\ldots,c_k\}$であり，
+各コインは何度でも使用することができとします。
+必要なコインの最小枚数は何枚か？
 
-For example, if the coins are the euro coins (in cents)
+例えば、コインがユーロコイン（単位はセント）で、
+
 \[\{1,2,5,10,20,50,100,200\}\]
-and $n=520$,
-we need at least four coins.
-The optimal solution is to select coins
-$200+200+100+20$ whose sum is 520.
+のコインがあるとします。$n=520$だとします。最適解は$200+200+100+20$と少なくとも4枚のコインが必要になります。
 
-\subsubsection{Greedy algorithm}
+\subsubsection{貪欲なアルゴリズム - Greedy algorithm}
 
-A simple greedy algorithm to the problem
-always selects the largest possible coin,
-until the required sum of money has been constructed.
-This algorithm works in the example case,
-because we first select two 200 cent coins,
-then one 100 cent coin and finally one 20 cent coin.
-But does this algorithm always work?
+この問題に対する貪欲アルゴリズムでは必要な金額が構成されるまで、
+常に可能な限り大きなコインを選択していきます。
+まず200セント硬貨を2枚選び、次に100セント硬貨を1枚、
+最後に20セント硬貨を1枚選ぶので、このアルゴリズムはうまく動作するように見えます。
+しかし，このアルゴリズムは常に正しく動作するのでしょうか？
 
-It turns out that if the coins are the euro coins,
-the greedy algorithm \emph{always} works, i.e.,
-it always produces a solution with the fewest
-possible number of coins.
-The correctness of the algorithm can be
-shown as follows:
+コインがユーロコインであれば、
+貪欲アルゴリズムが\emph{常に}機能すること、すなわち、コインの枚数が最も少ない解を常に生成することが判明しています。
+このアルゴリズムの正しさは、以下のように示されます。
 
-First, each coin 1, 5, 10, 50 and 100 appears
-at most once in an optimal solution,
-because if the
-solution would contain two such coins,
-we could replace them by one coin and
-obtain a better solution.
-For example, if the solution would contain
-coins $5+5$, we could replace them by coin $10$.
+各コイン1, 5, 10, 50, 100が最適解に現れるのはせいぜい1回で、
+もし解にそのようなコインが2枚含まれていれば次のように1枚ずつ減らし、よりよい解を得ることができるからです。
+例えば、解答にコイン$5+5$が含まれている場合、$10$に置き換えることができます。
 
-In the same way, coins 2 and 20 appear
-at most twice in an optimal solution,
-because we could replace
-coins $2+2+2$ by coins $5+1$ and
-coins $20+20+20$ by coins $50+10$.
-Moreover, an optimal solution cannot contain
-coins $2+2+1$ or $20+20+10$,
-because we could replace them by coins $5$ and $50$.
+同様に、2と20が最適解に現れるのは最大2回で、
+コイン$2+2+2$をコイン$5+1$、
+コイン$20+20+20$をコイン$50+10$と置き換えられます。
+また、$2+2+1$ や、 $20+20+10$の場合、$5$や$50$で置き換えられます。
 
-Using these observations,
-we can show for each coin $x$ that
-it is not possible to optimally construct
-a sum $x$ or any larger sum by only using coins
-that are smaller than $x$.
-For example, if $x=100$, the largest optimal
-sum using the smaller coins is  $50+20+20+5+2+2=99$.
-Thus, the greedy algorithm that always selects
-the largest coin produces the optimal solution.
+これらのことから、各コイン$x$について、$x$より小さいコインだけを用いて最適に和$x$またはそれ以上の和を構成することは不可能であることを示すことができます。
+例えば、$x = 100$の場合、小さいコインを使った最大の最適和は$50+20+20+5+2+2 = 99$である。したがって、常に最大のコインを選択する貪欲なアルゴリズムが最適解を生成します。
+このようにアルゴリズム自体が単純であっても、
+貪欲なアルゴリズムが有効であることを主張するのは難しいことがわかる。
 
-This example shows that it can be difficult
-to argue that a greedy algorithm works,
-even if the algorithm itself is simple.
+\subsubsection{貪欲法でのコイン問題の一般化 - General case}
 
-\subsubsection{General case}
+一般的な場合、コインセットには任意のコインを入れることができ、貪欲アルゴリズムは、必ずしも最適解が得られるとは限りません。
 
-In the general case, the coin set can contain any coins
-and the greedy algorithm \emph{does not} necessarily produce
-an optimal solution.
+貪欲なアルゴリズムが働かないことは、アルゴリズムが間違った答えを出す反例を示すことで証明できます。
+単純な例ではコインを$\{1,3,4\}$とし、目標を6としましょう。
+最適解は$3 + 3$であるのに
+貪欲アルゴリズムは解$4 + 1 + 1$を生成しまいます。
 
-We can prove that a greedy algorithm does not work
-by showing a counterexample
-where the algorithm gives a wrong answer.
-In this problem we can easily find a counterexample:
-if the coins are $\{1,3,4\}$ and the target sum
-is 6, the greedy algorithm produces the solution
-$4+1+1$ while the optimal solution is $3+3$.
-
-It is not known if the general coin problem
-can be solved using any greedy algorithm\footnote{However, it is possible
-to \emph{check} in polynomial time
+一般的なコイン問題がどのような貪欲アルゴリズムで解けるかは不明です。\footnote{However, it is possible
+to \emph{check} in polynomial 
 if the greedy algorithm presented in this chapter works for
-a given set of coins \cite{pea05}.}.
-However, as we will see in Chapter 7,
-in some cases,
-the general problem can be efficiently
-solved using a dynamic
-programming algorithm that always gives the
-correct answer.
+a given set of coins \cite{pea05}.}。
+しかし、第7章で見るように、常に正しい答えを与える動的計画法を使うと一般的な問題も効率的に解くことができます。
 
-\section{Scheduling}
+\section{スケジューリング問題 - Scheduling}
 
-Many scheduling problems can be solved
-using greedy algorithms.
-A classic problem is as follows:
-Given $n$ events with their starting and ending
-times, find a schedule
-that includes as many events as possible.
-It is not possible to select an event partially.
-For example, consider the following events:
+多くのスケジューリング問題も、貪欲アルゴリズムで解くことができ、古典的な問題としては以下のようなものです。
+$n$個のイベントとその開始時刻と終了時刻が与えられたとき、
+できるだけ多くのイベントを含むスケジュールを求めよ。
+ただし、イベントを部分的に選択することはできない。
+
+例えば、次のようなイベントを考えられます。
 \begin{center}
 \begin{tabular}{lll}
-event & starting time & ending time \\
+イベント名 & 開始時刻 & 終了時刻 \\
 \hline
 $A$ & 1 & 3 \\
 $B$ & 2 & 5 \\
@@ -134,9 +82,8 @@ $C$ & 3 & 9 \\
 $D$ & 6 & 8 \\
 \end{tabular}
 \end{center}
-In this case the maximum number of events is two.
-For example, we can select events $B$ and $D$
-as follows:
+
+この場合は最大2つで$B$と$D$を次のように選択すればよいです。
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -151,16 +98,11 @@ as follows:
   \end{scope}
 \end{tikzpicture}
 \end{center}
+どのようなアルゴリズムが考えられ、どのようなものが最適なのでしょうか？
 
-It is possible to invent several greedy algorithms
-for the problem, but which of them works in every case?
+\subsubsection*{方法1: Algorithm 1}
 
-\subsubsection*{Algorithm 1}
-
-The first idea is to select as \emph{short}
-events as possible.
-In the example case this algorithm
-selects the following events:
+最初に思い浮かぶのは最も短いイベントを選ぶことです。
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -176,9 +118,7 @@ selects the following events:
 \end{tikzpicture}
 \end{center}
 
-However, selecting short events is not always
-a correct strategy. For example, the algorithm fails
-in the following case:
+ところがこれは失敗するケースがあります。反例を示します。
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -188,14 +128,11 @@ in the following case:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-If we select the short event, we can only select one event.
-However, it would be possible to select both long events.
+短いイベントを選ぶと１つしか選択できませんが、実際には長い２つを取ることが出来ることは明らかです。
 
-\subsubsection*{Algorithm 2}
+\subsubsection*{方法2: Algorithm 2}
 
-Another idea is to always select the next possible
-event that \emph{begins} as \emph{early} as possible.
-This algorithm selects the following events:
+では、なるべく早い時間に始まるイベントを選び続けるのはどうでしょう？
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -211,10 +148,7 @@ This algorithm selects the following events:
 \end{tikzpicture}
 \end{center}
 
-However, we can find a counterexample
-also for this algorithm.
-For example, in the following case,
-the algorithm only selects one event:
+これも反例が簡単に見つかってしまいます。
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -224,16 +158,12 @@ the algorithm only selects one event:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-If we select the first event, it is not possible
-to select any other events.
-However, it would be possible to select the
-other two events.
+
+最初のイベントを選択すると、他のイベントを選択することはできません。しかし、他の2つのイベントを選択することは可能です。
 
 \subsubsection*{Algorithm 3}
 
-The third idea is to always select the next
-possible event that \emph{ends} as \emph{early} as possible.
-This algorithm selects the following events: 
+そこで３つ目のアイデアとしては、最も早く終わるイベントを選ぶアイデアはどうでしょうか？
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -249,42 +179,26 @@ This algorithm selects the following events:
 \end{tikzpicture}
 \end{center}
 
-It turns out that this algorithm
-\emph{always} produces an optimal solution.
-The reason for this is that it is always an optimal choice
-to first select an event that ends
-as early as possible.
-After this, it is an optimal choice
-to select the next event
-using the same strategy, etc.,
-until we cannot select any more events.
+このアルゴリズムは常に最適解を生成することができます。
+最初にできるだけ早く終了するイベントを選択することが常に最適な選択です。
+その後、同じ戦略で次のイベントを選択しそれ以上のイベントを選択できなくなるまで続けることが最適な選択となります。
 
-One way to argue that the algorithm works
-is to consider
-what happens if we first select an event
-that ends later than the event that ends
-as early as possible.
-Now, we will have at most an equal number of
-choices how we can select the next event.
-Hence, selecting an event that ends later
-can never yield a better solution,
-and the greedy algorithm is correct.
+このアルゴリズムを証明する一つの方法を示します。
+最初にできるだけ早く終わる事象より、遅く終わる事象を選択した場合にどうなるかを考えてみましょう。
+次のイベントの選択の仕方は(最大でも)同じ数のイベントの選択肢しかありません。
+このため、遅く終わるイベントを選択してもより良い解が得られることはないので貪欲なアルゴリズムが正しいということになります。
 
-\section{Tasks and deadlines}
+\section{締め切り付きタスク問題 - Tasks and deadlines}
 
-Let us now consider a problem where
-we are given $n$ tasks with durations and deadlines
-and our task is to choose an order to perform the tasks.
-For each task, we earn $d-x$ points
-where $d$ is the task's deadline
-and $x$ is the moment when we finish the task.
-What is the largest possible total score
-we can obtain?
+期間と期限を持つ$n$個のタスクが与えられ、
+タスクの実行順序を選択する問題を考えてみます。
+ここで各タスクについて$d - x$点のスコアを獲得するとします。
+$d$はタスクの期限$x$であるタスクが終了した時点とします。
 
-For example, suppose that the tasks are as follows:
+例えば、以下のようなタスクがあるとする。
 \begin{center}
 \begin{tabular}{lll}
-task & duration & deadline \\
+タスク & 期間 & 期限 \\
 \hline
 $A$ & 4 & 2 \\
 $B$ & 3 & 5 \\
@@ -292,8 +206,9 @@ $C$ & 2 & 7 \\
 $D$ & 4 & 5 \\
 \end{tabular}
 \end{center}
-In this case, an optimal schedule for the tasks
-is as follows:
+
+最適解は以下の通りです。
+
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -319,21 +234,15 @@ is as follows:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-In this solution, $C$ yields 5 points,
-$B$ yields 0 points, $A$ yields $-7$ points
-and $D$ yields $-8$ points,
-so the total score is $-10$.
 
-Surprisingly, the optimal solution to the problem
-does not depend on the deadlines at all,
-but a correct greedy strategy is to simply
-perform the tasks \emph{sorted by their durations}
-in increasing order.
-The reason for this is that if we ever perform
-two tasks one after another such that the first task
-takes longer than the second task,
-we can obtain a better solution if we swap the tasks.
-For example, consider the following schedule:
+この解答では、Cが$5$点、Bが$0$点、Aが$-7$点、Dが$-8$点で合計で-10点となります。
+
+意外なことに、この問題の最適解は期限に全く依存せず、
+単にタスクにかかる時間順に並べたタスクを実行することが正しい貪欲な戦略となります。
+その理由は、2つのタスクを次々に実行して最初のタスクが2番目のタスクより時間がかかるようなことがあれば、
+タスクを入れ替えた方が良くなるからです。
+例えば、次のようなスケジュールを考えてみます。
+
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -352,7 +261,7 @@ For example, consider the following schedule:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Here $a>b$, so we should swap the tasks:
+ここでは、$a>b$なので、タスクを入れ替える必要があります
 \begin{center}
 \begin{tikzpicture}[scale=.4]
   \begin{scope}
@@ -371,94 +280,72 @@ Here $a>b$, so we should swap the tasks:
   \end{scope}
 \end{tikzpicture}
 \end{center}
-Now $X$ gives $b$ points less and $Y$ gives $a$ points more,
-so the total score increases by $a-b > 0$.
-In an optimal solution,
-for any two consecutive tasks,
-it must hold that the shorter task comes
-before the longer task.
-Thus, the tasks must be performed
-sorted by their durations.
 
-\section{Minimizing sums}
+今、$X$は$b$を獲得し、$Y$は$a$を獲得します。
+このため、$a-b > 0$となります。
+最適解では、連続する2つのタスクについて、
+短いタスクが長いタスクの前に来ることが成立しなければいけません。
+従って、タスクはその時間順に並べられなければなりません。
 
-We next consider a problem where
-we are given $n$ numbers $a_1,a_2,\ldots,a_n$
-and our task is to find a value $x$
-that minimizes the sum
+\section{最小和問題 - Minimizing sums}
+
+ここで、 $n$ 個の整数$a_1,a_2,\ldots,a_n$
+が与えられたときに、次の和が最小になる$x$を求めたいとします。
 \[|a_1-x|^c+|a_2-x|^c+\cdots+|a_n-x|^c.\]
-We focus on the cases $c=1$ and $c=2$.
+ここでは、$c=1$ と $c=2$を例にとります。
 
 \subsubsection{Case $c=1$}
 
-In this case, we should minimize the sum
+この場合は次の通りです。
 \[|a_1-x|+|a_2-x|+\cdots+|a_n-x|.\]
-For example, if the numbers are $[1,2,9,2,6]$,
-the best solution is to select $x=2$
-which produces the sum
+$[1,2,9,2,6]$を入力とすると、最適な解は$x=2$
+の時で、
 \[
 |1-2|+|2-2|+|9-2|+|2-2|+|6-2|=12.
 \]
-In the general case, the best choice for $x$
-is the \textit{median} of the numbers,
-i.e., the middle number after sorting.
-For example, the list $[1,2,9,2,6]$
-becomes $[1,2,2,6,9]$ after sorting,
-so the median is 2.
+となります。
 
-The median is an optimal choice,
-because if $x$ is smaller than the median,
-the sum becomes smaller by increasing $x$,
-and if $x$ is larger then the median,
-the sum becomes smaller by decreasing $x$.
-Hence, the optimal solution is that $x$
-is the median.
-If $n$ is even and there are two medians,
-both medians and all values between them
-are optimal choices.
+一般的な場合、$x$は数字の\textit{median - 中央値}、つまりソート後の真ん中の数字が最適となります。。
+例えば，$[1,2,9,2,6]$ というリストは，並べ替えの結果 $[1,2,2,6,9]$ なので，中央値である 2 を選びます。
+
+$x$が中央値より小さければ、
+$x$を大きくすれば合計は小さくなり、
+$x$が中央値より大きければ、
+$x$を小さくすれば合計は小さくなるから、
+最適解は$x$が中央値となります。
+$n$が偶数で中央値が2つある場合は両方の値および、その間のすべての値が最適な選択となります。
 
 \subsubsection{Case $c=2$}
 
-In this case, we should minimize the sum
+この場合は次の最小化です。
 \[(a_1-x)^2+(a_2-x)^2+\cdots+(a_n-x)^2.\]
-For example, if the numbers are $[1,2,9,2,6]$,
-the best solution is to select $x=4$
-which produces the sum
+例えば、数字が$[1,2,9,2,6]$の場合、最適な解は $x = 4$ を選択することで、この場合、
+和は次のようになります。
 \[
 (1-4)^2+(2-4)^2+(9-4)^2+(2-4)^2+(6-4)^2=46.
 \]
-In the general case, the best choice for $x$
-is the \emph{average} of the numbers.
-In the example the average is $(1+2+9+2+6)/5=4$.
-This result can be derived by presenting
-the sum as follows:
+一般的な場合に、$x$は数字の平均を選ぶのが最適です。
+この例では、$(1+2+9+2+6)/5=4$です。
+この結果は、次のように和を提示することで導き出すことができる。
 \[
 nx^2 - 2x(a_1+a_2+\cdots+a_n) + (a_1^2+a_2^2+\cdots+a_n^2)
 \]
-The last part does not depend on $x$,
-so we can ignore it.
-The remaining parts form a function
-$nx^2-2xs$ where $s=a_1+a_2+\cdots+a_n$.
-This is a parabola opening upwards
-with roots $x=0$ and $x=2s/n$,
-and the minimum value is the average
-of the roots $x=s/n$, i.e.,
-the average of the numbers $a_1,a_2,\ldots,a_n$.
+最後の部分は$x$に依存しないので、ここでは無視してもよいです。
+残りの部分は$s=a_1+a_2+\cdots+a_n$に対して、関数 $nx^2-2xs$ を形成します。
+これは $x = 0$ と $x = 2s/n$ の根を持つ上に開く放物線(訳註:二次関数)になるため、
+最小値は$x=s/n$で、これは$a_1,a_2,\ldots,a_n$の平均となります。
 
-\section{Data compression}
+\section{データ圧縮 - Data compression}
 
-\index{data compression}
-\index{binary code}
+\index{データ圧縮 - data compression}
+\index{バイナリコード - binary code}
 \index{codeword}
 
-A \key{binary code} assigns for each character
-of a string a \key{codeword} that consists of bits.
-We can \emph{compress} the string using the binary code
-by replacing each character by the
-corresponding codeword.
-For example, the following binary code
-assigns codewords for characters
-\texttt{A}–\texttt{D}:
+\key{バイナリコード - binary code}とは、
+文字列の各文字に、ビットで構成される\key{コードワード - codeword}を割り当てたものです。
+各文字を対応するコードワードに置き換えることで、バイナリコードを使って文字列を圧縮することができます。
+例えば、次のバイナリコードでは、文字\texttt{A}–\texttt{D}にコードワードを割り当てています。
+
 \begin{center}
 \begin{tabular}{rr}
 character & codeword \\
@@ -469,23 +356,15 @@ character & codeword \\
 \texttt{D} & 11 \\
 \end{tabular}
 \end{center}
-This is a \key{constant-length} code
-which means that the length of each
-codeword is the same.
-For example, we can compress the string
-\texttt{AABACDACA} as follows:
+これは各コードワードの長さが同じであることを意味する\key{定長 - constant-length}符号と呼ばれます。
+例えば、\texttt{AABACDACA}という文字列を圧縮する場合、次のようになります。
 \[00\,00\,01\,00\,10\,11\,00\,10\,00\]
-Using this code, the length of the compressed
-string is 18 bits.
-However, we can compress the string better
-if we use a \key{variable-length} code
-where codewords may have different lengths.
-Then we can give short codewords for
-characters that appear often
-and long codewords for characters
-that appear rarely.
-It turns out that an \key{optimal} code
-for the above string is as follows:
+この符号を用いると、圧縮される文字列の長さは18ビットです。
+コードワードの長さが異なる\key{可変長 - variable-length}符号を用いると、
+文字列をより圧縮することができます。
+よく登場する文字には短いコードワードを与え、めったに登場しない文字には長いコードワードを与えていきます。
+上記の文字列に対する最適な符号は、次のようになります。
+
 \begin{center}
 \begin{tabular}{rr}
 character & codeword \\
@@ -496,26 +375,16 @@ character & codeword \\
 \texttt{D} & 111 \\
 \end{tabular}
 \end{center}
-An optimal code produces a compressed string
-that is as short as possible.
-In this case, the compressed string using
-the optimal code is
+最適な符号は、可能な限り短い圧縮文字列を生成でき、最適な符号を用いた圧縮文字列は
 \[0\,0\,110\,0\,10\,111\,0\,10\,0,\]
-so only 15 bits are needed instead of 18 bits.
-Thus, thanks to a better code it was possible to
-save 3 bits in the compressed string.
+と、18ビットではなく15ビットになり3ビットを節約することができました。
 
-We require that no codeword
-is a prefix of another codeword.
-For example, it is not allowed that a code
-would contain both codewords 10
-and 1011.
-The reason for this is that we want
-to be able to generate the original string
-from the compressed string.
-If a codeword could be a prefix of another codeword,
-this would not always be possible.
-For example, the following code is \emph{not} valid:
+コードワードは他のコードワードの接頭辞でないように決めることが重要です。
+例えば、あるコードが10と1011の両方のコードワードを含むことは許されません。
+この理由は、圧縮された文字列から元の文字列を生成できるようにしたいからです。
+もしコードワードが他のコードワードの接頭辞になり得るとしたら、これは常に可能とは限りません。
+
+たとえば、次のようなコードワードにしてはいけません。
 \begin{center}
 \begin{tabular}{rr}
 character & codeword \\
@@ -526,43 +395,30 @@ character & codeword \\
 \texttt{D} & 111 \\
 \end{tabular}
 \end{center}
-Using this code, it would not be possible to know
-if the compressed string 1011 corresponds to
-the string \texttt{AB} or the string \texttt{C}.
+圧縮された文字列1011が文字列\texttt{AB}に対応するのか、文字列\texttt{C}に対応するのかが区別できないからです。
 
-\index{Huffman coding}
+\index{ハフマン符号化 - Huffman coding}
 
-\subsubsection{Huffman coding}
+\subsubsection{ハフマン符号化 - Huffman coding}
 
-\key{Huffman coding}\footnote{D. A. Huffman discovered this method
+\key{ハフマン符号化 - Huffman coding}
+\footnote{D. A. Huffman discovered this method
 when solving a university course assignment
-and published the algorithm in 1952 \cite{huf52}.} is a greedy algorithm
-that constructs an optimal code for
-compressing a given string.
-The algorithm builds a binary tree
-based on the frequencies of the characters
-in the string,
-and each character's codeword can be read
-by following a path from the root to
-the corresponding node.
-A move to the left corresponds to bit 0,
-and a move to the right corresponds to bit 1.
+and published the algorithm in 1952 \cite{huf52}.}
+は、与えられた文字列を圧縮するために最適な符号を構築す る貪欲なアルゴリズムです。
+このアルゴリズムは、文字列中の文字の頻度をもとに二分木を構築し、
+根から対応するノードへのパスを辿り各文字のコードワードを読み取ります。
+左への移動はビット0に対応し、右への移動はビット1に対応します。
 
-Initially, each character of the string is
-represented by a node whose weight is the
-number of times the character occurs in the string.
-Then at each step two nodes with minimum weights
-are combined by creating
-a new node whose weight is the sum of the weights
-of the original nodes.
-The process continues until all nodes have been combined.
+初期状態では、文字列の各文字は、
+その文字が文字列中に出現する回数を重みとするノードで表現します。
+次に、各ステップで重みが最小の2つのノードが結合され、
+元のノードの重みの合計を重みとする新しいノードを作成します。
+この処理をすべてのノードが結合されるまで続けます。
 
-Next we will see how Huffman coding creates
-the optimal code for the string
-\texttt{AABACDACA}.
-Initially, there are four nodes that correspond
-to the characters of the string:
-
+実際に\texttt{AABACDACA}という文字列に対して、
+ハフマン符号化がどのように最適な符号を生成するかを見ていきましょう。
+最初に、文字列の文字に対応する4つのノードが存在します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$5$};
@@ -578,16 +434,11 @@ to the characters of the string:
 %\path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-The node that represents character \texttt{A}
-has weight 5 because character \texttt{A}
-appears 5 times in the string.
-The other weights have been calculated
-in the same way.
 
-The first step is to combine the nodes that
-correspond to characters \texttt{B} and \texttt{D},
-both with weight 1.
-The result is:
+文字\texttt{A}は文字列中に5回出現するので、文字\texttt{A}を表すノードの重みは5です。
+他の重みも同じように計算されます。
+
+まず、重さ1の文字\texttt{B}と文字\texttt{D}に対応するノードを結合した結果がこれです。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$5$};
@@ -608,7 +459,7 @@ The result is:
 \path[draw,thick,-] (4) -- (5);
 \end{tikzpicture}
 \end{center}
-After this, the nodes with weight 2 are combined:
+重み2のノードを結合します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,0) {$5$};
@@ -634,7 +485,7 @@ After this, the nodes with weight 2 are combined:
 \path[draw,thick,-] (5) -- (6);
 \end{tikzpicture}
 \end{center}
-Finally, the two remaining nodes are combined:
+最後に残った2つのノードを結合します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (2,2) {$5$};
@@ -666,8 +517,7 @@ Finally, the two remaining nodes are combined:
 \end{tikzpicture}
 \end{center}
 
-Now all nodes are in the tree, so the code is ready.
-The following codewords can be read from the tree:
+すべてのノードがツリー上に揃ったので、コードワードをツリーから読み取りましょう。
 \begin{center}
 \begin{tabular}{rr}
 character & codeword \\

@@ -1,16 +1,12 @@
-\chapter{Tree algorithms}
+\chapter{木のアルゴリズム - Tree algorithms}
 
-\index{tree}
+\index{木}
 
-A \key{tree} is a connected, acyclic graph
-that consists of $n$ nodes and $n-1$ edges.
-Removing any edge from a tree divides it
-into two components,
-and adding any edge to a tree creates a cycle.
-Moreover, there is always a unique path between any
-two nodes of a tree.
+\key{木} は、$n$個のノードと$n - 1$個のエッジからなる連結かつ閉路を含まないグラフです。
+木から辺を1つ取り除くと2つの要素に分かれ、辺を加えると1つの閉路ができます。
+また、木の任意の2つのノード間には常に一本のパスが存在します。
 
-For example, the following tree consists of 8 nodes and 7 edges:
+例えば、8個のノードと7個のエッジから構成されている木の例を示します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -33,20 +29,15 @@ For example, the following tree consists of 8 nodes and 7 edges:
 
 \index{leaf}
 
-The \key{leaves} of a tree are the nodes
-with degree 1, i.e., with only one neighbor.
-For example, the leaves of the above tree
-are nodes 3, 5, 7 and 8.
+木の\key{葉}(リーフ)は、次数が1のノード、つまり、隣接ノードが1つしかないノードです。
+上図の葉は、ノード$3,5,7,8$です。
 
-\index{root}
-\index{rooted tree}
+\index{根}
+\index{根付き木}
 
-In a \key{rooted} tree, one of the nodes
-is appointed the \key{root} of the tree,
-and all other nodes are
-placed underneath the root.
-For example, in the following tree,
-node 1 is the root node.
+根付き木は、あるノードを木の根として指名し、
+他のすべてのノードは 根の下に配置されます。
+例えば、以下の木では、ノード1が根となるノード(ルートノード)です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -70,23 +61,17 @@ node 1 is the root node.
 \index{child}
 \index{parent}
 
-In a rooted tree, the \key{children} of a node
-are its lower neighbors, and the \key{parent} of a node
-is its upper neighbor.
-Each node has exactly one parent,
-except for the root that does not have a parent.
-For example, in the above tree,
-the children of node 2 are nodes 5 and 6,
-and its parent is node 1.
+根付き木では、次の様に言葉を定義します。
+\key{子}は配下にいる隣接ノード、\key{親}は上位の隣接ノードです。
+根以外のノードは、ただ1つの親を持ちます。
+上図の木では、ノード2の子はノード5とノード6です。ノード2の親はノード1です。
 
-\index{subtree}
+\index{部分木}
 
-The structure of a rooted tree is \emph{recursive}:
-each node of the tree acts as the root of a \key{subtree}
-that contains the node itself and all nodes
-that are in the subtrees of its children.
-For example, in the above tree, the subtree of node 2
-consists of nodes 2, 5, 6 and 8:
+根付き木の構造は\emph{再帰的}です。
+あるノードに注目した時にそのノードは、そのノード自身とそのノードの子の部分木に含まれるすべてのノードを含む部分木のルートとして機能します。
+例えば、上図の木では、ノード2の部分木は、ノード2、5、6 、8です。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (2) at (-2,1) {$2$};
@@ -99,18 +84,11 @@ consists of nodes 2, 5, 6 and 8:
 \end{tikzpicture}
 \end{center}
 
-\section{Tree traversal}
+\section{木の探索 - Graph Traversal}
 
-General graph traversal algorithms
-can be used to traverse the nodes of a tree.
-However, the traversal of a tree is easier to implement than
-that of a general graph, because
-there are no cycles in the tree and it is not
-possible to reach a node from multiple directions.
-
-The typical way to traverse a tree is to start
-a depth-first search at an arbitrary node.
-The following recursive function can be used:
+一般的なグラフの探索アルゴリズムは、木のノードを探索に使用することができます。
+木には閉路がなく、親と子の関係で構成されているため木の探索は一般のグラフの探索よりも実装が簡単です。
+最もシンプルな方法はあるノードから深さ優先探索します。次のような再帰的な関数が考えられます。
 
 \begin{lstlisting}
 void dfs(int s, int e) {
@@ -121,39 +99,25 @@ void dfs(int s, int e) {
 }
 \end{lstlisting}
 
-The function is given two parameters: the current node $s$
-and the previous node $e$.
-The purpose of the parameter $e$ is to make sure
-that the search only moves to nodes
-that have not been visited yet.
-
-The following function call starts the search
-at node $x$:
+この関数は現在のノード$s$と直前のノード$e$が与えられます。
+$e$はこれまでの訪問ノードの情報を持ちます。
+この関数は次のように呼ぶとノード$x$から探索を開始します。
 
 \begin{lstlisting}
 dfs(x, 0);
 \end{lstlisting}
 
-In the first call $e=0$, because there is no
-previous node, and it is allowed
-to proceed to any direction in the tree.
+$e=0$とすることで(訳註:この例ではノード0は存在しないので終わることはなく)最初のノードは全てのノードに移動できます。
 
-\subsubsection{Dynamic programming}
+\subsubsection{動的計画法 - Dynamic programming}
 
-Dynamic programming can be used to calculate
-some information during a tree traversal.
-Using dynamic programming, we can, for example,
-calculate in $O(n)$ time for each node of a rooted tree the
-number of nodes in its subtree
-or the length of the longest path from the node
-to a leaf.
+動的計画法は、木の探索中に何らかの情報を計算するために用いることができます。
+根付き木において各ノードの部分木のノード数やそのノードから葉までの最長経路の長さといったものを$O(n)$時間で計算できます。
 
-As an example, let us calculate for each node $s$
-a value $\texttt{count}[s]$: the number of nodes in its subtree.
-The subtree contains the node itself and
-all nodes in the subtrees of its children,
-so we can calculate the number of nodes
-recursively using the following code:
+各ノード$s$について、その部分木に含まれるノードの数
+$\texttt{count}[s]$求めてみましょう。
+部分木には，ノード自身とその子の部分木に含まれるすべてのノードが含まれるので
+以下のコードで再帰的にノード数を計算することができます。
 
 \begin{lstlisting}
 void dfs(int s, int e) {
@@ -166,13 +130,13 @@ void dfs(int s, int e) {
 }
 \end{lstlisting}
 
-\section{Diameter}
+\section{直径 - Diameter}
 
-\index{diameter}
+\index{直径}
 
-The \key{diameter} of a tree
-is the maximum length of a path between two nodes.
-For example, consider the following tree:
+木の\key{直径}とはその木に含まれる２ノード間の最長の距離です。
+例を示します。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -190,8 +154,7 @@ For example, consider the following tree:
 \path[draw,thick,-] (3) -- (7);
 \end{tikzpicture}
 \end{center}
-The diameter of this tree is 4,
-which corresponds to the following path:
+この木の直径は次のパスの通り4です。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -214,34 +177,20 @@ which corresponds to the following path:
 \path[draw,thick,-,color=red,line width=2pt] (2) -- (5);
 \end{tikzpicture}
 \end{center}
-Note that there may be several maximum-length paths.
-In the above path, we could replace node 6 with node 5
-to obtain another path with length 4.
+半径の経路は複数存在する可能性があります。例えば上記の例ならノード6をノード5に置き換えると、
+長さ4の別のパスを得ることができます。
 
-Next we will discuss two $O(n)$ time algorithms
-for calculating the diameter of a tree.
-The first algorithm is based on dynamic programming,
-and the second algorithm uses two depth-first searches.
+木の直径を計算するための2つの$O(n)$のアルゴリズムを紹介します。
+最初のアルゴリズムは動的計画法に基づいており、2番目のアルゴリズムは2つの深さ優先探索を用います。
 
-\subsubsection{Algorithm 1}
+\subsubsection{アルゴリズム1: 動的計画法}
 
-A general way to approach many tree problems
-is to first root the tree arbitrarily.
-After this, we can try to solve the problem
-separately for each subtree.
-Our first algorithm for calculating the diameter
-is based on this idea.
+木の問題を解く際によく使われるアプローチは木を根付き木と捉えることです。
+この木を根付き木と捉える方法は部分木について個別に問題を解けば良いケースが多々あり、有効です。
+このアルゴリズムはこのアプローチをとり、根付き木の各ノードにはそのパスを経由する最も長いパスが存在します。
+各ノードについてそのノードに含まれる最長経路の長さを表せれば、そのパスの1つが木の直径に相当します。
+例えば、以下の木では、ノード1が直径に相当する部分木の頂点です。
 
-An important observation is that every path
-in a rooted tree has a \emph{highest point}:
-the highest node that belongs to the path.
-Thus, we can calculate for each node the length
-of the longest path whose highest point is the node.
-One of those paths corresponds to the diameter of the tree.
-
-For example, in the following tree,
-node 1 is the highest point on the path
-that corresponds to the diameter:
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -265,41 +214,36 @@ that corresponds to the diameter:
 \end{tikzpicture}
 \end{center}
 
-We calculate for each node $x$ two values:
+
+各ノード$x$に対して以下の２つを求めます。
 \begin{itemize}
-\item $\texttt{toLeaf}(x)$: the maximum length of a path from $x$ to any leaf
-\item $\texttt{maxLength}(x)$: the maximum length of a path
-whose highest point is $x$
+\item $\texttt{toLeaf}(x)$: $x$から葉まで最大長
+\item $\texttt{maxLength}(x)$: 最高点が$x$であるパスの最大長
 \end{itemize}
-For example, in the above tree,
-$\texttt{toLeaf}(1)=2$, because there is a path
-$1 \rightarrow 2 \rightarrow 6$,
-and $\texttt{maxLength}(1)=4$,
-because there is a path
-$6 \rightarrow 2 \rightarrow 1 \rightarrow 4 \rightarrow 7$.
-In this case, $\texttt{maxLength}(1)$ equals the diameter.
 
-Dynamic programming can be used to calculate the above
-values for all nodes in $O(n)$ time.
-First, to calculate $\texttt{toLeaf}(x)$,
-we go through the children of $x$,
-choose a child $c$ with maximum $\texttt{toLeaf}(c)$
-and add one to this value.
-Then, to calculate $\texttt{maxLength}(x)$,
-we choose two distinct children $a$ and $b$
-such that the sum $\texttt{toLeaf}(a)+\texttt{toLeaf}(b)$
-is maximum and add two to this sum.
+例えば上の図の木では
+$1 \rightarrow 2 \rightarrow 6$があるため
+$\texttt{toLeaf}(1)=2$となり、
+$6 \rightarrow 2 \rightarrow 1 \rightarrow 4 \rightarrow 7$があるので
+$\texttt{maxLength}(1)=4$となります。
+この例では $\texttt{maxLength}(1)$が直径となります。
 
-\subsubsection{Algorithm 2}
+動的計画法を用いて上記の値を全ノードについて$O(n)$時間で計算することができます。
+まず、$\texttt{toLeaf}(x)$を計算するために、$x$の子ノードを調べ、
+$\texttt{toLeaf}(c)$が最大である子$c$を選んで、この値に1を足します。
+次に、$\texttt{maxLength}(x)$を計算するために、
+$\texttt{toLeaf}(a)+\texttt{toLeaf}(b)$の和が最大となるような異なる二つの子 $a$ と $b$ を選び、
+この和に2を足します。
+（訳註：このような計算は木DPとも呼ばれます）
 
-Another efficient way to calculate the diameter
-of a tree is based on two depth-first searches.
-First, we choose an arbitrary node $a$ in the tree
-and find the farthest node $b$ from $a$.
-Then, we find the farthest node $c$ from $b$.
-The diameter of the tree is the distance between $b$ and $c$.
+\subsubsection{アルゴリズム2: 深さ優先探索}
 
-In the following graph, $a$, $b$ and $c$ could be:
+木の直径を計算するためにもう一つの効率的な方法を紹介します。
+2回の深さ優先探索を利用した方法です。
+まず、木の任意のノード$a$を選び、$a$から最も遠いノード$b$を見つけます。
+$b$から最も遠いノード$c$を見つけます。木の直径は$b$と$c$の間の距離となります。
+次のグラフで$a$,$b$,$c$を次のように置くことができます。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -326,12 +270,8 @@ In the following graph, $a$, $b$ and $c$ could be:
 \end{tikzpicture}
 \end{center}
 
-This is an elegant method, but why does it work?
-
-It helps to draw the tree differently so that
-the path that corresponds to the diameter
-is horizontal, and all other
-nodes hang from it:
+たったこれだけです。本当にうまく動作するのでしょうか？
+ツリーの向きを変えて直径のパスが水平になるように表現します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (2,1) {$1$};
@@ -359,26 +299,21 @@ nodes hang from it:
 \end{tikzpicture}
 \end{center}
 
-Node $x$ indicates the place where the path
-from node $a$ joins the path that corresponds
-to the diameter.
-The farthest node from $a$
-is node $b$, node $c$ or some other node
-that is at least as far from node $x$.
-Thus, this node is always a valid choice for
-an endpoint of a path that corresponds to the diameter.
+ノード$x$は、ノード$a$からの経路が直径に対応する経路に合流するノードとしましょう。
+$a$から最も遠いノードは$b$とはノード $c$あるいはノード$x$から少なくとも同じだけ遠い異なるノードです。
+したがって、このノードは直径に対応するパスの終点として常に有効な候補となります。
+(訳注: $a$から辿るとこの表現をした際の水平の線に必ず合流します。
+なので1回目のBFSでそこから最も遠い距離を探すことはいずれかの水平な線の候補の端点を見つけることとなり、そこからBFSを再度行えば同じ様にもう一方の端点を探せます)
 
-\section{All longest paths}
+\section{全ノードからの最長経路 - All longest paths}
 
-Our next problem is to calculate for every node
-in the tree the maximum length of a path
-that begins at the node.
-This can be seen as a generalization of the
-tree diameter problem, because the largest of those
-lengths equals the diameter of the tree.
-Also this problem can be solved in $O(n)$ time.
 
-As an example, consider the following tree:
+木の各ノードについて、
+そのノードから始まる最大の経路の長さを計算することを考えましょう。
+これは木の直径問題の一般化とも言えます。
+それらの長さのうち最大のものは木の直径だからです。
+
+この問題は$O(n)$で解くことができます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -395,21 +330,19 @@ As an example, consider the following tree:
 \end{tikzpicture}
 \end{center}
 
-Let $\texttt{maxLength}(x)$ denote the maximum length
-of a path that begins at node $x$.
-For example, in the above tree,
-$\texttt{maxLength}(4)=3$, because there
-is a path $4 \rightarrow 1 \rightarrow 2 \rightarrow 6$.
-Here is a complete table of the values:
+$\texttt{maxLength}(x)$を$x$を始点とするパスの最大長とします。
+上図の木では
+$\rightarrow 1 \rightarrow 2 \rightarrow 6$
+というパスがあるので、
+$\texttt{maxLength}(4)=3$です。これを表にします。
 \begin{center}
 \begin{tabular}{l|lllllll}
-node $x$ & 1 & 2 & 3 & 4 & 5 & 6 \\
+ノード$x$ & 1 & 2 & 3 & 4 & 5 & 6 \\
 $\texttt{maxLength}(x)$ & 2 & 2 & 3 & 3 & 3 & 3 \\
 \end{tabular}
 \end{center}
 
-Also in this problem, a good starting point
-for solving the problem is to root the tree arbitrarily:
+先ほどと同じ様に根付き木にすると見通しがよくなります。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -426,10 +359,9 @@ for solving the problem is to root the tree arbitrarily:
 \end{tikzpicture}
 \end{center}
 
-The first part of the problem is to calculate for every node $x$
-the maximum length of a path that goes through a child of $x$.
-For example, the longest path from node 1
-goes through its child 2:
+各$x$について、その子のノードの中で最長のパスを持つノードを探します。
+例えば、ノード1からの最長の経路はその子2を通ることがわかります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -448,14 +380,14 @@ goes through its child 2:
 \path[draw,thick,->,color=red,line width=2pt] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-This part is easy to solve in $O(n)$ time, because we can use
-dynamic programming as we have done previously.
 
-Then, the second part of the problem is to calculate
-for every node $x$ the maximum length of a path
-through its parent $p$.
-For example, the longest path
-from node 3 goes through its parent 1:
+これは前回と同様に動的計画法で$O(n)$で解くことができます。
+例えば、ノード3からの最長経路はその親1を通る。
+
+次に、各ノードに対して、以下の計算を行います。
+各ノード $x$ について、親 $p$ を通る経路の最大長を計算します。
+例えば、ノード3からの最長経路はその親1を通ります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -476,12 +408,11 @@ from node 3 goes through its parent 1:
 \end{tikzpicture}
 \end{center}
 
-At first glance, it seems that we should choose
-the longest path from $p$.
-However, this \emph{does not} always work,
-because the longest path from $p$
-may go through $x$.
-Here is an example of this situation:
+これは$p$からの最長経路を選べばよさそうにみえますが、
+$p$からの最長経路が$x$を経由する場合があるため、
+必ずしもうまくいかきません。
+次の様な例があります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -501,42 +432,37 @@ Here is an example of this situation:
 \end{tikzpicture}
 \end{center}
 
-Still, we can solve the second part in
-$O(n)$ time by storing \emph{two} maximum lengths
-for each node $x$:
+ですが、各ノード$x$について2つの最大長を記憶することで、$O(n)$で解くことができます。まずは次の２つを定義しましょう。
 \begin{itemize}
 \item $\texttt{maxLength}_1(x)$:
-the maximum length of a path from $x$
+$x$からの最大のパス長
 \item $\texttt{maxLength}_2(x)$
-the maximum length of a path from $x$
-in another direction than the first path
+それとは異なる次の最大のパス長。長さは同じこともある。
 \end{itemize}
-For example, in the above graph,
+
+上記のグラフでは
+$1 \rightarrow 2 \rightarrow 5$から
 $\texttt{maxLength}_1(1)=2$
-using the path $1 \rightarrow 2 \rightarrow 5$,
-and $\texttt{maxLength}_2(1)=1$
-using the path $1 \rightarrow 3$.
+であり、
+$1 \rightarrow 3$から
+$\texttt{maxLength}_2(1)=1$となります。
 
-Finally, if the path that corresponds to
-$\texttt{maxLength}_1(p)$ goes through $x$,
-we conclude that the maximum length is
-$\texttt{maxLength}_2(p)+1$,
-and otherwise the maximum length is
-$\texttt{maxLength}_1(p)+1$.
+$\texttt{maxLength}_1(p)$に対応するパスが$x$を通る時、
+$\texttt{maxLength}_2(p)+1$ということができます。
+そうでない場合は、$\texttt{maxLength}_1(p)+1$となります。
 
+\section{二分木 - Binary trees}
 
-\section{Binary trees}
-
-\index{binary tree}
+\index{二分木 - binary tree}
 
 \begin{samepage}
-A \key{binary tree} is a rooted tree
-where each node has a left and right subtree.
-It is possible that a subtree of a node is empty.
-Thus, every node in a binary tree has
-zero, one or two children.
 
-For example, the following tree is a binary tree:
+\key{二分木}とは、
+全てのノードが左と右に部分木を持つ根付きの木のことである。
+ただし、部分木が空であることも許容します。
+言い換えれば、二分木のすべてのノードは$0$個、$1$個、または$2$個の子を持つと言えます。
+
+例を示します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -560,39 +486,24 @@ For example, the following tree is a binary tree:
 \index{pre-order}
 \index{in-order}
 \index{post-order}
-
-The nodes of a binary tree have three natural
-orderings that correspond to different ways to 
-recursively traverse the tree:
-
+二分木のノードには3つの自然な走査(Traversal)があります。
 \begin{itemize}
-\item \key{pre-order}: first process the root,
-then traverse the left subtree, then traverse the right subtree
-\item \key{in-order}: first traverse the left subtree,
-then process the root, then traverse the right subtree
-\item \key{post-order}: first traverse the left subtree,
-then traverse the right subtree, then process the root
+\item \key{pre-order}: ルートを処理してから左を処理する。次に右を処理する。
+\item \key{in-order}: 左を処理してからルートを処理する。次に右を処理する。
+\item \key{post-order}: 左を処理してから右を処理する。次にルートを処理する。
 \end{itemize}
 
-For the above tree, the nodes in
-pre-order are
-$[1,2,4,5,6,3,7]$,
-in in-order $[4,2,6,5,1,3,7]$
-and in post-order $[4,6,5,2,7,3,1]$.
+上記の木では、
+pre-orderは$[1,2,4,5,6,3,7]$,
+in-orderは$[4,2,6,5,1,3,7]$,
+post-orderは$[4,6,5,2,7,3,1]$となります。
 
-If we know the pre-order and in-order
-of a tree, we can reconstruct the exact structure of the tree.
-For example, the above tree is the only possible tree
-with pre-order $[1,2,4,5,6,3,7]$ and
-in-order $[4,2,6,5,1,3,7]$.
-In a similar way, the post-order and in-order
-also determine the structure of a tree.
+また、pre-orderとin-orderの２つが分かると木が復元できることも知られています。
+例えば、pre-order$[1,2,4,5,6,3,7]$でin-order$[4,2,6,5,1,3,7]$とわかれば上の木を復元できます。
+同様にpost-orderとin-orderがわかっている場合も復元できます。
 
-However, the situation is different if we only know
-the pre-order and post-order of a tree.
-In this case, there may be more than one tree
-that match the orderings.
-For example, in both of the trees
+ただし、pre-orderとpost-orderだけがわかっている場合は注意が必要です。
+条件を満たす複数の可能性があるからです。この例をみてみます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -604,6 +515,4 @@ For example, in both of the trees
 \path[draw,thick,-] (1b) -- (2b);
 \end{tikzpicture}
 \end{center}
-the pre-order is $[1,2]$ and the post-order is $[2,1]$,
-but the structures of the trees are different.
-
+どちらの木も pre-order $[1,2]$ で post-order is $[2,1]$です。このため、どちらかに確定させることはできません。

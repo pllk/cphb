@@ -1,18 +1,16 @@
-\chapter{Combinatorics}
+\chapter{組合わせ論 - Combinatorics}
 
-\index{combinatorics}
+\index{組合わせ論 - combinatorics}
 
-\key{Combinatorics} studies methods for counting
-combinations of objects.
-Usually, the goal is to find a way to
-count the combinations efficiently
-without generating each combination separately.
+\key{組合わせ論 - Combinatorics} は、
+組合わせを数える方法を研究する学問です。
+これらは通常、各組合わせを個別に数え上げるのではなく、
+効率的に組み合わせを数える方法を見つけます。
 
-As an example, consider the problem
-of counting the number of ways to
-represent an integer $n$ as a sum of positive integers.
-For example, there are 8 representations
-for $4$:
+例として、
+ある整数nを正の整数の和として表現する方法の数を数える問題を考えます。
+例えば，$4$には8通りの表現があります。
+
 \begin{multicols}{2}
 \begin{itemize}
 \item $1+1+1+1$
@@ -26,30 +24,24 @@ for $4$:
 \end{itemize}
 \end{multicols}
 
-A combinatorial problem can often be solved
-using a recursive function.
-In this problem, we can define a function $f(n)$
-that gives the number of representations for $n$.
-For example, $f(4)=8$ according to the above example.
-The values of the function
-can be recursively calculated as follows:
+組合せ問題では再帰関数がよく使われます。
+この問題では、$n$を表現する数を示す
+関数$f(n)$を定義してみましょう。
+例えば、上記の例では$f(4)=8$です。
+この関数の値は以下のように再帰的に計算することができます。
+
 \begin{equation*}
     f(n) = \begin{cases}
                1               & n = 0\\
                f(0)+f(1)+\cdots+f(n-1) & n > 0\\
            \end{cases}
 \end{equation*}
-The base case is $f(0)=1$,
-because the empty sum represents the number 0.
-Then, if $n>0$, we consider all ways to
-choose the first number of the sum.
-If the first number is $k$,
-there are $f(n-k)$ representations
-for the remaining part of the sum.
-Thus, we calculate the sum of all values
-of the form $f(n-k)$ where $k<n$.
 
-The first values for the function are:
+$f(0)=1$は自明で、これは空集合が数0を表すからである。
+次に、$n > 0$のとき、和の第１項目の選び方をすべて考えます。
+第１項目を$k$と定めると、和の残りの部分には$f (n - k)$の表現が存在します。
+したがって、$k < n$である$f (n - k)$の形のすべての値の 和を計算します。
+
 \[
 \begin{array}{lcl}
 f(0) & = & 1 \\
@@ -60,100 +52,83 @@ f(4) & = & 8 \\
 \end{array}
 \]
 
-Sometimes, a recursive formula can be replaced
-with a closed-form formula.
-In this problem,
+これは一般的な式で示せます。
 \[
 f(n)=2^{n-1},
 \]
-which is based on the fact that there are $n-1$
-possible positions for +-signs in the sum
-and we can choose any subset of them.
+これは、 +と-の位置は$n-1$通りありそのうちの任意の部分集合を選ぶことができる、という事実に基づいています。
+(TODO: ここあってる？)
 
-\section{Binomial coefficients}
+\section{二項係数 - Binomial coefficients}
 
-\index{binomial coefficient}
+\index{二項係数 - binomial coefficient}
 
-The \key{binomial coefficient} ${n \choose k}$
-equals the number of ways we can choose a subset
-of $k$ elements from a set of $n$ elements.
-For example, ${5 \choose 3}=10$,
-because the set $\{1,2,3,4,5\}$
-has 10 subsets of 3 elements:
-\[ \{1,2,3\}, \{1,2,4\}, \{1,2,5\}, \{1,3,4\}, \{1,3,5\}, 
+\key{二項係数 - binomial coefficient} は
+${n \choose k}$で表されます。
+これは、$n$個の要素の集合から$k$個の要素の部分集合を選ぶ時の組み合わせの数です。
+例えば、${5 \choose 3}=10$で、例えば
+集合$\{1,2,3,4,5\}$を考えた時に3つとるという組み合わせは次の10通りあります。
+\[ \{1,2,3\}, \{1,2,4\}, \{1,2,5\}, \{1,3,4\}, \{1,3,5\},
 \{1,4,5\}, \{2,3,4\}, \{2,3,5\}, \{2,4,5\}, \{3,4,5\} \]
 
-\subsubsection{Formula 1}
+\subsubsection{公式1 - Formula 1}
 
-Binomial coefficients can be
-recursively calculated as follows:
+二項係数は次のように再起的に計算できます。
 
 \[
 {n \choose k}  =  {n-1 \choose k-1} + {n-1 \choose k}
 \]
 
-The idea is to fix an element $x$ in the set.
-If $x$ is included in the subset,
-we have to choose $k-1$
-elements from $n-1$ elements,
-and if $x$ is not included in the subset,
-we have to choose $k$ elements from $n-1$ elements.
+これは、集合の中のある要素$x$を固定するアイデアと言えます。
+$x$が部分集合に含まれる場合は、$n - 1$個の要素から$k - 1$個の要素を選ぶことになり、
+$x$が部分集合に含まれない 場合は、$n - 1$個の要素から$k$個の要素を選ぶことになるためです。
+なお、この時、次の点に注意してください。
 
-The base cases for the recursion are
 \[
 {n \choose 0}  =  {n \choose n} = 1,
 \]
-because there is always exactly
-one way to construct an empty subset
-and a subset that contains all the elements.
+空の部分集合とすべての要素を含む部分集合を構成する方法は常に1つしかありません。
 
-\subsubsection{Formula 2}
+\subsubsection{公式2 - Formula 2}
 
-Another way to calculate binomial coefficients is as follows:
+また次が成り立ちます。
 \[
 {n \choose k}  =  \frac{n!}{k!(n-k)!}.
 \]
 
-There are $n!$ permutations of $n$ elements.
-We go through all permutations and always
-include the first $k$ elements of the permutation
-in the subset.
-Since the order of the elements in the subset
-and outside the subset does not matter,
-the result is divided by $k!$ and $(n-k)!$
 
-\subsubsection{Properties}
+$n$個の要素の並べ換えは$n!$個です。
+すべての順列を調べて、常に順列の最初の$k$個の要素を部分集合に含めましょう。
+部分集合の中の要素と部分集合の外の要素の順序は重要ではないので、
+$k!$ と $(n - k)!$で割れば良いです。
 
-For binomial coefficients,
+\subsubsection{補足 - Properties}
+
 \[
 {n \choose k}  =  {n \choose n-k},
 \]
-because we actually divide a set of $n$ elements into
-two subsets: the first contains $k$ elements
-and the second contains $n-k$ elements.
+となります。$n$個の要素からなる集合を2つの部分集合に分割し、
+1つ目の部分集合には$k$個の要素を含み、2番目は$n - k$個の要素を含む場合を考えればこれは自明です。
 
-The sum of binomial coefficients is
+二項係数の和は
 \[
 {n \choose 0}+{n \choose 1}+{n \choose 2}+\ldots+{n \choose n}=2^n.
 \]
-
-The reason for the name ''binomial coefficient''
-can be seen when the binomial $(a+b)$ is raised to
-the $n$th power:
+で示されます。二項係数という名前の由来は、$(a+b)$を$n$乗したときにわかります。次の通りです。
 
 \[ (a+b)^n =
-{n \choose 0} a^n b^0 + 
+{n \choose 0} a^n b^0 +
 {n \choose 1} a^{n-1} b^1 +
-\ldots + 
+\ldots +
 {n \choose n-1} a^1 b^{n-1} +
 {n \choose n} a^0 b^n. \]
 
-\index{Pascal's triangle}
+\index{パスカルの三角形 - Pascal's triangle}
 
-Binomial coefficients also appear in
-\key{Pascal's triangle}
-where each value equals the sum of two
-above values:
+二項係数は
+\key{パスカルの三角形 - Pascal's triangle}
+とも密接な関係があります。
+
 \begin{center}
 \begin{tikzpicture}{0.9}
 \node at (0,0) {1};
@@ -179,17 +154,13 @@ above values:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Boxes and balls}
+\subsubsection{箱とボールの問題 - Boxes and balls}
 
-''Boxes and balls'' is a useful model,
-where we count the ways to
-place $k$ balls in $n$ boxes.
-Let us consider three scenarios:
+''箱とボールの問題 - Boxes and balls''は
+二項係数を考える上で非常に有名な問題です。$k$個の玉を$n$個に入れる方法を数えます。 3つのシナリオを考えてみましょう。
 
-\textit{Scenario 1}: Each box can contain
-at most one ball.
-For example, when $n=5$ and $k=2$,
-there are 10 solutions:
+シナリオ1:各ボックスには、最大で1個のボールを入れることができます。
+例えば、$n = 5$、$k = 2$ のとき、解は $10$です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -222,12 +193,10 @@ there are 10 solutions:
 \end{tikzpicture}
 \end{center}
 
-In this scenario, the answer is directly the
-binomial coefficient ${n \choose k}$.
+このシナリオでは答えは二項係数そのままです。${n \choose k}$となります。
 
-\textit{Scenario 2}: A box can contain multiple balls.
-For example, when $n=5$ and $k=2$,
-there are 15 solutions:
+シナリオ2:箱には複数の球を入れることができる。
+例えば、$n = 5$ で $k = 2$の場合、解は15です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -265,30 +234,18 @@ there are 15 solutions:
 \end{tikzpicture}
 \end{center}
 
-The process of placing the balls in the boxes
-can be represented as a string
-that consists of symbols
-''o'' and ''$\rightarrow$''.
-Initially, assume that we are standing at the leftmost box.
-The symbol ''o'' means that we place a ball
-in the current box, and the symbol
-''$\rightarrow$'' means that we move to
-the next box to the right.
+ボールを箱に入れる作業を
+記号 ''o'' と ''$\rightarrow$''で表現しましょう。
+はじめに、一番左の箱に立っているとする。記号 ''o'' は現在の箱に玉を入れることを意味し、
+記号''$\rightarrow$''は次の右隣の箱に移動することを意味します。
+この表記法を用いると、各解は''o''という記号を$k$回、
+''$\rightarrow$''という記号を$n- 1$回含む文字列となります。
+例えば、上の図の右上の解は、''$\rightarrow$ $\rightarrow$ o $\rightarrow$ o $\rightarrow$''
+という文字列に相当します。
+そのため答えば${k+n-1 \choose k}$です。
 
-Using this notation, each solution is a string
-that contains $k$ times the symbol ''o'' and
-$n-1$ times the symbol ''$\rightarrow$''.
-For example, the upper-right solution
-in the above picture corresponds to the string
-''$\rightarrow$ $\rightarrow$ o $\rightarrow$ o $\rightarrow$''.
-Thus, the number of solutions is
-${k+n-1 \choose k}$.
-
-\textit{Scenario 3}: Each box may contain at most one ball,
-and in addition, no two adjacent boxes may both contain a ball.
-For example, when $n=5$ and $k=2$,
-there are 6 solutions:
-
+シナリオ3: 各箱にボールを入れる。しかし隣り合う箱にボールが入っていてはならない。
+$n=5$, $k=2$とするとき、次の6通りが考えられます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -316,48 +273,33 @@ there are 6 solutions:
 \end{tikzpicture}
 \end{center}
 
-In this scenario, we can assume that
-$k$ balls are initially placed in boxes
-and there is an empty box between each
-two adjacent boxes.
-The remaining task is to choose the
-positions for the remaining empty boxes.
-There are $n-2k+1$ such boxes and
-$k+1$ positions for them.
-Thus, using the formula of scenario 2,
-the number of solutions is
-${n-k+1 \choose n-2k+1}$.
+このシナリオでは、
+$k$個のボールが箱に入れられ、
+隣り合う2つの箱の間に空の箱があるとしましょう。
+課題は、残りの空き箱の位置を選択することである。
+このような箱は $n-2k+1$ 個あり、その位置は $k+1$ が考えられます。
 
-\subsubsection{Multinomial coefficients}
+ここでシナリオ2の式を思い出すと
+${n-k+1 \choose n-2k+1}$であることがわかります。
 
-\index{multinomial coefficient}
+\subsubsection{多項係数 - Multinomial coefficients}
 
-The \key{multinomial coefficient}
+\index{多項係数 - multinomial coefficient}
+
+\key{多項係数 - multinomial coefficient}は、
 \[ {n \choose k_1,k_2,\ldots,k_m} = \frac{n!}{k_1! k_2! \cdots k_m!}, \]
-equals the number of ways
-we can divide $n$ elements into subsets
-of sizes $k_1,k_2,\ldots,k_m$,
-where $k_1+k_2+\cdots+k_m=n$.
-Multinomial coefficients can be seen as a
-generalization of binomial cofficients;
-if $m=2$, the above formula
-corresponds to the binomial coefficient formula.
+であり、$n$個の要素をサイズ $k_1,k_2,\ldots,k_m$の部分集合に分割できる方法の数に等しくなります。
+この時、$k_1+k_2+\cdots+k_m=n$とします。
 
-\section{Catalan numbers}
+多項係数は二項係数の一般化と見ることができ、$m = 2$なら、上式は二項係数の式となります。
 
-\index{Catalan number}
+\section{カタラン数 - Catalan numbers}
 
-The \key{Catalan number}
-%\footnote{E. C. Catalan (1814--1894) was a Belgian mathematician.}
-$C_n$ equals the
-number of valid
-parenthesis expressions that consist of
-$n$ left parentheses and $n$ right parentheses.
+\index{カタラン数 - Catalan number}
 
-For example, $C_3=5$, because
-we can construct the following parenthesis
-expressions using three
-left and right parentheses:
+\key{カタラン数 - Catalan number}
+$C_n$ は、$n$個の左括弧と$n$個の右括弧からなる有効な括弧式の数に等しいような数字です。
+例えば$C_3=5$ですが、左右3つの括弧を使って次のような括弧式が作れます。
 
 \begin{itemize}[noitemsep]
 \item \texttt{()()()}
@@ -367,102 +309,71 @@ left and right parentheses:
 \item \texttt{(()())}
 \end{itemize}
 
-\subsubsection{Parenthesis expressions}
+\subsubsection{括弧表現 - Parenthesis expressions}
 
-\index{parenthesis expression}
+\index{括弧表現 - parenthesis expression}
 
-What is exactly a \emph{valid parenthesis expression}?
-The following rules precisely define all
-valid parenthesis expressions:
+有効な括弧表現は次の定義で示されます。
 
 \begin{itemize}
-\item An empty parenthesis expression is valid.
-\item If an expression $A$ is valid,
-then also the expression
-\texttt{(}$A$\texttt{)} is valid.
-\item If expressions $A$ and $B$ are valid,
-then also the expression $AB$ is valid.
+\item 空の括弧は有効です
+\item 式$A$が有効であるとき、\texttt{(}$A$\texttt{)} は有効です
+\item $A$と$B$が有効である時、$AB$は有効です
 \end{itemize}
 
-Another way to characterize valid 
-parenthesis expressions is that if
-we choose any prefix of such an expression,
-it has to contain at least as many left
-parentheses as right parentheses.
-In addition, the complete expression has to
-contain an equal number of left and right
-parentheses.
+有効な括弧式のもう１つの特徴は、
+このような式の任意の接頭辞を選ぶと、
+そこに含まれる右括弧以上の左括弧が含まれていなければならないことです。
+また、完全な式には、左括弧と右括弧が同じ数だけ含まれていなければなりません。
 
-\subsubsection{Formula 1}
+\subsubsection{公式1: Formula 1}
 
-Catalan numbers can be calculated using the formula
+カタラン数は次の式で求めることができます。
 \[ C_n = \sum_{i=0}^{n-1} C_{i} C_{n-i-1}.\]
 
-The sum goes through the ways to divide the
-expression into two parts
-such that both parts are valid
-expressions and the first part is as short as possible
-but not empty.
-For any $i$, the first part contains $i+1$ pairs
-of parentheses and the number of expressions
-is the product of the following values:
+この和は、式を2つの部分に分割して両方の部分が有効な式であり、
+最初の部分ができるだけ短い空でないものの数を調べます。
+任意の$i$について 、最初の部分は$i + 1$組の括弧を含むため式の数は次の値の積となる。
 
 \begin{itemize}
-\item $C_{i}$: the number of ways to construct an expression
-using the parentheses of the first part,
-not counting the outermost parentheses
-\item $C_{n-i-1}$: the number of ways to construct an
-expression using the parentheses of the second part
+\item $C_{i}$: 一番外側の括弧を除いた、最初の部分の括弧を使った式の組み立て方の数
+\item $C_{n-i-1}$: ２番目の括弧を使った式の組み立て方の数
 \end{itemize}
 
-The base case is $C_0=1$,
-because we can construct an empty parenthesis
-expression using zero pairs of parentheses.
+なお、$C_0=1$となります。
+これは、ゼロ個の括弧の組を使って空の括弧式を構成することができるためです。
 
 \subsubsection{Formula 2}
 
-Catalan numbers can also be calculated
-using binomial coefficients:
+カタラン数は二項係数から求めることもできます。
 \[ C_n = \frac{1}{n+1} {2n \choose n}\]
-The formula can be explained as follows:
 
-There are a total of ${2n \choose n}$ ways
-to construct a (not necessarily valid)
-parenthesis expression that contains $n$ left
-parentheses and $n$ right parentheses.
-Let us calculate the number of such
-expressions that are \emph{not} valid.
+$n$個の左括弧と$n$個の右括弧を含む、有効とは限らない括弧式を構成する数は、
+全部で${2n \choose n}$ です。
+これかから有効でないものの数を計算します。
 
-If a parenthesis expression is not valid,
-it has to contain a prefix where the
-number of right parentheses exceeds the
-number of left parentheses.
-The idea is to reverse each parenthesis
-that belongs to such a prefix.
-For example, the expression
-\texttt{())()(} contains a prefix \texttt{())},
-and after reversing the prefix,
-the expression becomes \texttt{)((()(}.
+括弧式が有効でない場合というのは、
+ある地点に置いて右括弧の数が左括弧の数を上回るような接頭辞でなければいけません。
+ここで、そのような接頭辞に属するそれぞれの括弧を逆にしてみます。
+例えば、\texttt{())()(} は接頭辞 \texttt{())}を含んでおり、
+接頭辞を反転させる と \texttt{)((()(} となります。
 
-The resulting expression consists of $n+1$
-left parentheses and $n-1$ right parentheses.
-The number of such expressions is ${2n \choose n+1}$,
-which equals the number of non-valid
-parenthesis expressions.
-Thus, the number of valid parenthesis
-expressions can be calculated using the formula
+これを行うと式は$n + 1$個の左括弧と$n - 1$個の右括弧で構成さます。
+このような${2n \choose n+1}$の式は有効でない括弧式の数となります。
+したがって、有効な括弧式の数は、次の式で計算できます。
 \[{2n \choose n}-{2n \choose n+1} = {2n \choose n} - \frac{n}{n+1} {2n \choose n} = \frac{1}{n+1} {2n \choose n}.\]
 
-\subsubsection{Counting trees}
+\subsubsection{木の数え上げ - Counting trees}
 
 Catalan numbers are also related to trees:
+カタラン数は木とも関係があります。
 
 \begin{itemize}
-\item there are $C_n$ binary trees of $n$ nodes
-\item there are $C_{n-1}$ rooted trees of $n$ nodes
+\item $n$個のノードを持つ二分木の数は$C_n$
+\item $n$個のノードを持つ根付き木の数は$C_{n-1}$
 \end{itemize}
 \noindent
-For example, for $C_3=5$, the binary trees are
+$C_3=5$です。さて二分木は次のようになります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -493,7 +404,7 @@ For example, for $C_3=5$, the binary trees are
 \draw[fill=white] (11.5+1.5,-2) circle (0.3);
 \end{tikzpicture}
 \end{center}
-and the rooted trees are
+根付き木は次のようになります。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \path[draw,thick,-] (0,0) -- (-1,-1);
@@ -534,19 +445,17 @@ and the rooted trees are
 \end{tikzpicture}
 \end{center}
 
-\section{Inclusion-exclusion}
+\section{包除原理 - Inclusion-exclusion}
 
-\index{inclusion-exclusion}
+\index{包除原理 - inclusion-exclusion}
 
-\key{Inclusion-exclusion} is a technique
-that can be used for counting the size
-of a union of sets when the sizes of
-the intersections are known, and vice versa.
-A simple example of the technique is the formula
+\key{包除原理 - Inclusion-exclusion}
+とは、集合の重なる部分の大きさが分かっているときに、
+その集合の和の大きさを数えるテクニックです。
+２つの集合の例としては、
 \[ |A \cup B| = |A| + |B| - |A \cap B|,\]
-where $A$ and $B$ are sets and $|X|$
-denotes the size of $X$.
-The formula can be illustrated as follows:
+となり、$A$と$B$は集合であり、$|X|$という表現は$X$の集合の大きさです。
+これを図に示します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -561,20 +470,13 @@ The formula can be illustrated as follows:
 \end{tikzpicture}
 \end{center}
 
-Our goal is to calculate
-the size of the union $A \cup B$
-that corresponds to the area of the region
-that belongs to at least one circle.
-The picture shows that we can calculate
-the area of $A \cup B$ by first summing the
-areas of $A$ and $B$ and then subtracting
-the area of $A \cap B$.
+$A \cup B$の大きさを計算するには、少なくとも1つの円に属する領域の面積に対応する組合わせを計算することです。
+図のようにまず$A$と$B$の面積から$A \cap B$の面積を差し引けば、
+$A \cup B$の面積を計算することができます。
 
-The same idea can be applied when the number
-of sets is larger.
-When there are three sets, the inclusion-exclusion formula is
+この考え方は集合の数が多くなっても同じ考え方ができます。
+３つの集合の考え方と図を示します。
 \[ |A \cup B \cup C| = |A| + |B| + |C| - |A \cap B|  - |A \cap C|  - |B \cap C| + |A \cap B \cap C| \]
-and the corresponding picture is
 
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
@@ -594,37 +496,28 @@ and the corresponding picture is
 \end{tikzpicture}
 \end{center}
 
-In the general case, the size of the 
-union $X_1 \cup X_2 \cup \cdots \cup X_n$
-can be calculated by going through all possible
-intersections that contain some of the sets $X_1,X_2,\ldots,X_n$.
-If the intersection contains an odd number of sets,
-its size is added to the answer,
-and otherwise its size is subtracted from the answer.
+一般的に$X_1 \cup X_2 \cup \cdots \cup X_n$のサイズの大きさは
+集合$X_1,X_2,\ldots,X_n$の全ての重なる部分を調べることによって計算することができます。
+この時に重なる部分の集合の数の偶奇に注目すると良いです。
+交差点が奇数の集合を含む場合は加算、偶数の集合を含む場合は減算します。
 
-Note that there are similar formulas
-for calculating
-the size of an intersection from the sizes of
-unions. For example,
+また、重なる部分のサイズを計算する式は以下のようになります。
 \[ |A \cap B| = |A| + |B| - |A \cup B|\]
-and
+集合が３つの場合は次のようになります。
 \[ |A \cap B \cap C| = |A| + |B| + |C| - |A \cup B|  - |A \cup C|  - |B \cup C| + |A \cup B \cup C| .\]
 
-\subsubsection{Derangements}
+\subsubsection{完全順列 - Derangements}
 
-\index{derangement}
+\index{完全順列 - derangement}
 
-As an example, let us count the number of \key{derangements}
-of elements $\{1,2,\ldots,n\}$, i.e., permutations
-where no element remains in its original place.
-For example, when $n=3$, there are
-two derangements: $(2,3,1)$ and $(3,1,2)$.
+\key{完全順列 - derangements}とは、
+$n$個の要素$\{1,2,\ldots,n\}$の並び替えのうち、
+元の位置と一致する要素がないような順列のことです。
+$n=3$とすると、２つの完全順列があり: $(2,3,1)$ と $(3,1,2)$です。
 
-One approach for solving the problem is to use
-inclusion-exclusion.
-Let $X_k$ be the set of permutations
-that contain the element $k$ at position $k$.
-For example, when $n=3$, the sets are as follows:
+これを求める一つのアプローチとして、包除原理を用いることができます。
+$X_k$ を位置 $k$ に要素 $k$ を含む並べ換えの集合としましょう。
+例えば、$n = 3$ のとき、 集合は次のようになります。
 \[
 \begin{array}{lcl}
 X_1 & = & \{(1,2,3),(1,3,2)\} \\
@@ -632,14 +525,12 @@ X_2 & = & \{(1,2,3),(3,2,1)\} \\
 X_3 & = & \{(1,2,3),(2,1,3)\} \\
 \end{array}
 \]
-Using these sets, the number of derangements equals
+これらを用いると、完全順列は以下に等しくなります。
 \[ n! - |X_1 \cup X_2 \cup \cdots \cup X_n|, \]
-so it suffices to calculate the size of the union.
-Using inclusion-exclusion, this reduces to
-calculating sizes of intersections which can be
-done efficiently.
-For example, when $n=3$, the size of
-$|X_1 \cup X_2 \cup X_3|$ is
+この集合和の大きさを計算すれば十分になります。
+包除原理を用いると、これは交点の大きさを計算すればよく、効率的に計算できます。
+例えば、 $n=3$
+$|X_1 \cup X_2 \cup X_3|$ のサイズは以下のようになります。
 \[
 \begin{array}{lcl}
  & & |X_1| + |X_2| + |X_3| - |X_1 \cap X_2|  - |X_1 \cap X_3|  - |X_2 \cap X_3| + |X_1 \cap X_2 \cap X_3| \\
@@ -647,14 +538,11 @@ $|X_1 \cup X_2 \cup X_3|$ is
  & = & 4, \\
 \end{array}
 \]
-so the number of solutions is $3!-4=2$.
+$3!-4=2$.とわかりました。
 
-It turns out that the problem can also be solved
-without using inclusion-exclusion.
-Let $f(n)$ denote the number of derangements
-for $\{1,2,\ldots,n\}$. We can use the following
-recursive formula:
-
+尚、この問題は包除原理を使わずに解けることがわかっています。
+$f(n)$を$\{1,2,\ldots,n\}$に対応する完全順列の数とします。
+この時、以下のように示せます。
 \begin{equation*}
     f(n) = \begin{cases}
                0               & n = 1\\
@@ -663,49 +551,34 @@ recursive formula:
            \end{cases}
 \end{equation*}
 
-The formula can be derived by considering
-the possibilities how the element 1 changes
-in the derangement.
-There are $n-1$ ways to choose an element $x$
-that replaces the element 1.
-In each such choice, there are two options:
 
-\textit{Option 1:} We also replace the element $x$
-with the element 1.
-After this, the remaining task is to construct
-a derangement of $n-2$ elements.
+この式は、完全順列の中で要素1がどのように変化するかのパターンを考えることで導き出すことができます。
+要素1に代わる要素$x$の選び方は$n - 1$通りです。
+それぞれの選択において、2つの選択肢がある。
 
-\textit{Option 2:} We replace the element $x$
-with some other element than 1.
-Now we have to construct a derangement
-of $n-1$ element, because we cannot replace
-the element $x$ with the element $1$, and all other
-elements must be changed.
+\textit{Option 1:} 要素$x$を要素1に置き換える。この後、残る課題は、$n - 2$個
+の要素からなる完全順列を構成することである。
 
-\section{Burnside's lemma}
+\textit{Option 2:} 要素xを1以外の要素に置き換える。 
+要素$x$を要素1に置き換えることはしないため、$n - 1$個の要素の完全順列を構成しなければならず、
+他の要素もすべて変更しなければならなりません。
 
-\index{Burnside's lemma}
+\section{バーンサイドの補題 - Burnside's lemma}
 
-\key{Burnside's lemma}
+\index{バーンサイドの補題 - Burnside's lemma}
+
+\key{バーンサイドの補題 - Burnside's lemma}
 %\footnote{Actually, Burnside did not discover this lemma; he only mentioned it in his book \cite{bur97}.}
-can be used to count
-the number of combinations so that
-only one representative is counted
-for each group of symmetric combinations.
-Burnside's lemma states that the number of
-combinations is
+は、
+対称的な組み合わせのグループごとに重複がないように組み合わせの数を数えるために利用します。
+バーンサイドの補題は組み合わせの数が、
 \[\sum_{k=1}^n \frac{c(k)}{n},\]
-where there are $n$ ways to change the
-position of a combination,
-and there are $c(k)$ combinations that
-remain unchanged when the $k$th way is applied.
+で示され、組み合わせの位置を変える方法が$n$通りあり、
+そこに$k$ 番目の方法を適用しても変化しない$c(k)$ の組み合わせがあるとします。
 
-As an example, let us calculate the number of
-necklaces of $n$ pearls,
-where each pearl has $m$ possible colors.
-Two necklaces are symmetric if they are
-similar after rotating them.
-For example, the necklace
+例えば、真珠の色が$m$色あるとして、$n$個の真珠を使ったネックレスの組み合わせ数を計算してみましょう。
+2つのネックレスが回転して似ている場合、対称（ここでは同一）であると言えます。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw[fill=white] (0,0) circle (1);
@@ -715,7 +588,7 @@ For example, the necklace
 \draw[fill=green] (-1,0) circle (0.3);
 \end{tikzpicture}
 \end{center}
-has the following symmetric necklaces:
+に対して、以下のネックレスは同一であるとしましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw[fill=white] (0,0) circle (1);
@@ -743,51 +616,34 @@ has the following symmetric necklaces:
 \draw[fill=red] (12+-1,0) circle (0.3);
 \end{tikzpicture}
 \end{center}
-There are $n$ ways to change the position
-of a necklace,
-because we can rotate it
-$0,1,\ldots,n-1$ steps clockwise.
-If the number of steps is 0,
-all $m^n$ necklaces remain the same,
-and if the number of steps is 1,
-only the $m$ necklaces where each
-pearl has the same color remain the same.
+まず、ネックレスを時計回りに$0,1,\ldots,n-1$ ステップ回転させることができるので、 
+ネックレスの位置を変える方法は$n$通りあります。
+ステップ数が0の場合、$m^n$ のネックレスはすべて同じで、
+ステップ数が1の場合、各真珠の色が同じである$m$個のネックレスだけが同じままである。
 
-More generally, when the number of steps is $k$,
-a total of
+より一般的には、ステップ数を$k$としたとき、合計で
 \[m^{\textrm{gcd}(k,n)}\]
-necklaces remain the same,
-where $\textrm{gcd}(k,n)$ is the greatest common
-divisor of $k$ and $n$.
-The reason for this is that blocks
-of pearls of size $\textrm{gcd}(k,n)$
-will replace each other.
-Thus, according to Burnside's lemma,
-the number of necklaces is
+のネックレスが同じになります。
+$\textrm{gcd}(k,n)$は$k$と$n$の最大公約数です。
+この理由は、$\textrm{gcd}(k,n)$の大きさの真珠のブロックは互いに置き換えられるためです。
+したがって、バーンサイドの補題によれば、首飾りの個数は
 \[\sum_{i=0}^{n-1} \frac{m^{\textrm{gcd}(i,n)}}{n}. \]
-For example, the number of necklaces of length 4
-with 3 colors is
+で示され、長さ4, 色が3なら、以下の通りとなります。
 \[\frac{3^4+3+3^2+3}{4} = 24. \]
 
-\section{Cayley's formula}
+\section{ケイリーの公式 - Cayley's formula}
 
-\index{Cayley's formula}
+\index{ケイリーの公式 - Cayley's formula}
 
-\key{Cayley's formula}
+\key{ケイリーの公式 - Cayley's formula}
 % \footnote{While the formula is named after A. Cayley,
 % who studied it in 1889, it was discovered earlier by C. W. Borchardt in 1860.}
-states that
-there are $n^{n-2}$ labeled trees
-that contain $n$ nodes.
-The nodes are labeled $1,2,\ldots,n$,
-and two trees are different
-if either their structure or
-labeling is different.
+は、$n$個のノードを含む$n^{n-2}$のラベル付き木が存在することを述べている。
+ノードは$1,2,\ldots,n$とラベル付けされ、
+2つの木はその構造かラベルが異なれば異なる木としましょう。
 
 \begin{samepage}
-For example, when $n=4$, the number of labeled
-trees is $4^{4-2}=16$:
-
+例えば、$n = 4$のとき、ラベル付き木の本数は$4^{4-2}=16$となる。
 \begin{center}
 \begin{tikzpicture}[scale=0.8]
 \footnotesize
@@ -832,24 +688,20 @@ trees is $4^{4-2}=16$:
 \end{center}
 \end{samepage}
 
-Next we will see how Cayley's formula can
-be derived using Prüfer codes.
+次に、プリュファーコードを使ってケイリーの公式がどのように導かれるのかを見ていきます。
 
-\subsubsection{Prüfer code}
+\subsubsection{プリューファー列 - Prüfer code}
 
-\index{Prüfer code}
+\index{プリューファー列 - Prüfer code}
 
-A \key{Prüfer code}
+A \key{プリューファー列 - Prüfer code}
 %\footnote{In 1918, H. Prüfer proved Cayley's theorem using Prüfer codes \cite{pru18}.}
-is a sequence of
-$n-2$ numbers that describes a labeled tree.
-The code is constructed by following a process
-that removes $n-2$ leaves from the tree.
-At each step, the leaf with the smallest label is removed,
-and the label of its only neighbor is added to the code.
+ラベル付きツリーを記述する$n - 2$個の数列です。
+この数列は木から$n - 2$枚の葉を除去する過程を経て構成されます。
+各ステップで、最も小さいラベルを持つ葉が取り除かれ、
+その唯一の隣接葉のラベルをコードに追加します。
 
-For example, let us calculate the Prüfer code
-of the following graph:
+例えば、次のようなグラフのプルーファーコードを計算してみましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (2,3) {$1$};
@@ -865,7 +717,7 @@ of the following graph:
 \end{tikzpicture}
 \end{center}
 
-First we remove node 1 and add node 4 to the code:
+まず、ノード1を削除し、ノード4をコードに追加します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 %\node[draw, circle] (1) at (2,3) {$1$};
@@ -881,7 +733,7 @@ First we remove node 1 and add node 4 to the code:
 \end{tikzpicture}
 \end{center}
 
-Then we remove node 3 and add node 4 to the code:
+そして、ノード3を削除し、ノード4を追加するコードになります。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 %\node[draw, circle] (1) at (2,3) {$1$};
@@ -897,7 +749,7 @@ Then we remove node 3 and add node 4 to the code:
 \end{tikzpicture}
 \end{center}
 
-Finally we remove node 4 and add node 2 to the code:
+最後にノード4を削除し、ノード2をコードに追加します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 %\node[draw, circle] (1) at (2,3) {$1$};
@@ -913,13 +765,9 @@ Finally we remove node 4 and add node 2 to the code:
 \end{tikzpicture}
 \end{center}
 
-Thus, the Prüfer code of the graph is $[4,4,2]$.
+このグラフのプリューファー列は$[4,4,2]$です。
 
-We can construct a Prüfer code for any tree,
-and more importantly,
-the original tree can be reconstructed
-from a Prüfer code.
-Hence, the number of labeled trees
-of $n$ nodes equals
-$n^{n-2}$, the number of Prüfer codes
-of size $n$.
+どのような木に対してもプリューファー列を構成することができます。
+さらに重要なことは、プリューファー列から元の木を再構成することができることです。
+したがって、ノード数$n$のラベル付き木の数は、
+サイズ$n$ のプリュファー列の数 $n^{n-2}$に等しくなります。

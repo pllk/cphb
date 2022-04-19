@@ -1,29 +1,24 @@
-\chapter{Directed graphs}
+\chapter{有向グラフ - Directed graphs}
 
-In this chapter, we focus on two classes of directed graphs:
+ここでは2つの特徴を持つグラフについて検討していきます。
 \begin{itemize}
-\item \key{Acyclic graphs}:
-There are no cycles in the graph,
-so there is no path from any node to itself\footnote{Directed acyclic
-graphs are sometimes called DAGs.}.
+\item \key{非巡回グラフ - Acyclic graphs}:
+閉路を含まない有向グラフのこと。時にDAG(Directed Acyclic Graphs)と呼ばれる
 \item \key{Successor graphs}:
-The outdegree of each node is 1,
-so each node has a unique successor.
+各ノードの出次が1であるグラフ。このため、ただ一つの子を持つ。
 \end{itemize}
-It turns out that in both cases,
-we can design efficient algorithms that are based
-on the special properties of the graphs.
+どちらの場合も、グラフの特別な性質に基づく
+効率的なアルゴリズムがあります。
 
-\section{Topological sorting}
+\section{トポロジカルソート - Topological sorting}
 
-\index{topological sorting}
-\index{cycle}
+\index{トポロジカルソート - topological sorting}
+\index{閉路 - cycle}
 
-A \key{topological sort} is an ordering
-of the nodes of a directed graph
-such that if there is a path from node $a$ to node $b$,
-then node $a$ appears before node $b$ in the ordering.
-For example, for the graph
+\key{トポロジカルソート - topological sort}とは、
+有向グラフのノードにおいて、ノード$a$からノー ド$b$へのパスが存在する場合、
+ノードaがノードbの前に現れるような順序を持つグラフのことです。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -42,8 +37,8 @@ For example, for the graph
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-one topological sort is
-$[4,1,5,2,3,6]$:
+このトポロジカルソートは
+$[4,1,5,2,3,6]$です。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (-6,0) {$1$};
@@ -63,48 +58,36 @@ $[4,1,5,2,3,6]$:
 \end{tikzpicture}
 \end{center}
 
-An acyclic graph always has a topological sort.
-However, if the graph contains a cycle,
-it is not possible to form a topological sort,
-because no node of the cycle can appear
-before the other nodes of the cycle in the ordering.
-It turns out that depth-first search can be used
-to both check if a directed graph contains a cycle
-and, if it does not contain a cycle, to construct a topological sort.
+非巡回グラフは常にトポロジカルソートです。
+しかし，グラフが閉路を含む場合は
+閉路のどのノードも順序においてサイクルの他のノードより前に現れることができないので
+トポロジカルソートを形成することはできません。
+深さ優先探索を用いて，
+有向グラフに閉路があるかどうかを調べ，
+閉路がない場合にはトポロジカルソートを構成することができると判定できます。
 
-\subsubsection{Algorithm}
+\subsubsection{アルゴリズム - Algorithm}
 
-The idea is to go through the nodes of the graph
-and always begin a depth-first search at the current node
-if it has not been processed yet.
-During the searches, the nodes have three possible states:
+ベースとなる考え方はグラフのノードを適当にみていき、
+まだ処理されていない場合はそのノードから深さ優先探索を開始していきます。
+ノードは3つのいずれかの状態を持ちます。
 
 \begin{itemize}
-\item state 0: the node has not been processed (white)
-\item state 1: the node is under processing (light gray)
-\item state 2: the node has been processed (dark gray)
+\item 状態 0: ノードは処理されていない状態(白色)
+\item 状態 1: ノードが処理中(薄いグレー)
+\item 状態 2: ノードが処理された状態(濃いグレー)
 \end{itemize}
 
-Initially, the state of each node is 0.
-When a search reaches a node for the first time,
-its state becomes 1.
-Finally, after all successors of the node have
-been processed, its state becomes 2.
+初期状態では、各ノードの状態は0です。初めて検索が到達するとノードの状態は1になります。そして、そのノードのすべての探索が処理された後、そのノードの状態は2にします。
 
-If the graph contains a cycle, we will find this out
-during the search, because sooner or later
-we will arrive at a node whose state is 1.
-In this case, it is not possible to construct a topological sort.
+グラフに閉路が存在する場合、状態が1であるノードに探索をするので探索中にグラフに閉路があることが判明します。
 
-If the graph does not contain a cycle, we can construct
-a topological sort by 
-adding each node to a list when the state of the node becomes 2.
-This list in reverse order is a topological sort.
+グラフがサイクルを含まない場合はこの条件以外の時で、全てのノードの状態が2になったときに各ノードの探索順をリストとすることで、
+トポロジカルソートとなります。
 
 \subsubsection{Example 1}
 
-In the example graph, the search first proceeds
-from node 1 to node 6:
+このグラフの例では1,2,3,6と探索が進みます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -127,8 +110,8 @@ from node 1 to node 6:
 \end{tikzpicture}
 \end{center}
 
-Now node 6 has been processed, so it is added to the list.
-After this, also nodes 3, 2 and 1 are added to the list:
+ここで、6には探索する先がないので、状態2となり、リストに値が登録されます。
+次に、3,2,1と追加されていきます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -149,8 +132,7 @@ After this, also nodes 3, 2 and 1 are added to the list:
 \end{tikzpicture}
 \end{center}
 
-At this point, the list is $[6,3,2,1]$.
-The next search begins at node 4:
+いま、リストの状態は$[6,3,2,1]$です。次は4が探索されます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -173,11 +155,8 @@ The next search begins at node 4:
 \end{tikzpicture}
 \end{center}
 
-Thus, the final list is $[6,3,2,1,5,4]$.
-We have processed all nodes, so a topological sort has
-been found.
-The topological sort is the reverse list
-$[4,5,1,2,3,6]$:
+このようにリスト$[6,3,2,1,5,4]$を得ることができます。
+この逆順がトポロジカルソート$[4,5,1,2,3,6]$です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -198,14 +177,12 @@ $[4,5,1,2,3,6]$:
 \end{tikzpicture}
 \end{center}
 
-Note that a topological sort is not unique,
-and there can be several topological sorts for a graph.
+なお、トポロジカルソートは１つとは限りません。
+閉路を含まないグラフでは複数のトポロジカルソートが存在しえます。
 
 \subsubsection{Example 2}
 
-Let us now consider a graph for which we
-cannot construct a topological sort,
-because the graph contains a cycle:
+閉路を含むのでトポロジカルソートできない場合はどうなるでしょうか。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -225,7 +202,7 @@ because the graph contains a cycle:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-The search proceeds as follows:
+次のように進んでいきます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle,fill=gray!20] (1) at (1,5) {$1$};
@@ -245,30 +222,26 @@ The search proceeds as follows:
 \path[draw=red,thick,->,line width=2pt] (5) -- (2);
 \end{tikzpicture}
 \end{center}
-The search reaches node 2 whose state is 1,
-which means that the graph contains a cycle.
-In this example, there is a cycle
-$2 \rightarrow 3 \rightarrow 5 \rightarrow 2$.
 
-\section{Dynamic programming}
+探索は状態が1であるノード2に到達しました。
+つまり、グラフが閉路を含むということです。
+この例では、$2 \rightarrow 3 \rightarrow 5 \rightarrow 2$という閉路が存在します。
 
-If a directed graph is acyclic,
-dynamic programming can be applied to it.
-For example, we can efficiently solve the following
-problems concerning paths from a starting node
-to an ending node:
+\section{木DP  - Dynamic programming}
+
+有向グラフがサイクルを含まないのであれば動的計画法を木上で適用することができます。
+例えば、始点ノードから終点ノードへの経路に関する次のような問題を効率的に解くことができます。
 
 \begin{itemize}
-\item how many different paths are there?
-\item what is the shortest/longest path?
-\item what is the minimum/maximum number of edges in a path?
-\item which nodes certainly appear in any path?
+\item パスの種類は？
+\item 最短あるいは最大のパスは？
+\item 最短あるいは最大の辺の数は？
+\item 全てのパスにおいて必ず通るノードはあるか？
 \end{itemize}
 
-\subsubsection{Counting the number of paths}
+\subsubsection{パス数のカウント}
 
-As an example, let us calculate the number of paths
-from node 1 to node 6 in the following graph:
+次のグラフで1から6のパスの数を考えます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -288,24 +261,20 @@ from node 1 to node 6 in the following graph:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-There are a total of three such paths:
+このようなパスは以下の３つがあります。
 \begin{itemize}
 \item $1 \rightarrow 2 \rightarrow 3 \rightarrow 6$
 \item $1 \rightarrow 4 \rightarrow 5 \rightarrow 2 \rightarrow 3 \rightarrow 6$
 \item $1 \rightarrow 4 \rightarrow 5 \rightarrow 3 \rightarrow 6$
 \end{itemize}
 
-Let $\texttt{paths}(x)$ denote the number of paths from
-node 1 to node $x$.
-As a base case, $\texttt{paths}(1)=1$.
-Then, to calculate other values of $\texttt{paths}(x)$,
-we may use the recursion
+$\texttt{paths}(1)=1$です。
+$\texttt{paths}(x)$は以下のように再帰的に求めていきます。
 \[\texttt{paths}(x) = \texttt{paths}(a_1)+\texttt{paths}(a_2)+\cdots+\texttt{paths}(a_k)\]
-where $a_1,a_2,\ldots,a_k$ are the nodes from which there
-is an edge to $x$.
-Since the graph is acyclic, the values of $\texttt{paths}(x)$
-can be calculated in the order of a topological sort.
-A topological sort for the above graph is as follows:
+は$x$への辺が存在するノードです。
+グラフは閉路を持たないため、
+$path(x)$の値はトポロジカルソートの順に計算することができます。
+上のグラフのトポロジカルソートの１つは以下の通りです。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -324,7 +293,7 @@ A topological sort for the above graph is as follows:
 \path[draw,thick,->,>=latex] (3) -- (6);
 \end{tikzpicture}
 \end{center}
-Hence, the numbers of paths are as follows:
+このためパス数は以下のように求められます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,5) {$1$};
@@ -351,22 +320,17 @@ Hence, the numbers of paths are as follows:
 \end{tikzpicture}
 \end{center}
 
-For example, to calculate the value of $\texttt{paths}(3)$,
-we can use the formula $\texttt{paths}(2)+\texttt{paths}(5)$,
-because there are edges from nodes 2 and 5
-to node 3.
-Since $\texttt{paths}(2)=2$ and $\texttt{paths}(5)=1$, we conclude that $\texttt{paths}(3)=3$.
+$\texttt{paths}(3)$を求める時、ノード2と5からノード3への辺があるので、
+$\texttt{paths}(2)+\texttt{paths}(5)$を計算します。
+$\texttt{paths}(2)=2$, $\texttt{paths}(5)=1$ですから、$\texttt{paths}(3)=3$となります。
 
-\subsubsection{Extending Dijkstra's algorithm}
+\subsubsection{ダイクストラのアルゴリズムの拡張}
 
-\index{Dijkstra's algorithm}
+\index{ダイクストラアルゴリズム}
 
-A by-product of Dijkstra's algorithm is a directed, acyclic
-graph that indicates for each node of the original graph
-the possible ways to reach the node using a shortest path
-from the starting node.
-Dynamic programming can be applied to that graph.
-For example, in the graph
+ダイクストラのアルゴリズムを利用すると、
+開始ノードから各ノードへの最短経路を使用してそのノードに到達する可能性を示す有向の閉路が存在しないグラフを得ることができます。
+このグラフに対しては動的計画法を適用することができます。以下を考えます。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -384,7 +348,7 @@ For example, in the graph
 \path[draw,thick,-] (2) -- node[font=\small,label=above:2] {} (3);
 \end{tikzpicture}
 \end{center}
-the shortest paths from node 1 may use the following edges:
+ノード1からの最短経路は以下のようになります。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -402,9 +366,7 @@ the shortest paths from node 1 may use the following edges:
 \end{tikzpicture}
 \end{center}
 
-Now we can, for example, calculate the number of
-shortest paths from node 1 to node 5
-using dynamic programming:
+これでノード1から5までの最短経路を以下のように求めることができます。
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -428,22 +390,16 @@ using dynamic programming:
 \end{tikzpicture}
 \end{center}
 
-\subsubsection{Representing problems as graphs}
+\subsubsection{グラフによる問題表現 - Representing problems as graphs}
 
-Actually, any dynamic programming problem
-can be represented as a directed, acyclic graph.
-In such a graph, each node corresponds to a dynamic programming state
-and the edges indicate how the states depend on each other.
+動的計画問題は閉路が存在しない有向のグラフで表現することができます。
+このようなグラフでは、各ノードが動的計画法の状態に対応し、
+辺は状態各ノードの依存を示します。
 
-As an example, consider the problem
-of forming a sum of money $n$
-using coins
-$\{c_1,c_2,\ldots,c_k\}$.
-In this problem, we can construct a graph where
-each node corresponds to a sum of money,
-and the edges show how the coins can be chosen.
-For example, for coins $\{1,3,4\}$ and $n=6$,
-the graph is as follows:
+例として，硬貨$\{c_1,c_2,\ldots,c_k\}$を用いて金額$n$を作る問題を考えます。
+この問題では，各ノードが金額に対応し，エッジがコインの選び方を示すグラフと捉えることができます。
+たとえば，コイン $\{1,3,4\}$ と $n = 6$ の場合， グラフは次のようになります。
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (0) at (0,0) {$0$};
@@ -472,35 +428,23 @@ the graph is as follows:
 \end{tikzpicture}
 \end{center}
 
-Using this representation,
-the shortest path from node 0 to node $n$
-corresponds to a solution with the minimum number of coins,
-and the total number of paths from node 0 to node $n$
-equals the total number of solutions.
+この表し方をするとノード$0$からノード$n$までの最短経路はコインの枚数が最小の解に対応していることとなり、
+ノード$0$からノード$n$までの経路の総数は解の総数に等しくなります。
 
-\section{Successor paths}
+\section{サクセスパス - Successor paths}
 
-\index{successor graph}
+\index{サクセスグラフ - successor graph}
 \index{functional graph}
 
-For the rest of the chapter,
-we will focus on \key{successor graphs}.
-In those graphs,
-the outdegree of each node is 1, i.e.,
-exactly one edge starts at each node.
-A successor graph consists of one or more
-components, each of which contains
-one cycle and some paths that lead to it.
+\key{successor graphs}に焦点を当てていきます。
+このグラフでは、各ノードの出次辺は1、つまり、ちょうど1本の辺が各ノードから出ています。
+サクセスグラフは1つ以上のコンポーネントとからなます。
+それぞれのコンポーネントには1つのサイクルとそれにつながるパスがあります。
+サクセスグラフはfunctionalグラフと呼ばれることもあります。
+これはサクセスグラフがグラフの辺を定義する関数に対応するからです。
+関数のパラメータはグラフのノードであり、関数はそのノードの後ろの後ろ、と考えます。
 
-Successor graphs are sometimes called
-\key{functional graphs}.
-The reason for this is that any successor graph
-corresponds to a function that defines
-the edges of the graph.
-The parameter for the function is a node of the graph,
-and the function gives the successor of that node.
-
-For example, the function
+例えば以下の関数を考えます。
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
 $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
@@ -508,7 +452,7 @@ $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
 $\texttt{succ}(x)$ & 3 & 5 & 7 & 6 & 2 & 2 & 1 & 6 & 3 \\
 \end{tabular}
 \end{center}
-defines the following graph:
+これは次のようなパスと考えられます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$1$};
@@ -533,13 +477,11 @@ defines the following graph:
 \end{tikzpicture}
 \end{center}
 
-Since each node of a successor graph has a
-unique successor, we can also define a function $\texttt{succ}(x,k)$
-that gives the node that we will reach if
-we begin at node $x$ and walk $k$ steps forward.
-For example, in the above graph $\texttt{succ}(4,6)=2$,
-because we will reach node 2 by walking 6 steps from node 4:
-
+successorグラフの各ノードは一意な次のノードを持つので、
+ノード$x$から始めて$k$歩進んで到達するノードを与える
+関数$\texttt{succ}(x,k)$を定義することができます。
+たとえば，上のグラフでは $\texttt{succ}(4,6)=2$ で、これは
+ノード4から6回移動するとノード2に到達することを表します。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,0) {$4$};
@@ -559,16 +501,13 @@ because we will reach node 2 by walking 6 steps from node 4:
 \end{tikzpicture}
 \end{center}
 
-A straightforward way to calculate a value of $\texttt{succ}(x,k)$
-is to start at node $x$ and walk $k$ steps forward, which takes $O(k)$ time.
-However, using preprocessing, any value of $\texttt{succ}(x,k)$
-can be calculated in only $O(\log k)$ time.
+$\texttt{succ}(x,k)$値を計算する簡単な方法は、ノード$x$から始めて$k$歩を実際に進むことですが、
+これには$O(k)$個の時間がかかってしまいます。
+前処理を行うことと$O(\log k)$で計算することができます。
 
-The idea is to precalculate all values of $\texttt{succ}(x,k)$ where
-$k$ is a power of two and at most $u$, where $u$ is
-the maximum number of steps we will ever walk.
-This can be efficiently done, because
-we can use the following recursion:
+この方法を紹介します。$k$が2の累乗であって、最大でも$u$である$\texttt{succ}(x,k)$のすべての値を
+事前に計算します。$u$は必要となる最大の数です。
+これは以下のような再起的な方法で求めることができます。　
 
 \begin{equation*}
     \texttt{succ}(x,k) = \begin{cases}
@@ -577,9 +516,8 @@ we can use the following recursion:
            \end{cases}
 \end{equation*}
 
-Precalculating the values takes $O(n \log u)$ time,
-because $O(\log u)$ values are calculated for each node.
-In the above graph, the first values are as follows:
+各ノードに対して$O(\log u)$個の値を計算するため、
+値の事前計算には$O(n \log u)$個の時間がかかります。
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
@@ -593,33 +531,25 @@ $\cdots$ \\
 \end{tabular}
 \end{center}
 
-After this, any value of $\texttt{succ}(x,k)$ can be calculated
-by presenting the number of steps $k$ as a sum of powers of two.
-For example, if we want to calculate the value of $\texttt{succ}(x,11)$,
-we first form the representation $11=8+2+1$.
-Using that,
+この事前計算を用いるとステップ数kを2の累乗の和で表すことで、
+$\texttt{succ}(x,k)$の任意の値を算出することができます。
+例えば、$\texttt{succ}(x,11)$の値を計算したい場合は、
+$11 = 8 + 2 + 1$とします。こうすることで、
+
 \[\texttt{succ}(x,11)=\texttt{succ}(\texttt{succ}(\texttt{succ}(x,8),2),1).\]
-For example, in the previous graph
+これは次のように展開されます。
 \[\texttt{succ}(4,11)=\texttt{succ}(\texttt{succ}(\texttt{succ}(4,8),2),1)=5.\]
 
-Such a representation always consists of
-$O(\log k)$ parts, so calculating a value of $\texttt{succ}(x,k)$
-takes $O(\log k)$ time.
+これによって全ての数は$O(\log k)$で求めることができます。
+(訳註:ダブリングと呼ばれるテクニックです)
 
-\section{Cycle detection}
+\section{閉路検出 - Cycle detection}
 
 \index{cycle}
-\index{cycle detection}
+\index{閉路検出 - cycle detection}
 
-Consider a successor graph that only contains
-a path that ends in a cycle.
-We may ask the following questions:
-if we begin our walk at the starting node,
-what is the first node in the cycle
-and how many nodes does the cycle contain?
-
-For example, in the graph
-
+閉路で終わる有向グラフを考えます。
+始点から歩き始めたときに閉路の最初のノードは何でサイクルはいくつのノードを含むか？に焦点をあてます。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (5) at (0,0) {$5$};
@@ -637,40 +567,28 @@ For example, in the graph
 \path[draw,thick,->] (6) -- (4);
 \end{tikzpicture}
 \end{center}
-we begin our walk at node 1,
-the first node that belongs to the cycle is node 4, and the cycle consists
-of three nodes (4, 5 and 6).
 
-A simple way to detect the cycle is to walk in the
-graph and keep track of
-all nodes that have been visited. Once a node is visited
-for the second time, we can conclude
-that the node is the first node in the cycle.
-This method works in $O(n)$ time and also uses
-$O(n)$ memory.
+ノード1から歩き始めたときに閉路に属する最初のノードは4で、
+この閉路は3つのノード(4、5、6)から構成されています。
+閉路を検出する簡単な方法は、グラフ内を順に探索していき訪問済みかを記録しておくことです。
+あるノードに2度目に達した時にそのノードは閉路に属するの最初のノードです。
+この方法は$O(n)$で動作します。
 
-However, there are better algorithms for cycle detection.
-The time complexity of such algorithms is still $O(n)$,
-but they only use $O(1)$ memory.
-This is an important improvement if $n$ is large.
-Next we will discuss Floyd's algorithm that
-achieves these properties.
+ここで閉路検出のための空間計算量が$O(1)$であるフロイドの循環検出アルゴリズムを紹介します。
 
-\subsubsection{Floyd's algorithm}
+\subsubsection{フロイドの循環検出アルゴリズム - Floyd's algorithm}
 
-\index{Floyd's algorithm}
+\index{フロイドの循環検出アルゴリズム - Floyd's algorithm}
 
-\key{Floyd's algorithm}\footnote{The idea of the algorithm is mentioned in \cite{knu982}
+\key{フロイドの循環検出アルゴリズム - Floyd's algorithm}とは
+\footnote{The idea of the algorithm is mentioned in \cite{knu982}
 and attributed to R. W. Floyd; however, it is not known if Floyd actually
-discovered the algorithm.} walks forward 
-in the graph using two pointers $a$ and $b$.
-Both pointers begin at a node $x$ that
-is the starting node of the graph.
-Then, on each turn, the pointer $a$ walks
-one step forward and the pointer $b$
-walks two steps forward.
-The process continues until
-the pointers meet each other:
+discovered the algorithm.}
+2つのポインタ$a$、$b$を用いてグラフを探索していく方法です。
+両ポインタはグラフの始点であるノードxに位置します。
+そして、1ターンごとに、ポインタ$a$は1歩、ポインタ$b$は2歩前進させていきます。
+これを両方のポインタが(開始時点を除いて)最初に同じ位置に重なるまで続けます。
+
 \begin{lstlisting}
 a = succ(x);
 b = succ(succ(x));
@@ -680,13 +598,11 @@ while (a != b) {
 }
 \end{lstlisting}
 
-At this point, the pointer $a$ has walked $k$ steps
-and the pointer $b$ has walked $2k$ steps,
-so the length of the cycle divides $k$.
-Thus, the first node that belongs to the cycle
-can be found by moving the pointer $a$ to node $x$
-and advancing the pointers
-step by step until they meet again.
+
+$k$歩で出会った時、ポインタ$a$は$k$歩、ポインタ$b$は$2k$歩歩いているので、
+閉路の長さは$k$で割ることができます。
+このため、$a$をノード$x$に移動して再び$a$と$b$が重なるところまでポインタを進めると閉路に所属する最初のノードを知ることができます。
+
 \begin{lstlisting}
 a = x;
 while (a != b) {
@@ -696,8 +612,7 @@ while (a != b) {
 first = a;
 \end{lstlisting}
 
-After this, the length of the cycle
-can be calculated as follows:
+そして、サイクルの長さは以下のように求めることができます。
 \begin{lstlisting}
 b = succ(a);
 length = 1;

@@ -1,39 +1,23 @@
-\chapter{Data structures}
+\chapter{データ構造 - Data structures}
 
-\index{data structure}
+\index{データ構造 -data structure}
 
-A \key{data structure} is a way to store
-data in the memory of a computer.
-It is important to choose an appropriate
-data structure for a problem,
-because each data structure has its own
-advantages and disadvantages.
-The crucial question is: which operations
-are efficient in the chosen data structure?
+\key{データ構造 -data structure}は、コンピュータのメモリにデータを格納するための方法です。
+データ構造にはそれぞれ長所と短所があり、あるデータを格納する際に問題に適したデータ構造を選択できるかが大切になります。
+この判断に必要な知識は選択したデータ構造でどのような操作が効率的に行えるのかということです。
 
-This chapter introduces the most important
-data structures in the C++ standard library.
-It is a good idea to use the standard library
-whenever possible,
-because it will save a lot of time.
-Later in the book we will learn about more sophisticated
-data structures that are not available
-in the standard library.
+この章では、C++標準ライブラリの中で最も重要なデータ構造について紹介します。
+標準ライブラリを可能な限り使用することは、多くの時間を節約することができるのでベストな方法です。
+このドキュメントの後半では標準ライブラリでは利用できないより高度なデータ構造について学びます。
 
-\section{Dynamic arrays}
+\section{動的配列 - Dynamic arrays}
 
-\index{dynamic array}
-\index{vector}
+\index{動的配列 - dynamic array}
+\index{配列 - vector}
 
-A \key{dynamic array} is an array whose
-size can be changed during the execution
-of the program.
-The most popular dynamic array in C++ is
-the \texttt{vector} structure,
-which can be used almost like an ordinary array.
-
-The following code creates an empty vector and
-adds three elements to it:
+\key{動的配列 - dynamic array}とは、プログラムの実行中にサイズを変更することができる配列のことです。
+C++で最もよく使われる動的配列は\texttt{vector}で，普通の配列と同じように使うことができます．
+次のコードは、空のvectorを作成し、そこに3つの要素を追加します。
 
 \begin{lstlisting}
 vector<int> v;
@@ -42,18 +26,15 @@ v.push_back(2); // [3,2]
 v.push_back(5); // [3,2,5]
 \end{lstlisting}
 
-After this, the elements can be accessed like in an ordinary array:
-
+これには配列のようにアクセスが出来ます。
 \begin{lstlisting}
 cout << v[0] << "\n"; // 3
 cout << v[1] << "\n"; // 2
 cout << v[2] << "\n"; // 5
 \end{lstlisting}
 
-The function \texttt{size} returns the number of elements in the vector.
-The following code iterates through
-the vector and prints all elements in it:
-
+\texttt{size}によってvectorの長さを知ることが出来ます。
+これを利用して全ての配列の要素にアクセスすることができます。
 \begin{lstlisting}
 for (int i = 0; i < v.size(); i++) {
     cout << v[i] << "\n";
@@ -61,8 +42,8 @@ for (int i = 0; i < v.size(); i++) {
 \end{lstlisting}
 
 \begin{samepage}
-A shorter way to iterate through a vector is as follows:
 
+また、forを使って次のようにアクセスをすることもできます。
 \begin{lstlisting}
 for (auto x : v) {
     cout << x << "\n";
@@ -70,10 +51,8 @@ for (auto x : v) {
 \end{lstlisting}
 \end{samepage}
 
-The function \texttt{back} returns the last element
-in the vector, and
-the function \texttt{pop\_back} removes the last element:
-
+\texttt{back}によって配列の最後の要素にアクセスすることができ、
+\texttt{pop\_back}によって最後の要素を削除することが出来ます。
 \begin{lstlisting}
 vector<int> v;
 v.push_back(5);
@@ -83,15 +62,12 @@ v.pop_back();
 cout << v.back() << "\n"; // 5
 \end{lstlisting}
 
-The following code creates a vector with five elements:
-
+初期値を設定して生成することもできます。
 \begin{lstlisting}
 vector<int> v = {2,4,2,5,1};
 \end{lstlisting}
 
-Another way to create a vector is to give the number
-of elements and the initial value for each element:
-
+次のようにして要素数を指定して作成したり、各要素の初期値を決めることが出来ます。
 \begin{lstlisting}
 // size 10, initial value 0
 vector<int> v(10);
@@ -101,29 +77,20 @@ vector<int> v(10);
 vector<int> v(10, 5);
 \end{lstlisting}
 
-The internal implementation of a vector
-uses an ordinary array.
-If the size of the vector increases and
-the array becomes too small,
-a new array is allocated and all the
-elements are moved to the new array.
-However, this does not happen often and the
-average time complexity of
-\texttt{push\_back} is $O(1)$.
+vectorの内部実装は、通常の配列を使用します。
+vectorのサイズが大きくなり過ぎる、あるいは小さくなり過ぎるとき、
+新しい配列のメモリ確保して全要素を新しい配列に移動させます(訳註：この操作は$O(N)$かかります)。
+ただし、このサイズ生成はがあまり起こるものではないので\texttt{push\_back}の平均的な時間複雑度は$O(1)$と考えてよいです。
 
 \index{string}
 
-The \texttt{string} structure
-is also a dynamic array that can be used almost like a vector.
-In addition, there is special syntax for strings
-that is not available in other data structures.
-Strings can be combined using the \texttt{+} symbol.
-The function $\texttt{substr}(k,x)$ returns the substring
-that begins at position $k$ and has length $x$,
-and the function $\texttt{find}(\texttt{t})$ finds the position
-of the first occurrence of a substring \texttt{t}.
+文字列型である\texttt{string}構造体は動的な配列で、ほとんどvectorのように使用することができます。
+stringには他のデータ構造にはない特別な操作ができます。
+文字列は \texttt{+} 記号を使って結合することができます。
+関数$\texttt{substr}(k,x)$は位置$k$からの長さ$x$の部分文字列を返し，
+関数$\texttt{find}(\texttt{t})$はある文字列$t$が最初に出現する位置(訳註:あるいは存在しない)を探します。
 
-The following code presents some string operations:
+次のコードでは、いくつかの文字列操作を紹介します。
 
 \begin{lstlisting}
 string a = "hatti";
@@ -135,38 +102,26 @@ string c = b.substr(3,4);
 cout << c << "\n"; // tiva
 \end{lstlisting}
 
-\section{Set structures}
+\section{set - Set structures}
 
 \index{set}
 
-A \key{set} is a data structure that
-maintains a collection of elements.
-The basic operations of sets are element
-insertion, search and removal.
+\key{set}は、要素の集合のデータ構造です。
+集合の基本操作は、要素の挿入、検索、削除からなります。
 
-The C++ standard library contains two set
-implementations:
-The structure \texttt{set} is based on a balanced
-binary tree and its operations work in $O(\log n)$ time.
-The structure \texttt{unordered\_set} uses hashing,
-and its operations work in $O(1)$ time on average.
+C++の標準ライブラリには、2つの集合の実装があります。
+１つ目は\texttt{set}で、内部のデータは平衡二分木で格納され，操作は$O(\log n)$時間で行われます。
+もう一つは\texttt{unordered\_set}内部のデータをハッシュで格納し、操作は平均して$O(1)$時間で動作する。
 
-The choice of which set implementation to use
-is often a matter of taste.
-The benefit of the \texttt{set} structure
-is that it maintains the order of the elements
-and provides functions that are not available
-in \texttt{unordered\_set}.
-On the other hand, \texttt{unordered\_set}
-can be more efficient.
+どのセット実装を使うかは、好みの問題と特徴を考えて判断します。
+\texttt{set}の利点は、要素の順序を維持し、
+\texttt{unordered\_set}では利用できない関数を提供されます。
+もちろん\texttt{unordered\_set}の方が効率的な場合もある。
 
-The following code creates a set
-that contains integers,
-and shows some of the operations.
-The function \texttt{insert} adds an element to the set,
-the function \texttt{count} returns the number of occurrences
-of an element in the set,
-and the function \texttt{erase} removes an element from the set.
+次のコードは、整数を含む集合を作成し、その操作の一部を示します。
+関数\texttt{insert}は集合に要素を追加し，
+関数\texttt{count}は集合内の要素の出現回数を返し，
+関数\texttt{erase}は集合から要素を削除する関数です。
 
 \begin{lstlisting}
 set<int> s;
@@ -181,12 +136,9 @@ cout << s.count(3) << "\n"; // 0
 cout << s.count(4) << "\n"; // 1
 \end{lstlisting}
 
-A set can be used mostly like a vector,
-but it is not possible to access
-the elements using the \texttt{[]} notation.
-The following code creates a set,
-prints the number of elements in it, and then
-iterates through all the elements:
+setの操作のいくつかはvectorのように使うことができますが、
+\texttt{[]}記法を使ってインデックスで指定した要素に直接アクセスすることはできません。
+次のコードは、セットを作成し、その中の要素数を表示し、すべての要素に処理をするものです。
 \begin{lstlisting}
 set<int> s = {2,5,6,8};
 cout << s.size() << "\n"; // 4
@@ -195,16 +147,10 @@ for (auto x : s) {
 }
 \end{lstlisting}
 
-An important property of sets is
-that all their elements are \emph{distinct}.
-Thus, the function \texttt{count} always returns
-either 0 (the element is not in the set)
-or 1 (the element is in the set),
-and the function \texttt{insert} never adds
-an element to the set if it is
-already there.
-The following code illustrates this:
-
+集合の重要な特性は、そのすべての要素が\emph{ユニーク - distinct}であることです。
+したがって、関数\texttt{count}は常に
+0（要素ない）か1（要素ある）を返し、
+関数\texttt{insert}は要素がすでに集合にある場合、それを追加することはありません。
 \begin{lstlisting}
 set<int> s;
 s.insert(5);
@@ -213,13 +159,10 @@ s.insert(5);
 cout << s.count(5) << "\n"; // 1
 \end{lstlisting}
 
-C++ also contains the structures
-\texttt{multiset} and \texttt{unordered\_multiset}
-that otherwise work like \texttt{set}
-and \texttt{unordered\_set}
-but they can contain multiple instances of an element.
-For example, in the following code all three instances
-of the number 5 are added to a multiset:
+C++には、\texttt{multiset}と\texttt{unordered\_multiset}という構造体もあり、
+これらは\texttt{set} と \texttt{unordered\_set}と同様の機能しますが、
+同じ値の複数要素を格納することができます。
+たとえば、次のコードでは、5という数字の3つのインスタンスがすべてmultisetに追加されています。
 
 \begin{lstlisting}
 multiset<int> s;
@@ -228,45 +171,33 @@ s.insert(5);
 s.insert(5);
 cout << s.count(5) << "\n"; // 3
 \end{lstlisting}
-The function \texttt{erase} removes
-all instances of an element
-from a multiset:
+
+\texttt{erase}は複数の要素があったとしても全てを削除します。
 \begin{lstlisting}
 s.erase(5);
 cout << s.count(5) << "\n"; // 0
 \end{lstlisting}
-Often, only one instance should be removed,
-which can be done as follows:
+
+１つの要素だけを削除したいのなら次のようにイテレータでアクセスします。
 \begin{lstlisting}
 s.erase(s.find(5));
 cout << s.count(5) << "\n"; // 2
 \end{lstlisting}
 
-\section{Map structures}
+\section{map - Map structures}
 
 \index{map}
 
-A \key{map} is a generalized array
-that consists of key-value-pairs.
-While the keys in an ordinary array are always
-the consecutive integers $0,1,\ldots,n-1$,
-where $n$ is the size of the array,
-the keys in a map can be of any data type and
-they do not have to be consecutive values.
+\key{map}はキーと値のペアで構成される一般的な配列のことである。
+通常の配列のキーは常に連続した整数$0,1,\ldots,n-1$（nは配列のサイズ）ですが、
+マップのキーは整数でない任意のデータ型とでき、連続した値である必要はありません。
 
-The C++ standard library contains two map
-implementations that correspond to the set
-implementations: the structure
-\texttt{map} is based on a balanced
-binary tree and accessing elements
-takes $O(\log n)$ time,
-while the structure
-\texttt{unordered\_map} uses hashing
-and accessing elements takes $O(1)$ time on average.
+C++標準ライブラリには、
+集合の実装に対応する2つのマップの実装がある。
+一つは\texttt{map}で平衡二分木に基づいており、要素へのアクセスに$O(\log n)$時間かかります。
+もう一つは\texttt{unordered\_map}でハッシュを使用しており、平均で$O(1)$で操作可能です。
 
-The following code creates a map
-where the keys are strings and the values are integers:
-
+次のコードは，キーが文字列，値が整数であるマップを作成します．
 \begin{lstlisting}
 map<string,int> m;
 m["monkey"] = 4;
@@ -275,51 +206,40 @@ m["harpsichord"] = 9;
 cout << m["banana"] << "\n"; // 3
 \end{lstlisting}
 
-If the value of a key is requested
-but the map does not contain it,
-the key is automatically added to the map with
-a default value.
-For example, in the following code,
-the key ''aybabtu'' with value 0
-is added to the map.
+キーの値が要求されマップにその値が含まれていない場合、
+キーは自動的にデフォルト値でマップに追加されます（訳注：参照した時点で作成されることに注意します）。
+例えば、次のコードでは、値0を持つキー''aybabtu''がマップに追加されます。
 
 \begin{lstlisting}
 map<string,int> m;
 cout << m["aybabtu"] << "\n"; // 0
 \end{lstlisting}
-The function \texttt{count} checks
-if a key exists in a map:
+
+\texttt{count}はキーの存在を確認します。
 \begin{lstlisting}
 if (m.count("aybabtu")) {
     // key exists
 }
 \end{lstlisting}
-The following code prints all the keys and values
-in a map:
+
+次のコードはキーと値を列挙します。
 \begin{lstlisting}
 for (auto x : m) {
     cout << x.first << " " << x.second << "\n";
 }
 \end{lstlisting}
 
-\section{Iterators and ranges}
+\section{イテレータと範囲 - Iterators and ranges}
 
-\index{iterator}
+\index{イテレータ - iterator}
 
-Many functions in the C++ standard library
-operate with iterators.
-An \key{iterator} is a variable that points
-to an element in a data structure.
+C++標準ライブラリの多くの関数は、\key{イテレータ - iterator}を使用して操作します。
+イテレータはデータ構造中の要素を指す変数です(訳註:Cを知っている方はポインタと考えると良いでしょう)。
 
-The often used iterators \texttt{begin}
-and \texttt{end} define a range that contains
-all elements in a data structure.
-The iterator \texttt{begin} points to
-the first element in the data structure,
-and the iterator \texttt{end} points to
-the position \emph{after} the last element.
-The situation looks as follows:
-
+よく使われるイテレータを返す関数
+\texttt{begin}と\texttt{end}
+は、データ構造内の全要素を含む範囲を示すために使われます。
+イテレータ\texttt{begin}はデータ構造の最初の要素を指し、\texttt{end}は最後の要素の後を指します。
 \begin{center}
 \begin{tabular}{llllllllll}
 \{ & 3, & 4, & 6, & 8, & 12, & 13, & 14, & 17 & \} \\
@@ -328,24 +248,21 @@ The situation looks as follows:
 \end{tabular}
 \end{center}
 
-Note the asymmetry in the iterators:
-\texttt{s.begin()} points to an element in the data structure,
-while \texttt{s.end()} points outside the data structure.
-Thus, the range defined by the iterators is \emph{half-open}.
+\texttt{s.begin()}はデータ構造内の要素を指し、
+\texttt{s.end()}はデータ構造の外を指している、という非対称性に注意してください。
+つまり、イテレータで定義される範囲は\emph{片方が開区間 - half-open}となっています。
 
-\subsubsection{Working with ranges}
+\subsubsection{範囲の利用 - Working with ranges}
 
-Iterators are used in C++ standard library functions
-that are given a range of elements in a data structure.
-Usually, we want to process all elements in a
-data structure, so the iterators
-\texttt{begin} and \texttt{end} are given for the function.
+イテレータは、(訳註:反復した処理に用いられることが多く)
+C++の標準ライブラリ関数の中でデータ構造内の要素の範囲を与えられて使用されます。
+通常、データ構造内のすべての要素を処理したいので、
+イテレータ\texttt{begin} と \texttt{end}が操作の関数に与えられます。
 
-For example, the following code sorts a vector
-using the function \texttt{sort},
-then reverses the order of the elements using the function
-\texttt{reverse}, and finally shuffles the order of
-the elements using the function \texttt{random\_shuffle}.
+次のコードは、
+\texttt{sort}関数でvectorをソートし、
+\texttt{reverse}関数で要素の順序を反転させ、
+\texttt{random\_shuffle}関数で要素の順序をシャッフルします。
 
 \index{sort@\texttt{sort}}
 \index{reverse@\texttt{reverse}}
@@ -357,9 +274,7 @@ reverse(v.begin(), v.end());
 random_shuffle(v.begin(), v.end());
 \end{lstlisting}
 
-These functions can also be used with an ordinary array.
-In this case, the functions are given pointers to the array
-instead of iterators:
+これらは通常の配列でも使え、この場合は配列のポインタを与えます。
 
 \newpage
 \begin{lstlisting}
@@ -368,52 +283,45 @@ reverse(a, a+n);
 random_shuffle(a, a+n);
 \end{lstlisting}
 
-\subsubsection{Set iterators}
+\subsubsection{イテレータの設定 - Set iterators}
 
-Iterators are often used to access
-elements of a set.
-The following code creates an iterator
-\texttt{it} that points to the smallest element in a set:
+イテレータは、集合の要素にアクセスするためにもよく使われます。
+次のコードは、集合の最小の要素を指すイテレータ\texttt{it}を作成します。
 \begin{lstlisting}
 set<int>::iterator it = s.begin();
 \end{lstlisting}
-A shorter way to write the code is as follows:
+
+次のように書くこともできます。
 \begin{lstlisting}
 auto it = s.begin();
 \end{lstlisting}
-The element to which an iterator points
-can be accessed using the \texttt{*} symbol.
-For example, the following code prints
-the first element in the set:
 
+イテレータが指す要素には\texttt{*}記号でアクセスすることができます。
+たとえば、次のコードは、セットの最初の要素を表示します。
 \begin{lstlisting}
 auto it = s.begin();
 cout << *it << "\n";
 \end{lstlisting}
 
-Iterators can be moved using the operators
-\texttt{++} (forward) and \texttt{--} (backward),
-meaning that the iterator moves to the next
-or previous element in the set.
+イテレータの移動は、演算子 \texttt{++}（次）
+および \texttt{--}（前）を用いて行うことができ、
+これはイテレータがセットの次の要素または前の要素に移動することを意味します。
 
-The following code prints all the elements
-in increasing order:
+これらを使って、次のように全ての配列にアクセスすることもできます。
 \begin{lstlisting}
 for (auto it = s.begin(); it != s.end(); it++) {
     cout << *it << "\n";
 }
 \end{lstlisting}
-The following code prints the largest element in the set:
+
+次のコードは配列の最後の要素を表示します。
 \begin{lstlisting}
 auto it = s.end(); it--;
 cout << *it << "\n";
 \end{lstlisting}
 
-The function $\texttt{find}(x)$ returns an iterator
-that points to an element whose value is $x$.
-However, if the set does not contain $x$,
-the iterator will be \texttt{end}.
-
+関数 $\texttt{find}(x)$ は，値が $x$ である要素を指すイテレータを返す関数ですが
+集合に $x$ が含まれない場合は，イテレータは\texttt{end}を示します。
 \begin{lstlisting}
 auto it = s.find(x);
 if (it == s.end()) {
@@ -421,22 +329,13 @@ if (it == s.end()) {
 }
 \end{lstlisting}
 
-The function $\texttt{lower\_bound}(x)$ returns
-an iterator to the smallest element in the set
-whose value is \emph{at least} $x$, and
-the function $\texttt{upper\_bound}(x)$
-returns an iterator to the smallest element in the set
-whose value is \emph{larger than} $x$.
-In both functions, if such an element does not exist,
-the return value is \texttt{end}.
-These functions are not supported by the
-\texttt{unordered\_set} structure which
-does not maintain the order of the elements.
+関数 $\texttt{lower\_bound}(x)$ は，集合の中で値が $x$ 以上である最小の要素へのイテレータを返し，
+関数 $\texttt{upper\_bound}(x)$ は，集合の中で値が $x$ よりも大きい最小の要素へのイテレータを返します。
+これらの関数は、該当する要素がないならば、\texttt{end}を返します。
+また、要素の順序を保持しない\texttt{unordered\_set}構造体ではサポートされません。
 
 \begin{samepage}
-For example, the following code finds the element
-nearest to $x$:
-
+例えば、次のコードは、$x$に最も近い要素を見つけます。
 \begin{lstlisting}
 auto it = s.lower_bound(x);
 if (it == s.begin()) {
@@ -452,30 +351,22 @@ if (it == s.begin()) {
 }
 \end{lstlisting}
 
-The code assumes that the set is not empty,
-and goes through all possible cases
-using an iterator \texttt{it}.
-First, the iterator points to the smallest
-element whose value is at least $x$.
-If \texttt{it} equals \texttt{begin},
-the corresponding element is nearest to $x$.
-If \texttt{it} equals \texttt{end},
-the largest element in the set is nearest to $x$.
-If none of the previous cases hold,
-the element nearest to $x$ is either the
-element that corresponds to \texttt{it} or the previous element.
+このコードでは、集合が空でないことを仮定し、
+イテレータ\texttt{it}を使用してすべての可能なケースを通過します。
+イテレータは値が少なくとも$x$である最小の要素を指します。
+もし\texttt{it}が\texttt{begin} に等しければ、対応する要素が $x$ に最も近いです。
+もし\texttt{it}が\texttt{end} に等しければ、セットの中で最大の要素が $x$ に最も近いです。
+もし前のケースがどれも成立しなければ、$x$に最も近い要素は前後の要素のどちらかになります。
 \end{samepage}
 
-\section{Other structures}
+\section{その他の構造 - Other structures}
 
-\subsubsection{Bitset}
+\subsubsection{ビットセット - Bitset}
 
-\index{bitset}
+\index{ビットセット - bitset}
 
-A \key{bitset} is an array
-whose each value is either 0 or 1.
-For example, the following code creates
-a bitset that contains 10 elements:
+\key{ビットセット - bitset} とは、各値が0または1である配列です。
+例えば、次のコードは10個の要素を含むビットセットを作成します。
 \begin{lstlisting}
 bitset<10> s;
 s[1] = 1;
@@ -486,35 +377,27 @@ cout << s[4] << "\n"; // 1
 cout << s[5] << "\n"; // 0
 \end{lstlisting}
 
-The benefit of using bitsets is that
-they require less memory than ordinary arrays,
-because each element in a bitset only
-uses one bit of memory.
-For example, 
-if $n$ bits are stored in an \texttt{int} array,
-$32n$ bits of memory will be used,
-but a corresponding bitset only requires $n$ bits of memory.
-In addition, the values of a bitset
-can be efficiently manipulated using
-bit operators, which makes it possible to
-optimize algorithms using bit sets.
+ビットセットを使用する利点は、
+ビットセットの各要素は1ビットしか要さないので少ないメモリしか必要としないことです。
+\texttt{int}配列に$n$ビットを格納する場合、
+$32n$ビットのメモリを使用しますが、同じ長さのビットセットは$n$ビットのメモリしか必要としません。
+また、ビットセットの値はビット演算子を使って効率的に操作できるため、
+ビットセットを使ったアルゴリズムの最適化が可能です。
 
-The following code shows another way to create the above bitset:
+次のコードはビットセットを作成する別の方法を示しています。
 \begin{lstlisting}
 bitset<10> s(string("0010011010")); // from right to left
 cout << s[4] << "\n"; // 1
 cout << s[5] << "\n"; // 0
 \end{lstlisting}
 
-The function \texttt{count} returns the number
-of ones in the bitset:
-
+関数 \texttt{count} は，ビットセット内の 1 の個数を返します。
 \begin{lstlisting}
 bitset<10> s(string("0010011010"));
 cout << s.count() << "\n"; // 4
 \end{lstlisting}
 
-The following code shows examples of using bit operations:
+また、次のようにビット演算を行うことが出来ます。
 \begin{lstlisting}
 bitset<10> a(string("0010110110"));
 bitset<10> b(string("1011011000"));
@@ -523,20 +406,13 @@ cout << (a|b) << "\n"; // 1011111110
 cout << (a^b) << "\n"; // 1001101110
 \end{lstlisting}
 
-\subsubsection{Deque}
+\subsubsection{デック - Deque}
 
-\index{deque}
+\index{デック - deque}
 
-A \key{deque} is a dynamic array
-whose size can be efficiently
-changed at both ends of the array.
-Like a vector, a deque provides the functions
-\texttt{push\_back} and \texttt{pop\_back}, but
-it also includes the functions
-\texttt{push\_front} and \texttt{pop\_front}
-which are not available in a vector.
-
-A deque can be used as follows:
+\key{デック - deque} は配列の両端で効率的にサイズを変更できる動的な配列です。
+vectorと同様にdequeは関数 \texttt{push\_back} and \texttt{pop\_back} を提供しますが
+vectorでは利用できない関数 \texttt{push\_front} and \texttt{pop\_front} も提供します。
 \begin{lstlisting}
 deque<int> d;
 d.push_back(5); // [5]
@@ -546,25 +422,18 @@ d.pop_back(); // [3,5]
 d.pop_front(); // [5]
 \end{lstlisting}
 
-The internal implementation of a deque
-is more complex than that of a vector,
-and for this reason, a deque is slower than a vector.
-Still, both adding and removing
-elements take $O(1)$ time on average at both ends.
+dequeの内部実装はvectorよりも複雑なので遅いですが、
+要素の追加と削除は両端とも平均して$O(1)$です。
 
-\subsubsection{Stack}
+\subsubsection{スタック - Stack}
 
-\index{stack}
+\index{スタック - stack}
 
-A \key{stack}
-is a data structure that provides two
-$O(1)$ time operations:
-adding an element to the top,
-and removing an element from the top.
-It is only possible to access the top
-element of a stack.
+\key{スタック - stack}は$O(1)$時間の操作を提供するデータ構造で、
+要素をトップに追加すること、トップから要素を削除することの2つの操作だけを提供します。
+つまり、スタックの先頭の要素にのみアクセスすることができる構造体です。
 
-The following code shows how a stack can be used:
+次のコードは、スタックを使用する方法を示しています。
 \begin{lstlisting}
 stack<int> s;
 s.push(3);
@@ -576,16 +445,14 @@ cout << s.top(); // 2
 \end{lstlisting}
 \subsubsection{Queue}
 
-\index{queue}
+\index{キュー - queue}
 
-A \key{queue} also
-provides two $O(1)$ time operations:
-adding an element to the end of the queue,
-and removing the first element in the queue.
-It is only possible to access the first
-and last element of a queue.
+\key{キュー - queue} も末尾に要素を追加する操作と、
+待ち行列の先頭の要素を削除する操作の2つの$O(1)$の操作だけが用意されています。
+つまり、待ち行列の最初と最後の要素にのみアクセスすることができます。
 
-The following code shows how a queue can be used:
+次のコードは、キューを使用する方法を示しています。
+
 \begin{lstlisting}
 queue<int> q;
 q.push(3);
@@ -596,35 +463,22 @@ q.pop();
 cout << q.front(); // 2
 \end{lstlisting}
 
-\subsubsection{Priority queue}
+\subsubsection{優先度付きキュー - Priority queue}
 
-\index{priority queue}
-\index{heap}
+\index{優先度付きキュー - priority queue}
+\index{ヒープ - heap}
 
-A \key{priority queue}
-maintains a set of elements.
-The supported operations are insertion and,
-depending on the type of the queue,
-retrieval and removal of
-either the minimum or maximum element.
-Insertion and removal take $O(\log n)$ time,
-and retrieval takes $O(1)$ time.
-
-While an ordered set efficiently supports
-all the operations of a priority queue,
-the benefit of using a priority queue is
-that it has smaller constant factors.
-A priority queue is usually implemented using
-a heap structure that is much simpler than a
-balanced binary tree used in an ordered set.
+\key{優先度付きキュー - priority queue}は要素の集合を保持するデータ構造です。
+サポートされている操作は、挿入と、待ち行列の種類に応じて、最小または最大の要素の検索と削除です。
+挿入と削除には $O(\log n)$ の時間がかかり、取り出しには $O(1)$ の時間がかかります。。
+setでも、優先度付きキューでできるすべての操作が可能ですが、
+優先度付きキューは定数係数がより小さく操作できます。
+優先度付きキューはヒープ構造を用いて実装されますが、
+順序付きセットで用いられる平衡二分木よりもはるかに単純なものです。
 
 \begin{samepage}
-By default, the elements in a C++
-priority queue are sorted in decreasing order,
-and it is possible to find and remove the
-largest element in the queue.
-The following code illustrates this:
 
+C++の優先度付きキューは、デフォルトは要素の降順でソートされ、キュー内の最大要素を見つけ、削除することが可能です。
 \begin{lstlisting}
 priority_queue<int> q;
 q.push(3);
@@ -641,36 +495,33 @@ q.pop();
 \end{lstlisting}
 \end{samepage}
 
-If we want to create a priority queue
-that supports finding and removing
-the smallest element,
-we can do it as follows:
-
+昇順（つまり小さい順)の優先度付きキューを作りたいならば次のようにします。
 \begin{lstlisting}
 priority_queue<int,vector<int>,greater<int>> q;
 \end{lstlisting}
 
 \subsubsection{Policy-based data structures}
 
-The \texttt{g++} compiler also supports
-some data structures that are not part
-of the C++ standard library.
-Such structures are called \emph{policy-based}
-data structures.
-To use these structures, the following lines
-must be added to the code:
+\texttt{g++} は、
+C++標準ライブラリに含まれないデータ構造もいくつかサポートしています。
+このような構造は、\emph{policy-based}データ構造と呼ばれています。
+これらの構造体を使うには、次の行をコードに追加する必要があります。
+
 \begin{lstlisting}
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds; 
 \end{lstlisting}
-After this, we can define a data structure \texttt{indexed\_set} that
-is like \texttt{set} but can be indexed like an array.
-The definition for \texttt{int} values is as follows:
+
+これで\texttt{set}のように配列のようにインデックスを付けられる
+データ構造\texttt{indexed\_set}を定義することができるようになりました。
+\texttt{int}を保持する構造は以下のように作ります。
 \begin{lstlisting}
 typedef tree<int,null_type,less<int>,rb_tree_tag,
              tree_order_statistics_node_update> indexed_set; 
 \end{lstlisting}
-Now we can create a set as follows:
+
+次のように作ります。
+
 \begin{lstlisting}
 indexed_set s;
 s.insert(2);
@@ -678,92 +529,69 @@ s.insert(3);
 s.insert(7);
 s.insert(9);
 \end{lstlisting}
-The speciality of this set is that we have access to
-the indices that the elements would have in a sorted array.
-The function $\texttt{find\_by\_order}$ returns
-an iterator to the element at a given position:
+
+この拡張setはソートされた配列の要素にあるインデックスにアクセスできます。
+関数 $\texttt{find\_by\_order}$ は，指定された位置の要素へのイテレータを返します。
 \begin{lstlisting}
 auto x = s.find_by_order(2);
 cout << *x << "\n"; // 7
 \end{lstlisting}
-And the function $\texttt{order\_of\_key}$
-returns the position of a given element:
+
+$\texttt{order\_of\_key}$は与えた要素のindexを返します。
+(TODO: これ本当か？2ではない気もする)
 \begin{lstlisting}
 cout << s.order_of_key(7) << "\n"; // 2
 \end{lstlisting}
-If the element does not appear in the set,
-we get the position that the element would have
-in the set:
+
+その要素が集合に現れない場合、その要素が集合の中で持つであろう位置を求めます。
 \begin{lstlisting}
 cout << s.order_of_key(6) << "\n"; // 2
 cout << s.order_of_key(8) << "\n"; // 3
 \end{lstlisting}
-Both the functions work in logarithmic time.
 
-\section{Comparison to sorting}
+これらは対数時間で動作します。
 
-It is often possible to solve a problem
-using either data structures or sorting.
-Sometimes there are remarkable differences
-in the actual efficiency of these approaches,
-which may be hidden in their time complexities.
+\section{ソートとの比較 - Comparison to sorting}
 
-Let us consider a problem where
-we are given two lists $A$ and $B$
-that both contain $n$ elements.
-Our task is to calculate the number of elements
-that belong to both of the lists.
-For example, for the lists
+データ構造とソートのどちらかを使って解ける問題は多いです。
+これらのアプローチの実際の効率に顕著な違いがでることもあり、
+それは時間的な複雑さに起因することがあります。
+
+$n$個の要素を含む2つのリスト$A$、$B$が与えられたときの問題を考えてみましょう。ここで両方に所属する要素数をカウント死体とします。
+
+例えば、以下の例を考えます。
 \[A = [5,2,8,9] \hspace{10px} \textrm{and} \hspace{10px} B = [3,2,9,5],\]
-the answer is 3 because the numbers 2, 5
-and 9 belong to both of the lists.
+この場合、2,5,9が両方に含まれるので答えは3です。
 
-A straightforward solution to the problem is
-to go through all pairs of elements in $O(n^2)$ time,
-but next we will focus on
-more efficient algorithms.
+愚直な比較を行うと$O(n^2)$ですが、いくつかのアプローチを考えてみましょう。
 
-\subsubsection{Algorithm 1}
+\subsubsection{方法1: Algorithm 1}
 
-We construct a set of the elements that appear in $A$,
-and after this, we iterate through the elements
-of $B$ and check for each elements if it
-also belongs to $A$.
-This is efficient because the elements of $A$
-are in a set.
-Using the \texttt{set} structure,
-the time complexity of the algorithm is $O(n \log n)$.
+$A$のsetをつくり、$B$の各要素について$A$にも属するかどうかをチェックします。
+時間計算量は$O(n \log n)$です。
 
-\subsubsection{Algorithm 2}
+\subsubsection{方法2: Algorithm 2}
 
-It is not necessary to maintain an ordered set,
-so instead of the \texttt{set} structure
-we can also use the \texttt{unordered\_set} structure.
-This is an easy way to make the algorithm
-more efficient, because we only have to change
-the underlying data structure.
-The time complexity of the new algorithm is $O(n)$.
+順序付きセットである必要がないので
+\texttt{set}の代わりに\texttt{unordered\_set}を使うこともできます。
+基礎となるデータ構造を変更するだけなので非常に簡単な方法です。
+時間計算量は$O(n)$になりました。
 
-\subsubsection{Algorithm 3}
+\subsubsection{方法3: Algorithm 3}
 
-Instead of data structures, we can use sorting.
-First, we sort both lists $A$ and $B$.
-After this, we iterate through both the lists
-at the same time and find the common elements.
-The time complexity of sorting is $O(n \log n)$,
-and the rest of the algorithm works in $O(n)$ time,
-so the total time complexity is $O(n \log n)$.
+ソートを使うことができます。
+まず$A$ と$B$をソートします。
+この後、両方のリストを同時に反復処理し、共通の要素を見つけます。
+ソートの時間計算量は$O(n \log n)$で
+残りのアルゴリズムも$O(n)$ 時間で動作するので、全体の時間計算量は$O(n \log n)$となります。
 
-\subsubsection{Efficiency comparison}
+\subsubsection{効率性の比較 - Efficiency comparison}
 
-The following table shows how efficient
-the above algorithms are when $n$ varies and
-the elements of the lists are random
-integers between $1 \ldots 10^9$:
-
+次の表は$n$が変化し，リストの要素が $1 \ldots 10^9$ の間のランダムな整数である場合に，
+上記のアルゴリズムがどの程度効率的に動作するかを示します。
 \begin{center}
 \begin{tabular}{rrrr}
-$n$ & Algorithm 1 & Algorithm 2 & Algorithm 3 \\
+$n$ & 方法 1 & 方法 2 & 方法 3 \\
 \hline
 $10^6$ & $1.5$ s & $0.3$ s & $0.2$ s \\
 $2 \cdot 10^6$ & $3.7$ s & $0.8$ s & $0.3$ s \\
@@ -773,22 +601,17 @@ $5 \cdot 10^6$ & $10.0$ s & $2.3$ s & $0.9$ s \\
 \end{tabular}
 \end{center}
 
-Algorithms 1 and 2 are equal except that
-they use different set structures.
-In this problem, this choice has an important effect on
-the running time, because Algorithm 2
-is 4–5 times faster than Algorithm 1.
+アルゴリズム1と2は、使用する集合構造が異なることを除けば同じコードです。
+この問題では、この選択が実行時間に重要な影響を及ぼします。
+アルゴリズム2はアルゴリズム1より4-5倍速く動作します。
 
-However, the most efficient algorithm is Algorithm 3
-which uses sorting.
-It only uses half the time compared to Algorithm 2.
-Interestingly, the time complexity of both
-Algorithm 1 and Algorithm 3 is $O(n \log n)$,
-but despite this, Algorithm 3 is ten times faster.
-This can be explained by the fact that
-sorting is a simple procedure and it is done
-only once at the beginning of Algorithm 3,
-and the rest of the algorithm works in linear time.
-On the other hand,
-Algorithm 1 maintains a complex balanced binary tree
-during the whole algorithm.
+しかし、最も効率的な方法は、ソートを使用する方法3であることに注意してください。
+方法2に比べ、半分の時間しか使いません。
+興味深いことに、方法1と方法3の時間計算量はともに$O(n \log n)$ですが、
+それにもかかわらず方法3は10倍も速いのです。
+
+これは、ソートが方法3の冒頭で一度だけ行われるのに対して、
+残りの方法は線形時間で動作するためです。
+
+一方、方法1はアルゴリズム全体の間、複雑なバランス二分木を維持するために
+毎回$O(\log n)$の動作を行うためです。
