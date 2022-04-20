@@ -24,7 +24,9 @@ https://cses.fi/book/
 # Texのコンパイル方法
 
 オリジナルがLuaTeXなようなので以下のインストール手順を実行します。
+
 https://moromisenpy.com/m1-mactex2021/
+
 この後は以下のようにコンパイルできます。
 
 ```shell
