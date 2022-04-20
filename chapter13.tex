@@ -362,8 +362,7 @@ Bellman-Fordと同変わらない処理時間となる入力が作成可能で�
 \end{center}
 
 次はノード4であり、ノード3までの距離が9になりました。
-After this, the next node is node 4, which reduces
-the distance to node 3 to 9:
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (1,3) {3};
@@ -444,12 +443,6 @@ $1 \rightarrow 3 \rightarrow 4$
 $1 \rightarrow 2 \rightarrow 4$
 の経路と確定します。
 このケースでは、重み6のあとに重み-5があることが考慮されません。
-
-However, Dijkstra's algorithm
-by following the minimum weight edges.
-The algorithm does not take into account that
-on the other path, the weight $-5$
-compensates the previous large weight $6$.
 
 \subsubsection{実装}
 
