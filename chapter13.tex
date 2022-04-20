@@ -505,12 +505,6 @@ is named after R. W. Floyd and S. Warshall
 who published it independently in 1962 \cite{flo62,war62}.}
 は最短経路を求めるアルゴリズムですがこれまでの２つとはまた違ったアプローチです。
 1回の実行でグラフ上の全ての2点の最短経路を求めることができます(訳註:これまではある始点からの距離を求めていたことに注意してください)。
-provides an alternative way to approach the problem
-of finding shortest paths.
-Unlike the other algorithms of this chapter,
-it finds all shortest paths between the nodes
-in a single run.
-
 
 ワーシャルフロイド法では、ノード間の距離を含む2次元の配列を保持します。
 まず、ノード間の直接のエッジのみを用いて距離を更新し、経由するノードを用いて距離を更新するというアプローチを取ります。
