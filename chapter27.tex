@@ -1,32 +1,18 @@
-\chapter{Square root algorithms}
+\chapter{平方根アルゴリズム - Square root algorithms}
 
 \index{square root algorithm}
 
-A \key{square root algorithm} is an algorithm
-that has a square root in its time complexity.
-A square root can be seen as a ''poor man's logarithm'':
-the complexity $O(\sqrt n)$ is better than $O(n)$
-but worse than $O(\log n)$.
-In any case, many square root algorithms are fast and usable in practice.
+A \key{平方根アルゴリズム(square root algorithm)} は、時間計算量が平方根になるアルゴリズムの相性です。
+平方根は「貧乏人の対数(poor man's logarithm)」です。
+$O(\sqrt n)$はO(n)より高速に動作しますが$O(log n)$よりは遅いです。
+とはいえ、多くの平方根アルゴリズムは高速に動作し、競技プログラミングでは実際に使用することができます。
 
-As an example, consider the problem of
-creating a data structure that supports
-two operations on an array:
-modifying an element at a given position
-and calculating the sum of elements in the given range.
-We have previously solved the problem using
-binary indexed and segment trees,
-that support both operations in $O(\log n)$ time.
-However, now we will solve the problem
-in another way using a square root structure
-that allows us to modify elements in $O(1)$ time
-and calculate sums in $O(\sqrt n)$ time.
+例を挙げて考えます。、配列に対して、あるindexの要素を変更する操作と、与えられた区間の合計を計算する操作の2つをサポートするデータ構造を考えます。
+この問題は本書でもみてきた通り、バイナリインデックス木やセグメントツリーを用いることで$O(log n)$で両方の操作で解くことができます。
+ここでは、$O(1)$時間で要素を修正し、$O(\sqrt n)$で合計を計算できる平方根アルゴリズムを使って、この問題にアプローチします。
 
-The idea is to divide the array into \emph{blocks}
-of size $\sqrt n$ so that each block contains
-the sum of elements inside the block.
-For example, an array of 16 elements will be
-divided into blocks of 4 elements as follows:
+これは、配列をサイズ $\sqrt n$の\emph{ブロック}に分割し、各ブロックにブロック内の要素の合計が含まれるようにします。
+例えば、$n=16$要素の配列は、以下のように4要素のブロックに分割されます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -62,15 +48,9 @@ divided into blocks of 4 elements as follows:
 \end{tikzpicture}
 \end{center}
 
-In this structure,
-it is easy to modify array elements,
-because it is only needed to update
-the sum of a single block
-after each modification,
-which can be done in $O(1)$ time.
-For example, the following picture shows
-how the value of an element and
-the sum of the corresponding block change:
+
+配列要素の変更は、変更のたびに1ブロックの合計を更新すれば よいので$O(1)$で行えます。
+次の図のように値自身とブロックの値を考えれば良いです。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -108,10 +88,8 @@ the sum of the corresponding block change:
 \end{tikzpicture}
 \end{center}
 
-Then, to calculate the sum of elements in a range,
-we divide the range into three parts such that 
-the sum consists of values of single elements
-and sums of blocks between them:
+さて、ある範囲の要素の総和を計算するために、範囲を3つに分割します。
+両端にはみ出した要素が両端、と、その間のブロックの3つで、この総和を求めることにします。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -154,46 +132,29 @@ and sums of blocks between them:
 \end{tikzpicture}
 \end{center}
 
-Since the number of single elements is $O(\sqrt n)$
-and the number of blocks is also $O(\sqrt n)$,
-the sum query takes $O(\sqrt n)$ time.
-The purpose of the block size $\sqrt n$ is
-that it \emph{balances} two things:
-the array is divided into $\sqrt n$ blocks,
-each of which contains $\sqrt n$ elements.
+単体の要素数は$O(\sqrt n)$、ブロック数も$O(\sqrt n)$であるからであるため、
+和の問い合わせは$O(\sqrt n)$となります。
+ブロックサイズ$O(\sqrt n)$とした目的は、配列が$O(\sqrt n)$個のブロックに分割されて、
+各ブロックも$O(\sqrt n)$個の要素を含むという2つを達成することです。
 
-In practice, it is not necessary to use the
-exact value of $\sqrt n$ as a parameter,
-and instead we may use parameters $k$ and $n/k$ where $k$ is
-different from $\sqrt n$.
-The optimal parameter depends on the problem and input.
-For example, if an algorithm often goes
-through the blocks but rarely inspects
-single elements inside the blocks,
-it may be a good idea to divide the array into
-$k < \sqrt n$ blocks, each of which contains $n/k > \sqrt n$
-elements.
+尚$\sqrt n$の値は正確である必要はありません。
+例えば、パラメータ$k$を用いて、$k$が$\sqrt n$と異なる$n/k$を用いてもよいです。
+最適なパラメータは問題や入力に依存します。
+例えば、ブロック全体は頻繁に参照されるが、ブロックの中の要素を見ることがほとんどないなら、
+配列を$k < \sqrt n$ブロックに分割し、それぞれが、$n/k > \sqrt n$ の要素を含むようにするとよいかも しれません。
 
-\section{Combining algorithms}
+\section{アルゴリズムの組み合わせ - Combining algorithms}
 
-In this section we discuss two square root algorithms
-that are based on combining two algorithms into one algorithm.
-In both cases, we could use either of the algorithms
-without the other
-and solve the problem in $O(n^2)$ time.
-However, by combining the algorithms, the running
-time is only $O(n \sqrt n)$.
+ここでは、2つのアルゴリズムを組み合わせた平方根アルゴリズムについて説明します。
+それぞれのアルゴリズムは片方だけでも$O(n^2)$ 時間で問題を解くことができます。
+しかしアルゴリズムを組み合わせることで、時間計算量は$O(n \sqrt n)$となります。
 
-\subsubsection{Case processing}
+\subsubsection{ケース処理 - Case processing}
 
-Suppose that we are given a two-dimensional
-grid that contains $n$ cells.
-Each cell is assigned a letter,
-and our task is to find two cells
-with the same letter whose distance is minimum,
-where the distance between cells
-$(x_1,y_1)$ and $(x_2,y_2)$ is $|x_1-x_2|+|y_1-y_2|$.
-For example, consider the following grid:
+n個のセルを含む2次元の表が与えられたとする。
+各セルには文字が割り当てられてており、距離が最小となる同じ文字を持つ2つのセルを見つけたいとします。
+この問題での距離は
+$(x_1,y_1)$ と $(x_2,y_2)$ の２点に対して $|x_1-x_2|+|y_1-y_2|$で定義します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -216,59 +177,44 @@ For example, consider the following grid:
 \draw (0,0) grid (4,4);
 \end{tikzpicture}
 \end{center}
-In this case, the minimum distance is 2 between the two 'E' letters.
+この場合、2つの'E'文字の間の距離は2です。
 
-We can solve the problem by considering each letter separately.
-Using this approach, the new problem is to calculate
-the minimum distance
-between two cells with a \emph{fixed} letter $c$.
-We focus on two algorithms for this:
+各文字を別々に考えることで問題を解くことができます。
+こう考えると固定文字cを持つ2つのセル間の最小距離を計 算することである。このために、2つのアルゴリズムを考えます。
 
-\emph{Algorithm 1:} Go through all pairs of cells with letter $c$,
-and calculate the minimum distance between such cells.
-This will take $O(k^2)$ time where $k$ is the number of cells with letter $c$.
+\emph{アルゴリズム1:}文字cを持つ全てのセルのペアを調べておき、そのセル間の最小距離を計算する。
+これには$O(k^2)$の時間がかかる。ここで、$k$は文字$c$を持つセルの数。
 
-\emph{Algorithm 2:} Perform a breadth-first search that simultaneously
-starts at each cell with letter $c$. The minimum distance between
-two cells with letter $c$ will be calculated in $O(n)$ time.
+\emph{アルゴリズム2:}文字cを持つ各セルから同時に開始する幅優先探索。
+文字$c$を持つ2つのセル間の最小距離は$O(n)$で実行できる。
 
-One way to solve the problem is to choose either of the
-algorithms and use it for all letters.
-If we use Algorithm 1, the running time is $O(n^2)$,
-because all cells may contain the same letter,
-and in this case $k=n$.
-Also if we use Algorithm 2, the running time is $O(n^2)$,
-because all cells may have different letters,
-and in this case $n$ searches are needed.
+どちらかのアルゴリズムだけをすべての文字に対してそれを使用することでこの問題は解けます。
 
-However, we can \emph{combine} the two algorithms and
-use different algorithms for different letters
-depending on how many times each letter appears in the grid.
-Assume that a letter $c$ appears $k$ times.
-If $k \le \sqrt n$, we use Algorithm 1, and if $k > \sqrt n$,
-we use Algorithm 2.
-It turns out that by doing this, the total running time
-of the algorithm is only $O(n \sqrt n)$.
+まず、アルゴリズム1を使用する場合、すべてのセルに同じ文字が含まれる可能性があるため、実行時間
+は$O(n^2)$となります。($k=n$となるためです)
 
-First, suppose that we use Algorithm 1 for a letter $c$.
-Since $c$ appears at most $\sqrt n$ times in the grid,
-we compare each cell with letter $c$ $O(\sqrt n)$ times
-with other cells.
-Thus, the time used for processing all such cells is $O(n \sqrt n)$.
-Then, suppose that we use Algorithm 2 for a letter $c$.
-There are at most $\sqrt n$ such letters,
-so processing those letters also takes $O(n \sqrt n)$ time.
+アルゴリズム2を使用する場合 、すべてのセルに異なる$n$文字が含まれる可能性があるのでそれぞれに対して
+$O(n)$でクエリするため実行時間は $O(n^2)$ となります。
+
+しかし、2つのアルゴリズムを組み合わせて、各文字がグリッドに何回現れるかを事前に計算し、文字ごとにアルゴリズムを使い分けることができます。
+ある文字$c$が$k$回出現すると仮定しましょう。$k \le \sqrt n$ならアルゴリズム1を、$k > \sqrt n$ならアルゴリズム2を使いまず。
+こうすることで、アルゴリズムの総実行時間は$O(n \sqrt n)$ですむことがわかります。これをもう少し見ていきます。
+
+まず、文字$c$に対してアルゴリズム1を使うとします。
+$\sqrt n$回以下出現する文字 $c$のセルと他のセルを比較します。この回数は最大で$O(n \sqrt n)$回です。
+したがって、このようなすべてのセルの処理に使われる時間は$O(n \sqrt n)$です。
+
+次に、文字$c$に対してアルゴリズム2を使用することを考えます。このような文字は最大で$\sqrt n$個なので、
+それらの文字の処理には$O(n \sqrt n)$個の時間がかかります。
 
 \subsubsection{Batch processing}
 
-Our next problem also deals with
-a two-dimensional grid that contains $n$ cells.
-Initially, each cell except one is white.
-We perform $n-1$ operations, each of which first
-calculates the minimum distance from a given white cell
-to a black cell, and then paints the white cell black.
 
-For example, consider the following operation:
+次の問題も、$n$個のセルを含む2次元のグリッドを扱います。
+初期状態ではまず、1つを除くセルは白です。これに$n - 1$回の操作を行います。
+操作は、まず与えられた白いセルから黒いセルまでの最小距離を計算し、次にその白いセルを黒にします。
+
+例を示します。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -280,11 +226,8 @@ For example, consider the following operation:
 \end{tikzpicture}
 \end{center}
 
-First, we calculate the minimum distance
-from the white cell marked with * to a black cell.
-The minimum distance is 2, because we can move
-two steps left to a black cell.
-Then, we paint the white cell black:
+この場面で * のついた白いセルから黒いセルまでの最小距離を計算するしたいとします。
+2つ左に移動すれば黒に移動できるので、最小距離は2です。そして、白いセルを黒く塗ります。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -296,72 +239,45 @@ Then, we paint the white cell black:
 \end{tikzpicture}
 \end{center}
 
-Consider the following two algorithms:
+ここでも2つのアルゴリズムを考えましょう。
 
-\emph{Algorithm 1:} Use breadth-first search
-to calculate
-for each white cell the distance to the nearest black cell.
-This takes $O(n)$ time, and after the search,
-we can find the minimum distance from any white cell
-to a black cell in $O(1)$ time.
+\emph{アルゴリズム1:}幅優先探索を用いて、各白セルについて、最も近い黒セルまでの距離を計算する。
+これには$O(n)$の時間がかかり、探索後は任意の白セルから黒セルまでの最小距離をO(1)の時間で求められる。
 
-\emph{Algorithm 2:} Maintain a list of cells that have been
-painted black, go through this list at each operation
-and then add a new cell to the list.
-An operation takes $O(k)$ time where $k$ is the length of the list.
+\emph{アルゴリズム2:}黒く塗られたセルのリストを保持しておき、
+操作のたびにこのリストをクエリして、また、リストに新しいセルを追加していく。
+操作には$O(k)$かかります($k$はリストの長さ)。
 
-We combine the above algorithms by
-dividing the operations into
-$O(\sqrt n)$ \emph{batches}, each of which consists
-of $O(\sqrt n)$ operations.
-At the beginning of each batch,
-we perform Algorithm 1.
-Then, we use Algorithm 2 to process the operations
-in the batch.
-We clear the list of Algorithm 2 between
-the batches.
-At each operation,
-the minimum distance to a black cell
-is either the distance calculated by Algorithm 1
-or the distance calculated by Algorithm 2.
+上記のアルゴリズムを組み合わせて、演算を$O(\sqrt n)$のバッチに分割します。
+各バッチは$O(\sqrt n)$個の操作で構成されます。
+各バッチの始めに、アルゴリズム1を実行します。その後、アルゴリズム2を用いて、バッチ内の演算を処理します。
+バッチとバッチの間は、アルゴリズム2のリストをクリアします。
+各バッチでの演算で、黒セルまでの最小距離は、アルゴリズム1で計算された距離か、 アルゴリズム2で計算された距離のどちらかになります。
 
-The resulting algorithm works in
-$O(n \sqrt n)$ time.
-First, Algorithm 1 is performed $O(\sqrt n)$ times,
-and each search works in $O(n)$ time.
-Second, when using Algorithm 2 in a batch,
-the list contains $O(\sqrt n)$ cells
-(because we clear the list between the batches)
-and each operation takes $O(\sqrt n)$ time.
+その結果、アルゴリズムは$O(n \sqrt n)$ 時間で動作します。
+まず、アルゴリズム 1は$O(\sqrt n)$回実行され、各検索は$O(n)$時間です。
+次に、バッチで Algorithm 2を使う場合、リストには$O(\sqrt n)$個のセルが含まれ(バッチの間に リストをクリアするため)、
+各操作には$O(\sqrt n)$個の時間がかかる。
 
-\section{Integer partitions}
 
-Some square root algorithms are based on
-the following observation:
-if a positive integer $n$ is represented as
-a sum of positive integers,
-such a sum always contains at most
-$O(\sqrt n)$ \emph{distinct} numbers.
-The reason for this is that to construct
-a sum that contains a maximum number of distinct
-numbers, we should choose \emph{small} numbers.
-If we choose the numbers $1,2,\ldots,k$,
-the resulting sum is
+\section{整数のパーティション - Integer partitions}
+
+平方根アルゴリズムは次の考察に基づき使われることも多くあります。
+正の整数$n$を正整数の和で表現した場合、その和は常に最大$O(\sqrt n)$個の異なる数を含む。という事実である。
+さて、最大数の異なる数を含む和を構成するためには、小さな数から選んでいく。
+今、$1,2,\ldots,k$という数を選ぶと、得られる総和は
 \[\frac{k(k+1)}{2}.\]
-Thus, the maximum amount of distinct numbers is $k = O(\sqrt n)$.
-Next we will discuss two problems that can be solved
-efficiently using this observation.
+になる。従って、数の最大量は$k = O(\sqrt n)$となります。
+次に、この観測を利用して効率的に解くことができる2つの問題を見ていきましょう。
 
-\subsubsection{Knapsack}
+\subsubsection{ナップザック問題 - Knapsack}
 
-Suppose that we are given a list of integer weights
-whose sum is $n$.
-Our task is to find out all sums that can be formed using
-a subset of the weights. For example, if the weights are
-$\{1,3,3\}$, the possible sums are as follows:
+重さの和が$n$である整数の重さのリストが与えられたとしましょう。
+我々のタスクは、重みの部分集合を使って作れるすべての重さの数を見つけることである。
+例えば、入力が${1, 3, 3}$の場合、可能な和は以下の通りになります。
 
 \begin{itemize}[noitemsep]
-\item $0$ (empty set)
+\item $0$ (何も選ばない)
 \item $1$
 \item $3$
 \item $1+3=4$
@@ -369,42 +285,30 @@ $\{1,3,3\}$, the possible sums are as follows:
 \item $1+3+3=7$
 \end{itemize}
 
-Using the standard knapsack approach (see Chapter 7.4),
-the problem can be solved as follows:
-we define a function $\texttt{possible}(x,k)$ whose value is 1
-if the sum $x$ can be formed using the first $k$ weights,
-and 0 otherwise.
-Since the sum of the weights is $n$,
-there are at most $n$ weights and
-all values of the function can be calculated
-in $O(n^2)$ time using dynamic programming.
+標準的なナップザック問題として捉えると(7.4章参照)、この問題は次のように解けます。
+最初の$k$個の重みを用いて和$x$を形成できる場合に1、それ以外は0である関数
+$\texttt{possible}(x,k)$を考えます。
+重さの和が$n$であることから，重みは最大$n$であるため、
+関数のすべての値は動的計画法を用いて$O(n^2)$で計算することができます。
 
-However, we can make the algorithm more efficient
-by using the fact that there are at most $O(\sqrt n)$
-\emph{distinct} weights.
-Thus, we can process the weights in groups
-that consists of similar weights.
-We can process each group
-in $O(n)$ time, which yields an $O(n \sqrt n)$ time algorithm.
+しかし、最大で$O(\sqrt n)$個の\emph{異なる}重りが存在することを利用して、
+アルゴリズムをより効率的にすることができます。
+まず、重りを同じお守りで構成されるグループに分けて処理します。
+各グループを$O(n)$時間で処理す ることができ、$O(n \sqrt n)$とすることができます。
 
-The idea is to use an array that records the sums of weights
-that can be formed using the groups processed so far.
-The array contains $n$ elements: element $k$ is 1 if the sum
-$k$ can be formed and 0 otherwise.
-To process a group of weights, we scan the array
-from left to right and record the new sums of weights that
-can be formed using this group and the previous groups.
+このアイデアは、
+これまでに処理したグループを使って形成できる重みの和を記録した配列を使用します。
+配列は$n$個の要素からなり、
+和$k$が形成できる場合に1、そうでない場合に0となる配列です。
+重りのグループを処理するために、配列を左から右へ走査し、
+このグループと前のグループを使って形成できる新しい重みの和を記録します。
 
-\subsubsection{String construction}
+\subsubsection{文字列構築 - String construction}
 
-Given a string \texttt{s} of length $n$
-and a set of strings $D$ whose total length is $m$,
-consider the problem of counting the number of ways
-\texttt{s} can be formed as a concatenation of strings in $D$.
-For example,
-if $\texttt{s}=\texttt{ABAB}$ and
-$D=\{\texttt{A},\texttt{B},\texttt{AB}\}$,
-there are 4 ways:
+長さ$n$の文字列$s$と全ての長さをたしあわせた長さ$m$の文字列の集合$D$があるとき、
+$s$が$D$中の文字列の連結して何通りの組み合わせ方があるかを数える問題を考える。
+例えば、$\texttt{s}=\texttt{ABAB}$で
+$D=\{\texttt{A},\texttt{B},\texttt{AB}\}$とすると、次の4通りが考えられます。
 
 \begin{itemize}[noitemsep]
 \item $\texttt{A}+\texttt{B}+\texttt{A}+\texttt{B}$
@@ -413,99 +317,64 @@ there are 4 ways:
 \item $\texttt{AB}+\texttt{AB}$
 \end{itemize}
 
-We can solve the problem using dynamic programming:
-Let $\texttt{count}(k)$ denote the number of ways to construct the prefix
-$\texttt{s}[0 \ldots k]$ using the strings in $D$.
-Now $\texttt{count}(n-1)$ gives the answer to the problem,
-and we can solve the problem in $O(n^2)$ time
-using a trie structure.
+動的計画法を用いてこの問題を解くことができます。
+ここで、$\texttt{count}(k)$ を $D$ の文字列を用いて接頭辞 $\texttt{s}[0 \ldots k]$ を構成する方法の数とすると、
+$\texttt{count}(n-1)$が
+問題の答えとなります。これは、Trie木を用いて$O(n^2)$でこの問題を解くことができる。
 
-However, we can solve the problem more efficiently
-by using string hashing and the fact that there
-are at most $O(\sqrt m)$ distinct string lengths in $D$.
-First, we construct a set $H$ that contains all
-hash values of the strings in $D$.
-Then, when calculating a value of $\texttt{count}(k)$,
-we go through all values of $p$
-such that there is a string of length $p$ in $D$,
-calculate the hash value of $\texttt{s}[k-p+1 \ldots k]$
-and check if it belongs to $H$.
-Since there are at most $O(\sqrt m)$ distinct string lengths,
-this results in an algorithm whose running time is $O(n \sqrt m)$.
+しかし、文字列のハッシュ値と、
+$D$に含まれる文字列の長さが最大$O(\sqrt m)$個であることを利用すれば、
+この問題をより効率的に解決することができる。
 
-\section{Mo's algorithm}
+まず、$D$に含まれる文字列の全てのハッシュ値を含む集合$H$を構築する。
+
+次に、$\texttt{count}(k)$の値を計算する際に、$D$に長さ$p$の文字列が存在するような$p$の値を全て調べておき、
+$\texttt{s}[k-p+1 \ldots k]$のハッシュ値を計算して、それがHに属するかどうか確認する。
+
+文字列の長さは最大でも$O(\sqrt m)$ 個なので、この結果、実行時間が$O(n \sqrt m)$のアルゴリズムとなる。
+
+\section{Moのアルゴリズム - Mo's algorithm}
 
 \index{Mo's algorithm}
 
-\key{Mo's algorithm}\footnote{According to \cite{cod15}, this algorithm
-is named after Mo Tao, a Chinese competitive programmer, but
-the technique has appeared earlier in the literature \cite{ken06}.}
-can be used in many problems
-that require processing range queries in 
-a \emph{static} array, i.e., the array values
-do not change between the queries.
-In each query, we are given a range $[a,b]$,
-and we should calculate a value based on the
-array elements between positions $a$ and $b$.
-Since the array is static,
-the queries can be processed in any order,
-and Mo's algorithm
-processes the queries in a special order which guarantees
-that the algorithm works efficiently.
+\key{Mo's algorithm}\footnote{According to \cite{cod15}}は、
+静的な配列の区間クエリに応答し、つまり、配列の値が変化しない問題で使用することができます。
+各クエリでは、区間$[a,b]$が与えられ、$a$ と $b$ の間の配列要素に基づく値を計算する必要があるとしましょう。
+配列は静的なので、クエリは任意の順序で処理できます。
+Moのアルゴリズムは、アルゴリズムが効率的に動作することが保証される特別な順序で、クエリを処理していきます。
 
-Mo's algorithm maintains an \emph{active range}
-of the array, and the answer to a query
-concerning the active range is known at each moment.
-The algorithm processes the queries one by one,
-and always moves the endpoints of the
-active range by inserting and removing elements.
-The time complexity of the algorithm is
-$O(n \sqrt n f(n))$ where the array contains
-$n$ elements, there are $n$ queries
-and each insertion and removal of an element
-takes $O(f(n))$ time.
+このアルゴリズムは配列の有効範囲(active range)を保持しておき、有効範囲の問い合わせの答えはすぐににわかるようになっています。
+このアルゴリズムはその有効範囲に基づいて問い合わせを処理し、要素を挿入・削除することで
+有効範囲の端点を移動させます。このアルゴリズムの時間計算量は$O(n \sqrt n f(n))$ です。
+ここで，配列は$n$個の要素を含み，$n$個の問い合わせがあり，要素の挿入と削除には それぞれ$O(f(n))$ の時間がかかるとしましょう。
 
-The trick in Mo's algorithm is the order
-in which the queries are processed:
-The array is divided into blocks of $k=O(\sqrt n)$
-elements, and a query $[a_1,b_1]$
-is processed before a query $[a_2,b_2]$
-if either 
+Moのアルゴリズムのトリックは、クエリの処理順序です。
+配列は$k=O(\sqrt n)$要素のブロックに分割され
+クエリ $[l_1,r_1]$は、以下のいずれか の場合にクエリ$[l_2,r_2]$ の前に処理されます。
+
 \begin{itemize}
-\item $\lfloor a_1/k \rfloor < \lfloor a_2/k \rfloor$ or
-\item $\lfloor a_1/k \rfloor = \lfloor a_2/k \rfloor$ and $b_1 < b_2$.
+\item $\lfloor l_1/k \rfloor < \lfloor l_2/k \rfloor$ または
+\item $\lfloor l_1/k \rfloor = \lfloor l_2/k \rfloor$ かつ $r_1 < r_2$.
 \end{itemize}
 
-Thus, all queries whose left endpoints are
-in a certain block are processed one after another
-sorted according to their right endpoints.
-Using this order, the algorithm
-only performs $O(n \sqrt n)$ operations,
-because the left endpoint moves
-$O(n)$ times $O(\sqrt n)$ steps,
-and the right endpoint moves
-$O(\sqrt n)$ times $O(n)$ steps. Thus, both
-endpoints move a total of $O(n \sqrt n)$ steps during the algorithm.
+このように、左端があるブロックにある全てのクエリは、
+右端の順にソートされて次々と処理されます。
+この順序を用いると、
+TODOここ文章直す
+左端は$O(\sqrt n)$ステップで$O(n)$ 移 動し、
+右端は$O(n)$ステップで$O(\sqrt n)$ 移動し、
+アルゴリズム全体は$O(n \sqrt n)$の演算しか実行しないことになります。
+このように、両端点はアルゴリズム中に合計$O(n \sqrt n)$ステップ移動することになります。
 
-\subsubsection*{Example}
+\subsubsection*{例}
 
-As an example, consider a problem
-where we are given a set of queries,
-each of them corresponding to a range in an array,
-and our task is to calculate for each query
-the number of \emph{distinct} elements in the range.
+配列の範囲に対応するクエリの集合が与えられて、範囲内の異なる要素の数を数えるクエリに答える問題を考えて見ます。
+Moアルゴリズムでは、クエリーは常に同じ方法でソートされますが、
+クエリの答えがどのようにストアされるのかはは問題に依存します。
+この問題では、$\texttt{count}[x]$は要素xがアクティブ範囲に出現する回数を示す配列\texttt{count}を保持します。
+あるクエリから別のクエリに移動すると、アクティブな範囲は変更されます。
+例えば、現在の区間が
 
-In Mo's algorithm, the queries are always sorted
-in the same way, but it depends on the problem
-how the answer to the query is maintained.
-In this problem, we can maintain an array 
-\texttt{count} where $\texttt{count}[x]$
-indicates the number of times an element $x$
-occurs in the active range.
-
-When we move from one query to another query,
-the active range changes.
-For example, if the current range is
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (1,0) rectangle (5,1);
@@ -521,7 +390,7 @@ For example, if the current range is
 \node at (8.5, 0.5) {4};
 \end{tikzpicture}
 \end{center}
-and the next range is
+で、次の区間が次の通りだったとします。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (7,1);
@@ -537,23 +406,8 @@ and the next range is
 \node at (8.5, 0.5) {4};
 \end{tikzpicture}
 \end{center}
-there will be three steps:
-the left endpoint moves one step to the right,
-and the right endpoint moves two steps to the right.
-
-After each step, the array \texttt{count}
-needs to be updated.
-After adding an element $x$,
-we increase the value of 
-$\texttt{count}[x]$ by 1,
-and if $\texttt{count}[x]=1$ after this,
-we also increase the answer to the query by 1.
-Similarly, after removing an element $x$,
-we decrease the value of 
-$\texttt{count}[x]$ by 1,
-and if $\texttt{count}[x]=0$ after this,
-we also decrease the answer to the query by 1.
-
-In this problem, the time needed to perform
-each step is $O(1)$, so the total time complexity
-of the algorithm is $O(n \sqrt n)$.
+左の端点が右に1ステップ、右の端点が右に2ステップ移動することになりますね。
+各ステップの後、配列\texttt{count}を更新する必要があります。
+この更新で$\texttt{count}[x]=1$ になった場合、 クエリに対する答えは1増やし、
+$\texttt{count}[x]=0$ になった場合、 クエリに対する答えも 1 つ減らします。
+この問題では、各ステップの実行に必要な時間はO(1)であるから、アルゴリ ズムの総時間複雑度は$O(n \sqrt n)$です。
