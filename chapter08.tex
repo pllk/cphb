@@ -1,46 +1,30 @@
-\chapter{Amortized analysis}
+\chapter{ならし解析 - Amortized analysis}
 
 \index{amortized analysis}
 
-The time complexity of an algorithm
-is often easy to analyze
-just by examining the structure
-of the algorithm:
-what loops does the algorithm contain
-and how many times the loops are performed.
-However, sometimes a straightforward analysis
-does not give a true picture of the efficiency of the algorithm.
+多くのプログラムにおいて、時間計算量は、アルゴリズムの構造を調べるだけで簡単に解析できます。
+これは、どんなループを含み、何回ループが実行されるかといった解析を行います。
+ただし、直感的な解析だけでは、計算量を正しく見積もれないこともあります。
 
-\key{Amortized analysis} can be used to analyze
-algorithms that contain operations whose
-time complexity varies.
-The idea is to estimate the total time used to
-all such operations during the
-execution of the algorithm, instead of focusing
-on individual operations.
+\key{ならし解析 - Amortized analysis} を使って、時間計算量が一定に定まらないような計算量を見積もることができます。
+基本的なアイデアは、個々の操作に注目するのではなく、アルゴリズムの実行中に全ての操作に使用される操作の合計時間を推定することです。
 
-\section{Two pointers method}
+\section{2ポインタ - Two pointers method}
 
 \index{two pointers method}
 
-In the \key{two pointers method},
-two pointers are used to
-iterate through the array values.
-Both pointers can move to one direction only,
-which ensures that the algorithm works efficiently.
-Next we discuss two problems that can be solved
-using the two pointers method.
+\key{2ポインタテクニック - two pointers method}
+では、決められた方向にしか動かない2つのポインタを用いて処理を行います。
+これにより、アルゴリズムの最大の動作時間が保証されます。
+この例を２つ見ていきましょう。
 
-\subsubsection{Subarray sum}
+\subsubsection{連続部分配列の和 - Subarray sum}
 
-As the first example,
-consider a problem where we are
-given an array of $n$ positive integers
-and a target sum $x$,
-and we want to find a subarray whose sum is $x$
-or report that there is no such subarray.
+まず、$n$個の正の整数からなる配列と$x$が与えられたとき、
+和が$x$となる連続した部分配列を見つけるか、
+そのような部分配列はないと出力する問題を考えます。
 
-For example, the array
+例えば配列は以下のように与えられます。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -55,7 +39,7 @@ For example, the array
 \node at (7.5,0.5) {$3$};
 \end{tikzpicture}
 \end{center}
-contains a subarray whose sum is 8:
+これは、和が$8$となる連続部分配列があります。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (2,0) rectangle (5,1);
@@ -72,18 +56,14 @@ contains a subarray whose sum is 8:
 \end{tikzpicture}
 \end{center}
 
-This problem can be solved in
-$O(n)$ time by using the two pointers method.
-The idea is to maintain pointers that point to the
-first and last value of a subarray.
-On each turn, the left pointer moves one step
-to the right, and the right pointer moves to the right
-as long as the resulting subarray sum is at most $x$.
-If the sum becomes exactly $x$,
-a solution has been found.
+この問題は、2ポインターを使うことで$O(n)$時間で解くことができます。
+これは、部分配列の最初と最後の場所を指すポインタを保持し、
+各ステップでにおいて、右ポインタを右にシフトしても和が$x$以下であるなら、ポインタを右にシフトします。
+そうでなければ左ポインタを左にシフトします。
+そして。和がちょうど$x$になれば、 解が見つかったことになります。
 
-As an example, consider the following array
-and a target sum $x=8$:
+
+ここで、$x=8$を達成するための例を見てみましょう。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -99,8 +79,8 @@ and a target sum $x=8$:
 \end{tikzpicture}
 \end{center}
 
-The initial subarray contains the values
-1, 3 and 2 whose sum is 6:
+まず、いくつか右ポインタを進め、
+1, 3, 2 まで進めると和は6です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -121,9 +101,8 @@ The initial subarray contains the values
 \end{tikzpicture}
 \end{center}
 
-Then, the left pointer moves one step to the right.
-The right pointer does not move, because otherwise
-the subarray sum would exceed $x$.
+ここで、右のポインタを進めると$x$を超えてしまうので、
+左のポインタを右に動かすことにします。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -144,11 +123,8 @@ the subarray sum would exceed $x$.
 \end{tikzpicture}
 \end{center}
 
-Again, the left pointer moves one step to the right,
-and this time the right pointer moves three
-steps to the right.
-The subarray sum is $2+5+1=8$, so a subarray
-whose sum is $x$ has been found.
+ただし、この状態でも5を加えると$x$を超えてしまうので、左のポインタを右に進めます。
+こうすると右のポインタを右に進められることになり、$2+5+1=8$となって$x$を見つけることができました。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -169,44 +145,23 @@ whose sum is $x$ has been found.
 \end{tikzpicture}
 \end{center}
 
-The running time of the algorithm depends on
-the number of steps the right pointer moves.
-While there is no useful upper bound on how many steps the
-pointer can move on a \emph{single} turn.
-we know that the pointer moves \emph{a total of}
-$O(n)$ steps during the algorithm,
-because it only moves to the right.
-
-Since both the left and right pointer
-move $O(n)$ steps during the algorithm,
-the algorithm works in $O(n)$ time.
+このアルゴリズムの実行時間は、まず、右ポインタの移動ステップ数に注目します。
+ポインタが1回のターンで何ステップ動けるかというのは配列によって異なります。
+ただし、ポインタは右にしか動かないので、アルゴリズム中に合計$O(n)$ステップです。
+ここで、左のポインタはアルゴリズム中に$O(n)$ステップ移動するので、このアルゴリズムは$O(n)$で動作する。
 
 \subsubsection{2SUM problem}
 
-\index{2SUM problem}
+\index{2SUM問題 - 2SUM problem}
 
-Another problem that can be solved using
-the two pointers method is the following problem,
-also known as the \key{2SUM problem}:
-given an array of $n$ numbers and
-a target sum $x$, find
-two array values such that their sum is $x$,
-or report that no such values exist.
+他の問題を考えます。$n$個の数値からなる配列と$x$が与えられたとき、
+和が$x$となる配列の2つの要素見つけるか、そのような値は存在しないことを出力しなさい、という問題です。
+まず、配列の値を昇順に並べ替えます。
+次に、2つのポインタを用いて配列を繰り返し処理します。
+左のポインタは最初の値から始まり、1ターンごとに1ステップ右へ移動させます。
+右のポインタは最後の値から始まり、左と右の値の合計が最大で$x$になるまで常に左に移動します。
+例えば、次のような配列で、対象の和が$x=12$である場合を考える。
 
-To solve the problem, we first
-sort the array values in increasing order.
-After that, we iterate through the array using
-two pointers.
-The left pointer starts at the first value
-and moves one step to the right on each turn.
-The right pointer begins at the last value
-and always moves to the left until the sum of the
-left and right value is at most $x$.
-If the sum is exactly $x$,
-a solution has been found.
-
-For example, consider the following array
-and a target sum $x=12$:
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,0) grid (8,1);
@@ -222,10 +177,7 @@ and a target sum $x=12$:
 \end{tikzpicture}
 \end{center}
 
-The initial positions of the pointers
-are as follows.
-The sum of the values is $1+10=11$
-that is smaller than $x$.
+ポインタの初期位置は以下の通りです。値の和は$1+10=11$で$x$より小さいです。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -247,9 +199,8 @@ that is smaller than $x$.
 \end{tikzpicture}
 \end{center}
 
-Then the left pointer moves one step to the right.
-The right pointer moves three steps to the left,
-and the sum becomes $4+7=11$.
+そこで、左のポインタが右に1ステップ移動します。
+ここで、右のポインターは左に3ステップ移動し、合計は$4 + 7 = 11$となる。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -271,9 +222,9 @@ and the sum becomes $4+7=11$.
 \end{tikzpicture}
 \end{center}
 
-After this, the left pointer moves one step to the right again.
-The right pointer does not move, and a solution
-$5+7=12$ has been found.
+
+ここで、左ポインタは再び右へ1ステップ移動します。
+右のポインタは動かないため、$5+7=12$という解が存在することが分かりました。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -295,32 +246,16 @@ $5+7=12$ has been found.
 \end{tikzpicture}
 \end{center}
 
-The running time of the algorithm is
-$O(n \log n)$, because it first sorts
-the array in $O(n \log n)$ time,
-and then both pointers move $O(n)$ steps.
-
-Note that it is possible to solve the problem
-in another way in $O(n \log n)$ time using binary search.
-In such a solution, we iterate through the array
-and for each array value, we try to find another
-value that yields the sum $x$.
-This can be done by performing $n$ binary searches,
-each of which takes $O(\log n)$ time.
+実行時間は、
+まず配列を$O(n \log n)$でソートし、次に両方のポインタを$O(n)$回移動させるため、$O(n \log n)$となります。
+なお、二分探索を用いれば、別の方法で$O(n \log n)$時間で解くこともできます。
+これは、配列を繰り返し、配列の各値に対して、和xをもたらす別の値を二分探索を行うことで行います。
 
 \index{3SUM problem}
-A more difficult problem is 
-the \key{3SUM problem} that asks to
-find \emph{three} array values
-whose sum is $x$.
-Using the idea of the above algorithm,
-this problem can be solved in $O(n^2)$ time\footnote{For a long time,
-it was thought that solving
-the 3SUM problem more efficiently than in $O(n^2)$ time
-would not be possible.
-However, in 2014, it turned out \cite{gro14}
-that this is not the case.}.
-Can you see how?
+これより難しい問題としては、和が$x$となる3つの配列値を求める\key{3SUM 問題} があります。
+上記のアルゴリズムの考え方を用いると，この問題は に従って O(n2 ) 時間で解くことができます。
+\footnote{長い間、3SUM 問題を $O(n^2)$ 時間より効率的に解くことは不可能と考えられていました。し
+かし、2014 年に、そうではないことが判明した \cite{gro14} }.
 
 \section{Nearest smaller elements}
 
@@ -727,6 +662,3 @@ Since each array element
 is added to the queue exactly once and
 removed from the queue at most once,
 the algorithm works in $O(n)$ time.
-
-
-
