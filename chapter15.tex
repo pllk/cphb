@@ -289,24 +289,15 @@ $\{1,2,3,5,6\}$と$\{4\}$です。
 \end{tikzpicture}
 \end{center}
 
-For this reason, it is always optimal
-to include the minimum weight edge
-in the tree to produce a minimum spanning tree.
-Using a similar argument, we can show that it
-is also optimal to add the next edge in weight order
-to the tree, and so on.
-Hence, Kruskal's algorithm works correctly and
-always produces a minimum spanning tree.
+このため、最小の重さの辺を最小全域木に含めることは妥当で、これによって最小のスパ ニングツリーが生成されます。
+つまり、重さが小さな順に辺を木に加えることも最適であることを示すことができ、
+クラスカルのアルゴリズムは正しく動作し、常に最小全域木となることが示されました。
 
-\subsubsection{Implementation}
+\subsubsection{実装}
 
-When implementing Kruskal's algorithm,
-it is convenient to use
-the edge list representation of the graph.
-The first phase of the algorithm sorts the
-edges in the list in $O(m \log m)$ time.
-After this, the second phase of the algorithm
-builds the minimum spanning tree as follows:
+クラスカル法の実装は、辺をリスト表現で持つのが便利です。
+最初に$O(m log m)$ で リスト中のエッジを重さ順にソートし
+次に以下のように最小スパニングツリーを構築します。
 
 \begin{lstlisting}
 for (...) {
@@ -314,55 +305,28 @@ for (...) {
 }
 \end{lstlisting}
 
-The loop goes through the edges in the list
-and always processes an edge $a$--$b$
-where $a$ and $b$ are two nodes.
-Two functions are needed:
-the function \texttt{same} determines
-if $a$ and $b$ are in the same component,
-and the function \texttt{unite}
-joins the components that contain $a$ and $b$.
+ループは$a,b$を処理します。$same$は同じ連結成分にいるかを判定する関数で、
+$unite$は互いに所属する連結成分を結合する操作です。ただし、これらをシンプルに書くと
+$O(log(n+m))$となってしまいます。
+$Union-Find$構造を用いるとこれらは$O(log n)$で実装することができるため、
+ソート後の計算量$O(m log n)$を実現できます。
 
-The problem is how to efficiently implement
-the functions \texttt{same} and \texttt{unite}.
-One possibility is to implement the function
-\texttt{same} as a graph traversal and check if
-we can get from node $a$ to node $b$.
-However, the time complexity of such a function
-would be $O(n+m)$
-and the resulting algorithm would be slow,
-because the function \texttt{same} will be called for each edge in the graph.
-
-We will solve the problem using a union-find structure
-that implements both functions in $O(\log n)$ time.
-Thus, the time complexity of Kruskal's algorithm
-will be $O(m \log n)$ after sorting the edge list.
-
-\section{Union-find structure}
+\section{Union-find構造 - Union-find structure}
 
 \index{union-find structure}
 
-A \key{union-find structure} maintains
-a collection of sets.
-The sets are disjoint, so no element
-belongs to more than one set.
-Two $O(\log n)$ time operations are supported:
-the \texttt{unite} operation joins two sets,
-and the \texttt{find} operation finds the representative
-of the set that contains a given element\footnote{The structure presented here
-was introduced in 1971 by J. D. Hopcroft and J. D. Ullman \cite{hop71}.
-Later, in 1975, R. E. Tarjan studied a more sophisticated variant
-of the structure \cite{tar75} that is discussed in many algorithm
-textbooks nowadays.}.
+\key{Union-find構造} は集合の集まりを管理するデータ構造です。
+どの要素もいずれかの集合に属し、2つ以上の集合に属しません。
+この構造は先にあげた$unite$と$same$を$O(\log n)$で実行できます。
+\footnote{ ここで紹介する構造は、1971年にJ. D. HopcroftとJ. D. Ullmanによって紹介されたもの \cite{hop71}。
+その後、1975年にR. E. Tarjanがこの構造のより洗練された変種を研究し\cite{tar75}、
+現在では 多くのアルゴリズムの教科書で議論されています。}
 
-\subsubsection{Structure}
+\subsubsection{構造}
 
-In a union-find structure, one element in each set
-is the representative of the set,
-and there is a chain from any other element of the
-set to the representative.
-For example, assume that the sets are
-$\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$:
+Union-findでは各集合の1つの要素がその集合の代表として存在します。
+そして、集合の他の要素は必ず代表への連鎖に辿ることができます。例えば、集合が$\{1, 4, 7\}$、\{5\}、\{2, 3, 6, 8\}としましょう。
+
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (0,-1) {$1$};
@@ -383,22 +347,13 @@ $\{1,4,7\}$, $\{5\}$ and $\{2,3,6,8\}$:
 
 \end{tikzpicture}
 \end{center}
-In this case the representatives
-of the sets are 4, 5 and 2.
-We can find the representative of any element
-by following the chain that begins at the element.
-For example, the element 2 is the representative
-for the element 6, because
-we follow the chain $6 \rightarrow 3 \rightarrow 2$.
-Two elements belong to the same set exactly when
-their representatives are the same.
+この図では集合の代表は4、5、2です。
+あるの要素の代表は、その要素から木を辿ると発見できます。
+例えば、 $6 \rightarrow 3 \rightarrow 2$という連鎖をたどれば、要素はが要素6の代表です。
+さて、2つの要素が同じ集合に属するのは、その代表が同じであるときだけです。
+そして、2つの集合は、一方の集合の代表と他方の集合の代表を結ぶことで結合することができます。
+例えば、$\{1,4,7\}$ と $\{2,3,6,8\}$は以下のように結合することができます。
 
-Two sets can be joined by connecting the
-representative of one set to the
-representative of the other set.
-For example, the sets
-$\{1,4,7\}$ and $\{2,3,6,8\}$
-can be joined as follows:
 \begin{center}
 \begin{tikzpicture}
 \node[draw, circle] (1) at (2,-1) {$1$};
@@ -420,23 +375,10 @@ can be joined as follows:
 \end{tikzpicture}
 \end{center}
 
-The resulting set contains the elements
-$\{1,2,3,4,6,7,8\}$.
-From this on, the element 2 is the representative
-for the entire set and the old representative 4
-points to the element 2.
-
-The efficiency of the union-find structure depends on
-how the sets are joined.
-It turns out that we can follow a simple strategy:
-always connect the representative of the
-\emph{smaller} set to the representative of the \emph{larger} set
-(or if the sets are of equal size,
-we can make an arbitrary choice).
-Using this strategy, the length of any chain
-will be $O(\log n)$, so we can
-find the representative of any element
-efficiently by following the corresponding chain.
+結果、$\{1,2,3,4,6,7,8\}$の要素が集合に含まれ、要素2がそれらの集合全体の代表となり、もともと代表要素4であった要素2を指すようになります。
+Union-find構造の計算量は、集合をどのように結合するかに依存します。
+集合のサイズは小さい方の集合代表をと大きい方の集合の代表につなげばよいのである(同じ大きさの集合であれば、任意に選択することも可能である)。
+この方法を用いると、どのパスの長さも$O(log n)$となり、対応する鎖をたどることで任意の要素の代表を効率的に求めることができます。
 
 \subsubsection{Implementation}
 
