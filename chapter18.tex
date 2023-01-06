@@ -16,11 +16,10 @@
 
 \index{祖先 - ancestor}
 
-根付き木においてノード$x$の$k$番目の祖先とは
+根付き木においてノード$x$の$k$番目の祖先(ancestor)とは
 $x$から$k$個だけ根の方向に移動したときのノードです。
 ノード$x$の$k$番目の祖先を$ancestor(x, k)$とします。(祖先が存在しない場合は0とする)。
-たとえば、次の木では、
-$\texttt{ancestor}(2,1)=1$ and $\texttt{ancestor}(8,2)=4$です。
+次の木では、$\texttt{ancestor}(2,1)=1$であり$\texttt{ancestor}(8,2)=4$です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -45,11 +44,11 @@ $\texttt{ancestor}(2,1)=1$ and $\texttt{ancestor}(8,2)=4$です。
 \end{tikzpicture}
 \end{center}
 
-$ancestor$を求める最もシンプルな方法は$k$回の移動を実際に行うことです。
+$ancestor$を求める最もシンプルな方法は$k$回の移動を実際に行うことでしょう。
 この方法の時間計算量は$O(k)$であり、$n$ 個のノード を持つ木では$n$個のノードの探索を持つ可能性があるため、高速に動作するとは言えません。
 
-ここで16.3章で用いたのと同様の手法を用いれば、前処理を行うことで$ancestor(x, k)$を$O(\log k)$で効率的に求められます。
-$k \le n$となる$2$の累乗について$ancestor(x, k)$を事前計算します。例えば、上記の木に対する値は以下の通りになります。
+ここで16.3章で用いたのと同様の手法(訳註:ダブリング)を用いれば、前処理を行うことで$ancestor(x, k)$を$O(\log k)$で効率的に求められます。
+$k \le n$となる$2$の累乗について$ancestor(x, k)$を事前計算します。上記の木に対する値は以下の通りになります。
 
 \begin{center}
 \begin{tabular}{r|rrrrrrrrr}
@@ -63,7 +62,7 @@ $\cdots$ \\
 \end{center}
 
 この前処理には各ノードに対して$O(\log n)$の計算が必要なので$O(n \log n)$の時間がかかります。
-この後、$ancestor(x, k)$ の任意の値は、$k$ を各項が2のべき乗である和として表現することで$O(\log k)$で計算可能となります。
+$ancestor(x, k)$ の任意の値は$k$ を各項が2のべき乗である和として表現することで$O(\log k)$で計算可能となりました。
 
 \section{部分木とパス - Subtrees and paths}
 
@@ -166,10 +165,10 @@ $\cdots$ \\
 
 \subsubsection{部分木クエリ - Subtree queries}
 
-木における部分木は、木の探索順のある部分配列に対応し、
-その部分配列の 最初の要素がその部分木の根となるようにします。
-例えば、以下の部分配列は、ノード $4$ の部分木となります。
+木における部分木とは木の探索順のある部分配列に対応して、
+その部分配列の最初の要素がその部分木の根となるようにします。
 
+例えば、以下の部分配列は、ノード $4$ の部分木となります。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \fill[color=lightgray] (4,0) rectangle (8,1);
@@ -199,7 +198,7 @@ $\cdots$ \\
 \end{center}
 
 これを利用して、木の部分木対するクエリを効率的に処理できます。
-例として、各ノードに値があるとします。次のようなクエリを考えます。
+各ノードに値があるとした時に、次のようなクエリを考えます。
 \begin{itemize}
 \item 単一ノードの値を更新する
 \item 単一の指定したノードの部分木の合計を計算する
@@ -295,8 +294,8 @@ $\cdots$ \\
 \end{center}
 
 
-この配列によって、まずサブツリーの大きさを求め、
-次に対応するノードの値を求めれば、任意の部分木の値の合計を計算することができます。
+この配列を使って部分木の大きさを求め、
+次に対応するノードの値を求めれば任意の部分木の値の合計を計算することができます。
 ノード$4$の部分木の値は以下のように求めます。
 
 \begin{center}
@@ -354,7 +353,7 @@ $\cdots$ \\
 \end{center}
 
 クエリに効率的に答えるにはこれを格納する構造体を工夫することが必要です。
-バイナリインデックスまたはセグメントツリーなどが適切でしょう。
+バイナリインデックスツリー(BIT)またはセグメントツリーなどが適切でしょう。
 これらを用いると値の更新と値の総和の計算の両方を$O(\log n)$で行うことができます。
 
 
@@ -405,19 +404,14 @@ $\cdots$ \\
 \end{center}
 
 これは先ほど同様に解くことができますが、
-今度は配列の最後の行の各値が、ルートからノードへのパス上の値の合計となります。
-
-We can solve this problem like before,
-but now each value in the last row of the array is the sum of values
-on a path from the root to the node.
-For example, the following array corresponds to the above tree:
+今度は配列の最後の行の各値がルートからノードへのパス上の値の合計となります。
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 \draw (0,1) grid (9,-2);
 
-\node[left] at (-1,0.5) {node id};
-\node[left] at (-1,-0.5) {subtree size};
-\node[left] at (-1,-1.5) {path sum};
+\node[left] at (-1,0.5) {ノード番号};
+\node[left] at (-1,-0.5) {部分木のサイズ};
+\node[left] at (-1,-1.5) {値の合計};
 
 \node at (0.5,0.5) {$1$};
 \node at (1.5,0.5) {$2$};
@@ -459,9 +453,9 @@ For example, the following array corresponds to the above tree:
 \fill[color=lightgray] (4,-1) rectangle (8,-2);
 \draw (0,1) grid (9,-2);
 
-\node[left] at (-1,0.5) {node id};
-\node[left] at (-1,-0.5) {subtree size};
-\node[left] at (-1,-1.5) {path sum};
+\node[left] at (-1,0.5) {ノード番号};
+\node[left] at (-1,-0.5) {部分木のサイズ};
+\node[left] at (-1,-1.5) {値の合計};
 
 \node at (0.5,0.5) {$1$};
 \node at (1.5,0.5) {$2$};
@@ -504,10 +498,10 @@ For example, the following array corresponds to the above tree:
 \index{最小共通祖先(LCA) - lowest common ancestor}
 
 根付き木の2つのノードの\key{最小共通祖先(LCA) - lowest common ancestor}とは、
-あるノードの部分木が2つのノードを含むような最も下のノードのことです。
-最も典型的な問題は2つのノードのペアが与えられるのでその問い合わせを効率的に行う問題です。
-例えば、以下の木では、ノード$5$と$8$のLCAはノード2です。
+あるノードの部分木が2つのノードを含むような最も下のノードのことです(訳註:つまり対象のノードに最も近いノードです)。
+最も典型的な問題は2つのノードのペアが与えられるのでその問い合わせを効率的に行う問題でしょう。
 
+以下の木では、ノード$5$と$8$のLCAはノード2です。
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
 \node[draw, circle] (1) at (0,3) {$1$};
@@ -647,8 +641,8 @@ This technique is sometimes called the \index{Euler tour technique}
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 
-\node[left] at (-1,1.5) {node id};
-\node[left] at (-1,0.5) {depth};
+\node[left] at (-1,1.5) {ノード番号};
+\node[left] at (-1,0.5) {深さ};
 
 \draw (0,1) grid (15,2);
 \node at (0.5,1.5) {$1$};
@@ -710,8 +704,8 @@ This technique is sometimes called the \index{Euler tour technique}
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
 
-\node[left] at (-1,1.5) {node id};
-\node[left] at (-1,0.5) {depth};
+\node[left] at (-1,1.5) {ノード番号};
+\node[left] at (-1,0.5) {深さ};
 
 \fill[color=lightgray] (2,1) rectangle (3,2);
 \fill[color=lightgray] (5,1) rectangle (6,2);
@@ -774,18 +768,18 @@ This technique is sometimes called the \index{Euler tour technique}
 \end{center}
 
 ノード5はindex 2にあり、ノード8はindex 5にあり、
-index $2 \ldots 5$の間の最小のノードを求めます
+index $2 \ldots 5$の間の最小のノードを求めます。
 従って、ノード5とノード8のLCAは深さ2であるノード$2$となります。
-2つのノードのLCAを見つけるには、区間最小を求めるクエリを処理すればよい。
-配列は静的なので、$O(n \log n)$の前処理をした後、
+2つのノードのLCAを見つけるには、区間最小を求めるクエリを処理すればよいです。
+配列は静的なので$O(n \log n)$の前処理をした後、
 $O(1)$時間でこのようなクエリを処理することができます。
-(訳注: Sparse Tableなどを用いることでこれが実現できます)
+(訳注: 前述の通りにSparse Tableなどを用いることでこれが実現できます)
 
 \subsubsection{ノード間の距離 - Distances of nodes}
 
 ノード$a$と$b$の距離とは$a$から$b$へのパスの長さです。
 ノード間の距離を計算する問題は、ノード間のLCAを見つけることが大切だとわかります。
-まず、木を根付きとして考えます。この後、ノード$a$、$b$の距離 は、次の式で計算できます。
+まず、木を根付き木として考えます。ノード$a$、$b$の距離は次の式で計算できます。
 
 \[\texttt{depth}(a)+\texttt{depth}(b)-2 \cdot \texttt{depth}(c),\]
 
@@ -816,7 +810,6 @@ $O(1)$時間でこのようなクエリを処理することができます。
 \end{tikzpicture}
 \end{center}
 
-ノード5と8の最小公倍数の祖先はノード2である。ノードの深さは depth(5) = 3, depth(8) = 4, depth(2) = 2 なので、 ノード 5 と 8 の間の距離は 3 + 4 - 2 - 2 = 3 である。
 ノード5,8のLCAは2です。ここで、
 $\texttt{depth}(5)=3$, $\texttt{depth}(8)=4$ and $\texttt{depth}(2)=2$,
 であるため、5,8の距離は

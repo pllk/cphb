@@ -40,8 +40,7 @@
 \index{成分グラフ - component graph}
 
 \key{強連結成分 - strongly connected components}は、
-グラフをできるだけ大きな強連結な部分である成分グラフで、
-元のグラフの閉路を含まない成分グラフから形成されます。
+元のグラフを閉路を含まないようにできるだけ大きくする成分グラフから形成したグラフです。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9,label distance=-2mm]
@@ -126,7 +125,7 @@ but did not publish it. In 1981, the same algorithm was rediscovered
 and published by M. Sharir \cite{sha81}.}
 は有向グラフの強連結成分を効率的に求める方法です。
 このアルゴリズムでは、2回の深さ優先探索を行います。
-１回目の探索で探索でグラ フの構造に従ってノードのリストを構築し、
+１回目の探索で探索でグラフの構造に従ってノードのリストを構築し、
 ２回目の探索で強連結成分を求めます。
 
 \subsubsection{1回目の探索 - Search 1}
