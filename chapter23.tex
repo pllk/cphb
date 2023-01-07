@@ -2,7 +2,7 @@
 
 \index{行列 - matrix}
 
-\key{行列(matrix)} は、プログラミングにおける2次元配列に相当する数学の用語です。
+\key{行列(matrix)}はプログラミングにおける2次元配列に相当する数学の用語です。
 \[
 A =
  \begin{bmatrix}
@@ -11,11 +11,11 @@ A =
   9 & 5 & 4 & 18 \\
  \end{bmatrix}
 \]
-はサイズ$3 \times 4$の行列であり、3行4列の行列と呼ばれます。
-$[i, j]$という表記がよく用いられ、行列の$i$行$j$列を意味します。
-例えば、上の行列では、$A[2,3]=8$ and $A[3,1]=9$です。
-行列の特殊な例として、大きさが1次元の行列である\key{ベクトル}があります
-つまり、$n \times 1$の行列のことで以下の様になります。
+はサイズ$3 \times 4$の行列であり3行4列の行列と呼ばれます。
+$[i, j]$という表記がよく用いられ行列の$i$行$j$列を意味します。
+上の行列では$A[2,3]=8$ and $A[3,1]=9$です。
+行列の特殊な例として大きさが1次元の行列である\key{ベクトル}があります。
+つまり$n \times 1$の行列のことで以下の様になります。
 \index{ベクトル - vector}
 
 \[
@@ -57,7 +57,7 @@ S =
  \end{bmatrix}
 \]
 
-\section{行列の演算 - Operations}
+\section{行列と行列の演算 - Operations}
 
 行列$A$と$B$の和$A+B$は、
 行列が同じ大きさである場合に操作できます。
@@ -104,9 +104,9 @@ $A$と$B$の同じ行と列の要素の和が答えとなります。
  \end{bmatrix}.
 \]
 
-\subsubsection{行列の乗算 - Matrix multiplication}
+\subsubsection{行列同士の乗算 - Matrix multiplication}
 
-\index{行列の乗算 - matrix multiplication}
+\index{行列同士の乗算 - matrix multiplication}
 
 行列$A$と$B$の積$AB$は，$A$がサイズ$a \times n$であり、
 Bがサイズ$n \times b$の時に定義されます。
@@ -159,12 +159,7 @@ $AB$の各要素は、Aの要素の積の和であるという考え方をしま
 \]
 
 行列の乗算において$A(BC)=(AB)C$は成立します。
-ただし、可換ではないので、$AB=BA$は成立するとは限りません。
-
-Matrix multiplication is associative,
-so $A(BC)=(AB)C$ holds,
-but it is not commutative,
-so $AB = BA$ does not usually hold.
+ただし、可換ではないので$AB=BA$は成立するとは限りません。
 
 \index{単位行列 - identity matrix}
 
@@ -199,7 +194,7 @@ so $AB = BA$ does not usually hold.
   1 & 4 \\
   3 & 9 \\
   8 & 6 \\
- \end{bmatrix} \hspace{10px} \textrm{and} \hspace{10px}
+ \end{bmatrix} \hspace{10px} \textrm{であり} \hspace{10px}
  \begin{bmatrix}
   1 & 4 \\
   3 & 9 \\
@@ -219,8 +214,8 @@ so $AB = BA$ does not usually hold.
 \]
 \end{samepage}
 
-基本的なアルゴリズムを用いると、２つの$n \times n$の行列の積は$O(n^3)$ で計算できます。
-行列の乗算にはより効率的なアルゴリズムがあります。しかし、それは数学的なものであり、競技プログラミングでは使われません。
+基本的なアルゴリズムを用いると２つの$n \times n$の行列の積は$O(n^3)$ で計算できます。
+行列の乗算にはより効率的なアルゴリズムがあります。それは数学的なものであり競技プログラミングでは使われません。
 \footnote{
 最も最初のこの工夫は1969年に発表されたStrassenのアルゴリズム\cite{str69}で、
 $O(n^{2.80735})$です。現在の最も優れたアルゴリズム \cite{gal14}は$O(n^{2.37286})$です。}
@@ -288,9 +283,9 @@ $A^k$ は21.2のアルゴリズムを使えば$O(n^3 \log k)$で求められま�
 
 \index{行列式 - determinant}
 
-\key{行列式 - determinant}は、Aが正方行列である場合に定義されます。
-Aが$1 \times 1$の大きさであれば、$\det(A)=A[1,1]$となります。
-より大きな行列の行列式 は、次の式を用いて再帰的に計算されます
+\key{行列式 - determinant}はAが正方行列である場合に定義されます。
+Aが$1 \times 1$の大きさであれば$\det(A)=A[1,1]$となります。
+より大きな行列の行列式は次の式を用いて再帰的に計算されます
 この時に\index{余因子 - cofactor}が用いられいます
 \[\det(A)=\sum_{j=1}^n A[1,j] C[1,j],\]
 $C[i,j]$は$A$における$[i,j]$の余因子で次の様に示されます。
@@ -339,8 +334,8 @@ $M[i,j]$は A から $i$ 行 $j$ 列を削除して得られる行列です。
 
 \index{逆行列 - inverse matrix}
 
-$A$の行列式は、$A \cdot A^{-1} = I$($I$は単位行列)となる逆行列$A^{-1}$が存在するかどうかを教えてくれます。
-$A^{-1}$は$\det(A) \neq 0$のときに正確に存在し、次式で計算できます。
+$A$の行列式は$A \cdot A^{-1} = I$($I$は単位行列)となる逆行列$A^{-1}$が存在するかどうかを教えてくれます。
+$A^{-1}$は$\det(A) \neq 0$のときに正確に存在して次の式で計算できます。
 
 \[A^{-1}[i,j] = \frac{C[j,i]}{det(A)}.\]
 
@@ -373,9 +368,9 @@ $A^{-1}$は$\det(A) \neq 0$のときに正確に存在し、次式で計算で�
 
 \section{線型回帰 - Linear recurrences}
 
-\index{線形漸化式 - linear recurrence}
+\index{線型回帰 - linear recurrence}
 
-\key{線形漸化式 - linear recurrence}
+\key{線型回帰 - linear recurrence}
 は$f(n)$に対して$f(0),f(1),\ldots,f(k-1)$などの初期値が与えられている時に、
 大きな$n$である
 \[f(n) = c_1 f(n-1) + c_2 f(n-2) + \ldots + c_k f (n-k),\]
@@ -388,7 +383,7 @@ $A^{-1}$は$\det(A) \neq 0$のときに正確に存在し、次式で計算で�
 
 \index{フィボナッチ数 - Fibonacci number}
 
-線形漸化式としてよくあるのはフィボナッチ数です。
+線型回帰としてよくあるのはフィボナッチ数です。
 \[
 \begin{array}{lcl}
 f(0) & = & 0 \\
@@ -480,13 +475,13 @@ X^n \cdot
   1 \\
  \end{bmatrix}.
 \]
-$X^n$ の値は $O(\log n)$  時間で計算できるため、$f(n)$ の値も $O(\log n)$  時間で計算できます。
+$X^n$の値は$O(\log n)$時間で計算できるため、$f(n)$の値も$O(\log n)$で計算できます。
 
 \subsubsection{一般化 - General case}
 
 
 では$f(n)$が任意の線形漸化式である一般的なケースを考えていきます。
-目的は、以下のような行列 $X$ を構成することです。
+目的は以下のような行列$X$を構成することです。
 \[ X \cdot
  \begin{bmatrix}
   f(i) \\
@@ -502,7 +497,7 @@ $X^n$ の値は $O(\log n)$  時間で計算できるため、$f(n)$ の値も $
   f(i+k) \\
  \end{bmatrix}.
 \]
-この様な行列は次の様になります。
+この様な行列は次のようになります。
 \[
 X =
  \begin{bmatrix}
@@ -515,11 +510,11 @@ X =
  \end{bmatrix}.
 \]
 最初の$k - 1$行は、1つの要素が1であることを除いて、
-各要素が0である。これらの 行は、$f (i)$ を$f (i + 1)$、$f (i + 1)$ を$f (i + 2)$、
+各要素が0です。これらの行は、$f (i)$を$f (i + 1)$、$f (i + 1)$ を$f (i + 2)$
 と置き換えていきます。
-最後の行には、 新しい値$f(i+k)$を計算するための漸化式の係数が含まれます。
+最後の行には新しい値$f(i+k)$を計算するための漸化式の係数が含まれます。
 \begin{samepage}
-さて、$f (n)$ は次の式を用いて $O(k^3 \log n)$  時間で計算できます。
+さて、$f (n)$は次の式を用いて$O(k^3 \log n)$で計算できます。
 \[
  \begin{bmatrix}
   f(n) \\
@@ -542,9 +537,9 @@ X^n \cdot
 
 \subsubsection{パスのカウント - Counting paths}
 
-グラフの隣接行列の累乗には、興味深い性質があります。
+グラフの隣接行列の累乗には興味深い性質があります。
 $V$が重みなしグラフの隣接行列であるとき、
-行列 $V^n$ は、グラフのノード間の $n$ 本のエッジのパス の数を含んでいます。
+行列 $V^n$ はグラフのノード間の $n$ 本のエッジのパスの数を含んでいます。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
@@ -587,9 +582,7 @@ V^4= \begin{bmatrix}
   0 & 0 & 1 & 1 & 1 & 0 \\
  \end{bmatrix}
 \]
-contains the numbers of paths of 4 edges
-between the nodes.
-これは、パスが4のノードを示します。
+これはパスが4のノードを示します。
 例えば、$V^4[2,5]=2$ですが、
 これはノード2とノード5の長さ4のパスは2つであることを示します。
 $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$
@@ -602,8 +595,8 @@ $2 \rightarrow 6 \rightarrow 3 \rightarrow 2 \rightarrow 5$.
 重み付きグラフも同様の考え方で、
 ノードのペアごとに、
 その間にちょうど $n$本のエッジを含むパスの最小の長さを計算することができます。
-これを計算するためには、パスの数を計算するのではなくてパスの長さを最小にするように、
-行列の乗算を新たに定義する必要があります。
+これを計算するためにはパスの数を計算するのではなく、
+パスの長さを最小にするように行列の乗算を新たに定義する必要があります。
 
 \begin{samepage}
 以下の例を考えます。
@@ -652,7 +645,7 @@ AB[i,j] = \min_{k=1}^n A[i,k] + B[k,j]
 \]
 
 の代わりに最小値を、積の代わりに要素の和を計算します。
-これだけで、行列の累乗はグラフの最短経路に対応します。
+これで行列の累乗はグラフの最短経路に対応します。
 
 \[
 V^4= \begin{bmatrix}
@@ -676,7 +669,7 @@ $2 \rightarrow 1 \rightarrow 4 \rightarrow 2 \rightarrow 5$.
 
 \key{キルヒホッフの定理 - Kirchhoff's theorem}
 %\footnote{G. R. Kirchhoff (1824--1887) was a German physicist.}
-グラフの全域木の数を特殊な行列の行列式として計算する方法です。
+はグラフの全域木の数を特殊な行列の行列式として計算する方法です。
 
 \begin{center}
 \begin{tikzpicture}[scale=0.9]
