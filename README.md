@@ -30,5 +30,7 @@ https://moromisenpy.com/m1-mactex2021/
 この後は以下のようにコンパイルできます。
 
 ```shell
-lualatex book.tex  
+lualatex book.tex
+# 索引を作成するのには以下のコマンドを打ってからtexをコンパイルします
+# makeindex book.idx
 ```
