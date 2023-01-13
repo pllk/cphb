@@ -19,7 +19,7 @@
 コンテストでの良いコーディングスタイルとはシンプルで簡潔なものです。
 コンテストの時間は限られるため、プログラムは素早く書かなければなりません。
 通常のソフトウェア開発とは異なり、プログラムは短く（どんなに長くても数百行程度）、
-コンテスト後にメンテナンスする必要はもありません。
+コンテスト後にメンテナンスする必要はありません。
 
 \section{プログラミング言語}
 
@@ -130,9 +130,9 @@ ios::sync_with_stdio(0);
 cin.tie(0);
 \end{lstlisting}
 
-\texttt{"\textbackslash n"}用いると
+改行には\texttt{"\textbackslash n"}を用いると
 \texttt{endl}よりも高速です。
-なぜなら、\texttt{endl}は毎回、出力のflushを行うからです。
+なぜなら\texttt{endl}は出力(stdout)のflushを行うからです。
 
 cinとcoutに代わり、C言語では\texttt{scanf}と\texttt{printf}が存在します。
 通常、これらの関数は少し高速に動作しますが、使用するのが少し複雑になります。
@@ -626,9 +626,9 @@ $\min(x_1,x_2,\ldots,x_n)$と、$\max(x_1,x_2,\ldots,x_n)$
 
 \index{階乗 - factorial}
 
-\key{階乗 - factorial} である $n!$は次のことです。
+$n!$の表記は\key{階乗 - factorial}と呼ばれており次の式の通りです。
 \[\prod_{x=1}^n x = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n\]
-次のように再帰で表現しても良いです。
+次のように再帰で表現もできます。
 \[
 \begin{array}{lcl}
 0! & = & 1 \\
@@ -664,9 +664,8 @@ $\log_k(x)$で示されるもので、
 $k$は底と呼ばれます。
 定義は$\log_k(x)=a$のとき、$k^a=x$です。
 
-対数の便利な性質は、$\log_k(x)$というのが、
-$x$を$k$で1にを切らないまで割れる回数を表すことです。
-例えば、$\log_2(32)=5$は、2で5回割ることが出来ます。
+対数の便利な性質は$\log_k(x)$が$x$を$k$で1を下回らないまで割れる回数を表すことです。
+例えば$\log_2(32)=5$は2で5回割ることが出来ます。
 \[32 \rightarrow 16 \rightarrow 8 \rightarrow 4 \rightarrow 2 \rightarrow 1 \]
 
 アルゴリズムの解析には対数がよく使われます。
