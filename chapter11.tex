@@ -262,7 +262,7 @@ $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$のパスの長さは$11$です。
 \end{tikzpicture}
 \end{center}
 
-グラフに含まれる頂点の次数の和は常に$2m$($m$は辺の数)となります。
+グラフに含まれるノードの次数の和は常に$2m$($m$は辺の数)となります。
 なぜなら、各辺はちょうど2つのノードの度数を1つずつ増加させるからです。
 このため、次数の和は常に偶数となります。
 
@@ -277,7 +277,7 @@ $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$のパスの長さは$11$です。
 \index{outdegree}
 
 
-有向グラフでにおいて各頂点には入次数と出次数があります。
+有向グラフでにおいて各ノードには入次数と出次数があります。
 \key{入次数(indegree)}とはそのノードで終わる辺の数、
 \key{出次数(outdegree)}そのノードで始まる辺の数です。
 例えば、次のグラフでは、ノード2の入次数は2、ノード2の出次数は1です。
@@ -432,7 +432,7 @@ $1 \rightarrow 3 \rightarrow 4 \rightarrow 5$のパスの長さは$11$です。
 \begin{lstlisting}
 vector<int> adj[N];
 \end{lstlisting}
-定数$N$はグラフの頂点の数です。
+定数$N$はグラフのノードの数です。
 例えば次のグラフを考えます。
 
 \begin{center}
