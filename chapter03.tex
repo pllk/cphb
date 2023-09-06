@@ -86,7 +86,7 @@ the algorithm swaps them.
 The algorithm can be implemented as follows:
 \begin{lstlisting}
 for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n-1; j++) {
+    for (int j = 0; j < n-i-1; j++) {
         if (array[j] > array[j+1]) {
             swap(array[j],array[j+1]);
         }
